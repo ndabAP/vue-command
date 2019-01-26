@@ -1,7 +1,8 @@
 <template>
   <vue-command
     style="max-width: 550px;"
-    title="neil@moon ~" :commands="commands"
+    title="neil@moon ~"
+    :commands="commands"
     :styles="{ border: '0', maxHeight: '150px' }"
     help
   />
