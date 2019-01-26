@@ -1,5 +1,5 @@
 <template>
-  <vue-command title="neil@moon ~" :commands="commands"/>
+  <vue-command style="max-width: 550px;" title="neil@moon ~" :commands="commands"/>
 </template>
 
 <script>

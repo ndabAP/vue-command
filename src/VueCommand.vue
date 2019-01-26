@@ -1,5 +1,5 @@
 <template>
-  <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler">
+  <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command">
     <div id="term" class="term">
       <div class="term-bar">
         <span class="term-title">{{ title }}</span>
@@ -43,7 +43,7 @@ export default {
     }
   },
 
-  components: {Stdin, Stdout},
+  components: { Stdin, Stdout },
 
   data: () => ({
     history: [],
@@ -62,7 +62,7 @@ export default {
   },
 
   methods: {
-    mutatePointerHandler ({key}) {
+    mutatePointerHandler ({ key }) {
       if (key === 'ArrowUp' && this.pointer > 0) {
         this.pointer--
         this.last = this.executed[this.pointer]
@@ -86,7 +86,7 @@ export default {
 
       if (this.commands[cmd]) {
         this.history.push(this.commands[cmd](yargsParser(command)))
-      } else  this.history.push(`${command}: command not found`)
+      } else this.history.push(`${command}: command not found`)
     }
   }
 }
@@ -95,119 +95,125 @@ export default {
 <style lang="scss">
   $background: #111;
 
-  html {
-    box-sizing: border-box;
-  }
+  #vue-command {
+    html {
+      box-sizing: border-box;
+    }
 
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
 
-  html, body {
-    width: 100%;
-    background: $background;
-  }
+    html, body {
+      width: 100%;
+      background: $background;
+    }
 
-  body {
-    margin: 0;
-  }
+    body {
+      margin: 0;
+    }
 
-  @media only screen and (min-width: 600px) {
+    @media only screen and (min-width: 600px) {
+      input {
+        min-width: 400px;
+      }
+    }
+
+    @media only screen and (max-width: 320px) {
+      input {
+        max-width: 120px;
+      }
+    }
+
+    @media only screen and (max-width: 375px) and (max-width: 375px) {
+      input {
+        max-width: 120px;
+      }
+    }
+
     input {
-      min-width: 400px;
+      background: none;
+      border: none;
+      outline: none;
+      color: #dadfe5;
+      font-family: 'Inconsolata', monospace;
+      font-size: 1rem;
     }
-  }
 
-  @media only screen and (max-width: 320px) {
-    input {
-      max-width: 120px;
+    div.cont {
+      width: 100%;
+      height: 100%;
+      min-width: 150px;
     }
-  }
 
-  @media only screen and (max-width: 375px) and (max-width: 375px) {
-    input {
-      max-width: 120px;
+    #term {
+      height: 100%;
+      width: 100%;
+      background: $background;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+
+      a {
+        color: white;
+      }
     }
-  }
 
-  input {
-    background: none;
-    border: none;
-    outline: none;
-    color: #dadfe5;
-    font-family: 'Inconsolata', monospace;
-    font-size: 1rem;
-  }
-
-  div.cont {
-    width: 100%;
-    height: 100%;
-    margin-top: 32px;
-    min-width: 150px;
-  }
-
-  #term {
-    height: 100%;
-    width: 100%;
-    background: $background;
-
-    a {
-      color: white;
+    .term-bar {
+      height: 32px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      border-bottom: 1px solid #252525;
+      justify-content: center;
+      top: 0;
+      background-color: $background;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
-  }
 
-  .term-bar {
-    height: 32px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    border-bottom: 1px solid #252525;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    background-color: $background;
-  }
+    .term-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      color: #ddd;
+      margin: auto 0;
+    }
 
-  .term-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.85rem;
-    color: #ddd;
-    margin: auto 0;
-  }
+    .term-cont {
+      font-family: 'Inconsolata', monospace;
+      color: #fff;
+      padding: 0.5rem;
+    }
 
-  .term-cont {
-    font-family: 'Inconsolata', monospace;
-    color: #fff;
-    padding: 0.5rem;
-  }
+    .term-cmd {
+      background: none;
+      margin: 0;
+      border: 0;
+      color: inherit;
+      font-family: inherit;
+      font-size: 1rem;
+    }
 
-  .term-cmd {
-    background: none;
-    margin: 0;
-    border: 0;
-    color: inherit;
-    font-family: inherit;
-    font-size: 1rem;
-  }
+    .term-caret {
+      display: inline-block;
+      color: #fff;
+      padding: 0;
+      margin: 0;
+      font-family: inherit;
+      font-size: inherit;
 
-  .term-caret {
-    display: inline-block;
-    color: #fff;
-    padding: 0;
-    margin: 0;
-    font-family: inherit;
-    font-size: inherit;
+      &.blink {
+        color: transparent;
+      }
+    }
 
-    &.blink {
+    .term-input-hide {
+      opacity: 0;
+      background: none;
+      border: 0;
       color: transparent;
+      position: absolute;
     }
-  }
-
-  .term-input-hide {
-    opacity: 0;
-    background: none;
-    border: 0;
-    color: transparent;
-    position: absolute;
   }
 </style>
