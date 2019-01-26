@@ -1,7 +1,7 @@
 {
   "name": "vue-command",
   "version": "0.0.1",
-  "description": "Vue.js terminal emulator.",
+  "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
   "files": [

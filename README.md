@@ -1,29 +1,39 @@
-# project
+# vue-command
 
-## Project setup
-```
-yarn install
-```
+A fully working Vue.js terminal emulator.
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+## Features
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+- Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
+- Search history
+- Highly customizable
 
-### Run your tests
-```
-yarn run test
+## Installation
+
+```bash
+$ npm i vue-command
 ```
 
-### Lints and fixes files
-```
-yarn run lint
+## Usage
+
+```js
+<template>
+    <vue-command :commands="{ whoami: () => 'me' }" />
+</template>
+
+<script>
+import VueCommand from 'vue-command'
+
+export default {
+    components: { VueCommand }
+}
+</script>
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Author
+
+[Julian Claus](https://www.julian-claus.de) and contributors.
+
+## License
+
+MIT
