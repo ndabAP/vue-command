@@ -30,7 +30,7 @@ export default {
       pokedex: args => {
         if (args.color && args._[1] === 'pikachu') return 'yellow'
 
-        return `Usage: pokedex pokemon [option]
+        return `Usage: pokedex pokemon [option]<br><br>
 
         Example: pokedex pikachu --color
         `
