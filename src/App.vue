@@ -19,7 +19,7 @@ export default {
   data: () => ({
     commands: {
       'pokedex': args => {
-        if (args.color && args._[1] === 'pickachu') return 'yellow'
+        if (args.color && args._[1] === 'pikachu') return 'yellow'
 
         return 'usage: pokedex pokemon [option]'
       }
