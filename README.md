@@ -23,6 +23,7 @@ $ npm i vue-command
 
 <script>
 import VueCommand from 'vue-command'
+import 'vue-command/dist/vue-command.css'
 
 export default {
     components: { VueCommand }
