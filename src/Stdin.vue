@@ -3,14 +3,14 @@
     <span class="term-prompt">{{ prompt }} </span>
     <span class="term-cmd">
             <input
-                    :disabled="isDisabled"
-                    :placeholder="placeholder"
-                    @keyup.enter="handle"
-                    v-model="command"
-                    type="text"
-                    class="cli-input right"
-                    name="cli-input"
-                    :autofocus="!isDisabled"
+              :disabled="isDisabled"
+              :placeholder="placeholder"
+              @keyup.enter="handle"
+              v-model="command"
+              type="text"
+              class="cli-input right"
+              name="cli-input"
+              :autofocus="!isDisabled"
             >
           </span>
   </div>
@@ -35,6 +35,11 @@ export default {
     isLast: {
       type: Boolean,
       default: false
+    },
+
+    help: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -46,7 +51,7 @@ export default {
 
   created () {
     setTimeout(() => {
-      this.placeholder = 'Type help'
+      if (this.isLast && !this.isDisabled && this.help) this.placeholder = 'Type help'
     }, 4000)
   },
 

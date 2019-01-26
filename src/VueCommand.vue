@@ -1,18 +1,23 @@
 <template>
   <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command">
-    <div id="term" class="term">
-      <div class="term-bar">
+    <div id="term" :style="{
+      borderRadius: styles.border
+    }">
+      <div class="term-bar" v-if="!hideTitle">
         <span class="term-title">{{ title }}</span>
       </div>
-      <div class="cont">
+      <div class="cont" :style="{
+        maxHeight: styles.maxHeight,
+        overflowX: 'auto'
+      }">
         <div class="term-cont">
           <div>
-            <Stdin @handle="handle($event)"/>
+            <stdin @handle="handle($event)" :is-last="progress === 0" :help="help"/>
 
             <div v-for="(io, index) in history" :key="index">
-              <Stdout :io="io" class="term-cmd"/>
+              <stdout :io="io" class="term-cmd"/>
 
-              <Stdin :is-last="index === progress - 1" :last="last" @handle="handle"/>
+              <stdin :is-last="index === progress - 1" :last="last" :help="help" @handle="handle"/>
             </div>
           </div>
         </div>
@@ -28,6 +33,7 @@ import uniq from 'lodash/uniq'
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
+import isEmpty from 'lodash/isEmpty'
 import yargsParser from 'yargs-parser'
 
 export default {
@@ -37,9 +43,24 @@ export default {
       default: 'neil@moon: ~'
     },
 
+    hideTitle: {
+      type: Boolean,
+      default: false
+    },
+
     commands: {
       type: Object,
       required: false
+    },
+
+    styles: {
+      border: 0,
+      stylesHeight: 'initial'
+    },
+
+    help: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -66,7 +87,7 @@ export default {
       if (key === 'ArrowUp' && this.pointer > 0) {
         this.pointer--
         this.last = this.executed[this.pointer]
-      } else if (key === 'ArrowDown' && this.pointer < size(this.executed)) {
+      } else if (key === 'ArrowDown' && this.pointer < size(this.executed) - 1) {
         this.pointer++
         this.last = this.executed[this.pointer]
       }
@@ -75,18 +96,23 @@ export default {
     async handle (command) {
       const cmd = head(yargsParser(command)._)
 
-      let executed = cloneDeep(this.executed)
-      executed.push(command)
-      executed = uniq(executed)
+      if (isEmpty(cmd)) {
+        this.history.push(null)
+        this.progress++
+      } else {
+        let executed = cloneDeep(this.executed)
+        executed.push(command)
+        executed = uniq(executed)
 
-      this.executed = executed
-      this.pointer = size(executed)
+        this.executed = executed
+        this.pointer = size(executed)
 
-      this.progress++
+        this.progress++
 
-      if (this.commands[cmd]) {
-        this.history.push(this.commands[cmd](yargsParser(command)))
-      } else this.history.push(`${command}: command not found`)
+        if (this.commands[cmd]) {
+          this.history.push(this.commands[cmd](yargsParser(command)))
+        } else this.history.push(`${command}: command not found`)
+      }
     }
   }
 }
@@ -96,21 +122,13 @@ export default {
   $background: #111;
 
   #vue-command {
-    html {
-      box-sizing: border-box;
+    ::-webkit-scrollbar {
+      width: 5px;
     }
 
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
-
-    html, body {
-      width: 100%;
-      background: $background;
-    }
-
-    body {
-      margin: 0;
+    ::-webkit-scrollbar-thumb {
+      background: #ddd;
+      -webkit-border-radius: 8px;
     }
 
     @media only screen and (min-width: 600px) {
@@ -119,13 +137,7 @@ export default {
       }
     }
 
-    @media only screen and (max-width: 320px) {
-      input {
-        max-width: 120px;
-      }
-    }
-
-    @media only screen and (max-width: 375px) and (max-width: 375px) {
+    @media only screen and (max-width: 375px) {
       input {
         max-width: 120px;
       }
@@ -147,13 +159,10 @@ export default {
     }
 
     #term {
+      border: 1px solid $background;
       height: 100%;
       width: 100%;
       background: $background;
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
 
       a {
         color: white;
@@ -168,9 +177,6 @@ export default {
       border-bottom: 1px solid #252525;
       justify-content: center;
       top: 0;
-      background-color: $background;
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
     }
 
     .term-title {

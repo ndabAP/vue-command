@@ -1,5 +1,10 @@
 <template>
-  <vue-command style="max-width: 550px;" title="neil@moon ~" :commands="commands"/>
+  <vue-command
+    style="max-width: 550px;"
+    title="neil@moon ~" :commands="commands"
+    :styles="{ border: '0', maxHeight: '150px' }"
+    help
+  />
 </template>
 
 <script>
@@ -13,7 +18,9 @@ export default {
   data: () => ({
     commands: {
       'pokedex': args => {
-        if (args.color) return 'yellow'
+        if (args.color && args._[1] === 'pickachu') return 'yellow'
+
+        return 'usage: pokedex pokemon [option]'
       }
     }
   })
