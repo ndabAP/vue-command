@@ -8921,16 +8921,9 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&type=template&id=215cf002&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('vue-command',{attrs:{"title":"neil@moon ~","commands":_vm.commands}})}
-var staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./src/App.vue?vue&type=template&id=215cf002&
-
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=75567ef4&
-var VueCommandvue_type_template_id_75567ef4_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}]}},[_c('div',{staticClass:"term",attrs:{"id":"term"}},[_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title"},[_vm._v(_vm._s(_vm.title))])]),_c('div',{staticClass:"cont"},[_c('div',{staticClass:"term-cont"},[_c('div',[_c('Stdin',{on:{"handle":function($event){_vm.handle($event)}}}),_vm._l((_vm.history),function(io,index){return _c('div',{key:index},[_c('Stdout',{staticClass:"term-cmd",attrs:{"io":io}}),_c('Stdin',{attrs:{"is-last":index === _vm.progress - 1,"last":_vm.last},on:{"handle":_vm.handle}})],1)})],2)])])])])}
-var VueCommandvue_type_template_id_75567ef4_staticRenderFns = []
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}]}},[_c('div',{staticClass:"term",attrs:{"id":"term"}},[_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title"},[_vm._v(_vm._s(_vm.title))])]),_c('div',{staticClass:"cont"},[_c('div',{staticClass:"term-cont"},[_c('div',[_c('Stdin',{on:{"handle":function($event){_vm.handle($event)}}}),_vm._l((_vm.history),function(io,index){return _c('div',{key:index},[_c('Stdout',{staticClass:"term-cmd",attrs:{"io":io}}),_c('Stdin',{attrs:{"is-last":index === _vm.progress - 1,"last":_vm.last},on:{"handle":_vm.handle}})],1)})],2)])])])])}
+var staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=75567ef4&
@@ -9366,48 +9359,6 @@ var VueCommandvue_type_style_index_0_lang_scss_ = __webpack_require__("156c");
 
 var VueCommand_component = normalizeComponent(
   src_VueCommandvue_type_script_lang_js_,
-  VueCommandvue_type_template_id_75567ef4_render,
-  VueCommandvue_type_template_id_75567ef4_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var VueCommand = (VueCommand_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-
-/* harmony default export */ var Appvue_type_script_lang_js_ = ({
-  components: {
-    VueCommand: VueCommand
-  },
-  data: function data() {
-    return {
-      commands: {
-        'pokedex': function pokedex(args) {
-          if (args.color) return 'yellow';
-        }
-      }
-    };
-  }
-});
-// CONCATENATED MODULE: ./src/App.vue?vue&type=script&lang=js&
- /* harmony default export */ var src_Appvue_type_script_lang_js_ = (Appvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./src/App.vue
-
-
-
-
-
-/* normalize component */
-
-var App_component = normalizeComponent(
-  src_Appvue_type_script_lang_js_,
   render,
   staticRenderFns,
   false,
@@ -9417,11 +9368,11 @@ var App_component = normalizeComponent(
   
 )
 
-/* harmony default export */ var App = (App_component.exports);
+/* harmony default export */ var VueCommand = (VueCommand_component.exports);
 // CONCATENATED MODULE: ./src/index.js
 
 /* harmony default export */ var src = ({
-  VueCommand: App
+  VueCommand: VueCommand
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
