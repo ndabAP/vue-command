@@ -9362,9 +9362,7 @@ var VueCommand_component = normalizeComponent(
 /* harmony default export */ var VueCommand = (VueCommand_component.exports);
 // CONCATENATED MODULE: ./src/index.js
 
-/* harmony default export */ var src = ({
-  VueCommand: VueCommand
-});
+/* harmony default export */ var src = (VueCommand);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 

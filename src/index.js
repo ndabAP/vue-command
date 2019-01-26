@@ -1,5 +1,3 @@
 import VueCommand from './VueCommand'
 
-export default {
-  VueCommand
-}
+export default VueCommand
