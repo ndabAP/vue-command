@@ -8919,12 +8919,12 @@ var staticRenderFns = []
 
 // CONCATENATED MODULE: ./src/App.vue?vue&type=template&id=215cf002&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=7bbd6714&
-var VueCommandvue_type_template_id_7bbd6714_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}]}},[_c('div',{staticClass:"term",attrs:{"id":"term"}},[_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title"},[_vm._v(_vm._s(_vm.title))])]),_c('div',{staticClass:"cont"},[_c('div',{staticClass:"term-cont"},[_c('div',[_c('Stdin',{on:{"handle":function($event){_vm.handle($event)}}}),_vm._l((_vm.history),function(io,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-cmd",attrs:{"io":io}}),_c('Stdin',{attrs:{"is-last":index === _vm.progress - 1,"last":_vm.last},on:{"handle":_vm.handle}})],1)})],2)])])])])}
-var VueCommandvue_type_template_id_7bbd6714_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=75567ef4&
+var VueCommandvue_type_template_id_75567ef4_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}]}},[_c('div',{staticClass:"term",attrs:{"id":"term"}},[_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title"},[_vm._v(_vm._s(_vm.title))])]),_c('div',{staticClass:"cont"},[_c('div',{staticClass:"term-cont"},[_c('div',[_c('Stdin',{on:{"handle":function($event){_vm.handle($event)}}}),_vm._l((_vm.history),function(io,index){return _c('div',{key:index},[_c('Stdout',{staticClass:"term-cmd",attrs:{"io":io}}),_c('Stdin',{attrs:{"is-last":index === _vm.progress - 1,"last":_vm.last},on:{"handle":_vm.handle}})],1)})],2)])])])])}
+var VueCommandvue_type_template_id_75567ef4_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=7bbd6714&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=75567ef4&
 
 // EXTERNAL MODULE: ./node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("96cf");
@@ -9357,8 +9357,8 @@ var VueCommandvue_type_style_index_0_lang_scss_ = __webpack_require__("156c");
 
 var VueCommand_component = normalizeComponent(
   src_VueCommandvue_type_script_lang_js_,
-  VueCommandvue_type_template_id_7bbd6714_render,
-  VueCommandvue_type_template_id_7bbd6714_staticRenderFns,
+  VueCommandvue_type_template_id_75567ef4_render,
+  VueCommandvue_type_template_id_75567ef4_staticRenderFns,
   false,
   null,
   null,
@@ -9412,9 +9412,7 @@ var App_component = normalizeComponent(
 // CONCATENATED MODULE: ./src/index.js
 
 /* harmony default export */ var src = ({
-  components: {
-    App: App
-  }
+  VueCommand: App
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 

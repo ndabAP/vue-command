@@ -1,7 +1,5 @@
-import App from './App'
+import VueCommand from './App'
 
 export default {
-  components: {
-    App
-  }
+  VueCommand
 }
