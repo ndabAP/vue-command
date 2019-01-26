@@ -1641,7 +1641,7 @@ var debugs = {};
 var debugEnviron;
 exports.debuglog = function(set) {
   if (isUndefined(debugEnviron))
-    debugEnviron = Object({"NODE_ENV":"production","BASE_URL":"/"}).NODE_DEBUG || '';
+    debugEnviron = Object({"NODE_ENV":"production","BASE_URL":""}).NODE_DEBUG || '';
   set = set.toUpperCase();
   if (!debugs[set]) {
     if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
@@ -6711,7 +6711,7 @@ function parse (args, opts) {
     if (typeof envPrefix === 'undefined') return
 
     var prefix = typeof envPrefix === 'string' ? envPrefix : ''
-    Object.keys(Object({"NODE_ENV":"production","BASE_URL":"/"})).forEach(function (envVar) {
+    Object.keys(Object({"NODE_ENV":"production","BASE_URL":""})).forEach(function (envVar) {
       if (prefix === '' || envVar.lastIndexOf(prefix, 0) === 0) {
         // get array of nested keys and convert them to camel case
         var keys = envVar.split('__').map(function (key, i) {
@@ -6722,7 +6722,7 @@ function parse (args, opts) {
         })
 
         if (((configOnly && flags.configs[keys.join('.')]) || !configOnly) && (!hasKey(argv, keys) || flags.defaulted[keys.join('.')])) {
-          setArg(keys.join('.'), Object({"NODE_ENV":"production","BASE_URL":"/"})[envVar])
+          setArg(keys.join('.'), Object({"NODE_ENV":"production","BASE_URL":""})[envVar])
         }
       }
     })
