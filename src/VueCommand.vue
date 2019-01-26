@@ -8,7 +8,8 @@
       </div>
       <div class="cont" :style="{
         maxHeight: styles.maxHeight,
-        overflowX: 'auto'
+        overflowX: 'auto',
+        minHeight: styles.minHeight
       }">
         <div class="term-cont">
           <div>
@@ -55,7 +56,8 @@ export default {
 
     styles: {
       border: 0,
-      stylesHeight: 'initial'
+      stylesHeight: 'initial',
+      minHeight: 'initial'
     },
 
     help: {
@@ -131,16 +133,8 @@ export default {
       -webkit-border-radius: 8px;
     }
 
-    @media only screen and (min-width: 600px) {
-      input {
-        min-width: 400px;
-      }
-    }
-
-    @media only screen and (max-width: 375px) {
-      input {
-        max-width: 120px;
-      }
+    input {
+      width: 60%;
     }
 
     input {
@@ -150,6 +144,21 @@ export default {
       color: #dadfe5;
       font-family: 'Inconsolata', monospace;
       font-size: 1rem;
+    }
+
+    @media only screen and (max-width: 400px) {
+        ::-webkit-input-placeholder { /* WebKit browsers */
+          color: transparent;
+        }
+        :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+          color: transparent;
+        }
+        ::-moz-placeholder { /* Mozilla Firefox 19+ */
+          color: transparent;
+        }
+        :-ms-input-placeholder { /* Internet Explorer 10+ */
+          color: transparent;
+        }
     }
 
     div.cont {
