@@ -10,7 +10,7 @@
             <Stdin @handle="handle($event)"/>
 
             <div v-for="(io, index) in history" :key="index">
-              <stdout :io="io" class="term-cmd"/>
+              <Stdout :io="io" class="term-cmd"/>
 
               <Stdin :is-last="index === progress - 1" :last="last" @handle="handle"/>
             </div>
