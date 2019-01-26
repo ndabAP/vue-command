@@ -152,8 +152,8 @@ export default {
       background: $background;
       -webkit-border-radius: 10px;
       -moz-border-radius: 10px;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
 
       a {
         color: white;
@@ -169,8 +169,8 @@ export default {
       justify-content: center;
       top: 0;
       background-color: $background;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
     }
 
     .term-title {
