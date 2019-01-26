@@ -1,0 +1,36 @@
+{
+  "name": "vue-command",
+  "version": "0.0.1",
+  "description": "Vue.js terminal emulator.",
+  "private": false,
+  "main": "./dist/vue-command.common.js",
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --target lib --name vue-command ./src/index.js",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "vue": "^2.5.21",
+    "yargs-parser": "^11.1.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.3.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-service": "^3.3.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.5.21"
+  }
+}
