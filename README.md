@@ -35,8 +35,6 @@ $ npm i vue-command
     show-help
     :yargs-options="{ alias: { color: ['colour'] } }"
     :commands="commands"
-    title="neil@moon ~" 
-    place-holder-text="Type help and enter"
   />
 </template>
 
