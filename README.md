@@ -52,7 +52,7 @@ export default {
 
   data: () => ({
     commands: {
-       // yargs arguments
+      // yargs arguments
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') return 'yellow'
 
