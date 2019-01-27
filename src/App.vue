@@ -6,8 +6,8 @@
       :yargs-options="{ alias: { color: ['colour'] } }"
       title="neil@moon ~"
       :commands="commands"
-      help
-      place-holder-text="Type help and enter"
+      show-help
+      place-holder-text="Type help"
     />
     <pre>
       <code>
@@ -27,8 +27,8 @@ export default {
 
   data: () => ({
     commands: {
-      pokedex: args => {
-        if (args.color && args._[1] === 'pikachu') return 'yellow'
+      pokedex: ({ color, _ }) => {
+        if (color && _[1] === 'pikachu') return 'yellow'
 
         return `Usage: pokedex pokemon [option]<br><br>
 

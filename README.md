@@ -1,6 +1,6 @@
 # vue-command
 
-A fully working Vue.js terminal emulator.
+A fully working Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/).
 
 ## Features
 
@@ -14,16 +14,28 @@ A fully working Vue.js terminal emulator.
 $ npm i vue-command
 ```
 
+## Properties
+
+| Property          | Type      | Default        | Required | Description                                                                                                                     |
+|-------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
+| `commands`        | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
+| `hideTitle`       | `Boolean` | `false`        | No       | Hides the title                                                                                                                 |
+| `hidePrompt`      | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
+| `showHelp`        | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
+| `title`           | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
+| `prompt`          | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
+| `placeholderText` | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
+| `yargsOptions`    | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
+
 ## Usage
 
 ```vue
 <template>
   <vue-command
-    help
+    show-help
     :yargs-options="{ alias: { color: ['colour'] } }"
     :commands="commands"
     title="neil@moon ~" 
-    style="max-width: 550px;"
     place-holder-text="Type help and enter"
   />
 </template>
@@ -39,8 +51,9 @@ export default {
 
   data: () => ({
     commands: {
-      pokedex: args => {
-        if (args.color && args._[1] === 'pikachu') return 'yellow'
+       // yargs arguments
+      pokedex: ({ color, _ }) => {
+        if (color && _[1] === 'pikachu') return 'yellow'
 
         return `Usage: pokedex pokemon [option]<br><br>
 

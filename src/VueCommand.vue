@@ -8,19 +8,23 @@
         <div class="term-cont">
           <div>
             <stdin
-              :place-holder-text="placeHolderText"
+              :hide-prompt="hidePrompt"
+              :prompt="prompt"
+              :placeholder-text="placeholderText"
               :is-last="progress === 0"
-              :help="help"
+              :show-help="showHelp"
               @handle="handle($event)"/>
 
             <div v-for="(io, index) in history" :key="index">
               <stdout :io="io" class="term-cmd"/>
 
               <stdin
-                :place-holder-text="placeHolderText"
+                :hide-prompt="hidePrompt"
+                :prompt="prompt"
+                :placeholder-text="placeholderText"
                 :is-last="index === progress - 1"
                 :last-command="last"
-                :help="help"
+                :show-help="showHelp"
                 @handle="handle"/>
             </div>
           </div>
@@ -42,14 +46,9 @@ import yargsParser from 'yargs-parser'
 
 export default {
   props: {
-    title: {
-      type: String,
-      default: 'neil@moon: ~'
-    },
-
-    placeHolderText: {
-      type: String,
-      default: 'Type help'
+    commands: {
+      type: Object,
+      required: true
     },
 
     hideTitle: {
@@ -57,19 +56,33 @@ export default {
       default: false
     },
 
-    commands: {
-      type: Object,
-      required: false
+    hidePrompt: {
+      type: Boolean,
+      default: false
+    },
+
+    showHelp: {
+      type: Boolean,
+      default: false
+    },
+
+    title: {
+      type: String,
+      default: 'neil@moon: ~'
+    },
+
+    prompt: {
+      type: String,
+      default: '~neil@moon:#'
+    },
+
+    placeholderText: {
+      type: String,
+      default: 'Type help'
     },
 
     yargsOptions: {
-      type: Object,
-      required: false
-    },
-
-    help: {
-      type: Boolean,
-      default: false
+      type: Object
     }
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{ prompt }} </span>
+    <span v-if="!hidePrompt">{{ prompt }} </span>
     <span class="term-cmd">
             <input
               :disabled="isDisabled"
@@ -23,8 +23,7 @@ import clone from 'lodash/clone'
 export default {
   props: {
     prompt: {
-      type: String,
-      default: '~neil@moon:#'
+      type: String
     },
 
     lastCommand: {
@@ -38,13 +37,18 @@ export default {
       required: true
     },
 
-    help: {
+    showHelp: {
       type: Boolean,
       default: false
     },
 
-    placeHolderText: {
+    placeholderText: {
       type: String
+    },
+
+    hidePrompt: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -56,7 +60,7 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (this.isLast && !this.isDisabled && this.help) this.placeholder = this.placeHolderText
+      if (this.isLast && !this.isDisabled && this.showHelp) this.placeholder = this.placeholderText
     }, 4000)
   },
 
