@@ -5,6 +5,10 @@
   "private": false,
   "main": "./dist/vue-command.common.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndabAP/vue-command"
+  },
   "files": [
     "dist/*",
     "src/*",
