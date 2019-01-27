@@ -1,9 +1,10 @@
 {
   "name": "vue-command",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
+  "license": "MIT",
   "files": [
     "dist/*",
     "src/*",
@@ -33,6 +34,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "webpack": "^4.29.0"
   }
 }

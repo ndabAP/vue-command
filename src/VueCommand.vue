@@ -1,24 +1,27 @@
 <template>
   <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command">
-    <div id="term" :style="{
-      borderRadius: styles.border
-    }">
+    <div id="term">
       <div class="term-bar" v-if="!hideTitle">
         <span class="term-title">{{ title }}</span>
       </div>
-      <div class="cont" :style="{
-        maxHeight: styles.maxHeight,
-        overflowX: 'auto',
-        minHeight: styles.minHeight
-      }">
+      <div class="cont">
         <div class="term-cont">
           <div>
-            <stdin @handle="handle($event)" :is-last="progress === 0" :help="help"/>
+            <stdin
+              :place-holder-text="placeHolderText"
+              :is-last="progress === 0"
+              :help="help"
+              @handle="handle($event)"/>
 
             <div v-for="(io, index) in history" :key="index">
               <stdout :io="io" class="term-cmd"/>
 
-              <stdin :is-last="index === progress - 1" :last="last" :help="help" @handle="handle"/>
+              <stdin
+                :place-holder-text="placeHolderText"
+                :is-last="index === progress - 1"
+                :last-command="last"
+                :help="help"
+                @handle="handle"/>
             </div>
           </div>
         </div>
@@ -44,6 +47,11 @@ export default {
       default: 'neil@moon: ~'
     },
 
+    placeHolderText: {
+      type: String,
+      default: 'Type help'
+    },
+
     hideTitle: {
       type: Boolean,
       default: false
@@ -54,10 +62,9 @@ export default {
       required: false
     },
 
-    styles: {
-      border: 0,
-      stylesHeight: 'initial',
-      minHeight: 'initial'
+    yargsOptions: {
+      type: Object,
+      required: false
     },
 
     help: {
@@ -96,7 +103,7 @@ export default {
     },
 
     async handle (command) {
-      const cmd = head(yargsParser(command)._)
+      const cmd = head(yargsParser(command, this.yargsOptions)._)
 
       if (isEmpty(cmd)) {
         this.history.push(null)
@@ -112,7 +119,7 @@ export default {
         this.progress++
 
         if (this.commands[cmd]) {
-          this.history.push(this.commands[cmd](yargsParser(command)))
+          this.history.push(this.commands[cmd](yargsParser(command, this.yargsOptions)))
         } else this.history.push(`${command}: command not found`)
       }
     }
@@ -135,9 +142,6 @@ export default {
 
     input {
       width: 60%;
-    }
-
-    input {
       background: none;
       border: none;
       outline: none;
@@ -147,18 +151,22 @@ export default {
     }
 
     @media only screen and (max-width: 400px) {
-        ::-webkit-input-placeholder { /* WebKit browsers */
-          color: transparent;
-        }
-        :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-          color: transparent;
-        }
-        ::-moz-placeholder { /* Mozilla Firefox 19+ */
-          color: transparent;
-        }
-        :-ms-input-placeholder { /* Internet Explorer 10+ */
-          color: transparent;
-        }
+      input {
+        width: 40%;
+      }
+
+      ::-webkit-input-placeholder { /* WebKit browsers */
+        color: transparent;
+      }
+      :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: transparent;
+      }
+      ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: transparent;
+      }
+      :-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: transparent;
+      }
     }
 
     div.cont {
@@ -199,15 +207,6 @@ export default {
       font-family: 'Inconsolata', monospace;
       color: #fff;
       padding: 0.5rem;
-    }
-
-    .term-cmd {
-      background: none;
-      margin: 0;
-      border: 0;
-      color: inherit;
-      font-family: inherit;
-      font-size: 1rem;
     }
 
     .term-caret {

@@ -3,11 +3,11 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working Vue.js terminal emulator.</p>
     <vue-command
-      style="max-width: 600px"
+      :yargs-options="{ alias: { color: ['colour'] } }"
       title="neil@moon ~"
       :commands="commands"
-      :styles="{ border: '8px', maxHeight: '150px', minHeight: '325px' }"
       help
+      place-holder-text="Type help and enter"
     />
     <pre>
       <code>
@@ -45,11 +45,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   body {
     display: grid;
     place-items: center;
     height: 95vh;
+    margin: 0;
   }
 
   h1 {
@@ -75,5 +76,15 @@ export default {
     padding: 10px;
     color: #333;
     margin: 5px;
+  }
+
+  #term {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+    .cont {
+      min-height: 300px;
+    }
   }
 </style>

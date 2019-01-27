@@ -19,11 +19,12 @@ $ npm i vue-command
 ```vue
 <template>
   <vue-command
-    style="max-width: 550px;"
-    title="neil@moon ~" 
-    :commands="commands"
-    :styles="{ border: '0', maxHeight: '150px' }"
     help
+    :yargs-options="{ alias: { color: ['colour'] } }"
+    :commands="commands"
+    title="neil@moon ~" 
+    style="max-width: 550px;"
+    place-holder-text="Type help and enter"
   />
 </template>
 
@@ -37,7 +38,7 @@ export default {
 
   data: () => ({
     commands: {
-      'pokedex': args => {
+      pokedex: args => {
         if (args.color && args._[1] === 'pikachu') return 'yellow'
 
         return `Usage: pokedex pokemon [option]<br><br>
@@ -50,6 +51,17 @@ export default {
 }
 </script>
 
+<style>
+  #term {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+    .cont {
+      min-height: 300px;
+    }
+  }
+</style>
 ```
 
 ## Author

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="term-prompt">{{ prompt }} </span>
+    <span>{{ prompt }} </span>
     <span class="term-cmd">
             <input
               :disabled="isDisabled"
@@ -27,19 +27,24 @@ export default {
       default: '~neil@moon:#'
     },
 
-    last: {
+    lastCommand: {
       type: String,
       default: ''
     },
 
     isLast: {
       type: Boolean,
-      default: false
+      default: false,
+      required: true
     },
 
     help: {
       type: Boolean,
       default: false
+    },
+
+    placeHolderText: {
+      type: String
     }
   },
 
@@ -51,7 +56,7 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (this.isLast && !this.isDisabled && this.help) this.placeholder = 'Type help'
+      if (this.isLast && !this.isDisabled && this.help) this.placeholder = this.placeHolderText
     }, 4000)
   },
 
@@ -65,9 +70,20 @@ export default {
   },
 
   watch: {
-    last () {
-      if (!isEmpty(this.last) && this.isLast) this.command = clone(this.last)
+    lastCommand () {
+      if (!isEmpty(this.lastCommand) && this.isLast) this.command = clone(this.lastCommand)
     }
   }
 }
 </script>
+
+<style>
+  .term-cmd {
+    background: none;
+    margin: 0;
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+</style>
