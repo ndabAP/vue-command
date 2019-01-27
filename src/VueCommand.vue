@@ -1,5 +1,5 @@
 <template>
-  <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command">
+  <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command" @keydown.tab="autocomplete">
     <div id="term" :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }">
       <div class="term-bar" v-if="!hideTitle">
         <span class="term-title" :class="{
@@ -11,6 +11,7 @@
         <div class="term-cont">
           <div>
             <stdin
+              @typing="setCurrent"
               :white-theme="whiteTheme"
               :hide-prompt="hidePrompt"
               :prompt="prompt"
@@ -23,6 +24,7 @@
               <stdout :white-theme="whiteTheme" :io="io" class="term-cmd"/>
 
               <stdin
+                @typing="setCurrent"
                 :white-theme="whiteTheme"
                 :hide-prompt="hidePrompt"
                 :prompt="prompt"
@@ -47,6 +49,8 @@ import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
 import isEmpty from 'lodash/isEmpty'
+import each from 'lodash/each'
+import keys from 'lodash/keys'
 import yargsParser from 'yargs-parser'
 
 export default {
@@ -101,6 +105,7 @@ export default {
   data: () => ({
     history: [],
     executed: [],
+    current: '',
     pointer: 0,
     last: '',
     progress: 0
@@ -125,8 +130,28 @@ export default {
       }
     },
 
+    autocomplete ({ key }) {
+      event.preventDefault()
+
+      if (key === 'Tab' && !isEmpty(this.current)) {
+        each(keys(this.commands).sort(), command => {
+          if (command.startsWith(this.current)) {
+            this.$_bus.$emit('autocomplete', command)
+
+            return false
+          }
+        })
+      }
+    },
+
+    setCurrent (current) {
+      this.current = current
+    },
+
     async handle (command) {
       const cmd = head(yargsParser(command, this.yargsOptions)._)
+
+      this.setCurrent('')
 
       if (isEmpty(cmd)) {
         this.history.push(null)

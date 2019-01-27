@@ -73,6 +73,12 @@ export default {
     }, 4000)
   },
 
+  mounted () {
+    this.$_bus.$on('autocomplete', command => {
+      if (this.isLast) this.command = command
+    })
+  },
+
   methods: {
     handle () {
       this.$emit('handle', this.command)
@@ -85,6 +91,10 @@ export default {
   watch: {
     lastCommand () {
       if (!isEmpty(this.lastCommand) && this.isLast) this.command = clone(this.lastCommand)
+    },
+
+    command () {
+      this.$emit('typing', this.command)
     }
   }
 }

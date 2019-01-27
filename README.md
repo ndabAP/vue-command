@@ -7,6 +7,7 @@ A fully working Vue.js terminal emulator. See the [demo](https://ndabap.github.i
 - Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
 - Search history
 - White/Dark theme support
+- Autocomplete
 - Lowest supported width is 300 pixels
 
 ## Installation
