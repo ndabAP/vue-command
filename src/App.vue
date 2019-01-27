@@ -6,6 +6,7 @@
       :yargs-options="{ alias: { color: ['colour'] } }"
       title="neil@moon ~"
       :commands="commands"
+      show-help
     />
     <pre>
       <code>
