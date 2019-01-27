@@ -1,13 +1,17 @@
 <template>
   <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command">
-    <div id="term">
+    <div id="term" :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }">
       <div class="term-bar" v-if="!hideTitle">
-        <span class="term-title">{{ title }}</span>
+        <span class="term-title" :class="{
+          'dark-font': whiteTheme,
+          'white-font': !whiteTheme
+        }">{{ title }}</span>
       </div>
       <div class="cont">
         <div class="term-cont">
           <div>
             <stdin
+              :white-theme="whiteTheme"
               :hide-prompt="hidePrompt"
               :prompt="prompt"
               :placeholder-text="placeholderText"
@@ -16,9 +20,10 @@
               @handle="handle($event)"/>
 
             <div v-for="(io, index) in history" :key="index">
-              <stdout :io="io" class="term-cmd"/>
+              <stdout :white-theme="whiteTheme" :io="io" class="term-cmd"/>
 
               <stdin
+                :white-theme="whiteTheme"
                 :hide-prompt="hidePrompt"
                 :prompt="prompt"
                 :placeholder-text="placeholderText"
@@ -79,6 +84,11 @@ export default {
     placeholderText: {
       type: String,
       default: 'Type help'
+    },
+
+    whiteTheme: {
+      type: Boolean,
+      default: false
     },
 
     yargsOptions: {
@@ -153,82 +163,58 @@ export default {
       -webkit-border-radius: 8px;
     }
 
-    input {
-      width: 60%;
-      background: none;
-      border: none;
-      outline: none;
-      color: #dadfe5;
-      font-family: 'Inconsolata', monospace;
-      font-size: 1rem;
-    }
-
-    @media only screen and (max-width: 400px) {
-      input {
-        width: 40%;
-      }
-
-      ::-webkit-input-placeholder { /* WebKit browsers */
-        color: transparent;
-      }
-      :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-        color: transparent;
-      }
-      ::-moz-placeholder { /* Mozilla Firefox 19+ */
-        color: transparent;
-      }
-      :-ms-input-placeholder { /* Internet Explorer 10+ */
-        color: transparent;
-      }
-    }
-
-    div.cont {
-      width: 100%;
-      height: 100%;
-      min-width: 150px;
-    }
-
-    #term {
-      border: 1px solid $background;
-      height: 100%;
-      width: 100%;
+    .dark-bg {
       background: $background;
+    }
+
+    .dark-font {
+      color: #000;
 
       a {
         color: white;
       }
     }
 
-    .term-bar {
-      height: 32px;
+    div.cont {
+      height: 100%;
+      min-width: 150px;
       width: 100%;
+    }
+
+    #term {
+      border: 1px solid $background;
+      height: 100%;
+      width: 100%;
+    }
+
+    .term-bar {
+      border-bottom: 1px solid #252525;
       display: flex;
       flex-direction: row;
-      border-bottom: 1px solid #252525;
+      height: 32px;
       justify-content: center;
       top: 0;
+      width: 100%;
     }
 
     .term-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 0.85rem;
-      color: #ddd;
       margin: auto 0;
     }
 
     .term-cont {
       font-family: 'Inconsolata', monospace;
-      color: #fff;
       padding: 0.5rem;
     }
 
     .term-caret {
-      display: inline-block;
       color: #fff;
-      padding: 0;
-      margin: 0;
+      display: inline-block;
       font-family: inherit;
       font-size: inherit;
+      margin: 0;
+      padding: 0;
 
       &.blink {
         color: transparent;
@@ -236,11 +222,23 @@ export default {
     }
 
     .term-input-hide {
-      opacity: 0;
       background: none;
       border: 0;
       color: transparent;
+      opacity: 0;
       position: absolute;
+    }
+
+    .white-bg {
+      background: #ffffff;
+    }
+
+    .white-font {
+      color: #ffffff;
+
+      a {
+        color: #ffffff;
+      }
     }
   }
 </style>

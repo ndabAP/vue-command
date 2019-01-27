@@ -1,8 +1,13 @@
 <template>
   <div>
-    <span v-if="!hidePrompt">{{ prompt }} </span>
+    <span
+      v-if="!hidePrompt"
+      :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
+      {{ prompt }}
+    </span>
     <span class="term-cmd">
             <input
+              :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
               :disabled="isDisabled"
               :placeholder="placeholder"
               @keyup.enter="handle"
@@ -49,6 +54,10 @@ export default {
     hidePrompt: {
       type: Boolean,
       default: false
+    },
+
+    whiteTheme: {
+      type: Boolean
     }
   },
 
@@ -81,13 +90,69 @@ export default {
 }
 </script>
 
-<style>
-  .term-cmd {
-    background: none;
-    margin: 0;
-    border: 0;
-    color: inherit;
-    font-family: inherit;
-    font-size: 1rem;
+<style lang="scss">
+  $background: #111;
+
+  #vue-command {
+    input {
+      background: none;
+      border: none;
+      font-family: 'Inconsolata', monospace;
+      font-size: 1rem;
+      outline: none;
+      width: 60%;
+    }
+
+    @media only screen and (max-width: 400px) {
+      input {
+        width: 40%;
+      }
+
+      ::-webkit-input-placeholder {
+        color: transparent;
+      }
+      :-moz-placeholder {
+        color: transparent;
+      }
+      ::-moz-placeholder {
+        color: transparent;
+      }
+      :-ms-input-placeholder {
+        color: transparent;
+      }
+    }
+
+    .dark-bg {
+      background: $background;
+    }
+
+    .dark-font {
+      color: #000;
+
+      a {
+        color: white;
+      }
+    }
+
+    .term-cmd {
+      background: none;
+      margin: 0;
+      border: 0;
+      color: inherit;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .white-bg {
+      background: #ffffff;
+    }
+
+    .white-font {
+      color: #ffffff;
+
+      a {
+        color: #ffffff;
+      }
+    }
   }
 </style>

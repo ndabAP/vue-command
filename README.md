@@ -6,12 +6,13 @@ A fully working Vue.js terminal emulator. See the [demo](https://ndabap.github.i
 
 - Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
 - Search history
-- Highly customizable
+- White/Dark theme support
+- Lowest supported width is 300 pixels
 
 ## Installation
 
 ```bash
-$ npm i vue-command
+$ npm i vue-command --save
 ```
 
 ## Properties
@@ -25,6 +26,7 @@ $ npm i vue-command
 | `title`           | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
 | `prompt`          | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
 | `placeholderText` | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
+| `whiteTheme`      | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |
 | `yargsOptions`    | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
 
 ## Usage

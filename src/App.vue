@@ -83,6 +83,8 @@ export default {
 
     .cont {
       min-height: 300px;
+      max-height: 300px;
+      overflow-y: scroll;
     }
   }
 </style>
