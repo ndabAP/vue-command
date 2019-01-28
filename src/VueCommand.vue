@@ -105,11 +105,11 @@ export default {
 
     yargsOptions: {
       type: Object,
-      default: {}
+      default: () => ({})
     }
   },
 
-  components: {Stdin, Stdout},
+  components: { Stdin, Stdout },
 
   data: () => ({
     // All executed commands
@@ -132,7 +132,7 @@ export default {
   },
 
   methods: {
-    mutatePointerHandler ({key}) {
+    mutatePointerHandler ({ key }) {
       if (key === ARROW_UP_KEY && this.pointer > 0) {
         this.pointer--
         this.last = this.executed[this.pointer]

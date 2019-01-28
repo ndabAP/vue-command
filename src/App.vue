@@ -8,7 +8,6 @@
       title="neil@moon ~"
       :commands="commands"
       show-help
-      white-theme
     />
 
     <pre>
@@ -72,12 +71,12 @@ export default {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
-  }
 
-  pre code {
-    padding: 10px;
-    color: #333;
-    margin: 5px;
+    code {
+      padding: 10px;
+      color: #333;
+      margin: 5px;
+    }
   }
 
   .vue-command {
