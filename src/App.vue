@@ -79,10 +79,12 @@ export default {
     margin: 5px;
   }
 
-  #term {
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+  .vue-command {
+    .term {
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+    }
 
     .cont {
       min-height: 300px;

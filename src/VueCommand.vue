@@ -1,39 +1,44 @@
 <template>
-  <div @keyup.down="mutatePointerHandler" @keyup.up="mutatePointerHandler" id="vue-command" @keydown.tab="autocomplete">
-    <div id="term" :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }">
+  <div
+    @keyup.down="mutatePointerHandler"
+    @keydown.tab="autocomplete"
+    @keyup.up="mutatePointerHandler"
+    class="vue-command"
+  >
+    <div :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }" class="term">
+
       <div class="term-bar" v-if="!hideTitle">
         <span class="term-title" :class="{
           'dark-font': whiteTheme,
           'white-font': !whiteTheme
         }">{{ title }}</span>
       </div>
-      <div class="cont">
+
+      <div class="cont" ref="term-cont">
         <div class="term-cont">
-          <div>
+          <stdin
+            @typing="setCurrent"
+            :white-theme="whiteTheme"
+            :hide-prompt="hidePrompt"
+            :prompt="prompt"
+            :placeholder-text="placeholderText"
+            :is-last="progress === 0"
+            :show-help="showHelp"
+            @handle="handle($event)"/>
+
+          <div v-for="(io, index) in history" :key="index">
+            <stdout :white-theme="whiteTheme" :io="io" class="term-cmd"/>
+
             <stdin
               @typing="setCurrent"
               :white-theme="whiteTheme"
               :hide-prompt="hidePrompt"
               :prompt="prompt"
               :placeholder-text="placeholderText"
-              :is-last="progress === 0"
+              :is-last="index === progress - 1"
+              :last-command="last"
               :show-help="showHelp"
-              @handle="handle($event)"/>
-
-            <div v-for="(io, index) in history" :key="index">
-              <stdout :white-theme="whiteTheme" :io="io" class="term-cmd"/>
-
-              <stdin
-                @typing="setCurrent"
-                :white-theme="whiteTheme"
-                :hide-prompt="hidePrompt"
-                :prompt="prompt"
-                :placeholder-text="placeholderText"
-                :is-last="index === progress - 1"
-                :last-command="last"
-                :show-help="showHelp"
-                @handle="handle"/>
-            </div>
+              @handle="handle"/>
           </div>
         </div>
       </div>
@@ -42,8 +47,6 @@
 </template>
 
 <script>
-import Stdin from './Stdin'
-import Stdout from './Stdout'
 import uniq from 'lodash/uniq'
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
@@ -52,6 +55,10 @@ import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
 import keys from 'lodash/keys'
 import yargsParser from 'yargs-parser'
+
+import Stdin from './Stdin'
+import Stdout from './Stdout'
+import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants'
 
 export default {
   props: {
@@ -112,19 +119,16 @@ export default {
   }),
 
   updated () {
-    const terminal = document.getElementsByTagName('html')[0]
+    const terminal = this.$refs['term-cont']
     terminal.scrollTop = terminal.scrollHeight
-
-    const input = document.getElementsByTagName('input')[this.history.length]
-    input.focus()
   },
 
   methods: {
     mutatePointerHandler ({ key }) {
-      if (key === 'ArrowUp' && this.pointer > 0) {
+      if (key === ARROW_UP_KEY && this.pointer > 0) {
         this.pointer--
         this.last = this.executed[this.pointer]
-      } else if (key === 'ArrowDown' && this.pointer < size(this.executed) - 1) {
+      } else if (key === ARROW_DOWN_KEY && this.pointer < size(this.executed) - 1) {
         this.pointer++
         this.last = this.executed[this.pointer]
       }
@@ -133,7 +137,7 @@ export default {
     autocomplete ({ key }) {
       event.preventDefault()
 
-      if (key === 'Tab' && !isEmpty(this.current)) {
+      if (key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
             this.$_bus.$emit('autocomplete', command)
@@ -176,9 +180,9 @@ export default {
 </script>
 
 <style lang="scss">
-  $background: #111;
+  @import './scss/mixins';
 
-  #vue-command {
+  .vue-command {
     ::-webkit-scrollbar {
       width: 5px;
     }
@@ -188,25 +192,7 @@ export default {
       -webkit-border-radius: 8px;
     }
 
-    .dark-bg {
-      background: $background;
-    }
-
-    .dark-font {
-      color: #000;
-
-      a {
-        color: white;
-      }
-    }
-
-    div.cont {
-      height: 100%;
-      min-width: 150px;
-      width: 100%;
-    }
-
-    #term {
+    .vue-command:first-child {
       border: 1px solid $background;
       height: 100%;
       width: 100%;
@@ -252,18 +238,6 @@ export default {
       color: transparent;
       opacity: 0;
       position: absolute;
-    }
-
-    .white-bg {
-      background: #ffffff;
-    }
-
-    .white-font {
-      color: #ffffff;
-
-      a {
-        color: #ffffff;
-      }
     }
   }
 </style>

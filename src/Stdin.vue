@@ -6,18 +6,19 @@
       {{ prompt }}
     </span>
     <span class="term-cmd">
-            <input
-              :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
-              :disabled="isDisabled"
-              :placeholder="placeholder"
-              @keyup.enter="handle"
-              v-model="command"
-              type="text"
-              class="cli-input right"
-              name="cli-input"
-              :autofocus="!isDisabled"
-            >
-          </span>
+      <input
+        ref="input"
+        :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
+        :disabled="!isLast"
+        :placeholder="placeholder"
+        @keyup.enter="handle"
+        v-model="command"
+        type="text"
+        class="cli-input right"
+        name="cli-input"
+        :autofocus="isLast"
+      >
+    </span>
   </div>
 </template>
 
@@ -69,11 +70,12 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (this.isLast && !this.isDisabled && this.showHelp) this.placeholder = this.placeholderText
+      if (this.isLast && this.showHelp) this.placeholder = this.placeholderText
     }, 4000)
   },
 
   mounted () {
+    this.$refs.input.focus()
     this.$_bus.$on('autocomplete', command => {
       if (this.isLast) this.command = command
     })
@@ -83,7 +85,6 @@ export default {
     handle () {
       this.$emit('handle', this.command)
 
-      this.isDisabled = true
       this.placeholder = ''
     }
   },
@@ -101,9 +102,9 @@ export default {
 </script>
 
 <style lang="scss">
-  $background: #111;
+  @import './scss/mixins';
 
-  #vue-command {
+  .vue-command {
     input {
       background: none;
       border: none;
@@ -132,18 +133,6 @@ export default {
       }
     }
 
-    .dark-bg {
-      background: $background;
-    }
-
-    .dark-font {
-      color: #000;
-
-      a {
-        color: white;
-      }
-    }
-
     .term-cmd {
       background: none;
       margin: 0;
@@ -151,18 +140,6 @@ export default {
       color: inherit;
       font-family: inherit;
       font-size: 1rem;
-    }
-
-    .white-bg {
-      background: #ffffff;
-    }
-
-    .white-font {
-      color: #ffffff;
-
-      a {
-        color: #ffffff;
-      }
     }
   }
 </style>

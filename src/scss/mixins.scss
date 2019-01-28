@@ -1,0 +1,27 @@
+$background: #111;
+
+.vue-command {
+  .dark-bg {
+    background: $background;
+  }
+
+  .dark-font {
+    color: #000;
+
+    a {
+      color: #000;
+    }
+  }
+
+  .white-bg {
+    background: #ffffff;
+  }
+
+  .white-font {
+    color: #ffffff;
+
+    a {
+      color: #ffffff;
+    }
+  }
+}
