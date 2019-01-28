@@ -48,6 +48,7 @@
 
 <script>
 import uniq from 'lodash/uniq'
+import has from 'lodash/has'
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
@@ -103,18 +104,25 @@ export default {
     },
 
     yargsOptions: {
-      type: Object
+      type: Object,
+      default: {}
     }
   },
 
-  components: { Stdin, Stdout },
+  components: {Stdin, Stdout},
 
   data: () => ({
+    // All executed commands
     history: [],
+    // Non-empty executed commands
     executed: [],
+    // Current input
     current: '',
-    pointer: 0,
+    // Last pointed command
     last: '',
+    // History command pointer
+    pointer: 0,
+    // Amount of executed commands
     progress: 0
   }),
 
@@ -124,7 +132,7 @@ export default {
   },
 
   methods: {
-    mutatePointerHandler ({ key }) {
+    mutatePointerHandler ({key}) {
       if (key === ARROW_UP_KEY && this.pointer > 0) {
         this.pointer--
         this.last = this.executed[this.pointer]
@@ -155,11 +163,8 @@ export default {
     async handle (command) {
       const cmd = head(yargsParser(command, this.yargsOptions)._)
 
-      this.setCurrent('')
-
       if (isEmpty(cmd)) {
         this.history.push(null)
-        this.progress++
       } else {
         let executed = cloneDeep(this.executed)
         executed.push(command)
@@ -168,12 +173,13 @@ export default {
         this.executed = executed
         this.pointer = size(executed)
 
-        this.progress++
-
-        if (this.commands[cmd]) {
+        if (has(this.commands, cmd)) {
           this.history.push(this.commands[cmd](yargsParser(command, this.yargsOptions)))
         } else this.history.push(`${command}: command not found`)
       }
+
+      this.setCurrent('')
+      this.progress++
     }
   }
 }
