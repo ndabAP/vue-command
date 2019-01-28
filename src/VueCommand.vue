@@ -198,7 +198,7 @@ export default {
       -webkit-border-radius: 8px;
     }
 
-    .vue-command:first-child {
+    .term {
       border: 1px solid $background;
       height: 100%;
       width: 100%;

@@ -8,6 +8,7 @@
       title="neil@moon ~"
       :commands="commands"
       show-help
+      white-theme
     />
 
     <pre>
