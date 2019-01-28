@@ -1,8 +1,8 @@
 <template>
   <div
     @keyup.down="mutatePointerHandler"
-    @keydown.tab="autocomplete"
     @keyup.up="mutatePointerHandler"
+    @keydown.tab="autocomplete"
     class="vue-command"
   >
     <div :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }" class="term">
@@ -134,10 +134,10 @@ export default {
       }
     },
 
-    autocomplete ({ key }) {
+    autocomplete (event) {
       event.preventDefault()
 
-      if (key === TAB_KEY && !isEmpty(this.current)) {
+      if (event.key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
             this.$_bus.$emit('autocomplete', command)

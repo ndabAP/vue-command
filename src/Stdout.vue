@@ -20,29 +20,5 @@ export default {
 </script>
 
 <style lang="scss">
-  $background: #111;
-
-  .dark-bg {
-    background: $background;
-  }
-
-  .dark-font {
-    color: #000;
-
-    a {
-      color: white;
-    }
-  }
-
-  .white-bg {
-    background: #ffffff;
-  }
-
-  .white-font {
-    color: #ffffff;
-
-    a {
-      color: #ffffff;
-    }
-  }
+  @import './scss/mixins';
 </style>
