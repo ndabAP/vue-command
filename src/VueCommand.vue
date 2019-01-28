@@ -14,31 +14,33 @@
         }">{{ title }}</span>
       </div>
 
-      <div class="cont" ref="term-cont">
+      <div class="term-std" ref="term-std">
         <div class="term-cont">
           <stdin
+            @handle="handle"
             @typing="setCurrent"
-            :white-theme="whiteTheme"
+            :is-last="progress === 0"
             :hide-prompt="hidePrompt"
             :prompt="prompt"
             :placeholder-text="placeholderText"
-            :is-last="progress === 0"
+            :placeholder-timeout="placeholderTimeout"
             :show-help="showHelp"
-            @handle="handle($event)"/>
+            :white-theme="whiteTheme"/>
 
-          <div v-for="(io, index) in history" :key="index">
-            <stdout :white-theme="whiteTheme" :io="io" class="term-cmd"/>
+          <div v-for="(stdout, index) in history" :key="index">
+            <stdout :white-theme="whiteTheme" :stdout="stdout" class="term-cmd"/>
 
             <stdin
+              @handle="handle"
               @typing="setCurrent"
-              :white-theme="whiteTheme"
               :hide-prompt="hidePrompt"
-              :prompt="prompt"
-              :placeholder-text="placeholderText"
               :is-last="index === progress - 1"
               :last-command="last"
+              :prompt="prompt"
+              :placeholder-text="placeholderText"
+              :placeholder-timeout="placeholderTimeout"
               :show-help="showHelp"
-              @handle="handle"/>
+              :white-theme="whiteTheme"/>
           </div>
         </div>
       </div>
@@ -48,13 +50,14 @@
 
 <script>
 import uniq from 'lodash/uniq'
-import has from 'lodash/has'
+import has from 'lodash/has'io
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
 import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
 import keys from 'lodash/keys'
+import invoke from 'lodash/invoke'
 import yargsParser from 'yargs-parser'
 
 import Stdin from './Stdin'
@@ -98,6 +101,11 @@ export default {
       default: 'Type help'
     },
 
+    placeholderTimeout: {
+      type: Number,
+      default: 4000
+    },
+
     whiteTheme: {
       type: Boolean,
       default: false
@@ -121,14 +129,21 @@ export default {
     // Last pointed command
     last: '',
     // History command pointer
-    pointer: 0,
-    // Amount of executed commands
-    progress: 0
+    pointer: 0
   }),
 
   updated () {
-    const terminal = this.$refs['term-cont']
+    const terminal = this.$refs['term-std']
     terminal.scrollTop = terminal.scrollHeight
+  },
+
+  computed: {
+    // Amount of executed commands
+    progress: {
+      get () {
+        return size(this.history)
+      }
+    }
   },
 
   methods: {
@@ -174,12 +189,12 @@ export default {
         this.pointer = size(executed)
 
         if (has(this.commands, cmd)) {
-          this.history.push(this.commands[cmd](yargsParser(command, this.yargsOptions)))
+          const stdout = invoke(this.commands, cmd, yargsParser(command, this.yargsOptions))
+          this.history.push(stdout)
         } else this.history.push(`${command}: command not found`)
       }
 
       this.setCurrent('')
-      this.progress++
     }
   }
 }
@@ -223,27 +238,6 @@ export default {
     .term-cont {
       font-family: 'Inconsolata', monospace;
       padding: 0.5rem;
-    }
-
-    .term-caret {
-      color: #fff;
-      display: inline-block;
-      font-family: inherit;
-      font-size: inherit;
-      margin: 0;
-      padding: 0;
-
-      &.blink {
-        color: transparent;
-      }
-    }
-
-    .term-input-hide {
-      background: none;
-      border: 0;
-      color: transparent;
-      opacity: 0;
-      position: absolute;
     }
   }
 </style>

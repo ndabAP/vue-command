@@ -5,18 +5,16 @@
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       {{ prompt }}
     </span>
-    <span class="term-cmd">
+    <span class="term-stdin">
       <input
+        @keyup.enter="handle"
         ref="input"
+        :autofocus="isLast"
         :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
         :disabled="!isLast"
         :placeholder="placeholder"
-        @keyup.enter="handle"
-        v-model="command"
         type="text"
-        class="cli-input right"
-        name="cli-input"
-        :autofocus="isLast"
+        v-model="command"
       >
     </span>
   </div>
@@ -28,13 +26,9 @@ import clone from 'lodash/clone'
 
 export default {
   props: {
-    prompt: {
-      type: String
-    },
-
-    lastCommand: {
-      type: String,
-      default: ''
+    hidePrompt: {
+      type: Boolean,
+      default: false
     },
 
     isLast: {
@@ -43,16 +37,24 @@ export default {
       required: true
     },
 
-    showHelp: {
-      type: Boolean,
-      default: false
+    lastCommand: {
+      type: String,
+      default: ''
     },
 
     placeholderText: {
       type: String
     },
 
-    hidePrompt: {
+    placeholderTimeout: {
+      type: Number
+    },
+
+    prompt: {
+      type: String
+    },
+
+    showHelp: {
       type: Boolean,
       default: false
     },
@@ -63,6 +65,7 @@ export default {
   },
 
   data: () => ({
+    // Input disabled
     isDisabled: false,
     command: '',
     placeholder: ''
@@ -71,7 +74,7 @@ export default {
   created () {
     setTimeout(() => {
       if (this.isLast && this.showHelp) this.placeholder = this.placeholderText
-    }, 4000)
+    }, this.placeholderTimeout)
   },
 
   mounted () {
@@ -133,7 +136,7 @@ export default {
       }
     }
 
-    .term-cmd {
+    .term-stdin {
       background: none;
       margin: 0;
       border: 0;

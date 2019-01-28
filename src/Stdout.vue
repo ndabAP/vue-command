@@ -1,13 +1,11 @@
 <template>
-  <span v-html="io" :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"></span>
+  <span v-html="stdout" :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"></span>
 </template>
 
 <script>
 export default {
-  name: 'Stdout',
-
   props: {
-    io: {
+    stdout: {
       type: String,
       default: ''
     },

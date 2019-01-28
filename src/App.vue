@@ -4,10 +4,11 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :yargs-options="{ alias: { color: ['colour'] } }"
+      show-help
       title="neil@moon ~"
       :commands="commands"
-      show-help
+      :placeholder-timeout="1250"
+      :yargs-options="{ alias: { color: ['colour'] } }"
     />
 
     <pre>
@@ -86,7 +87,7 @@ export default {
       border-radius: 8px;
     }
 
-    .cont {
+    .term-std {
       min-height: 300px;
       max-height: 300px;
       overflow-y: scroll;

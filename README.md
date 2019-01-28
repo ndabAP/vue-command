@@ -18,17 +18,18 @@ $ npm i vue-command --save
 
 ## Properties
 
-| Property          | Type      | Default        | Required | Description                                                                                                                     |
-|-------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
-| `commands`        | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
-| `hideTitle`       | `Boolean` | `false`        | No       | Hides the title                                                                                                                 |
-| `hidePrompt`      | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
-| `showHelp`        | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
-| `title`           | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
-| `prompt`          | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
-| `placeholderText` | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
-| `whiteTheme`      | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |
-| `yargsOptions`    | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
+| Property              | Type      | Default        | Required | Description                                                                                                                     |
+|-----------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
+| `commands`            | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
+| `hideTitle`           | `Boolean` | `false`        | No       | Hides the title                                                                                                                 |
+| `hidePrompt`          | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
+| `showHelp`            | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
+| `title`               | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
+| `prompt`              | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
+| `placeholderText`     | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
+| `placeholderTimeout`  | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                            |
+| `whiteTheme`          | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |
+| `yargsOptions`        | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
 
 ## Usage
 

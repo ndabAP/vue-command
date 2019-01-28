@@ -376,6 +376,20 @@ module.exports = isBuffer;
 
 /***/ }),
 
+/***/ "0d58":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+var $keys = __webpack_require__("ce10");
+var enumBugKeys = __webpack_require__("e11e");
+
+module.exports = Object.keys || function keys(O) {
+  return $keys(O, enumBugKeys);
+};
+
+
+/***/ }),
+
 /***/ "0f0f":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -414,6 +428,30 @@ module.exports = function (index, length) {
 
 /***/ }),
 
+/***/ "100e":
+/***/ (function(module, exports, __webpack_require__) {
+
+var identity = __webpack_require__("cd9d"),
+    overRest = __webpack_require__("2286"),
+    setToString = __webpack_require__("c1c9");
+
+/**
+ * The base implementation of `_.rest` which doesn't validate or coerce arguments.
+ *
+ * @private
+ * @param {Function} func The function to apply a rest parameter to.
+ * @param {number} [start=func.length-1] The start position of the rest parameter.
+ * @returns {Function} Returns the new function.
+ */
+function baseRest(func, start) {
+  return setToString(overRest(func, start, identity), func + '');
+}
+
+module.exports = baseRest;
+
+
+/***/ }),
+
 /***/ "1041":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -444,6 +482,29 @@ module.exports = function (it, Constructor, name, forbiddenField) {
   if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
     throw TypeError(name + ': incorrect invocation!');
   } return it;
+};
+
+
+/***/ }),
+
+/***/ "11e9":
+/***/ (function(module, exports, __webpack_require__) {
+
+var pIE = __webpack_require__("52a7");
+var createDesc = __webpack_require__("4630");
+var toIObject = __webpack_require__("6821");
+var toPrimitive = __webpack_require__("6a99");
+var has = __webpack_require__("69a8");
+var IE8_DOM_DEFINE = __webpack_require__("c69a");
+var gOPD = Object.getOwnPropertyDescriptor;
+
+exports.f = __webpack_require__("9e1e") ? gOPD : function getOwnPropertyDescriptor(O, P) {
+  O = toIObject(O);
+  P = toPrimitive(P, true);
+  if (IE8_DOM_DEFINE) try {
+    return gOPD(O, P);
+  } catch (e) { /* empty */ }
+  if (has(O, P)) return createDesc(!pIE.f.call(O, P), O[P]);
 };
 
 
@@ -647,6 +708,26 @@ module.exports = isEmpty;
 /* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_node_modules_css_loader_index_js_ref_8_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_2_node_modules_sass_loader_lib_loader_js_ref_8_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Stdin_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_node_modules_css_loader_index_js_ref_8_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_2_node_modules_sass_loader_lib_loader_js_ref_8_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Stdin_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
 /* unused harmony reexport * */
  /* unused harmony default export */ var _unused_webpack_default_export = (_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_node_modules_css_loader_index_js_ref_8_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_2_node_modules_sass_loader_lib_loader_js_ref_8_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Stdin_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "1495":
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__("86cc");
+var anObject = __webpack_require__("cb7c");
+var getKeys = __webpack_require__("0d58");
+
+module.exports = __webpack_require__("9e1e") ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = getKeys(Properties);
+  var length = keys.length;
+  var i = 0;
+  var P;
+  while (length > i) dP.f(O, P = keys[i++], Properties[P]);
+  return O;
+};
+
 
 /***/ }),
 
@@ -914,6 +995,49 @@ function mapCacheSet(key, value) {
 }
 
 module.exports = mapCacheSet;
+
+
+/***/ }),
+
+/***/ "2286":
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = __webpack_require__("85e3");
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * A specialized version of `baseRest` which transforms the rest array.
+ *
+ * @private
+ * @param {Function} func The function to apply a rest parameter to.
+ * @param {number} [start=func.length-1] The start position of the rest parameter.
+ * @param {Function} transform The rest array transform.
+ * @returns {Function} Returns the new function.
+ */
+function overRest(func, start, transform) {
+  start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
+  return function() {
+    var args = arguments,
+        index = -1,
+        length = nativeMax(args.length - start, 0),
+        array = Array(length);
+
+    while (++index < length) {
+      array[index] = args[start + index];
+    }
+    index = -1;
+    var otherArgs = Array(start + 1);
+    while (++index < start) {
+      otherArgs[index] = args[index];
+    }
+    otherArgs[start] = transform(array);
+    return apply(func, this, otherArgs);
+  };
+}
+
+module.exports = overRest;
 
 
 /***/ }),
@@ -1525,6 +1649,54 @@ __webpack_require__("8378").inspectSource = function (it) {
 
 /***/ }),
 
+/***/ "2aeb":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+var anObject = __webpack_require__("cb7c");
+var dPs = __webpack_require__("1495");
+var enumBugKeys = __webpack_require__("e11e");
+var IE_PROTO = __webpack_require__("613b")('IE_PROTO');
+var Empty = function () { /* empty */ };
+var PROTOTYPE = 'prototype';
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var createDict = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = __webpack_require__("230e")('iframe');
+  var i = enumBugKeys.length;
+  var lt = '<';
+  var gt = '>';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  __webpack_require__("fab2").appendChild(iframe);
+  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+  // createDict = iframe.contentWindow.Object;
+  // html.removeChild(iframe);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+  iframeDocument.close();
+  createDict = iframeDocument.F;
+  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
+  return createDict();
+};
+
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    Empty[PROTOTYPE] = anObject(O);
+    result = new Empty();
+    Empty[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = createDict();
+  return Properties === undefined ? result : dPs(result, Properties);
+};
+
+
+/***/ }),
+
 /***/ "2b03":
 /***/ (function(module, exports) {
 
@@ -1552,6 +1724,44 @@ function baseFindIndex(array, predicate, fromIndex, fromRight) {
 }
 
 module.exports = baseFindIndex;
+
+
+/***/ }),
+
+/***/ "2b10":
+/***/ (function(module, exports) {
+
+/**
+ * The base implementation of `_.slice` without an iteratee call guard.
+ *
+ * @private
+ * @param {Array} array The array to slice.
+ * @param {number} [start=0] The start position.
+ * @param {number} [end=array.length] The end position.
+ * @returns {Array} Returns the slice of `array`.
+ */
+function baseSlice(array, start, end) {
+  var index = -1,
+      length = array.length;
+
+  if (start < 0) {
+    start = -start > length ? 0 : (length + start);
+  }
+  end = end > length ? length : end;
+  if (end < 0) {
+    end += length;
+  }
+  length = start > end ? 0 : ((end - start) >>> 0);
+  start >>>= 0;
+
+  var result = Array(length);
+  while (++index < length) {
+    result[index] = array[index + start];
+  }
+  return result;
+}
+
+module.exports = baseSlice;
 
 
 /***/ }),
@@ -3122,6 +3332,37 @@ module.exports = WeakMap;
 
 /***/ }),
 
+/***/ "3a0e":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseInvoke = __webpack_require__("86e1"),
+    baseRest = __webpack_require__("100e");
+
+/**
+ * Invokes the method at `path` of `object`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Object
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the method to invoke.
+ * @param {...*} [args] The arguments to invoke the method with.
+ * @returns {*} Returns the result of the invoked method.
+ * @example
+ *
+ * var object = { 'a': [{ 'b': { 'c': [1, 2, 3, 4] } }] };
+ *
+ * _.invoke(object, 'a[0].b.c.slice', 1, 3);
+ * // => [2, 3]
+ */
+var invoke = baseRest(baseInvoke);
+
+module.exports = invoke;
+
+
+/***/ }),
+
 /***/ "3a38":
 /***/ (function(module, exports) {
 
@@ -3546,6 +3787,33 @@ $export($export.S, 'Promise', { 'try': function (callbackfn) {
 
 /***/ }),
 
+/***/ "4416":
+/***/ (function(module, exports) {
+
+/**
+ * Gets the last element of `array`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Array
+ * @param {Array} array The array to query.
+ * @returns {*} Returns the last element of `array`.
+ * @example
+ *
+ * _.last([1, 2, 3]);
+ * // => 3
+ */
+function last(array) {
+  var length = array == null ? 0 : array.length;
+  return length ? array[length - 1] : undefined;
+}
+
+module.exports = last;
+
+
+/***/ }),
+
 /***/ "4439":
 /***/ (function(module, exports) {
 
@@ -3813,6 +4081,14 @@ var $exports = module.exports = function (name) {
 };
 
 $exports.store = store;
+
+
+/***/ }),
+
+/***/ "52a7":
+/***/ (function(module, exports) {
+
+exports.f = {}.propertyIsEnumerable;
 
 
 /***/ }),
@@ -4125,6 +4401,22 @@ module.exports = cloneDataView;
 
 /***/ }),
 
+/***/ "5dbc":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("d3f4");
+var setPrototypeOf = __webpack_require__("8b97").set;
+module.exports = function (that, target, C) {
+  var S = target.constructor;
+  var P;
+  if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
+    setPrototypeOf(that, P);
+  } return that;
+};
+
+
+/***/ }),
+
 /***/ "5e2e":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4206,6 +4498,31 @@ module.exports = nativeCreate;
 
 /***/ }),
 
+/***/ "613b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var shared = __webpack_require__("5537")('keys');
+var uid = __webpack_require__("ca5a");
+module.exports = function (key) {
+  return shared[key] || (shared[key] = uid(key));
+};
+
+
+/***/ }),
+
+/***/ "626a":
+/***/ (function(module, exports, __webpack_require__) {
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+var cof = __webpack_require__("2d95");
+// eslint-disable-next-line no-prototype-builtins
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
+  return cof(it) == 'String' ? it.split('') : Object(it);
+};
+
+
+/***/ }),
+
 /***/ "62a0":
 /***/ (function(module, exports) {
 
@@ -4283,6 +4600,37 @@ $export.W = 32;  // wrap
 $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library`
 module.exports = $export;
+
+
+/***/ }),
+
+/***/ "656b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var castPath = __webpack_require__("e2e4"),
+    toKey = __webpack_require__("f4d6");
+
+/**
+ * The base implementation of `_.get` without support for default values.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the property to get.
+ * @returns {*} Returns the resolved value.
+ */
+function baseGet(object, path) {
+  path = castPath(path, object);
+
+  var index = 0,
+      length = path.length;
+
+  while (object != null && index < length) {
+    object = object[toKey(path[index++])];
+  }
+  return (index && index == length) ? object : undefined;
+}
+
+module.exports = baseGet;
 
 
 /***/ }),
@@ -4400,6 +4748,19 @@ function listCacheSet(key, value) {
 }
 
 module.exports = listCacheSet;
+
+
+/***/ }),
+
+/***/ "6821":
+/***/ (function(module, exports, __webpack_require__) {
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
+var IObject = __webpack_require__("626a");
+var defined = __webpack_require__("be13");
+module.exports = function (it) {
+  return IObject(defined(it));
+};
 
 
 /***/ }),
@@ -4703,6 +5064,39 @@ module.exports = baseFor;
 
 /***/ }),
 
+/***/ "72f0":
+/***/ (function(module, exports) {
+
+/**
+ * Creates a function that returns `value`.
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Util
+ * @param {*} value The value to return from the new function.
+ * @returns {Function} Returns the new constant function.
+ * @example
+ *
+ * var objects = _.times(2, _.constant({ 'a': 1 }));
+ *
+ * console.log(objects);
+ * // => [{ 'a': 1 }, { 'a': 1 }]
+ *
+ * console.log(objects[0] === objects[1]);
+ * // => true
+ */
+function constant(value) {
+  return function() {
+    return value;
+  };
+}
+
+module.exports = constant;
+
+
+/***/ }),
+
 /***/ "73ac":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4911,6 +5305,20 @@ var global = module.exports = typeof window != 'undefined' && window.Math == Mat
   // eslint-disable-next-line no-new-func
   : Function('return this')();
 if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
+
+/***/ }),
+
+/***/ "77f1":
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__("4588");
+var max = Math.max;
+var min = Math.min;
+module.exports = function (index, length) {
+  index = toInteger(index);
+  return index < 0 ? max(index + length, 0) : min(index, length);
+};
 
 
 /***/ }),
@@ -5308,6 +5716,29 @@ module.exports = arrayEach;
 
 /***/ }),
 
+/***/ "8296":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGet = __webpack_require__("656b"),
+    baseSlice = __webpack_require__("2b10");
+
+/**
+ * Gets the parent value at `path` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array} path The path to get the parent value of.
+ * @returns {*} Returns the parent value.
+ */
+function parent(object, path) {
+  return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
+}
+
+module.exports = parent;
+
+
+/***/ }),
+
 /***/ "8378":
 /***/ (function(module, exports) {
 
@@ -5321,6 +5752,34 @@ if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 /***/ (function(module, exports) {
 
 module.exports = function () { /* empty */ };
+
+
+/***/ }),
+
+/***/ "85e3":
+/***/ (function(module, exports) {
+
+/**
+ * A faster alternative to `Function#apply`, this function invokes `func`
+ * with the `this` binding of `thisArg` and the arguments of `args`.
+ *
+ * @private
+ * @param {Function} func The function to invoke.
+ * @param {*} thisArg The `this` binding of `func`.
+ * @param {Array} args The arguments to invoke `func` with.
+ * @returns {*} Returns the result of `func`.
+ */
+function apply(func, thisArg, args) {
+  switch (args.length) {
+    case 0: return func.call(thisArg);
+    case 1: return func.call(thisArg, args[0]);
+    case 2: return func.call(thisArg, args[0], args[1]);
+    case 3: return func.call(thisArg, args[0], args[1], args[2]);
+  }
+  return func.apply(thisArg, args);
+}
+
+module.exports = apply;
 
 
 /***/ }),
@@ -5344,6 +5803,37 @@ exports.f = __webpack_require__("9e1e") ? Object.defineProperty : function defin
   if ('value' in Attributes) O[P] = Attributes.value;
   return O;
 };
+
+
+/***/ }),
+
+/***/ "86e1":
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = __webpack_require__("85e3"),
+    castPath = __webpack_require__("e2e4"),
+    last = __webpack_require__("4416"),
+    parent = __webpack_require__("8296"),
+    toKey = __webpack_require__("f4d6");
+
+/**
+ * The base implementation of `_.invoke` without support for individual
+ * method arguments.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the method to invoke.
+ * @param {Array} args The arguments to invoke the method with.
+ * @returns {*} Returns the result of the invoked method.
+ */
+function baseInvoke(object, path, args) {
+  path = castPath(path, object);
+  object = parent(object, path);
+  var func = object == null ? object : object[toKey(last(path))];
+  return func == null ? undefined : apply(func, object, args);
+}
+
+module.exports = baseInvoke;
 
 
 /***/ }),
@@ -5376,6 +5866,38 @@ function baseAssignValue(object, key, value) {
 }
 
 module.exports = baseAssignValue;
+
+
+/***/ }),
+
+/***/ "8b97":
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__("d3f4");
+var anObject = __webpack_require__("cb7c");
+var check = function (O, proto) {
+  anObject(O);
+  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function (test, buggy, set) {
+      try {
+        set = __webpack_require__("9b43")(Function.call, __webpack_require__("11e9").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) { buggy = true; }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy) O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
 
 
 /***/ }),
@@ -5499,6 +6021,20 @@ module.exports = function (str, sep) {
 		.replace(/([a-z\d])([A-Z])/g, '$1' + sep + '$2')
 		.replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + sep + '$2')
 		.toLowerCase();
+};
+
+
+/***/ }),
+
+/***/ "9093":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+var $keys = __webpack_require__("ce10");
+var hiddenKeys = __webpack_require__("e11e").concat('length', 'prototype');
+
+exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+  return $keys(O, hiddenKeys);
 };
 
 
@@ -6757,6 +7293,35 @@ module.exports = cloneSymbol;
 
 /***/ }),
 
+/***/ "a454":
+/***/ (function(module, exports, __webpack_require__) {
+
+var constant = __webpack_require__("72f0"),
+    defineProperty = __webpack_require__("3b4a"),
+    identity = __webpack_require__("cd9d");
+
+/**
+ * The base implementation of `setToString` without support for hot loop shorting.
+ *
+ * @private
+ * @param {Function} func The function to modify.
+ * @param {Function} string The `toString` result.
+ * @returns {Function} Returns `func`.
+ */
+var baseSetToString = !defineProperty ? identity : function(func, string) {
+  return defineProperty(func, 'toString', {
+    'configurable': true,
+    'enumerable': false,
+    'value': constant(string),
+    'writable': true
+  });
+};
+
+module.exports = baseSetToString;
+
+
+/***/ }),
+
 /***/ "a524":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6829,6 +7394,43 @@ function getAllKeys(object) {
 }
 
 module.exports = getAllKeys;
+
+
+/***/ }),
+
+/***/ "aa77":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__("5ca1");
+var defined = __webpack_require__("be13");
+var fails = __webpack_require__("79e5");
+var spaces = __webpack_require__("fdef");
+var space = '[' + spaces + ']';
+var non = '\u200b\u0085';
+var ltrim = RegExp('^' + space + space + '*');
+var rtrim = RegExp(space + space + '*$');
+
+var exporter = function (KEY, exec, ALIAS) {
+  var exp = {};
+  var FORCE = fails(function () {
+    return !!spaces[KEY]() || non[KEY]() != non;
+  });
+  var fn = exp[KEY] = FORCE ? exec(trim) : spaces[KEY];
+  if (ALIAS) exp[ALIAS] = fn;
+  $export($export.P + $export.F * FORCE, 'String', exp);
+};
+
+// 1 -> String#trimLeft
+// 2 -> String#trimRight
+// 3 -> String#trim
+var trim = exporter.trim = function (string, TYPE) {
+  string = String(defined(string));
+  if (TYPE & 1) string = string.replace(ltrim, '');
+  if (TYPE & 2) string = string.replace(rtrim, '');
+  return string;
+};
+
+module.exports = exporter;
 
 
 /***/ }),
@@ -8366,6 +8968,27 @@ module.exports = (input, options) => {
 
 /***/ }),
 
+/***/ "c1c9":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseSetToString = __webpack_require__("a454"),
+    shortOut = __webpack_require__("f3c1");
+
+/**
+ * Sets the `toString` method of `func` to return `string`.
+ *
+ * @private
+ * @param {Function} func The function to modify.
+ * @param {Function} string The `toString` result.
+ * @returns {Function} Returns `func`.
+ */
+var setToString = shortOut(baseSetToString);
+
+module.exports = setToString;
+
+
+/***/ }),
+
 /***/ "c207":
 /***/ (function(module, exports) {
 
@@ -8453,6 +9076,36 @@ function initCloneByTag(object, tag, isDeep) {
 }
 
 module.exports = initCloneByTag;
+
+
+/***/ }),
+
+/***/ "c366":
+/***/ (function(module, exports, __webpack_require__) {
+
+// false -> Array#indexOf
+// true  -> Array#includes
+var toIObject = __webpack_require__("6821");
+var toLength = __webpack_require__("9def");
+var toAbsoluteIndex = __webpack_require__("77f1");
+module.exports = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = toIObject($this);
+    var length = toLength(O.length);
+    var index = toAbsoluteIndex(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+      if (O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
 
 
 /***/ }),
@@ -8554,6 +9207,83 @@ function cacheHas(cache, key) {
 }
 
 module.exports = cacheHas;
+
+
+/***/ }),
+
+/***/ "c5f6":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var global = __webpack_require__("7726");
+var has = __webpack_require__("69a8");
+var cof = __webpack_require__("2d95");
+var inheritIfRequired = __webpack_require__("5dbc");
+var toPrimitive = __webpack_require__("6a99");
+var fails = __webpack_require__("79e5");
+var gOPN = __webpack_require__("9093").f;
+var gOPD = __webpack_require__("11e9").f;
+var dP = __webpack_require__("86cc").f;
+var $trim = __webpack_require__("aa77").trim;
+var NUMBER = 'Number';
+var $Number = global[NUMBER];
+var Base = $Number;
+var proto = $Number.prototype;
+// Opera ~12 has broken Object#toString
+var BROKEN_COF = cof(__webpack_require__("2aeb")(proto)) == NUMBER;
+var TRIM = 'trim' in String.prototype;
+
+// 7.1.3 ToNumber(argument)
+var toNumber = function (argument) {
+  var it = toPrimitive(argument, false);
+  if (typeof it == 'string' && it.length > 2) {
+    it = TRIM ? it.trim() : $trim(it, 3);
+    var first = it.charCodeAt(0);
+    var third, radix, maxCode;
+    if (first === 43 || first === 45) {
+      third = it.charCodeAt(2);
+      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+    } else if (first === 48) {
+      switch (it.charCodeAt(1)) {
+        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal /^0b[01]+$/i
+        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal /^0o[0-7]+$/i
+        default: return +it;
+      }
+      for (var digits = it.slice(2), i = 0, l = digits.length, code; i < l; i++) {
+        code = digits.charCodeAt(i);
+        // parseInt parses a string to a first unavailable symbol
+        // but ToNumber should return NaN if a string contains unavailable symbols
+        if (code < 48 || code > maxCode) return NaN;
+      } return parseInt(digits, radix);
+    }
+  } return +it;
+};
+
+if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
+  $Number = function Number(value) {
+    var it = arguments.length < 1 ? 0 : value;
+    var that = this;
+    return that instanceof $Number
+      // check on 1..constructor(foo) case
+      && (BROKEN_COF ? fails(function () { proto.valueOf.call(that); }) : cof(that) != NUMBER)
+        ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
+  };
+  for (var keys = __webpack_require__("9e1e") ? gOPN(Base) : (
+    // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+    // ES6 (in case, if modules with ES6 Number statics required before):
+    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
+  ).split(','), j = 0, key; keys.length > j; j++) {
+    if (has(Base, key = keys[j]) && !has($Number, key)) {
+      dP($Number, key, gOPD(Base, key));
+    }
+  }
+  $Number.prototype = proto;
+  proto.constructor = $Number;
+  __webpack_require__("2aba")(global, NUMBER, $Number);
+}
 
 
 /***/ }),
@@ -8802,6 +9532,30 @@ module.exports = identity;
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "ce10":
+/***/ (function(module, exports, __webpack_require__) {
+
+var has = __webpack_require__("69a8");
+var toIObject = __webpack_require__("6821");
+var arrayIndexOf = __webpack_require__("c366")(false);
+var IE_PROTO = __webpack_require__("613b")('IE_PROTO');
+
+module.exports = function (object, names) {
+  var O = toIObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~arrayIndexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
 
 /***/ }),
 
@@ -9519,6 +10273,17 @@ var substr = 'ab'.substr(-1) === 'b'
 
 /***/ }),
 
+/***/ "e11e":
+/***/ (function(module, exports) {
+
+// IE 8- don't enum bug keys
+module.exports = (
+  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+).split(',');
+
+
+/***/ }),
+
 /***/ "e24b":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10028,6 +10793,50 @@ module.exports = function (O, D) {
 
 /***/ }),
 
+/***/ "f3c1":
+/***/ (function(module, exports) {
+
+/** Used to detect hot functions by number of calls within a span of milliseconds. */
+var HOT_COUNT = 800,
+    HOT_SPAN = 16;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeNow = Date.now;
+
+/**
+ * Creates a function that'll short out and invoke `identity` instead
+ * of `func` when it's called `HOT_COUNT` or more times in `HOT_SPAN`
+ * milliseconds.
+ *
+ * @private
+ * @param {Function} func The function to restrict.
+ * @returns {Function} Returns the new shortable function.
+ */
+function shortOut(func) {
+  var count = 0,
+      lastCalled = 0;
+
+  return function() {
+    var stamp = nativeNow(),
+        remaining = HOT_SPAN - (stamp - lastCalled);
+
+    lastCalled = stamp;
+    if (remaining > 0) {
+      if (++count >= HOT_COUNT) {
+        return arguments[0];
+      }
+    } else {
+      count = 0;
+    }
+    return func.apply(undefined, arguments);
+  };
+}
+
+module.exports = shortOut;
+
+
+/***/ }),
+
 /***/ "f4d6":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10176,6 +10985,15 @@ module.exports = initCloneObject;
 
 /***/ }),
 
+/***/ "fab2":
+/***/ (function(module, exports, __webpack_require__) {
+
+var document = __webpack_require__("7726").document;
+module.exports = document && document.documentElement;
+
+
+/***/ }),
+
 /***/ "fb15":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -10195,15 +11013,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=158e770a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=19c7e3c2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideTitle)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
         'dark-font': _vm.whiteTheme,
         'white-font': !_vm.whiteTheme
-      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-cont",staticClass:"cont"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"white-theme":_vm.whiteTheme,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"is-last":_vm.progress === 0,"show-help":_vm.showHelp},on:{"typing":_vm.setCurrent,"handle":function($event){_vm.handle($event)}}}),_vm._l((_vm.history),function(io,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-cmd",attrs:{"white-theme":_vm.whiteTheme,"io":io}}),_c('stdin',{attrs:{"white-theme":_vm.whiteTheme,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"show-help":_vm.showHelp},on:{"typing":_vm.setCurrent,"handle":_vm.handle}})],1)})],2)])])])}
+      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"is-last":_vm.progress === 0,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-cmd",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"hide-prompt":_vm.hidePrompt,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=158e770a&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=19c7e3c2&
 
 // EXTERNAL MODULE: ./node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("96cf");
@@ -10256,6 +11074,9 @@ var es6_string_starts_with = __webpack_require__("f559");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
+var es6_number_constructor = __webpack_require__("c5f6");
+
 // EXTERNAL MODULE: ./node_modules/lodash/uniq.js
 var uniq = __webpack_require__("eed6");
 var uniq_default = /*#__PURE__*/__webpack_require__.n(uniq);
@@ -10288,24 +11109,27 @@ var each_default = /*#__PURE__*/__webpack_require__.n(each);
 var keys = __webpack_require__("ec69");
 var keys_default = /*#__PURE__*/__webpack_require__.n(keys);
 
+// EXTERNAL MODULE: ./node_modules/lodash/invoke.js
+var invoke = __webpack_require__("3a0e");
+var invoke_default = /*#__PURE__*/__webpack_require__.n(invoke);
+
 // EXTERNAL MODULE: ./node_modules/yargs-parser/index.js
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=aa654056&
-var Stdinvue_type_template_id_aa654056_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-cmd"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",staticClass:"cli-input right",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text","name":"cli-input","autofocus":_vm.isLast},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
-var Stdinvue_type_template_id_aa654056_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=b13f4b2a&
+var Stdinvue_type_template_id_b13f4b2a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
+var Stdinvue_type_template_id_b13f4b2a_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=aa654056&
+// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=b13f4b2a&
 
 // EXTERNAL MODULE: ./node_modules/lodash/clone.js
 var clone = __webpack_require__("b8ce");
 var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=script&lang=js&
-//
-//
+
 //
 //
 //
@@ -10332,26 +11156,29 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
 /* harmony default export */ var Stdinvue_type_script_lang_js_ = ({
   props: {
-    prompt: {
-      type: String
-    },
-    lastCommand: {
-      type: String,
-      default: ''
+    hidePrompt: {
+      type: Boolean,
+      default: false
     },
     isLast: {
       type: Boolean,
       default: false,
       required: true
     },
-    showHelp: {
-      type: Boolean,
-      default: false
+    lastCommand: {
+      type: String,
+      default: ''
     },
     placeholderText: {
       type: String
     },
-    hidePrompt: {
+    placeholderTimeout: {
+      type: Number
+    },
+    prompt: {
+      type: String
+    },
+    showHelp: {
       type: Boolean,
       default: false
     },
@@ -10361,6 +11188,7 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
   },
   data: function data() {
     return {
+      // Input disabled
       isDisabled: false,
       command: '',
       placeholder: ''
@@ -10371,7 +11199,7 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
     setTimeout(function () {
       if (_this.isLast && _this.showHelp) _this.placeholder = _this.placeholderText;
-    }, 4000);
+    }, this.placeholderTimeout);
   },
   mounted: function mounted() {
     var _this2 = this;
@@ -10507,8 +11335,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   src_Stdinvue_type_script_lang_js_,
-  Stdinvue_type_template_id_aa654056_render,
-  Stdinvue_type_template_id_aa654056_staticRenderFns,
+  Stdinvue_type_template_id_b13f4b2a_render,
+  Stdinvue_type_template_id_b13f4b2a_staticRenderFns,
   false,
   null,
   null,
@@ -10517,12 +11345,12 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Stdin = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=635f6a5e&
-var Stdoutvue_type_template_id_635f6a5e_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.io)}})}
-var Stdoutvue_type_template_id_635f6a5e_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=729bdc50&
+var Stdoutvue_type_template_id_729bdc50_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.stdout)}})}
+var Stdoutvue_type_template_id_729bdc50_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdout.vue?vue&type=template&id=635f6a5e&
+// CONCATENATED MODULE: ./src/Stdout.vue?vue&type=template&id=729bdc50&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=script&lang=js&
 //
@@ -10530,9 +11358,8 @@ var Stdoutvue_type_template_id_635f6a5e_staticRenderFns = []
 //
 //
 /* harmony default export */ var Stdoutvue_type_script_lang_js_ = ({
-  name: 'Stdout',
   props: {
-    io: {
+    stdout: {
       type: String,
       default: ''
     },
@@ -10557,8 +11384,8 @@ var Stdoutvue_type_style_index_0_lang_scss_ = __webpack_require__("7d05");
 
 var Stdout_component = normalizeComponent(
   src_Stdoutvue_type_script_lang_js_,
-  Stdoutvue_type_template_id_635f6a5e_render,
-  Stdoutvue_type_template_id_635f6a5e_staticRenderFns,
+  Stdoutvue_type_template_id_729bdc50_render,
+  Stdoutvue_type_template_id_729bdc50_staticRenderFns,
   false,
   null,
   null,
@@ -10576,6 +11403,7 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 
 
 
+
 //
 //
 //
@@ -10624,6 +11452,9 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 //
 //
 //
+//
+//
+
 
 
 
@@ -10666,6 +11497,10 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       type: String,
       default: 'Type help'
     },
+    placeholderTimeout: {
+      type: Number,
+      default: 4000
+    },
     whiteTheme: {
       type: Boolean,
       default: false
@@ -10692,14 +11527,20 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       // Last pointed command
       last: '',
       // History command pointer
-      pointer: 0,
-      // Amount of executed commands
-      progress: 0
+      pointer: 0
     };
   },
   updated: function updated() {
-    var terminal = this.$refs['term-cont'];
+    var terminal = this.$refs['term-std'];
     terminal.scrollTop = terminal.scrollHeight;
+  },
+  computed: {
+    // Amount of executed commands
+    progress: {
+      get: function get() {
+        return size_default()(this.history);
+      }
+    }
   },
   methods: {
     mutatePointerHandler: function mutatePointerHandler(_ref) {
@@ -10735,7 +11576,7 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       var _handle = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee(command) {
-        var cmd, executed;
+        var cmd, executed, stdout;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -10752,14 +11593,14 @@ var ARROW_DOWN_KEY = 'ArrowDown';
                   this.pointer = size_default()(executed);
 
                   if (has_default()(this.commands, cmd)) {
-                    this.history.push(this.commands[cmd](yargs_parser_default()(command, this.yargsOptions)));
+                    stdout = invoke_default()(this.commands, cmd, yargs_parser_default()(command, this.yargsOptions));
+                    this.history.push(stdout);
                   } else this.history.push("".concat(command, ": command not found"));
                 }
 
                 this.setCurrent('');
-                this.progress++;
 
-              case 4:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -10832,6 +11673,15 @@ function listCacheHas(key) {
 }
 
 module.exports = listCacheHas;
+
+
+/***/ }),
+
+/***/ "fdef":
+/***/ (function(module, exports) {
+
+module.exports = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
+  '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
 
 /***/ }),
