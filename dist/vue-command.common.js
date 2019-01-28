@@ -10104,7 +10104,7 @@ var Stdout_component = normalizeComponent(
 
 /* harmony default export */ var Stdout = (Stdout_component.exports);
 // CONCATENATED MODULE: ./src/constants.js
-var TAB_KEY = 'tab';
+var TAB_KEY = 'Tab';
 var ARROW_UP_KEY = 'ArrowUp';
 var ARROW_DOWN_KEY = 'ArrowDown';
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=script&lang=js&
