@@ -35,7 +35,6 @@ $ npm i vue-command --save
 ```vue
 <template>
   <vue-command
-    show-help
     :yargs-options="{ alias: { color: ['colour'] } }"
     :commands="commands"
   />
@@ -67,13 +66,17 @@ export default {
 </script>
 
 <style>
-  #term {
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+  .vue-command {
+    .term {
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+    }
 
     .cont {
       min-height: 300px;
+      max-height: 300px;
+      overflow-y: scroll;
     }
   }
 </style>
