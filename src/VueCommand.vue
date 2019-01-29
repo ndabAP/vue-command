@@ -134,10 +134,6 @@ export default {
     pointer: 0
   }),
 
-  created () {
-    console.log(this._uid)
-  },
-
   updated () {
     const terminal = this.$refs['term-std']
     terminal.scrollTop = terminal.scrollHeight
