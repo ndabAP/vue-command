@@ -88,7 +88,9 @@ export default {
   },
 
   mounted () {
+    this.$refs.input.scrollIntoView()
     this.$refs.input.focus()
+
     this.bus.$on('autocomplete', ({ command, uid }) => {
       if (this.isLast && this.uid === uid) this.command = command
     })

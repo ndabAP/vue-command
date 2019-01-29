@@ -141,11 +141,6 @@ export default {
     pointer: 0
   }),
 
-  updated () {
-    const terminal = this.$refs['term-std']
-    terminal.scrollTop = terminal.scrollHeight
-  },
-
   computed: {
     // Amount of executed commands
     progress: {
@@ -247,6 +242,7 @@ export default {
       font-family: 'Inconsolata', monospace;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
+      padding-bottom: 0.5rem;
     }
   }
 </style>
