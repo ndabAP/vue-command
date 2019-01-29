@@ -50,7 +50,7 @@
 
 <script>
 import uniq from 'lodash/uniq'
-import has from 'lodash/has'io
+import has from 'lodash/has'
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
