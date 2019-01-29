@@ -11013,15 +11013,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=19c7e3c2&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideTitle)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=70edc3b6&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
         'dark-font': _vm.whiteTheme,
         'white-font': !_vm.whiteTheme
-      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"is-last":_vm.progress === 0,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-cmd",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"hide-prompt":_vm.hidePrompt,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
+      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"uid":_vm._uid,"is-last":_vm.progress === 0,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"uid":_vm._uid,"hide-prompt":_vm.hidePrompt,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=19c7e3c2&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=70edc3b6&
 
 // EXTERNAL MODULE: ./node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("96cf");
@@ -11117,12 +11117,12 @@ var invoke_default = /*#__PURE__*/__webpack_require__.n(invoke);
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=b13f4b2a&
-var Stdinvue_type_template_id_b13f4b2a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
-var Stdinvue_type_template_id_b13f4b2a_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=6830a74e&
+var Stdinvue_type_template_id_6830a74e_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
+var Stdinvue_type_template_id_6830a74e_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=b13f4b2a&
+// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=6830a74e&
 
 // EXTERNAL MODULE: ./node_modules/lodash/clone.js
 var clone = __webpack_require__("b8ce");
@@ -11182,6 +11182,10 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
       type: Boolean,
       default: false
     },
+    uid: {
+      type: Number,
+      required: true
+    },
     whiteTheme: {
       type: Boolean
     }
@@ -11205,8 +11209,10 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
     var _this2 = this;
 
     this.$refs.input.focus();
-    this.$_bus.$on('autocomplete', function (command) {
-      if (_this2.isLast) _this2.command = command;
+    this.$_bus.$on('autocomplete', function (_ref) {
+      var command = _ref.command,
+          uid = _ref.uid;
+      if (_this2.isLast && _this2.uid === uid) _this2.command = command;
     });
   },
   methods: {
@@ -11335,8 +11341,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   src_Stdinvue_type_script_lang_js_,
-  Stdinvue_type_template_id_b13f4b2a_render,
-  Stdinvue_type_template_id_b13f4b2a_staticRenderFns,
+  Stdinvue_type_template_id_6830a74e_render,
+  Stdinvue_type_template_id_6830a74e_staticRenderFns,
   false,
   null,
   null,
@@ -11454,6 +11460,8 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 //
 //
 //
+//
+//
 
 
 
@@ -11473,7 +11481,7 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       type: Object,
       required: true
     },
-    hideTitle: {
+    hideBar: {
       type: Boolean,
       default: false
     },
@@ -11530,6 +11538,9 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       pointer: 0
     };
   },
+  created: function created() {
+    console.log(this._uid);
+  },
   updated: function updated() {
     var terminal = this.$refs['term-std'];
     terminal.scrollTop = terminal.scrollHeight;
@@ -11562,7 +11573,10 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       if (event.key === TAB_KEY && !isEmpty_default()(this.current)) {
         each_default()(keys_default()(this.commands).sort(), function (command) {
           if (command.startsWith(_this.current)) {
-            _this.$_bus.$emit('autocomplete', command);
+            _this.$_bus.$emit('autocomplete', {
+              command: command,
+              uid: _this._uid
+            });
 
             return false;
           }

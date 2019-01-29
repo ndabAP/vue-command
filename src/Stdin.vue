@@ -59,6 +59,11 @@ export default {
       default: false
     },
 
+    uid: {
+      type: Number,
+      required: true
+    },
+
     whiteTheme: {
       type: Boolean
     }
@@ -79,8 +84,8 @@ export default {
 
   mounted () {
     this.$refs.input.focus()
-    this.$_bus.$on('autocomplete', command => {
-      if (this.isLast) this.command = command
+    this.$_bus.$on('autocomplete', ({ command, uid }) => {
+      if (this.isLast && this.uid === uid) this.command = command
     })
   },
 

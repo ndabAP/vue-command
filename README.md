@@ -21,11 +21,11 @@ $ npm i vue-command --save
 | Property              | Type      | Default        | Required | Description                                                                                                                     |
 |-----------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
 | `commands`            | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
-| `hideTitle`           | `Boolean` | `false`        | No       | Hides the title                                                                                                                 |
+| `hideBar`             | `Boolean` | `false`        | No       | Hides the bar                                                                                                                   |
 | `hidePrompt`          | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
 | `prompt`              | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
 | `placeholderText`     | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
-| `placeholderTimeout`  | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                            |
+| `placeholderTimeout`  | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                    |
 | `showHelp`            | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
 | `title`               | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
 | `whiteTheme`          | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |

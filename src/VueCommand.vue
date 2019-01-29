@@ -7,7 +7,7 @@
   >
     <div :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }" class="term">
 
-      <div class="term-bar" v-if="!hideTitle">
+      <div class="term-bar" v-if="!hideBar">
         <span class="term-title" :class="{
           'dark-font': whiteTheme,
           'white-font': !whiteTheme
@@ -19,6 +19,7 @@
           <stdin
             @handle="handle"
             @typing="setCurrent"
+            :uid="_uid"
             :is-last="progress === 0"
             :hide-prompt="hidePrompt"
             :prompt="prompt"
@@ -28,11 +29,12 @@
             :white-theme="whiteTheme"/>
 
           <div v-for="(stdout, index) in history" :key="index">
-            <stdout :white-theme="whiteTheme" :stdout="stdout" class="term-cmd"/>
+            <stdout :white-theme="whiteTheme" :stdout="stdout" class="term-stdout"/>
 
             <stdin
               @handle="handle"
               @typing="setCurrent"
+              :uid="_uid"
               :hide-prompt="hidePrompt"
               :is-last="index === progress - 1"
               :last-command="last"
@@ -71,7 +73,7 @@ export default {
       required: true
     },
 
-    hideTitle: {
+    hideBar: {
       type: Boolean,
       default: false
     },
@@ -132,6 +134,10 @@ export default {
     pointer: 0
   }),
 
+  created () {
+    console.log(this._uid)
+  },
+
   updated () {
     const terminal = this.$refs['term-std']
     terminal.scrollTop = terminal.scrollHeight
@@ -163,7 +169,7 @@ export default {
       if (event.key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
-            this.$_bus.$emit('autocomplete', command)
+            this.$_bus.$emit('autocomplete', { command, uid: this._uid } )
 
             return false
           }

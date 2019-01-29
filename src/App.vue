@@ -5,12 +5,9 @@
 
     <vue-command
       show-help
-      title="neil@moon ~"
-      :commands="commands"
       :placeholder-timeout="1250"
-      :yargs-options="{ alias: { color: ['colour'] } }"
+      :commands="commands"
     />
-
     <pre>
       <code>
 $ npm i --save vue-command
@@ -53,44 +50,48 @@ export default {
     place-items: center;
     height: 95vh;
     margin: 0;
-  }
 
-  h1 {
-    font-family: 'Inconsolata', monospace;
-  }
-
-  p {
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  pre {
-    width: 100%;
-    padding: 0;
-    margin-top: 1em;
-    overflow: auto;
-    overflow-y: hidden;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-
-    code {
-      padding: 10px;
-      color: #333;
-      margin: 5px;
+    main {
+      margin: 1rem;
     }
-  }
 
-  .vue-command {
-    .term {
+    h1, h2, h3 {
+      font-family: 'Inconsolata', monospace;
+    }
+
+    p {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    pre {
+      width: 100%;
+      padding: 0;
+      margin-top: 1em;
+      overflow: auto;
+      overflow-y: hidden;
       -webkit-border-radius: 8px;
       -moz-border-radius: 8px;
       border-radius: 8px;
+
+      code {
+        padding: 10px;
+        color: #333;
+        margin: 5px;
+      }
     }
 
-    .term-std {
-      min-height: 300px;
-      max-height: 300px;
-      overflow-y: scroll;
+    .vue-command {
+      .term {
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+      }
+
+      .term-std {
+        min-height: 300px;
+        max-height: 300px;
+        overflow-y: scroll;
+      }
     }
   }
 </style>
