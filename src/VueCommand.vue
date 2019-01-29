@@ -19,14 +19,14 @@
           <stdin
             @handle="handle"
             @typing="setCurrent"
-            :uid="_uid"
             :is-last="progress === 0"
             :hide-prompt="hidePrompt"
             :prompt="prompt"
             :placeholder-text="placeholderText"
             :placeholder-timeout="placeholderTimeout"
             :show-help="showHelp"
-            :white-theme="whiteTheme"/>
+            :white-theme="whiteTheme"
+            :uid="_uid"/>
 
           <div v-for="(stdout, index) in history" :key="index">
             <stdout :white-theme="whiteTheme" :stdout="stdout" class="term-stdout"/>
@@ -34,7 +34,6 @@
             <stdin
               @handle="handle"
               @typing="setCurrent"
-              :uid="_uid"
               :hide-prompt="hidePrompt"
               :is-last="index === progress - 1"
               :last-command="last"
@@ -42,7 +41,8 @@
               :placeholder-text="placeholderText"
               :placeholder-timeout="placeholderTimeout"
               :show-help="showHelp"
-              :white-theme="whiteTheme"/>
+              :white-theme="whiteTheme"
+              :uid="_uid"/>
           </div>
         </div>
       </div>
@@ -178,9 +178,9 @@ export default {
     },
 
     async handle (command) {
-      const cmd = head(yargsParser(command, this.yargsOptions)._)
+      const program = head(yargsParser(command, this.yargsOptions)._)
 
-      if (isEmpty(cmd)) {
+      if (isEmpty(program)) {
         this.history.push(null)
       } else {
         let executed = cloneDeep(this.executed)
@@ -190,8 +190,8 @@ export default {
         this.executed = executed
         this.pointer = size(executed)
 
-        if (has(this.commands, cmd)) {
-          const stdout = invoke(this.commands, cmd, yargsParser(command, this.yargsOptions))
+        if (has(this.commands, program)) {
+          const stdout = invoke(this.commands, program, yargsParser(command, this.yargsOptions))
           this.history.push(stdout)
         } else this.history.push(`${command}: command not found`)
       }
