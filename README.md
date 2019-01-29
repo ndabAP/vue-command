@@ -66,7 +66,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   .vue-command {
     .term {
       -webkit-border-radius: 8px;
