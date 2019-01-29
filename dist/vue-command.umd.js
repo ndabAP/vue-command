@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("vue"));
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["vue-command"] = factory();
+		exports["vue-command"] = factory(require("vue"));
 	else
-		root["vue-command"] = factory();
-})((typeof self !== 'undefined' ? self : this), function() {
+		root["vue-command"] = factory(root["Vue"]);
+})((typeof self !== 'undefined' ? self : this), function(__WEBPACK_EXTERNAL_MODULE__8bbf__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5911,6 +5911,13 @@ module.exports = {
 
 /***/ }),
 
+/***/ "8bbf":
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__8bbf__;
+
+/***/ }),
+
 /***/ "8db3":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11022,15 +11029,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=27259b36&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=79b41b63&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
         'dark-font': _vm.whiteTheme,
         'white-font': !_vm.whiteTheme
-      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"uid":_vm._uid,"is-last":_vm.progress === 0,"hide-prompt":_vm.hidePrompt,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"uid":_vm._uid,"hide-prompt":_vm.hidePrompt,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
+      }},[_vm._v(_vm._s(_vm.title))])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-last":_vm.progress === 0,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"placeholder-text":_vm.placeholderText,"placeholder-timeout":_vm.placeholderTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=27259b36&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=79b41b63&
 
 // EXTERNAL MODULE: ./node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("96cf");
@@ -11086,6 +11093,10 @@ var es6_array_sort = __webpack_require__("55dd");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
 
+// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
+var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
+var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
+
 // EXTERNAL MODULE: ./node_modules/lodash/uniq.js
 var uniq = __webpack_require__("eed6");
 var uniq_default = /*#__PURE__*/__webpack_require__.n(uniq);
@@ -11126,12 +11137,12 @@ var invoke_default = /*#__PURE__*/__webpack_require__.n(invoke);
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=6830a74e&
-var Stdinvue_type_template_id_6830a74e_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
-var Stdinvue_type_template_id_6830a74e_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"42d25e5f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=25134652&
+var Stdinvue_type_template_id_25134652_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.hidePrompt)?_c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n    "+_vm._s(_vm.prompt)+"\n  ")]):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
+var Stdinvue_type_template_id_25134652_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=6830a74e&
+// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=25134652&
 
 // EXTERNAL MODULE: ./node_modules/lodash/clone.js
 var clone = __webpack_require__("b8ce");
@@ -11165,6 +11176,10 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
 /* harmony default export */ var Stdinvue_type_script_lang_js_ = ({
   props: {
+    bus: {
+      type: Object,
+      required: true
+    },
     hidePrompt: {
       type: Boolean,
       default: false
@@ -11218,7 +11233,7 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
     var _this2 = this;
 
     this.$refs.input.focus();
-    this.$_bus.$on('autocomplete', function (_ref) {
+    this.bus.$on('autocomplete', function (_ref) {
       var command = _ref.command,
           uid = _ref.uid;
       if (_this2.isLast && _this2.uid === uid) _this2.command = command;
@@ -11350,8 +11365,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   src_Stdinvue_type_script_lang_js_,
-  Stdinvue_type_template_id_6830a74e_render,
-  Stdinvue_type_template_id_6830a74e_staticRenderFns,
+  Stdinvue_type_template_id_25134652_render,
+  Stdinvue_type_template_id_25134652_staticRenderFns,
   false,
   null,
   null,
@@ -11471,6 +11486,8 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 //
 //
 //
+//
+//
 
 
 
@@ -11484,6 +11501,8 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 
 
 
+
+var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
 /* harmony default export */ var VueCommandvue_type_script_lang_js_ = ({
   props: {
     commands: {
@@ -11535,6 +11554,8 @@ var ARROW_DOWN_KEY = 'ArrowDown';
   },
   data: function data() {
     return {
+      // Bus for communication
+      bus: EventBus,
       // All executed commands
       history: [],
       // Non-empty executed commands
@@ -11579,7 +11600,7 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       if (event.key === TAB_KEY && !isEmpty_default()(this.current)) {
         each_default()(keys_default()(this.commands).sort(), function (command) {
           if (command.startsWith(_this.current)) {
-            _this.$_bus.$emit('autocomplete', {
+            _this.bus.$emit('autocomplete', {
               command: command,
               uid: _this._uid
             });
@@ -11596,14 +11617,14 @@ var ARROW_DOWN_KEY = 'ArrowDown';
       var _handle = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee(command) {
-        var cmd, executed, stdout;
+        var program, executed, stdout;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                cmd = head_default()(yargs_parser_default()(command, this.yargsOptions)._);
+                program = head_default()(yargs_parser_default()(command, this.yargsOptions)._);
 
-                if (isEmpty_default()(cmd)) {
+                if (isEmpty_default()(program)) {
                   this.history.push(null);
                 } else {
                   executed = cloneDeep_default()(this.executed);
@@ -11612,8 +11633,8 @@ var ARROW_DOWN_KEY = 'ArrowDown';
                   this.executed = executed;
                   this.pointer = size_default()(executed);
 
-                  if (has_default()(this.commands, cmd)) {
-                    stdout = invoke_default()(this.commands, cmd, yargs_parser_default()(command, this.yargsOptions));
+                  if (has_default()(this.commands, program)) {
+                    stdout = invoke_default()(this.commands, program, yargs_parser_default()(command, this.yargsOptions));
                     this.history.push(stdout);
                   } else this.history.push("".concat(command, ": command not found"));
                 }

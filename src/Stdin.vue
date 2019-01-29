@@ -26,6 +26,11 @@ import clone from 'lodash/clone'
 
 export default {
   props: {
+    bus: {
+      type: Object,
+      required: true
+    },
+
     hidePrompt: {
       type: Boolean,
       default: false
@@ -84,7 +89,7 @@ export default {
 
   mounted () {
     this.$refs.input.focus()
-    this.$_bus.$on('autocomplete', ({ command, uid }) => {
+    this.bus.$on('autocomplete', ({ command, uid }) => {
       if (this.isLast && this.uid === uid) this.command = command
     })
   },

@@ -19,8 +19,9 @@
           <stdin
             @handle="handle"
             @typing="setCurrent"
-            :is-last="progress === 0"
+            :bus="bus"
             :hide-prompt="hidePrompt"
+            :is-last="progress === 0"
             :prompt="prompt"
             :placeholder-text="placeholderText"
             :placeholder-timeout="placeholderTimeout"
@@ -34,6 +35,7 @@
             <stdin
               @handle="handle"
               @typing="setCurrent"
+              :bus="bus"
               :hide-prompt="hidePrompt"
               :is-last="index === progress - 1"
               :last-command="last"
@@ -51,6 +53,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import uniq from 'lodash/uniq'
 import has from 'lodash/has'
 import head from 'lodash/head'
@@ -65,6 +68,8 @@ import yargsParser from 'yargs-parser'
 import Stdin from './Stdin'
 import Stdout from './Stdout'
 import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants'
+
+const EventBus = new Vue()
 
 export default {
   props: {
@@ -122,6 +127,8 @@ export default {
   components: { Stdin, Stdout },
 
   data: () => ({
+    // Bus for communication
+    bus: EventBus,
     // All executed commands
     history: [],
     // Non-empty executed commands
@@ -165,7 +172,7 @@ export default {
       if (event.key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
-            this.$_bus.$emit('autocomplete', { command, uid: this._uid } )
+            this.bus.$emit('autocomplete', { command, uid: this._uid } )
 
             return false
           }
