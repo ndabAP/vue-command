@@ -74,7 +74,7 @@ export default {
       border-radius: 8px;
     }
 
-    .cont {
+    .term-std {
       min-height: 300px;
       max-height: 300px;
       overflow-y: scroll;
