@@ -224,8 +224,6 @@ export default {
 
     .term {
       border: 1px solid $background;
-      height: 100%;
-      width: 100%;
     }
 
     .term-bar {
