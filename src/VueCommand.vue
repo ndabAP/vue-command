@@ -54,7 +54,6 @@
 
 <script>
 import Vue from 'vue'
-import uniq from 'lodash/uniq'
 import has from 'lodash/has'
 import head from 'lodash/head'
 import cloneDeep from 'lodash/cloneDeep'
@@ -63,6 +62,8 @@ import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
 import keys from 'lodash/keys'
 import invoke from 'lodash/invoke'
+import trim from 'lodash/trim'
+import without from 'lodash/without'
 import yargsParser from 'yargs-parser'
 
 import Stdin from './Stdin'
@@ -180,14 +181,15 @@ export default {
     },
 
     async handle (command) {
+      command = trim(command)
       const program = head(yargsParser(command, this.yargsOptions)._)
 
       if (isEmpty(program)) {
         this.history.push(null)
       } else {
         let executed = cloneDeep(this.executed)
+        executed = without(executed, command)
         executed.push(command)
-        executed = uniq(executed)
 
         this.executed = executed
         this.pointer = size(executed)
