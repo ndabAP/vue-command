@@ -5,7 +5,7 @@
 
     <vue-command
       show-help
-      :placeholder-timeout="1250"
+      :help-timeout="1250"
       :commands="commands"
     />
     <pre>
@@ -31,7 +31,7 @@ export default {
 
         return `Usage: pokedex pokemon [option]<br><br>
 
-        Example: pokedex pikachu --color
+          Example: pokedex pikachu --color
         `
       },
 

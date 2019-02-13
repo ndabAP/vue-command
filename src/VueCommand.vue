@@ -23,8 +23,8 @@
             :hide-prompt="hidePrompt"
             :is-last="progress === 0"
             :prompt="prompt"
-            :placeholder-text="placeholderText"
-            :placeholder-timeout="placeholderTimeout"
+            :help-text="helpText"
+            :help-timeout="helpTimeout"
             :show-help="showHelp"
             :white-theme="whiteTheme"
             :uid="_uid"/>
@@ -40,8 +40,8 @@
               :is-last="index === progress - 1"
               :last-command="last"
               :prompt="prompt"
-              :placeholder-text="placeholderText"
-              :placeholder-timeout="placeholderTimeout"
+              :help-text="helpText"
+              :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
               :uid="_uid"/>
@@ -79,6 +79,11 @@ export default {
       required: true
     },
 
+    helpTimeout: {
+      type: Number,
+      default: 4000
+    },
+
     hideBar: {
       type: Boolean,
       default: false
@@ -104,14 +109,9 @@ export default {
       default: '~neil@moon:#'
     },
 
-    placeholderText: {
+    helpText: {
       type: String,
       default: 'Type help'
-    },
-
-    placeholderTimeout: {
-      type: Number,
-      default: 4000
     },
 
     whiteTheme: {

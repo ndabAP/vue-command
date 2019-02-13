@@ -21,15 +21,15 @@ $ npm i vue-command --save
 | Property              | Type      | Default        | Required | Description                                                                                                                     |
 |-----------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
 | `commands`            | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
-| `hideBar`             | `Boolean` | `false`        | No       | Hides the bar                                                                                                                   |
-| `hidePrompt`          | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
-| `placeholderText`     | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
-| `placeholderTimeout`  | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                    |
+| `help-text`           | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
+| `help-timeout`        | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                    |
+| `hide-bar`            | `Boolean` | `false`        | No       | Hides the bar                                                                                                                   |
+| `hide-prompt`         | `Boolean` | `false`        | No       | Hides the prompt                                                                                                                |
 | `prompt`              | `String`  | `~neil@moon:#` | No       | Sets the prompt                                                                                                                 |
-| `showHelp`            | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
+| `show-help`           | `Boolean` | `false`        | No       | Shows the placeholder                                                                                                           |
 | `title`               | `String`  | `neil@moon: ~` | No       | Sets the title                                                                                                                  |
-| `whiteTheme`          | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |
-| `yargsOptions`        | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
+| `white-theme`         | `Boolean` | `false`        | No       | Enables the white theme                                                                                                         |
+| `yargs-options`       | `Object`  | `{}`           | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                          |
 
 ## Usage
 

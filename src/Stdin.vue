@@ -31,6 +31,14 @@ export default {
       required: true
     },
 
+    helpText: {
+      type: String
+    },
+
+    helpTimeout: {
+      type: Number
+    },
+
     hidePrompt: {
       type: Boolean,
       default: false
@@ -45,14 +53,6 @@ export default {
     lastCommand: {
       type: String,
       default: ''
-    },
-
-    placeholderText: {
-      type: String
-    },
-
-    placeholderTimeout: {
-      type: Number
     },
 
     prompt: {
@@ -75,7 +75,7 @@ export default {
   },
 
   data: () => ({
-    // Input disabled
+    // Determinate if input disabled
     isDisabled: false,
     command: '',
     placeholder: ''
@@ -83,8 +83,8 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (this.isLast && this.showHelp) this.placeholder = this.placeholderText
-    }, this.placeholderTimeout)
+      if (this.isLast && this.showHelp) this.placeholder = this.helpText
+    }, this.helpTimeout)
   },
 
   mounted () {
