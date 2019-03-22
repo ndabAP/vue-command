@@ -75,7 +75,7 @@ export default {
   },
 
   data: () => ({
-    // Determinate if input disabled
+    // Determinate if input is disabled
     isDisabled: false,
     command: '',
     placeholder: ''
