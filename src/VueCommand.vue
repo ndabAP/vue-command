@@ -155,6 +155,7 @@ export default {
   },
 
   methods: {
+    // Lets you navigate through history based on key
     mutatePointerHandler ({ key }) {
       if (key === ARROW_UP_KEY && this.pointer > 0) {
         this.pointer--
@@ -165,6 +166,7 @@ export default {
       }
     },
 
+    // Provides autocompletion for tab key
     autocomplete (event) {
       event.preventDefault()
 
@@ -183,6 +185,7 @@ export default {
       this.current = current
     },
 
+    // Handles the command
     async handle (command) {
       command = trim(command)
       const program = head(yargsParser(command, this.yargsOptions)._)
