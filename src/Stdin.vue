@@ -104,6 +104,10 @@ export default {
 
   methods: {
     handle () {
+      if (this.inProgress) {
+        return
+      }
+
       this.$emit('handle', this.command)
 
       this.placeholder = ''
