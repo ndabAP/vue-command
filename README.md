@@ -8,6 +8,7 @@ A fully working Vue.js terminal emulator. See the [demo](https://ndabap.github.i
 - Search history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - White/Dark theme support
 - Autocomplete (with <kbd>↹</kbd>)
+- Supports asynchronous commands
 
 ## Installation
 
@@ -19,7 +20,7 @@ $ npm i vue-command --save
 
 | Property              | Type      | Default        | Required | Description                                                                                                                     |
 |-----------------------|-----------|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------|
-| `commands`            | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) |
+| `commands`            | `Object`  | `{}`           | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme). Function should return either a `String` or a `Promise` that resolves to a `String`. |
 | `help-text`           | `String`  | `Type help`    | No       | Sets the placeholder                                                                                                            |
 | `help-timeout`        | `Number`  | `4000`         | No       | Sets the placeholder timeout                                                                                                    |
 | `hide-bar`            | `Boolean` | `false`        | No       | Hides the bar                                                                                                                   |

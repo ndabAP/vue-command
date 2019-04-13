@@ -44,7 +44,8 @@
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
-              :uid="_uid"/>
+              :uid="_uid"
+              :in-progress="inProgess"/>
           </div>
         </div>
       </div>
@@ -139,7 +140,9 @@ export default {
     // Last pointed command
     last: '',
     // History command pointer
-    pointer: 0
+    pointer: 0,
+    // Indicates if a command is in progress
+    inProgess: false
   }),
 
   computed: {
@@ -168,7 +171,7 @@ export default {
       if (event.key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
-            this.bus.$emit('autocomplete', { command, uid: this._uid } )
+            this.bus.$emit('autocomplete', { command, uid: this._uid })
 
             return false
           }
@@ -195,8 +198,13 @@ export default {
         this.pointer = size(executed)
 
         if (has(this.commands, program)) {
-          const stdout = invoke(this.commands, program, yargsParser(command, this.yargsOptions))
-          this.history.push(stdout)
+          this.history.push('')
+          this.inProgess = true
+          const stdout = await Promise.resolve(
+            invoke(this.commands, program, yargsParser(command, this.yargsOptions))
+          )
+          Vue.set(this.history, this.history.length - 1, stdout)
+          this.inProgess = false
         } else this.history.push(`${command}: command not found`)
       }
 
