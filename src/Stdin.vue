@@ -2,6 +2,7 @@
   <div>
     <span
       v-if="!hidePrompt"
+      v-show="!isLast || !inProgress"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       {{ prompt }}
     </span>
@@ -71,6 +72,11 @@ export default {
 
     whiteTheme: {
       type: Boolean
+    },
+
+    inProgress: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -111,6 +117,13 @@ export default {
 
     command () {
       this.$emit('typing', this.command)
+    },
+
+    inProgress () {
+      if (!this.inProgress && this.isLast) {
+        this.$refs.input.scrollIntoView()
+        this.$refs.input.focus()
+      }
     }
   }
 }
