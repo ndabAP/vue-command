@@ -3,8 +3,7 @@
     @keyup.down="mutatePointerHandler"
     @keyup.up="mutatePointerHandler"
     @keydown.tab="autocomplete"
-    class="vue-command"
-  >
+    class="vue-command">
     <div :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }" class="term">
 
       <div class="term-bar" v-if="!hideBar">
@@ -37,6 +36,7 @@
               @typing="setCurrent"
               :bus="bus"
               :hide-prompt="hidePrompt"
+              :is-in-progress="isInProgress"
               :is-last="index === progress - 1"
               :last-command="last"
               :prompt="prompt"
@@ -44,8 +44,7 @@
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
-              :uid="_uid"
-              :in-progress="inProgess"/>
+              :uid="_uid"/>
           </div>
         </div>
       </div>
@@ -133,6 +132,8 @@ export default {
     bus: EventBus,
     // All executed commands
     history: [],
+    // Indicates if a command is in progress
+    isInProgress: false,
     // Non-empty executed commands
     executed: [],
     // Current input
@@ -140,9 +141,7 @@ export default {
     // Last pointed command
     last: '',
     // History command pointer
-    pointer: 0,
-    // Indicates if a command is in progress
-    inProgess: false
+    pointer: 0
   }),
 
   computed: {
@@ -191,6 +190,7 @@ export default {
       const program = head(yargsParser(command, this.yargsOptions)._)
 
       if (isEmpty(program)) {
+        // Empty stdin
         this.history.push(null)
       } else {
         let executed = cloneDeep(this.executed)
@@ -202,12 +202,13 @@ export default {
 
         if (has(this.commands, program)) {
           this.history.push('')
-          this.inProgess = true
+          this.isInProgress = true
           const stdout = await Promise.resolve(
             invoke(this.commands, program, yargsParser(command, this.yargsOptions))
           )
-          Vue.set(this.history, this.history.length - 1, stdout)
-          this.inProgess = false
+
+          Vue.set(this.history, size(this.history) - 1, stdout)
+          this.isInProgress = false
         } else this.history.push(`${command}: command not found`)
       }
 

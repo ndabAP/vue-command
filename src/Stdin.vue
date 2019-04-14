@@ -2,7 +2,7 @@
   <div>
     <span
       v-if="!hidePrompt"
-      v-show="!isLast || !inProgress"
+      v-show="!isLast || !isInProgress"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       {{ prompt }}
     </span>
@@ -15,8 +15,7 @@
         :disabled="!isLast"
         :placeholder="placeholder"
         type="text"
-        v-model="command"
-      >
+        v-model="command">
     </span>
   </div>
 </template>
@@ -41,6 +40,11 @@ export default {
     },
 
     hidePrompt: {
+      type: Boolean,
+      default: false
+    },
+
+    isInProgress: {
       type: Boolean,
       default: false
     },
@@ -72,11 +76,6 @@ export default {
 
     whiteTheme: {
       type: Boolean
-    },
-
-    inProgress: {
-      type: Boolean,
-      default: false
     }
   },
 
@@ -104,12 +103,9 @@ export default {
 
   methods: {
     handle () {
-      if (this.inProgress) {
-        return
-      }
+      if (this.isInProgress) return
 
       this.$emit('handle', this.command)
-
       this.placeholder = ''
     }
   },
@@ -123,8 +119,8 @@ export default {
       this.$emit('typing', this.command)
     },
 
-    inProgress () {
-      if (!this.inProgress && this.isLast) {
+    isInProgress () {
+      if (!this.isInProgress && this.isLast) {
         this.$refs.input.scrollIntoView()
         this.$refs.input.focus()
       }
