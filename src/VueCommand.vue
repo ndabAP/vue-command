@@ -15,6 +15,11 @@
 
       <div class="term-std" ref="term-std">
         <div class="term-cont">
+          <div
+            v-if="showIntro"
+            :class="{ 'white-font': !whiteTheme, 'dark-font': whiteTheme }">
+            {{ intro }}
+          </div>
           <stdin
             @handle="handle"
             @typing="setCurrent"
@@ -94,7 +99,17 @@ export default {
       default: false
     },
 
+    intro: {
+      type: String,
+      default: 'Fasten your seatbelts!'
+    },
+
     showHelp: {
+      type: Boolean,
+      default: false
+    },
+
+    showIntro: {
       type: Boolean,
       default: false
     },
@@ -229,6 +244,7 @@ export default {
     ::-webkit-scrollbar-thumb {
       background: #ddd;
       -webkit-border-radius: 8px;
+      border-radius: 8px;
     }
 
     .term {
