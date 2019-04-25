@@ -1,19 +1,28 @@
 <template>
   <div
+    class="vue-command"
     @keyup.down="mutatePointerHandler"
     @keyup.up="mutatePointerHandler"
-    @keydown.tab="autocomplete"
-    class="vue-command">
-    <div :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }" class="term">
-
-      <div class="term-bar" v-if="!hideBar">
-        <span class="term-title" :class="{
-          'dark-font': whiteTheme,
-          'white-font': !whiteTheme
-        }">{{ title }}</span>
+    @keydown.tab="autocomplete">
+    <div
+      :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
+      class="term">
+      <div
+        v-if="!hideBar"
+        class="term-bar">
+        <span
+          :class="{
+            'dark-font': whiteTheme,
+            'white-font': !whiteTheme
+          }"
+          class="term-title">
+          {{ title }}
+        </span>
       </div>
 
-      <div class="term-std" ref="term-std">
+      <div
+        ref="term-std"
+        class="term-std">
         <div class="term-cont">
           <div
             v-if="showIntro"
@@ -21,8 +30,6 @@
             {{ intro }}
           </div>
           <stdin
-            @handle="handle"
-            @typing="setCurrent"
             :bus="bus"
             :hide-prompt="hidePrompt"
             :is-last="progress === 0"
@@ -31,14 +38,19 @@
             :help-timeout="helpTimeout"
             :show-help="showHelp"
             :white-theme="whiteTheme"
-            :uid="_uid"/>
+            :uid="_uid"
+            @handle="handle"
+            @typing="setCurrent"/>
 
-          <div v-for="(stdout, index) in history" :key="index">
-            <stdout :white-theme="whiteTheme" :stdout="stdout" class="term-stdout"/>
+          <div
+            v-for="(stdout, index) in history"
+            :key="index">
+            <stdout
+              :white-theme="whiteTheme"
+              :stdout="stdout"
+              class="term-stdout"/>
 
             <stdin
-              @handle="handle"
-              @typing="setCurrent"
               :bus="bus"
               :hide-prompt="hidePrompt"
               :is-in-progress="isInProgress"
@@ -49,7 +61,9 @@
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
-              :uid="_uid"/>
+              :uid="_uid"
+              @handle="handle"
+              @typing="setCurrent"/>
           </div>
         </div>
       </div>

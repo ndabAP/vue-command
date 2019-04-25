@@ -8,14 +8,14 @@
     </span>
     <span class="term-stdin">
       <input
-        @keyup.enter="handle"
         ref="input"
         :autofocus="isLast"
         :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
         :disabled="!isLast"
         :placeholder="placeholder"
+        v-model="command"
         type="text"
-        v-model="command">
+        @keyup.enter="handle">
     </span>
   </div>
 </template>

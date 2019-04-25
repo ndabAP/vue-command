@@ -4,10 +4,9 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      show-help
       :help-timeout="1250"
       :commands="commands"
-    />
+      show-help/>
     <pre>
       <code>
 $ npm i --save vue-command

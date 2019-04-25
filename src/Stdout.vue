@@ -1,5 +1,8 @@
 <template>
-  <span v-html="stdout" :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"></span>
+  <span
+    :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
+    v-html="stdout">
+  </span>
 </template>
 
 <script>
