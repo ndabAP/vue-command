@@ -237,6 +237,7 @@ export default {
           )
 
           Vue.set(this.history, size(this.history) - 1, stdout)
+
           this.isInProgress = false
         } else this.history.push(`${command}: command not found`)
       }
