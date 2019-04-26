@@ -14,4 +14,16 @@ describe('VueCommand.vue', () => {
 
     expect(wrapper.contains('.term-bar')).toBe(false)
   })
+
+  it('sets the title', () => {
+    const reversed = Array.from(VueCommand.props.title.default).reverse().join('')
+    const wrapper = shallowMount(VueCommand, {
+      propsData: {
+        ...EMPTY_COMMANDS,
+        title: reversed
+      }
+    })
+
+    expect(wrapper.find('.term-title').text()).toBe(reversed)
+  })
 })
