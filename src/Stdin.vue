@@ -15,7 +15,7 @@
         :placeholder="placeholder"
         v-model="command"
         type="text"
-        @keyup.enter="handle">
+        @keyup.enter="handle"/>
     </span>
   </div>
 </template>
