@@ -1,7 +1,12 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
+
 import VueCommand from '../../src/VueCommand'
 
 const EMPTY_COMMANDS = { commands: { null: () => null } }
+
+// See https://github.com/vuejs/vue-test-utils/issues/1219
+Element.prototype.scrollIntoView = () => {}
 
 describe('VueCommand.vue', () => {
   it('hides the bar', () => {
@@ -38,5 +43,53 @@ describe('VueCommand.vue', () => {
     })
 
     expect(wrapper.find('.term-title').text()).toBe(title)
+  })
+
+  it('sets the placeholder', () => {
+    jest.useFakeTimers()
+
+    const helpText = Array.from(VueCommand.props.helpText.default).reverse().join('')
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        ...EMPTY_COMMANDS,
+        showHelp: true,
+        helpTimeout: 0,
+        helpText
+      }
+    })
+
+    jest.runAllTimers()
+
+    expect(wrapper.find('input').attributes('placeholder')).toBe(helpText)
+  })
+
+  it('doesn\'t find the command', () => {
+    const command = Math.random().toString(36).substring(6)
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        ...EMPTY_COMMANDS
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keyup.enter')
+
+    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
+  })
+
+  it('finds the command', async () => {
+    const command = Math.random().toString(36).substring(6)
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        commands: { [command]: () => command }
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keyup.enter')
+
+    await flushPromises()
+
+    expect(wrapper.find('.term-stdout').text()).toBe(command)
   })
 })
