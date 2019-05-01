@@ -118,4 +118,21 @@ describe('VueCommand.vue', () => {
 
     expect(wrapper.find('.term-stdout').text()).toBe(command)
   })
+
+  it('finds the asynchronous command', async () => {
+    const command = Math.random().toString(36).substring(6)
+    const timeout = 2000
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        commands: { [command]: () => new Promise(resolve => setTimeout(resolve(command), timeout)) }
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keyup.enter')
+
+    await flushPromises()
+
+    expect(wrapper.find('.term-stdout').text()).toBe(command)
+  })
 })
