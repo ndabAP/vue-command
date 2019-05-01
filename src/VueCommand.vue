@@ -32,6 +32,7 @@
           <stdin
             :bus="bus"
             :hide-prompt="hidePrompt"
+            :is-in-progress="isInProgress"
             :is-last="progress === 0"
             :prompt="prompt"
             :help-text="helpText"
@@ -232,6 +233,7 @@ export default {
         if (has(this.commands, program)) {
           this.history.push('')
           this.isInProgress = true
+
           const stdout = await Promise.resolve(
             invoke(this.commands, program, yargsParser(command, this.yargsOptions))
           )

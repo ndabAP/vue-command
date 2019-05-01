@@ -1,19 +1,18 @@
 <template>
-  <div>
+  <div v-show="!isLast || !isInProgress">
     <span
       v-if="!hidePrompt"
-      v-show="!isLast || !isInProgress"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       {{ prompt }}
     </span>
     <span class="term-stdin">
       <input
         ref="input"
+        v-model="command"
         :autofocus="isLast"
         :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
         :disabled="!isLast"
         :placeholder="placeholder"
-        v-model="command"
         type="text"
         @keyup.enter="handle"/>
     </span>
@@ -80,9 +79,9 @@ export default {
   },
 
   data: () => ({
+    command: '',
     // Determinate if input is disabled
     isDisabled: false,
-    command: '',
     placeholder: ''
   }),
 
@@ -119,8 +118,10 @@ export default {
       this.$emit('typing', this.command)
     },
 
-    isInProgress () {
+    async isInProgress () {
       if (!this.isInProgress && this.isLast) {
+        await this.$nextTick()
+
         this.$refs.input.scrollIntoView()
         this.$refs.input.focus()
       }
