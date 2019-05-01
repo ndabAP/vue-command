@@ -2,6 +2,7 @@ import { mount, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
 import VueCommand from '../../src/VueCommand'
+import Stdin from '../../src/Stdin'
 
 const EMPTY_COMMANDS = { commands: { null: () => null } }
 
@@ -43,6 +44,31 @@ describe('VueCommand.vue', () => {
     })
 
     expect(wrapper.find('.term-title').text()).toBe(title)
+  })
+
+  it('sets the prompt', () => {
+    const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        ...EMPTY_COMMANDS,
+        prompt
+      }
+    })
+
+    expect(wrapper.find(Stdin).find('span').text()).toBe(prompt)
+  })
+
+  it('hides the prompt', () => {
+    const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        ...EMPTY_COMMANDS,
+        prompt,
+        hidePrompt: true
+      }
+    })
+
+    expect(wrapper.find(Stdin).find('span').text()).not.toBe(prompt)
   })
 
   it('sets the placeholder', () => {
