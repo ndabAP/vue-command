@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "5.2.3",
+  "version": "5.2.4",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -20,18 +20,19 @@
     "*.css"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "npm run build:lib && npm run build:docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/index.js",
     "build:docs": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint:fix",
-    "test": "vue-cli-service test:unit"
+    "test": "vue-cli-service test:unit",
+    "serve": "vue-cli-service serve"
   },
   "dependencies": {
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
+    "tar": ">=4.4.2",
     "vue": "^2.5.21",
     "yargs-parser": "^13.0.0"
   },
