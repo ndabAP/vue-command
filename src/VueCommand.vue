@@ -197,6 +197,7 @@ export default {
 
     // Provides autocompletion for tab key
     autocomplete (event) {
+      // Prevent loosing focus
       event.preventDefault()
 
       if (event.key === TAB_KEY && !isEmpty(this.current)) {
@@ -230,6 +231,7 @@ export default {
         this.executed = executed
         this.pointer = size(executed)
 
+        // Check if command has been found
         if (has(this.commands, program)) {
           this.history.push('')
           this.isInProgress = true
