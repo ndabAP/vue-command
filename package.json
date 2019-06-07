@@ -48,6 +48,7 @@
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "js-yaml": "^3.13.1",
     "flush-promises": "^1.0.2",
     "vue-template-compiler": "^2.5.21",
     "webpack": "^4.30.0"
