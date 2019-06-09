@@ -105,10 +105,7 @@ export default {
       type: Number,
       default: 4000
     },
-    keepPrompt: {
-      type: Boolean,
-      default: false
-    },
+
     hideBar: {
       type: Boolean,
       default: false
@@ -119,9 +116,24 @@ export default {
       default: false
     },
 
+    helpText: {
+      type: String,
+      default: 'Type help'
+    },
+
     intro: {
       type: String,
       default: 'Fasten your seatbelts!'
+    },
+
+    keepPrompt: {
+      type: Boolean,
+      default: false
+    },
+
+    prompt: {
+      type: String,
+      default: '~neil@moon:#'
     },
 
     showHelp: {
@@ -137,16 +149,6 @@ export default {
     title: {
       type: String,
       default: 'neil@moon: ~'
-    },
-
-    prompt: {
-      type: String,
-      default: '~neil@moon:#'
-    },
-
-    helpText: {
-      type: String,
-      default: 'Type help'
     },
 
     whiteTheme: {
