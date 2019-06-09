@@ -3,8 +3,8 @@
     <span
       v-if="!hidePrompt"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
-      <template v-if="isLast == true || keepPrompt == false">{{ prompt }}</template>
-      <template v-if="isLast == false && keepPrompt == true">{{ locPrompt }}</template>
+      <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
+      <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
     </span>
     <span class="term-stdin">
       <input
@@ -87,7 +87,7 @@ export default {
     // Determinate if input is disabled
     isDisabled: false,
     placeholder: '',
-    locPrompt: ''
+    localPrompt: ''
   }),
 
   created () {
@@ -108,7 +108,7 @@ export default {
   methods: {
     handle () {
       if (this.isInProgress) return
-      this.locPrompt = this.prompt.substring()
+      this.localPrompt = this.prompt
       this.$emit('handle', this.command)
       this.placeholder = ''
     }
