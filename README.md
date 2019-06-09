@@ -1,6 +1,6 @@
 # vue-command
 
-A fully working and most feature rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/).
+A fully working Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/).
 
 ## Features
 
