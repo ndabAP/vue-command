@@ -12240,7 +12240,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=431d279a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=0532bb8a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
@@ -12248,7 +12248,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=431d279a&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=0532bb8a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12884,7 +12884,11 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       }
     }
   },
-  watch: {},
+  watch: {
+    current: function current() {
+      this.$emit('input', this.current);
+    }
+  },
   methods: {
     // Lets you navigate through history based on key
     mutatePointerHandler: function mutatePointerHandler(_ref) {
@@ -12899,10 +12903,12 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       }
     },
     // Provides autocompletion for tab key
-    autocomplete: function autocomplete(event) {
+    autocomplete: function autocomplete(_ref2) {
       var _this = this;
 
-      if (event.key === TAB_KEY && !isEmpty_default()(this.current)) {
+      var key = _ref2.key;
+
+      if (key === TAB_KEY && !isEmpty_default()(this.current)) {
         each_default()(keys_default()(this.commands).sort(), function (command) {
           if (command.startsWith(_this.current)) {
             _this.bus.$emit('autocomplete', {
@@ -12928,50 +12934,56 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                // Remove trailing and
                 command = trim_default()(command);
+                this.$emit('execute', command); // Parse the command and try to get the program
+
                 program = head_default()(yargs_parser_default()(command, this.yargsOptions)._);
 
                 if (!isEmpty_default()(program)) {
-                  _context.next = 6;
+                  _context.next = 7;
                   break;
                 }
 
                 // Empty stdin
                 this.history.push(null);
-                _context.next = 22;
+                _context.next = 24;
                 break;
 
-              case 6:
+              case 7:
                 executed = cloneDeep_default()(this.executed);
                 executed = without_default()(executed, command);
                 executed.push(command);
-                this.executed = executed;
+                this.executed = executed; // Point to latest command plus one
+
                 this.pointer = size_default()(executed); // Check if command has been found
 
                 if (!has_default()(this.commands, program)) {
-                  _context.next = 21;
+                  _context.next = 23;
                   break;
                 }
 
                 this.history.push('');
                 this.isInProgress = true;
-                _context.next = 16;
+                _context.next = 17;
                 return Promise.resolve(invoke_default()(this.commands, program, yargs_parser_default()(command, this.yargsOptions)));
 
-              case 16:
+              case 17:
                 stdout = _context.sent;
+                // Add program result to history
                 external_commonjs_vue_commonjs2_vue_root_Vue_default.a.set(this.history, size_default()(this.history) - 1, stdout);
                 this.isInProgress = false;
-                _context.next = 22;
+                this.$emit('executed', command);
+                _context.next = 24;
                 break;
 
-              case 21:
+              case 23:
                 this.history.push("".concat(command, ": command not found"));
 
-              case 22:
+              case 24:
                 this.setCurrent('');
 
-              case 23:
+              case 25:
               case "end":
                 return _context.stop();
             }

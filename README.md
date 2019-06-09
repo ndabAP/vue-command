@@ -34,6 +34,14 @@ $ npm i vue-command --save
 | `white-theme`   | `Boolean` | `false`                  | No       | Enables the white theme                                                                                                                                                                                              |
 | `yargs-options` | `Object`  | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                               |
 
+## Events
+
+| Event     | Type        | Description                       |
+|-----------|-------------|-----------------------------------|
+| `input`   | `String`    | Emits the current input           |
+| `execute` | `String`    | Emits the whole executing command |
+| `executed`| `String`    | Emits after command execution     |
+
 ## Usage
 
 ```vue

@@ -189,7 +189,9 @@ export default {
   },
 
   watch: {
-
+    current () {
+      this.$emit('input', this.current)
+    }
   },
 
   methods: {
@@ -205,8 +207,8 @@ export default {
     },
 
     // Provides autocompletion for tab key
-    autocomplete (event) {
-      if (event.key === TAB_KEY && !isEmpty(this.current)) {
+    autocomplete ({ key }) {
+      if (key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
             this.bus.$emit('autocomplete', { command, uid: this._uid })
@@ -223,7 +225,12 @@ export default {
 
     // Handles the command
     async handle (command) {
+      // Remove trailing and
       command = trim(command)
+
+      this.$emit('execute', command)
+
+      // Parse the command and try to get the program
       const program = head(yargsParser(command, this.yargsOptions)._)
 
       if (isEmpty(program)) {
@@ -235,6 +242,7 @@ export default {
         executed.push(command)
 
         this.executed = executed
+        // Point to latest command plus one
         this.pointer = size(executed)
 
         // Check if command has been found
@@ -246,9 +254,11 @@ export default {
             invoke(this.commands, program, yargsParser(command, this.yargsOptions))
           )
 
+          // Add program result to history
           Vue.set(this.history, size(this.history) - 1, stdout)
 
           this.isInProgress = false
+          this.$emit('executed', command)
         } else this.history.push(`${command}: command not found`)
       }
 
