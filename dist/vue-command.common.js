@@ -12231,15 +12231,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"84eac93a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=184fe2b8&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=431d279a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
         }},[_vm._v("\n        "+_vm._s(_vm.title)+"\n      ")])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[(_vm.showIntro)?_c('div',{class:{ 'white-font': !_vm.whiteTheme, 'dark-font': _vm.whiteTheme }},[_vm._v("\n          "+_vm._s(_vm.intro)+"\n        ")]):_vm._e(),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":_vm.progress === 0,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=184fe2b8&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=431d279a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12346,7 +12346,7 @@ var without_default = /*#__PURE__*/__webpack_require__.n(without);
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"84eac93a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=181f81c6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=181f81c6&
 var Stdinvue_type_template_id_181f81c6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
 var Stdinvue_type_template_id_181f81c6_staticRenderFns = []
 
@@ -12633,7 +12633,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Stdin = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"84eac93a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
 var Stdoutvue_type_template_id_0ce69ce0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.stdout)}})}
 var Stdoutvue_type_template_id_0ce69ce0_staticRenderFns = []
 
@@ -12875,6 +12875,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       }
     }
   },
+  watch: {},
   methods: {
     // Lets you navigate through history based on key
     mutatePointerHandler: function mutatePointerHandler(_ref) {
@@ -12891,9 +12892,6 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     // Provides autocompletion for tab key
     autocomplete: function autocomplete(event) {
       var _this = this;
-
-      // Prevent loosing focus
-      event.preventDefault();
 
       if (event.key === TAB_KEY && !isEmpty_default()(this.current)) {
         each_default()(keys_default()(this.commands).sort(), function (command) {

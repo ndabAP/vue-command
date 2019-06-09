@@ -3,7 +3,7 @@
     class="vue-command"
     @keyup.down="mutatePointerHandler"
     @keyup.up="mutatePointerHandler"
-    @keydown.tab="autocomplete">
+    @keydown.tab.prevent="autocomplete">
     <div
       :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
       class="term">
@@ -188,6 +188,10 @@ export default {
     }
   },
 
+  watch: {
+
+  },
+
   methods: {
     // Lets you navigate through history based on key
     mutatePointerHandler ({ key }) {
@@ -202,9 +206,6 @@ export default {
 
     // Provides autocompletion for tab key
     autocomplete (event) {
-      // Prevent loosing focus
-      event.preventDefault()
-
       if (event.key === TAB_KEY && !isEmpty(this.current)) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
