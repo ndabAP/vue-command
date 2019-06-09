@@ -36,6 +36,7 @@
             :is-last="progress === 0"
             :prompt="prompt"
             :help-text="helpText"
+            :keep-prompt="keepPrompt"
             :help-timeout="helpTimeout"
             :show-help="showHelp"
             :white-theme="whiteTheme"
@@ -59,6 +60,7 @@
               :last-command="last"
               :prompt="prompt"
               :help-text="helpText"
+              :keep-prompt="keepPrompt"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
@@ -103,7 +105,10 @@ export default {
       type: Number,
       default: 4000
     },
-
+    keepPrompt: {
+      type: Boolean,
+      default: false
+    },
     hideBar: {
       type: Boolean,
       default: false
