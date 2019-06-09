@@ -2,7 +2,7 @@
   <div v-show="!isLast || !isInProgress">
     <span
       v-if="!hidePrompt"
-      class="ps"
+      class="term-ps"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
       <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
@@ -60,10 +60,12 @@ export default {
       type: String,
       default: ''
     },
+
     keepPrompt: {
       type: Boolean,
       default: false
     },
+
     prompt: {
       type: String
     },
@@ -109,6 +111,7 @@ export default {
   methods: {
     handle () {
       if (this.isInProgress) return
+
       this.localPrompt = this.prompt
       this.$emit('handle', this.command)
       this.placeholder = ''
@@ -140,7 +143,7 @@ export default {
   @import './scss/mixins';
 
   .vue-command {
-    .ps {
+    .term-ps {
       margin-right: 0.5rem;
     }
 
