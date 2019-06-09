@@ -2,6 +2,7 @@
   <div v-show="!isLast || !isInProgress">
     <span
       v-if="!hidePrompt"
+      class="ps"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
       <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
       <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
@@ -139,6 +140,10 @@ export default {
   @import './scss/mixins';
 
   .vue-command {
+    .ps {
+      margin-right: 0.5rem;
+    }
+
     input {
       background: none;
       border: none;
