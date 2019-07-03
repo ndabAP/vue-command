@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -37,9 +37,9 @@
     "yargs-parser": "^13.0.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.3.0",
-    "@vue/cli-plugin-eslint": "^3.3.0",
-    "@vue/cli-plugin-unit-jest": "^3.0.1",
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-plugin-unit-jest": "^3.8.0",
     "@vue/cli-service": "^3.7.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
@@ -48,10 +48,10 @@
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
-    "js-yaml": "^3.13.1",
     "flush-promises": "^1.0.2",
+    "js-yaml": "^3.13.1",
     "querystringify": "^2.1.1",
     "vue-template-compiler": "^2.5.21",
-    "webpack": "^4.30.0"
+    "webpack": "^4.35.2"
   }
 }

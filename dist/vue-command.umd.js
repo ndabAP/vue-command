@@ -8477,7 +8477,7 @@ function parse (args, opts) {
 
   // aliases might have transitive relationships, normalize this.
   var aliases = combineAliases(opts.alias || {})
-  var configuration = assign({
+  var configuration = Object.assign({
     'short-option-groups': true,
     'camel-case-expansion': true,
     'dot-notation': true,
@@ -8489,7 +8489,9 @@ function parse (args, opts) {
     'populate--': false,
     'combine-arrays': false,
     'set-placeholder-key': false,
-    'halt-at-non-option': false
+    'halt-at-non-option': false,
+    'strip-aliased': false,
+    'strip-dashed': false
   }, opts.configuration)
   var defaults = opts.default || {}
   var configObjects = opts.configObjects || []
@@ -8498,9 +8500,7 @@ function parse (args, opts) {
   var notFlagsArgv = notFlagsOption ? '--' : '_'
   var newAliases = {}
   // allow a i18n handler to be passed in, default to a fake one (util.format).
-  var __ = opts.__ || function (str) {
-    return util.format.apply(util, Array.prototype.slice.call(arguments))
-  }
+  var __ = opts.__ || util.format
   var error = null
   var flags = {
     aliases: {},
@@ -8642,7 +8642,7 @@ function parse (args, opts) {
 
     // -- seperated by space.
     } else if (arg.match(/^--.+/) || (
-      !configuration['short-option-groups'] && arg.match(/^-.+/)
+      !configuration['short-option-groups'] && arg.match(/^-[^-]+/)
     )) {
       key = arg.match(/^--?(.+)/)[1]
 
@@ -8653,7 +8653,7 @@ function parse (args, opts) {
       } else if (checkAllAliases(key, flags.arrays) && args.length > i + 1) {
         i = eatArray(i, key, args)
       } else {
-        next = args[i + 1]
+        next = flags.nargs[key] === 0 ? undefined : args[i + 1]
 
         if (next !== undefined && (!next.match(/^-/) ||
           next.match(negative)) &&
@@ -8797,6 +8797,23 @@ function parse (args, opts) {
   notFlags.forEach(function (key) {
     argv[notFlagsArgv].push(key)
   })
+
+  if (configuration['camel-case-expansion'] && configuration['strip-dashed']) {
+    Object.keys(argv).filter(key => key !== '--' && key.includes('-')).forEach(key => {
+      delete argv[key]
+    })
+  }
+
+  if (configuration['strip-aliased']) {
+    // XXX Switch to [].concat(...Object.values(aliases)) once node.js 6 is dropped
+    ;[].concat(...Object.keys(aliases).map(k => aliases[k])).forEach(alias => {
+      if (configuration['camel-case-expansion']) {
+        delete argv[alias.split('.').map(prop => camelCase(prop)).join('.')]
+      }
+
+      delete argv[alias]
+    })
+  }
 
   // how many arguments should we consume, based
   // on the nargs option?
@@ -9132,6 +9149,14 @@ function parse (args, opts) {
     var isValueArray = Array.isArray(value)
     var duplicate = configuration['duplicate-arguments-array']
 
+    // nargs has higher priority than duplicate
+    if (!duplicate && checkAllAliases(key, flags.nargs)) {
+      duplicate = true
+      if ((!isUndefined(o[key]) && flags.nargs[key] === 1) || (Array.isArray(o[key]) && o[key].length === flags.nargs[key])) {
+        o[key] = undefined
+      }
+    }
+
     if (value === increment) {
       o[key] = increment(o[key])
     } else if (Array.isArray(o[key])) {
@@ -9152,8 +9177,8 @@ function parse (args, opts) {
   }
 
   // extend the aliases list with inferred aliases.
-  function extendAliases () {
-    Array.prototype.slice.call(arguments).forEach(function (obj) {
+  function extendAliases (...args) {
+    args.forEach(function (obj) {
       Object.keys(obj || {}).forEach(function (key) {
         // short-circuit if we've already added a key
         // to the aliases array, for example it might
@@ -9321,20 +9346,6 @@ function combineAliases (aliases) {
   return combined
 }
 
-function assign (defaults, configuration) {
-  var o = {}
-  configuration = configuration || {}
-
-  Object.keys(defaults).forEach(function (k) {
-    o[k] = defaults[k]
-  })
-  Object.keys(configuration).forEach(function (k) {
-    o[k] = configuration[k]
-  })
-
-  return o
-}
-
 // this function should only be called when a count is given as an arg
 // it is NOT called to set a default value
 // thus we can start the count at 1 instead of 0
@@ -9500,7 +9511,9 @@ module.exports = DataView;
 
 // take an un-split argv string and tokenize it.
 module.exports = function (argString) {
-  if (Array.isArray(argString)) return argString
+  if (Array.isArray(argString)) {
+    return argString.map(e => typeof e !== 'string' ? e + '' : e)
+  }
 
   argString = argString.trim()
 
@@ -9525,7 +9538,6 @@ module.exports = function (argString) {
     // don't split the string if we're in matching
     // opening or closing single and double quotes.
     if (c === opening) {
-      if (!args[i]) args[i] = ''
       opening = null
     } else if ((c === "'" || c === '"') && !opening) {
       opening = c
@@ -12240,7 +12252,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=0532bb8a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f7c2196-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=44313f9c&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
@@ -12248,7 +12260,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=0532bb8a&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=44313f9c&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12355,7 +12367,7 @@ var without_default = /*#__PURE__*/__webpack_require__.n(without);
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=181f81c6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f7c2196-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=181f81c6&
 var Stdinvue_type_template_id_181f81c6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
 var Stdinvue_type_template_id_181f81c6_staticRenderFns = []
 
@@ -12642,7 +12654,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Stdin = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0e3977e6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f7c2196-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
 var Stdoutvue_type_template_id_0ce69ce0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.stdout)}})}
 var Stdoutvue_type_template_id_0ce69ce0_staticRenderFns = []
 
@@ -12807,10 +12819,6 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       type: Number,
       default: 4000
     },
-    keepPrompt: {
-      type: Boolean,
-      default: false
-    },
     hideBar: {
       type: Boolean,
       default: false
@@ -12819,9 +12827,21 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       type: Boolean,
       default: false
     },
+    helpText: {
+      type: String,
+      default: 'Type help'
+    },
     intro: {
       type: String,
       default: 'Fasten your seatbelts!'
+    },
+    keepPrompt: {
+      type: Boolean,
+      default: false
+    },
+    prompt: {
+      type: String,
+      default: '~neil@moon:#'
     },
     showHelp: {
       type: Boolean,
@@ -12834,14 +12854,6 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     title: {
       type: String,
       default: 'neil@moon: ~'
-    },
-    prompt: {
-      type: String,
-      default: '~neil@moon:#'
-    },
-    helpText: {
-      type: String,
-      default: 'Type help'
     },
     whiteTheme: {
       type: Boolean,
