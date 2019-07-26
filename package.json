@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -29,7 +29,7 @@
     "serve": "vue-cli-service serve"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "lodash.mergewith": ">=4.6.2",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
