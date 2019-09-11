@@ -227,7 +227,7 @@ export default {
 
     // Handles the command
     async handle (command) {
-      // Remove trailing and
+      // Remove leading and trailing whitespace
       command = trim(command)
 
       this.$emit('execute', command)
