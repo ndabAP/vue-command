@@ -13,8 +13,8 @@ describe('VueCommand.vue', () => {
   it('hides the bar', () => {
     const wrapper = shallowMount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
-        hideBar: true
+        hideBar: true,
+        ...EMPTY_COMMANDS
       }
     })
 
@@ -25,9 +25,9 @@ describe('VueCommand.vue', () => {
     const intro = Array.from(VueCommand.props.intro.default).reverse().join('')
     const wrapper = shallowMount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
         showIntro: true,
-        intro
+        intro,
+        ...EMPTY_COMMANDS
       }
     })
 
@@ -38,8 +38,8 @@ describe('VueCommand.vue', () => {
     const title = Array.from(VueCommand.props.title.default).reverse().join('')
     const wrapper = shallowMount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
-        title
+        title,
+        ...EMPTY_COMMANDS
       }
     })
 
@@ -50,8 +50,8 @@ describe('VueCommand.vue', () => {
     const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
     const wrapper = mount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
-        prompt
+        prompt,
+        ...EMPTY_COMMANDS
       }
     })
 
@@ -62,9 +62,9 @@ describe('VueCommand.vue', () => {
     const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
     const wrapper = mount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
         prompt,
-        hidePrompt: true
+        hidePrompt: true,
+        ...EMPTY_COMMANDS
       }
     })
 
@@ -77,16 +77,32 @@ describe('VueCommand.vue', () => {
     const helpText = Array.from(VueCommand.props.helpText.default).reverse().join('')
     const wrapper = mount(VueCommand, {
       propsData: {
-        ...EMPTY_COMMANDS,
         showHelp: true,
         helpTimeout: 0,
-        helpText
+        helpText,
+        ...EMPTY_COMMANDS
       }
     })
 
     jest.runAllTimers()
 
     expect(wrapper.find('input').attributes('placeholder')).toBe(helpText)
+  })
+
+  it('sets command not found text', () => {
+    const command = Math.random().toString(36).substring(6)
+    const notFound = Math.random().toString(36).substring(6)
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        notFound,
+        ...EMPTY_COMMANDS
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keyup.enter')
+
+    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
   })
 
   it('doesn\'t find the command', () => {
