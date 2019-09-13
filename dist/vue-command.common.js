@@ -12315,7 +12315,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=56cfdcfd&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=1fb5d084&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
@@ -12323,7 +12323,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=56cfdcfd&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=1fb5d084&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12430,12 +12430,12 @@ var without_default = /*#__PURE__*/__webpack_require__.n(without);
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=181f81c6&
-var Stdinvue_type_template_id_181f81c6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
-var Stdinvue_type_template_id_181f81c6_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=94961430&
+var Stdinvue_type_template_id_94961430_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
+var Stdinvue_type_template_id_94961430_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=181f81c6&
+// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=94961430&
 
 // EXTERNAL MODULE: ./node_modules/lodash/clone.js
 var clone = __webpack_require__("b8ce");
@@ -12521,43 +12521,17 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
   data: function data() {
     return {
       command: '',
-      // Determinate if input is disabled
-      isDisabled: false,
-      placeholder: '',
-      localPrompt: ''
+      // For virtual path simulation
+      localPrompt: '',
+      placeholder: ''
     };
-  },
-  created: function created() {
-    var _this = this;
-
-    setTimeout(function () {
-      if (_this.isLast && _this.showHelp) _this.placeholder = _this.helpText;
-    }, this.helpTimeout);
-  },
-  mounted: function mounted() {
-    var _this2 = this;
-
-    this.$refs.input.scrollIntoView();
-    this.$refs.input.focus();
-    this.bus.$on('autocomplete', function (_ref) {
-      var command = _ref.command,
-          uid = _ref.uid;
-      if (_this2.isLast && _this2.uid === uid) _this2.command = command;
-    });
-  },
-  methods: {
-    handle: function handle() {
-      if (this.isInProgress) return;
-      this.localPrompt = this.prompt;
-      this.$emit('handle', this.command);
-      this.placeholder = '';
-    }
   },
   watch: {
     lastCommand: function lastCommand() {
-      if (!isEmpty_default()(this.lastCommand) && this.isLast) this.command = clone_default()(this.lastCommand);
+      if (!isEmpty_default()(this.lastCommand) && this.isLast) this.setCommand(clone_default()(this.lastCommand));
     },
     command: function command() {
+      // Emit current command as event
       this.$emit('typing', this.command);
     },
     isInProgress: function () {
@@ -12594,6 +12568,42 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
       return isInProgress;
     }()
+  },
+  created: function created() {
+    var _this = this;
+
+    setTimeout(function () {
+      if (_this.isLast && _this.showHelp) _this.setPlaceholder(_this.helpText);
+    }, this.helpTimeout);
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    // Scroll to current input and focus it
+    this.$refs.input.scrollIntoView();
+    this.$refs.input.focus();
+    this.bus.$on('autocomplete', function (_ref) {
+      var command = _ref.command,
+          uid = _ref.uid;
+      if (_this2.isLast && _this2.uid === uid) _this2.setCommand(command);
+    });
+  },
+  methods: {
+    handle: function handle() {
+      if (this.isInProgress) return;
+      this.setLocalPrompt(this.prompt);
+      this.$emit('handle', this.command);
+      this.setPlaceholder('');
+    },
+    setPlaceholder: function setPlaceholder(placeholder) {
+      this.placeholder = placeholder;
+    },
+    setCommand: function setCommand(command) {
+      this.command = command;
+    },
+    setLocalPrompt: function setLocalPrompt(localPrompt) {
+      this.localPrompt = localPrompt;
+    }
   }
 });
 // CONCATENATED MODULE: ./src/Stdin.vue?vue&type=script&lang=js&
@@ -12707,8 +12717,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   src_Stdinvue_type_script_lang_js_,
-  Stdinvue_type_template_id_181f81c6_render,
-  Stdinvue_type_template_id_181f81c6_staticRenderFns,
+  Stdinvue_type_template_id_94961430_render,
+  Stdinvue_type_template_id_94961430_staticRenderFns,
   false,
   null,
   null,
@@ -12870,9 +12880,14 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 
 
 
+ // Event bus for communication
 
 var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
 /* harmony default export */ var VueCommandvue_type_script_lang_js_ = ({
+  components: {
+    Stdin: Stdin,
+    Stdout: Stdout
+  },
   props: {
     commands: {
       type: Object,
@@ -12933,10 +12948,6 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       }
     }
   },
-  components: {
-    Stdin: Stdin,
-    Stdout: Stdout
-  },
   data: function data() {
     return {
       // Bus for communication
@@ -12965,20 +12976,21 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
   },
   watch: {
     current: function current() {
+      // Emit the current input as an event
       this.$emit('input', this.current);
     }
   },
   methods: {
-    // Lets you navigate through history based on key
+    // Lets user navigate through history based on input key
     mutatePointerHandler: function mutatePointerHandler(_ref) {
       var key = _ref.key;
 
       if (key === ARROW_UP_KEY && this.pointer > 0) {
-        this.pointer--;
-        this.last = this.executed[this.pointer];
+        this.setPointer(this.pointer - 1);
+        this.setLast(this.executed[this.pointer]);
       } else if (key === ARROW_DOWN_KEY && this.pointer < size_default()(this.executed) - 1) {
-        this.pointer++;
-        this.last = this.executed[this.pointer];
+        this.setPointer(this.pointer + 1);
+        this.setLast(this.executed[this.pointer]);
       }
     },
     // Provides autocompletion for tab key
@@ -12993,15 +13005,13 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
             _this.bus.$emit('autocomplete', {
               command: command,
               uid: _this._uid
-            });
+            }); // Terminate iteration because of successful hit
+
 
             return false;
           }
         });
       }
-    },
-    setCurrent: function setCurrent(current) {
-      this.current = current;
     },
     // Handles the command
     handle: function () {
@@ -13033,9 +13043,9 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
                 executed = cloneDeep_default()(this.executed);
                 executed = without_default()(executed, command);
                 executed.push(command);
-                this.executed = executed; // Point to latest command plus one
+                this.setExecuted(executed); // Point to latest command plus one
 
-                this.pointer = size_default()(executed); // Check if command has been found
+                this.setPointer(size_default()(executed)); // Check if command has been found
 
                 if (!has_default()(this.commands, program)) {
                   _context.next = 23;
@@ -13043,14 +13053,14 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
                 }
 
                 this.history.push('');
-                this.isInProgress = true;
+                this.setIsInProgress(true);
                 _context.next = 17;
                 return Promise.resolve(invoke_default()(this.commands, program, yargs_parser_default()(command, this.yargsOptions)));
 
               case 17:
                 stdout = _context.sent;
                 external_commonjs_vue_commonjs2_vue_root_Vue_default.a.set(this.history, size_default()(this.history) - 1, stdout);
-                this.isInProgress = false;
+                this.setIsInProgress(false);
                 this.$emit('executed', command);
                 _context.next = 24;
                 break;
@@ -13074,7 +13084,22 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       }
 
       return handle;
-    }()
+    }(),
+    setCurrent: function setCurrent(current) {
+      this.current = current;
+    },
+    setIsInProgress: function setIsInProgress(isInProgress) {
+      this.isInProgress = isInProgress;
+    },
+    setExecuted: function setExecuted(executed) {
+      this.executed = executed;
+    },
+    setPointer: function setPointer(pointer) {
+      this.pointer = pointer;
+    },
+    setLast: function setLast(last) {
+      this.last = last;
+    }
   }
 });
 // CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=script&lang=js&
