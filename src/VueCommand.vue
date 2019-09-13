@@ -86,6 +86,11 @@ import keys from 'lodash/keys'
 import invoke from 'lodash/invoke'
 import trim from 'lodash/trim'
 import without from 'lodash/without'
+import eq from 'lodash/eq'
+import gt from 'lodash/gt'
+import lt from 'lodash/lt'
+import get from 'lodash/get'
+import { and } from 'ramda'
 import yargsParser from 'yargs-parser'
 
 import Stdin from './Stdin'
@@ -96,8 +101,8 @@ import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants'
 const EventBus = new Vue()
 
 export default {
-
   components: { Stdin, Stdout },
+
   props: {
     commands: {
       type: Object,
@@ -206,18 +211,32 @@ export default {
   methods: {
     // Lets user navigate through history based on input key
     mutatePointerHandler ({ key }) {
-      if (key === ARROW_UP_KEY && this.pointer > 0) {
+      // Check if pointer is mutable and input key is up key
+      const isMutableAndUpKey = and(
+        eq(key, ARROW_UP_KEY),
+        gt(this.pointer, 0)
+      )
+
+      if (isMutableAndUpKey) {
         this.setPointer(this.pointer - 1)
-        this.setLast(this.executed[this.pointer])
-      } else if (key === ARROW_DOWN_KEY && this.pointer < size(this.executed) - 1) {
+        this.setLast(get(this.executed, this.pointer))
+      }
+
+      // Check if pointer is mutable and input key is down key
+      const isMutableAndDownKey = and(
+        eq(key, ARROW_DOWN_KEY),
+        lt(this.pointer, size(this.executed) - 1)
+      )
+
+      if (isMutableAndDownKey) {
         this.setPointer(this.pointer + 1)
-        this.setLast(this.executed[this.pointer])
+        this.setLast(get(this.executed, this.pointer))
       }
     },
 
     // Provides autocompletion for tab key
     autocomplete ({ key }) {
-      if (key === TAB_KEY && !isEmpty(this.current)) {
+      if (and(eq(key, TAB_KEY), !isEmpty(this.current))) {
         each(keys(this.commands).sort(), command => {
           if (command.startsWith(this.current)) {
             this.bus.$emit('autocomplete', { command, uid: this._uid })
@@ -244,6 +263,7 @@ export default {
         this.history.push(null)
       } else {
         let executed = cloneDeep(this.executed)
+        // Remove duplicate commands for a clear history
         executed = without(executed, command)
         executed.push(command)
 

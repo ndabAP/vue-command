@@ -258,6 +258,42 @@ module.exports = function (it, key) {
 
 /***/ }),
 
+/***/ "0863":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseLt = __webpack_require__("8d20"),
+    createRelationalOperation = __webpack_require__("e884");
+
+/**
+ * Checks if `value` is less than `other`.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.9.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if `value` is less than `other`,
+ *  else `false`.
+ * @see _.gt
+ * @example
+ *
+ * _.lt(1, 3);
+ * // => true
+ *
+ * _.lt(3, 3);
+ * // => false
+ *
+ * _.lt(3, 1);
+ * // => false
+ */
+var lt = createRelationalOperation(baseLt);
+
+module.exports = lt;
+
+
+/***/ }),
+
 /***/ "087d":
 /***/ (function(module, exports) {
 
@@ -4736,6 +4772,27 @@ module.exports = nativeKeys;
 
 /***/ }),
 
+/***/ "57dc":
+/***/ (function(module, exports) {
+
+/**
+ * The base implementation of `_.gt` which doesn't coerce arguments.
+ *
+ * @private
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if `value` is greater than `other`,
+ *  else `false`.
+ */
+function baseGt(value, other) {
+  return value > other;
+}
+
+module.exports = baseGt;
+
+
+/***/ }),
+
 /***/ "584a":
 /***/ (function(module, exports) {
 
@@ -6648,6 +6705,27 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__8bbf__;
 
 /***/ }),
 
+/***/ "8d20":
+/***/ (function(module, exports) {
+
+/**
+ * The base implementation of `_.lt` which doesn't coerce arguments.
+ *
+ * @private
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if `value` is less than `other`,
+ *  else `false`.
+ */
+function baseLt(value, other) {
+  return value < other;
+}
+
+module.exports = baseLt;
+
+
+/***/ }),
+
 /***/ "8db3":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7833,6 +7911,46 @@ var nodeUtil = (function() {
 module.exports = nodeUtil;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("62e4")(module)))
+
+/***/ }),
+
+/***/ "9b02":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGet = __webpack_require__("656b");
+
+/**
+ * Gets the value at `path` of `object`. If the resolved value is
+ * `undefined`, the `defaultValue` is returned in its place.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.7.0
+ * @category Object
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the property to get.
+ * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+ * @returns {*} Returns the resolved value.
+ * @example
+ *
+ * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+ *
+ * _.get(object, 'a[0].b.c');
+ * // => 3
+ *
+ * _.get(object, ['a', '0', 'b', 'c']);
+ * // => 3
+ *
+ * _.get(object, 'a.b.c', 'default');
+ * // => 'default'
+ */
+function get(object, path, defaultValue) {
+  var result = object == null ? undefined : baseGet(object, path);
+  return result === undefined ? defaultValue : result;
+}
+
+module.exports = get;
+
 
 /***/ }),
 
@@ -9422,6 +9540,79 @@ var min = Math.min;
 module.exports = function (it) {
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
+
+
+/***/ }),
+
+/***/ "b4b0":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("1a8c"),
+    isSymbol = __webpack_require__("ffd6");
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = toNumber;
 
 
 /***/ }),
@@ -11661,6 +11852,33 @@ module.exports = function (object, names) {
 
 /***/ }),
 
+/***/ "e884":
+/***/ (function(module, exports, __webpack_require__) {
+
+var toNumber = __webpack_require__("b4b0");
+
+/**
+ * Creates a function that performs a relational operation on two values.
+ *
+ * @private
+ * @param {Function} operator The function to perform the operation.
+ * @returns {Function} Returns the new relational operation function.
+ */
+function createRelationalOperation(operator) {
+  return function(value, other) {
+    if (!(typeof value == 'string' && typeof other == 'string')) {
+      value = toNumber(value);
+      other = toNumber(other);
+    }
+    return operator(value, other);
+  };
+}
+
+module.exports = createRelationalOperation;
+
+
+/***/ }),
+
 /***/ "eac5":
 /***/ (function(module, exports) {
 
@@ -12030,6 +12248,42 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "f2d7":
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGt = __webpack_require__("57dc"),
+    createRelationalOperation = __webpack_require__("e884");
+
+/**
+ * Checks if `value` is greater than `other`.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.9.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if `value` is greater than `other`,
+ *  else `false`.
+ * @see _.lt
+ * @example
+ *
+ * _.gt(3, 1);
+ * // => true
+ *
+ * _.gt(3, 3);
+ * // => false
+ *
+ * _.gt(1, 3);
+ * // => false
+ */
+var gt = createRelationalOperation(baseGt);
+
+module.exports = gt;
+
+
+/***/ }),
+
 /***/ "f3c1":
 /***/ (function(module, exports) {
 
@@ -12324,7 +12578,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=1fb5d084&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=36dc9bb8&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
@@ -12332,7 +12586,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=1fb5d084&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=36dc9bb8&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12435,16 +12689,112 @@ var trim_default = /*#__PURE__*/__webpack_require__.n(trim);
 var without = __webpack_require__("5add");
 var without_default = /*#__PURE__*/__webpack_require__.n(without);
 
+// EXTERNAL MODULE: ./node_modules/lodash/eq.js
+var eq = __webpack_require__("9638");
+var eq_default = /*#__PURE__*/__webpack_require__.n(eq);
+
+// EXTERNAL MODULE: ./node_modules/lodash/gt.js
+var gt = __webpack_require__("f2d7");
+var gt_default = /*#__PURE__*/__webpack_require__.n(gt);
+
+// EXTERNAL MODULE: ./node_modules/lodash/lt.js
+var lt = __webpack_require__("0863");
+var lt_default = /*#__PURE__*/__webpack_require__.n(lt);
+
+// EXTERNAL MODULE: ./node_modules/lodash/get.js
+var lodash_get = __webpack_require__("9b02");
+var get_default = /*#__PURE__*/__webpack_require__.n(lodash_get);
+
+// CONCATENATED MODULE: ./node_modules/ramda/es/internal/_isPlaceholder.js
+function _isPlaceholder(a) {
+       return a != null && typeof a === 'object' && a['@@functional/placeholder'] === true;
+}
+// CONCATENATED MODULE: ./node_modules/ramda/es/internal/_curry1.js
+
+
+/**
+ * Optimized internal one-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+function _curry1(fn) {
+  return function f1(a) {
+    if (arguments.length === 0 || _isPlaceholder(a)) {
+      return f1;
+    } else {
+      return fn.apply(this, arguments);
+    }
+  };
+}
+// CONCATENATED MODULE: ./node_modules/ramda/es/internal/_curry2.js
+
+
+
+/**
+ * Optimized internal two-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+function _curry2(fn) {
+  return function f2(a, b) {
+    switch (arguments.length) {
+      case 0:
+        return f2;
+      case 1:
+        return _isPlaceholder(a) ? f2 : _curry1(function (_b) {
+          return fn(a, _b);
+        });
+      default:
+        return _isPlaceholder(a) && _isPlaceholder(b) ? f2 : _isPlaceholder(a) ? _curry1(function (_a) {
+          return fn(_a, b);
+        }) : _isPlaceholder(b) ? _curry1(function (_b) {
+          return fn(a, _b);
+        }) : fn(a, b);
+    }
+  };
+}
+// CONCATENATED MODULE: ./node_modules/ramda/es/and.js
+
+
+/**
+ * Returns `true` if both arguments are `true`; `false` otherwise.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Logic
+ * @sig a -> b -> a | b
+ * @param {Any} a
+ * @param {Any} b
+ * @return {Any} the first argument if it is falsy, otherwise the second argument.
+ * @see R.both
+ * @example
+ *
+ *      R.and(true, true); //=> true
+ *      R.and(true, false); //=> false
+ *      R.and(false, true); //=> false
+ *      R.and(false, false); //=> false
+ */
+var and = /*#__PURE__*/_curry2(function and(a, b) {
+  return a && b;
+});
+/* harmony default export */ var es_and = (and);
 // EXTERNAL MODULE: ./node_modules/yargs-parser/index.js
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=94961430&
-var Stdinvue_type_template_id_94961430_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
-var Stdinvue_type_template_id_94961430_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=6c092872&
+var Stdinvue_type_template_id_6c092872_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
+var Stdinvue_type_template_id_6c092872_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=94961430&
+// CONCATENATED MODULE: ./src/Stdin.vue?vue&type=template&id=6c092872&
 
 // EXTERNAL MODULE: ./node_modules/lodash/clone.js
 var clone = __webpack_require__("b8ce");
@@ -12477,6 +12827,8 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 //
 //
 //
+
+
 
 
 /* harmony default export */ var Stdinvue_type_script_lang_js_ = ({
@@ -12537,7 +12889,9 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
   },
   watch: {
     lastCommand: function lastCommand() {
-      if (!isEmpty_default()(this.lastCommand) && this.isLast) this.setCommand(clone_default()(this.lastCommand));
+      if (es_and(!isEmpty_default()(this.lastCommand), this.isLast)) {
+        this.setCommand(clone_default()(this.lastCommand));
+      }
     },
     command: function command() {
       // Emit current command as event
@@ -12551,7 +12905,7 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!(!this.isInProgress && this.isLast)) {
+                if (!es_and(!this.isInProgress, this.isLast)) {
                   _context.next = 5;
                   break;
                 }
@@ -12582,7 +12936,9 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
     var _this = this;
 
     setTimeout(function () {
-      if (_this.isLast && _this.showHelp) _this.setPlaceholder(_this.helpText);
+      if (es_and(_this.isLast, _this.showHelp)) {
+        _this.setPlaceholder(_this.helpText);
+      }
     }, this.helpTimeout);
   },
   mounted: function mounted() {
@@ -12591,13 +12947,20 @@ var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
     // Scroll to current input and focus it
     this.$refs.input.scrollIntoView();
     this.$refs.input.focus();
-    this.bus.$on('autocomplete', function (_ref) {
+
+    var onAutocomplete = function onAutocomplete(_ref) {
       var command = _ref.command,
           uid = _ref.uid;
-      if (_this2.isLast && _this2.uid === uid) _this2.setCommand(command);
-    });
+
+      if (es_and(_this2.isLast, eq_default()(_this2.uid, uid))) {
+        _this2.setCommand(command);
+      }
+    };
+
+    this.bus.$on('autocomplete', onAutocomplete);
   },
   methods: {
+    // Handle current command
     handle: function handle() {
       if (this.isInProgress) return;
       this.setLocalPrompt(this.prompt);
@@ -12726,8 +13089,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   src_Stdinvue_type_script_lang_js_,
-  Stdinvue_type_template_id_94961430_render,
-  Stdinvue_type_template_id_94961430_staticRenderFns,
+  Stdinvue_type_template_id_6c092872_render,
+  Stdinvue_type_template_id_6c092872_staticRenderFns,
   false,
   null,
   null,
@@ -12736,7 +13099,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Stdin = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6b1b365e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
 var Stdoutvue_type_template_id_0ce69ce0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.stdout)}})}
 var Stdoutvue_type_template_id_0ce69ce0_staticRenderFns = []
 
@@ -12889,6 +13252,11 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 
 
 
+
+
+
+
+
  // Event bus for communication
 
 var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
@@ -12993,13 +13361,20 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     // Lets user navigate through history based on input key
     mutatePointerHandler: function mutatePointerHandler(_ref) {
       var key = _ref.key;
+      // Check if pointer is mutable and input key is up key
+      var isMutableAndUpKey = es_and(eq_default()(key, ARROW_UP_KEY), gt_default()(this.pointer, 0));
 
-      if (key === ARROW_UP_KEY && this.pointer > 0) {
+      if (isMutableAndUpKey) {
         this.setPointer(this.pointer - 1);
-        this.setLast(this.executed[this.pointer]);
-      } else if (key === ARROW_DOWN_KEY && this.pointer < size_default()(this.executed) - 1) {
+        this.setLast(get_default()(this.executed, this.pointer));
+      } // Check if pointer is mutable and input key is down key
+
+
+      var isMutableAndDownKey = es_and(eq_default()(key, ARROW_DOWN_KEY), lt_default()(this.pointer, size_default()(this.executed) - 1));
+
+      if (isMutableAndDownKey) {
         this.setPointer(this.pointer + 1);
-        this.setLast(this.executed[this.pointer]);
+        this.setLast(get_default()(this.executed, this.pointer));
       }
     },
     // Provides autocompletion for tab key
@@ -13008,7 +13383,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
 
       var key = _ref2.key;
 
-      if (key === TAB_KEY && !isEmpty_default()(this.current)) {
+      if (es_and(eq_default()(key, TAB_KEY), !isEmpty_default()(this.current))) {
         each_default()(keys_default()(this.commands).sort(), function (command) {
           if (command.startsWith(_this.current)) {
             _this.bus.$emit('autocomplete', {
@@ -13049,7 +13424,8 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
                 break;
 
               case 7:
-                executed = cloneDeep_default()(this.executed);
+                executed = cloneDeep_default()(this.executed); // Remove duplicate commands for a clear history
+
                 executed = without_default()(executed, command);
                 executed.push(command);
                 this.setExecuted(executed); // Point to latest command plus one

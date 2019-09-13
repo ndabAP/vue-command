@@ -23,7 +23,9 @@
 
 <script>
 import isEmpty from 'lodash/isEmpty'
+import eq from 'lodash/eq'
 import clone from 'lodash/clone'
+import { and } from 'ramda'
 
 export default {
   props: {
@@ -94,7 +96,9 @@ export default {
 
   watch: {
     lastCommand () {
-      if (!isEmpty(this.lastCommand) && this.isLast) this.setCommand(clone(this.lastCommand))
+      if (and(!isEmpty(this.lastCommand), this.isLast)) {
+        this.setCommand(clone(this.lastCommand))
+      }
     },
 
     command () {
@@ -103,7 +107,7 @@ export default {
     },
 
     async isInProgress () {
-      if (!this.isInProgress && this.isLast) {
+      if (and(!this.isInProgress, this.isLast)) {
         await this.$nextTick()
 
         this.$refs.input.scrollIntoView()
@@ -114,7 +118,9 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (this.isLast && this.showHelp) this.setPlaceholder(this.helpText)
+      if (and(this.isLast, this.showHelp)) {
+        this.setPlaceholder(this.helpText)
+      }
     }, this.helpTimeout)
   },
 
@@ -123,12 +129,17 @@ export default {
     this.$refs.input.scrollIntoView()
     this.$refs.input.focus()
 
-    this.bus.$on('autocomplete', ({ command, uid }) => {
-      if (this.isLast && this.uid === uid) this.setCommand(command)
-    })
+    const onAutocomplete = ({ command, uid }) => {
+      if (and(this.isLast, eq(this.uid, uid))) {
+        this.setCommand(command)
+      }
+    }
+
+    this.bus.$on('autocomplete', onAutocomplete)
   },
 
   methods: {
+    // Handle current command
     handle () {
       if (this.isInProgress) return
 
