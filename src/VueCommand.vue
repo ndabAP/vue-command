@@ -131,6 +131,11 @@ export default {
       default: false
     },
 
+    notFound: {
+      type: String,
+      default: 'command not found'
+    },
+
     prompt: {
       type: String,
       default: '~neil@moon:#'
@@ -261,7 +266,7 @@ export default {
 
           this.isInProgress = false
           this.$emit('executed', command)
-        } else this.history.push(`${command}: command not found`)
+        } else this.history.push(`${command}: ${this.notFound}`)
       }
 
       this.setCurrent('')
