@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -29,30 +29,30 @@
     "serve": "vue-cli-service serve"
   },
   "dependencies": {
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.15",
     "lodash.mergewith": ">=4.6.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
-    "tar": ">=4.4.8",
-    "vue": "^2.5.21",
+    "tar": ">=4.4.10",
+    "vue": "^2.6.10",
     "yargs-parser": "^13.0.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-plugin-unit-jest": "^3.9.0",
-    "@vue/cli-service": "^3.7.0",
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-plugin-unit-jest": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^5.2.3",
     "flush-promises": "^1.0.2",
     "js-yaml": "^3.13.1",
     "querystringify": "^2.1.1",
-    "vue-template-compiler": "^2.5.21",
-    "webpack": "^4.35.2"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.40.1"
   }
 }
