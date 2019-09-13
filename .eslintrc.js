@@ -16,6 +16,7 @@ module.exports = {
       'multiline': 'nerver'
     }],
     'vue/attributes-order': 'error',
+    'vue/order-in-components': 'error',
     'vue/html-indent': 'error'
   },
   parserOptions: {
