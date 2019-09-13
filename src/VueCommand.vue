@@ -92,9 +92,12 @@ import Stdin from './Stdin'
 import Stdout from './Stdout'
 import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants'
 
+// Event bus for communication
 const EventBus = new Vue()
 
 export default {
+
+  components: { Stdin, Stdout },
   props: {
     commands: {
       type: Object,
@@ -167,8 +170,6 @@ export default {
     }
   },
 
-  components: { Stdin, Stdout },
-
   data: () => ({
     // Bus for communication
     bus: EventBus,
@@ -197,19 +198,20 @@ export default {
 
   watch: {
     current () {
+      // Emit the current input as an event
       this.$emit('input', this.current)
     }
   },
 
   methods: {
-    // Lets you navigate through history based on key
+    // Lets user navigate through history based on input key
     mutatePointerHandler ({ key }) {
       if (key === ARROW_UP_KEY && this.pointer > 0) {
-        this.pointer--
-        this.last = this.executed[this.pointer]
+        this.setPointer(this.pointer - 1)
+        this.setLast(this.executed[this.pointer])
       } else if (key === ARROW_DOWN_KEY && this.pointer < size(this.executed) - 1) {
-        this.pointer++
-        this.last = this.executed[this.pointer]
+        this.setPointer(this.pointer + 1)
+        this.setLast(this.executed[this.pointer])
       }
     },
 
@@ -220,14 +222,11 @@ export default {
           if (command.startsWith(this.current)) {
             this.bus.$emit('autocomplete', { command, uid: this._uid })
 
+            // Terminate iteration because of successful hit
             return false
           }
         })
       }
-    },
-
-    setCurrent (current) {
-      this.current = current
     },
 
     // Handles the command
@@ -248,14 +247,14 @@ export default {
         executed = without(executed, command)
         executed.push(command)
 
-        this.executed = executed
+        this.setExecuted(executed)
         // Point to latest command plus one
-        this.pointer = size(executed)
+        this.setPointer(size(executed))
 
         // Check if command has been found
         if (has(this.commands, program)) {
           this.history.push('')
-          this.isInProgress = true
+          this.setIsInProgress(true)
 
           const stdout = await Promise.resolve(
             invoke(this.commands, program, yargsParser(command, this.yargsOptions))
@@ -264,12 +263,32 @@ export default {
           // Add program result to history
           Vue.set(this.history, size(this.history) - 1, stdout)
 
-          this.isInProgress = false
+          this.setIsInProgress(false)
           this.$emit('executed', command)
         } else this.history.push(`${command}: ${this.notFound}`)
       }
 
       this.setCurrent('')
+    },
+
+    setCurrent (current) {
+      this.current = current
+    },
+
+    setIsInProgress (isInProgress) {
+      this.isInProgress = isInProgress
+    },
+
+    setExecuted (executed) {
+      this.executed = executed
+    },
+
+    setPointer (pointer) {
+      this.pointer = pointer
+    },
+
+    setLast (last) {
+      this.last = last
     }
   }
 }

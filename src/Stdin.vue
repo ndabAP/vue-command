@@ -87,43 +87,18 @@ export default {
 
   data: () => ({
     command: '',
-    // Determinate if input is disabled
-    isDisabled: false,
-    placeholder: '',
-    localPrompt: ''
+    // For virtual path simulation
+    localPrompt: '',
+    placeholder: ''
   }),
-
-  created () {
-    setTimeout(() => {
-      if (this.isLast && this.showHelp) this.placeholder = this.helpText
-    }, this.helpTimeout)
-  },
-
-  mounted () {
-    this.$refs.input.scrollIntoView()
-    this.$refs.input.focus()
-
-    this.bus.$on('autocomplete', ({ command, uid }) => {
-      if (this.isLast && this.uid === uid) this.command = command
-    })
-  },
-
-  methods: {
-    handle () {
-      if (this.isInProgress) return
-
-      this.localPrompt = this.prompt
-      this.$emit('handle', this.command)
-      this.placeholder = ''
-    }
-  },
 
   watch: {
     lastCommand () {
-      if (!isEmpty(this.lastCommand) && this.isLast) this.command = clone(this.lastCommand)
+      if (!isEmpty(this.lastCommand) && this.isLast) this.setCommand(clone(this.lastCommand))
     },
 
     command () {
+      // Emit current command as event
       this.$emit('typing', this.command)
     },
 
@@ -134,6 +109,44 @@ export default {
         this.$refs.input.scrollIntoView()
         this.$refs.input.focus()
       }
+    }
+  },
+
+  created () {
+    setTimeout(() => {
+      if (this.isLast && this.showHelp) this.setPlaceholder(this.helpText)
+    }, this.helpTimeout)
+  },
+
+  mounted () {
+    // Scroll to current input and focus it
+    this.$refs.input.scrollIntoView()
+    this.$refs.input.focus()
+
+    this.bus.$on('autocomplete', ({ command, uid }) => {
+      if (this.isLast && this.uid === uid) this.setCommand(command)
+    })
+  },
+
+  methods: {
+    handle () {
+      if (this.isInProgress) return
+
+      this.setLocalPrompt(this.prompt)
+      this.$emit('handle', this.command)
+      this.setPlaceholder('')
+    },
+
+    setPlaceholder (placeholder) {
+      this.placeholder = placeholder
+    },
+
+    setCommand (command) {
+      this.command = command
+    },
+
+    setLocalPrompt (localPrompt) {
+      this.localPrompt = localPrompt
     }
   }
 }
