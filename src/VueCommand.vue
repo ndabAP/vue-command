@@ -29,25 +29,12 @@
             :class="{ 'white-font': !whiteTheme, 'dark-font': whiteTheme }">
             {{ intro }}
           </div>
-          <stdin
-            :bus="bus"
-            :hide-prompt="hidePrompt"
-            :is-in-progress="isInProgress"
-            :is-last="progress === 0"
-            :prompt="prompt"
-            :help-text="helpText"
-            :keep-prompt="keepPrompt"
-            :help-timeout="helpTimeout"
-            :show-help="showHelp"
-            :white-theme="whiteTheme"
-            :uid="_uid"
-            @handle="handle"
-            @typing="setCurrent"/>
 
           <div
             v-for="(stdout, index) in history"
             :key="index">
             <stdout
+              v-if="index !== 0"
               :white-theme="whiteTheme"
               :stdout="stdout"
               class="term-stdout"/>
@@ -90,7 +77,7 @@ import eq from 'lodash/eq'
 import gt from 'lodash/gt'
 import lt from 'lodash/lt'
 import get from 'lodash/get'
-import { and } from 'ramda'
+import { and, or } from 'ramda'
 import yargsParser from 'yargs-parser'
 
 import Stdin from './Stdin'
@@ -104,6 +91,11 @@ export default {
   components: { Stdin, Stdout },
 
   props: {
+    builtIn: {
+      type: Object,
+      default: () => ({})
+    },
+
     commands: {
       type: Object,
       required: true
@@ -179,7 +171,7 @@ export default {
     // Bus for communication
     bus: EventBus,
     // All executed commands
-    history: [],
+    history: [''],
     // Indicates if a command is in progress
     isInProgress: false,
     // Non-empty executed commands
@@ -212,23 +204,23 @@ export default {
     // Lets user navigate through history based on input key
     mutatePointerHandler ({ key }) {
       // Check if pointer is mutable and input key is up key
-      const isMutableAndUpKey = and(
+      const isMutablePointerAndUpKey = and(
         eq(key, ARROW_UP_KEY),
         gt(this.pointer, 0)
       )
 
-      if (isMutableAndUpKey) {
+      if (isMutablePointerAndUpKey) {
         this.setPointer(this.pointer - 1)
         this.setLast(get(this.executed, this.pointer))
       }
 
       // Check if pointer is mutable and input key is down key
-      const isMutableAndDownKey = and(
+      const isMutablePointerAndDownKey = and(
         eq(key, ARROW_DOWN_KEY),
         lt(this.pointer, size(this.executed) - 1)
       )
 
-      if (isMutableAndDownKey) {
+      if (isMutablePointerAndDownKey) {
         this.setPointer(this.pointer + 1)
         this.setLast(get(this.executed, this.pointer))
       }
@@ -259,29 +251,43 @@ export default {
       const program = head(yargsParser(command, this.yargsOptions)._)
 
       if (isEmpty(program)) {
-        // Empty stdin
+        // Empty command
         this.history.push(null)
-      } else {
+      }
+
+      if (!isEmpty(program)) {
         let executed = cloneDeep(this.executed)
         // Remove duplicate commands for a clear history
         executed = without(executed, command)
         executed.push(command)
 
         this.setExecuted(executed)
-        // Point to latest command plus one
-        this.setPointer(size(executed))
+
+        const isBuiltin = has(this.builtIn, program)
+        const isCommand = has(this.commands, program)
 
         // Check if command has been found
-        if (has(this.commands, program)) {
+        if (or(isBuiltin, isCommand)) {
           this.history.push('')
           this.setIsInProgress(true)
 
-          const stdout = await Promise.resolve(
-            invoke(this.commands, program, yargsParser(command, this.yargsOptions))
-          )
+          let stdout = ''
+          if (isBuiltin) {
+            stdout = await Promise.resolve(
+              invoke(this.builtIn, program, yargsParser(command, this.yargsOptions), this.$data)
+            )
+          }
+
+          if (isCommand) {
+            stdout = await Promise.resolve(
+              invoke(this.commands, program, yargsParser(command, this.yargsOptions))
+            )
+          }
 
           // Add program result to history
           Vue.set(this.history, size(this.history) - 1, stdout)
+          // Point to latest command plus one
+          this.setPointer(size(executed))
 
           this.setIsInProgress(false)
           this.$emit('executed', command)

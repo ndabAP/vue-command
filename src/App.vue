@@ -26,8 +26,11 @@ export default {
   data: () => ({
     commands: {
       pokedex: ({ color, _ }) => {
-        if (color && _[1] === 'pikachu') return 'yellow'
+        if (color && _[1] === 'pikachu') {
+          return 'yellow'
+        }
 
+        // Return help since no match
         return `Usage: pokedex pokemon [option]<br><br>
 
           Example: pokedex pikachu --color

@@ -18,22 +18,24 @@ $ npm i vue-command --save
 
 ## Properties
 
-| Property        | Type      | Default                  | Required | Description                                                                                                                                                                                                          |
-|-----------------|-----------|--------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `commands`      | `Object`  | `{}`                     | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme). Function should return either a `String` or a `Promise` that resolves to a `String` |
-| `help-text`     | `String`  | `Type help`              | No       | Sets the placeholder                                                                                                                                                                                                 |
-| `help-timeout`  | `Number`  | `4000`                   | No       | Sets the placeholder timeout                                                                                                                                                                                         |
-| `hide-bar`      | `Boolean` | `false`                  | No       | Hides the bar                                                                                                                                                                                                        |
-| `hide-prompt`   | `Boolean` | `false`                  | No       | Hides the prompt                                                                                                                                                                                                     |
-| `intro`         | `String`  | `Fasten your seatbelts!` | No       | Sets the intro                                                                                                                                                                                                       |
-| `keep-prompt`   | `Boolean` | `false`                  | No       | Keeps the prompt for already executed commands                                                                                                                                                                       |
-| `not-found`     | `String`  | `not found`              | No       | Sets the command not found text                                                                                                                                                                                      |
-| `prompt`        | `String`  | `~neil@moon:#`           | No       | Sets the prompt                                                                                                                                                                                                      |
-| `show-help`     | `Boolean` | `false`                  | No       | Shows the placeholder                                                                                                                                                                                                |
-| `show-intro`    | `Boolean` | `false`                  | No       | Shows the intro                                                                                                                                                                                                      |
-| `title`         | `String`  | `neil@moon: ~`           | No       | Sets the title                                                                                                                                                                                                       |
-| `white-theme`   | `Boolean` | `false`                  | No       | Enables the white theme                                                                                                                                                                                              |
-| `yargs-options` | `Object`  | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                               |
+| Property        | Type      | Default                  | Required | Description                                                                                                                                                                                                                                    |
+|-----------------|-----------|--------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `built-in`      | `Object`  | `{}`                     | No       | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String` |
+| `commands`      | `Object`  |                          | Yes      | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme). Function should return `String` or `Promise` that resolves to `String`                           |
+| `help-text`     | `String`  | `Type help`              | No       | Sets the placeholder                                                                                                                                                                                                                           |
+| `help-timeout`  | `Number`  | `4000`                   | No       | Sets the placeholder timeout                                                                                                                                                                                                                   |
+| `hide-bar`      | `Boolean` | `false`                  | No       | Hides the bar                                                                                                                                                                                                                                  |
+| `hide-prompt`   | `Boolean` | `false`                  | No       | Hides the prompt                                                                                                                                                                                                                               |
+| `intro`         | `String`  | `Fasten your seatbelts!` | No       | Sets the intro                                                                                                                                                                                                                                 |
+| `keep-prompt`   | `Boolean` | `false`                  | No       | Keeps the prompt for already executed commands                                                                                                                                                                                                 |
+| `not-found`     | `String`  | `not found`              | No       | Sets the command not found text                                                                                                                                                                                                                |
+| `prompt`        | `String`  | `~neil@moon:#`           | No       | Sets the prompt                                                                                                                                                                                                                                |
+| `show-help`     | `Boolean` | `false`                  | No       | Shows the placeholder                                                                                                                                                                                                                          |
+| `show-intro`    | `Boolean` | `false`                  | No       | Shows the intro                                                                                                                                                                                                                                |
+| `title`         | `String`  | `neil@moon: ~`           | No       | Sets the title                                                                                                                                                                                                                                 |
+| `white-theme`   | `Boolean` | `false`                  | No       | Enables the white theme                                                                                                                                                                                                                        |
+| `yargs-options` | `Object`  | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                                         |
+
 
 ## Events
 
@@ -66,8 +68,11 @@ export default {
     commands: {
       // yargs arguments
       pokedex: ({ color, _ }) => {
-        if (color && _[1] === 'pikachu') return 'yellow'
-
+        if (color && _[1] === 'pikachu') {
+          return 'yellow'
+        }
+        
+        // Return help since no match
         return `Usage: pokedex pokemon [option]<br><br>
 
         Example: pokedex pikachu --color

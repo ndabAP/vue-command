@@ -12578,15 +12578,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=36dc9bb8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6cc4aa1e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=0b8bb3dd&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
-        }},[_vm._v("\n        "+_vm._s(_vm.title)+"\n      ")])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[(_vm.showIntro)?_c('div',{class:{ 'white-font': !_vm.whiteTheme, 'dark-font': _vm.whiteTheme }},[_vm._v("\n          "+_vm._s(_vm.intro)+"\n        ")]):_vm._e(),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":_vm.progress === 0,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}}),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
+        }},[_vm._v("\n        "+_vm._s(_vm.title)+"\n      ")])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[(_vm.showIntro)?_c('div',{class:{ 'white-font': !_vm.whiteTheme, 'dark-font': _vm.whiteTheme }},[_vm._v("\n          "+_vm._s(_vm.intro)+"\n        ")]):_vm._e(),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[(index !== 0)?_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}):_vm._e(),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=36dc9bb8&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=0b8bb3dd&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -12785,11 +12785,38 @@ var and = /*#__PURE__*/_curry2(function and(a, b) {
   return a && b;
 });
 /* harmony default export */ var es_and = (and);
+// CONCATENATED MODULE: ./node_modules/ramda/es/or.js
+
+
+/**
+ * Returns `true` if one or both of its arguments are `true`. Returns `false`
+ * if both arguments are `false`.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Logic
+ * @sig a -> b -> a | b
+ * @param {Any} a
+ * @param {Any} b
+ * @return {Any} the first argument if truthy, otherwise the second argument.
+ * @see R.either
+ * @example
+ *
+ *      R.or(true, true); //=> true
+ *      R.or(true, false); //=> true
+ *      R.or(false, true); //=> true
+ *      R.or(false, false); //=> false
+ */
+var or = /*#__PURE__*/_curry2(function or(a, b) {
+  return a || b;
+});
+/* harmony default export */ var es_or = (or);
 // EXTERNAL MODULE: ./node_modules/yargs-parser/index.js
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=6c092872&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6cc4aa1e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdin.vue?vue&type=template&id=6c092872&
 var Stdinvue_type_template_id_6c092872_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"keyup":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)},"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
 var Stdinvue_type_template_id_6c092872_staticRenderFns = []
 
@@ -13099,7 +13126,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Stdin = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8fc55da4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6cc4aa1e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Stdout.vue?vue&type=template&id=0ce69ce0&
 var Stdoutvue_type_template_id_0ce69ce0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },domProps:{"innerHTML":_vm._s(_vm.stdout)}})}
 var Stdoutvue_type_template_id_0ce69ce0_staticRenderFns = []
 
@@ -13225,19 +13252,6 @@ var ARROW_DOWN_KEY = 'ArrowDown';
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -13266,6 +13280,13 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     Stdout: Stdout
   },
   props: {
+    builtIn: {
+      type: Object,
+      required: false,
+      default: function _default() {
+        return {};
+      }
+    },
     commands: {
       type: Object,
       required: true
@@ -13330,7 +13351,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       // Bus for communication
       bus: EventBus,
       // All executed commands
-      history: [],
+      history: [''],
       // Indicates if a command is in progress
       isInProgress: false,
       // Non-empty executed commands
@@ -13362,17 +13383,17 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     mutatePointerHandler: function mutatePointerHandler(_ref) {
       var key = _ref.key;
       // Check if pointer is mutable and input key is up key
-      var isMutableAndUpKey = es_and(eq_default()(key, ARROW_UP_KEY), gt_default()(this.pointer, 0));
+      var isMutablePointerAndUpKey = es_and(eq_default()(key, ARROW_UP_KEY), gt_default()(this.pointer, 0));
 
-      if (isMutableAndUpKey) {
+      if (isMutablePointerAndUpKey) {
         this.setPointer(this.pointer - 1);
         this.setLast(get_default()(this.executed, this.pointer));
       } // Check if pointer is mutable and input key is down key
 
 
-      var isMutableAndDownKey = es_and(eq_default()(key, ARROW_DOWN_KEY), lt_default()(this.pointer, size_default()(this.executed) - 1));
+      var isMutablePointerAndDownKey = es_and(eq_default()(key, ARROW_DOWN_KEY), lt_default()(this.pointer, size_default()(this.executed) - 1));
 
-      if (isMutableAndDownKey) {
+      if (isMutablePointerAndDownKey) {
         this.setPointer(this.pointer + 1);
         this.setLast(get_default()(this.executed, this.pointer));
       }
@@ -13402,7 +13423,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       var _handle = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee(command) {
-        var program, executed, stdout;
+        var program, executed, isBuiltin, isCommand, stdout;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -13413,50 +13434,73 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
 
                 program = head_default()(yargs_parser_default()(command, this.yargsOptions)._);
 
-                if (!isEmpty_default()(program)) {
-                  _context.next = 7;
+                if (isEmpty_default()(program)) {
+                  // Empty command
+                  this.history.push(null);
+                }
+
+                if (isEmpty_default()(program)) {
+                  _context.next = 30;
                   break;
                 }
 
-                // Empty stdin
-                this.history.push(null);
-                _context.next = 24;
-                break;
-
-              case 7:
                 executed = cloneDeep_default()(this.executed); // Remove duplicate commands for a clear history
 
                 executed = without_default()(executed, command);
                 executed.push(command);
                 this.setExecuted(executed); // Point to latest command plus one
 
-                this.setPointer(size_default()(executed)); // Check if command has been found
+                this.setPointer(size_default()(executed));
+                isBuiltin = has_default()(this.builtIn, program);
+                isCommand = has_default()(this.commands, program); // Check if command has been found
 
-                if (!has_default()(this.commands, program)) {
-                  _context.next = 23;
+                if (!es_or(isBuiltin, isCommand)) {
+                  _context.next = 29;
                   break;
                 }
 
                 this.history.push('');
                 this.setIsInProgress(true);
-                _context.next = 17;
+                stdout = '';
+
+                if (!isBuiltin) {
+                  _context.next = 20;
+                  break;
+                }
+
+                _context.next = 19;
+                return Promise.resolve(invoke_default()(this.builtIn, program, yargs_parser_default()(command, this.yargsOptions), this.$data));
+
+              case 19:
+                stdout = _context.sent;
+
+              case 20:
+                if (!isCommand) {
+                  _context.next = 24;
+                  break;
+                }
+
+                _context.next = 23;
                 return Promise.resolve(invoke_default()(this.commands, program, yargs_parser_default()(command, this.yargsOptions)));
 
-              case 17:
+              case 23:
                 stdout = _context.sent;
+
+              case 24:
+                // Add program result to history
                 external_commonjs_vue_commonjs2_vue_root_Vue_default.a.set(this.history, size_default()(this.history) - 1, stdout);
                 this.setIsInProgress(false);
                 this.$emit('executed', command);
-                _context.next = 24;
+                _context.next = 30;
                 break;
 
-              case 23:
+              case 29:
                 this.history.push("".concat(command, ": ").concat(this.notFound));
 
-              case 24:
+              case 30:
                 this.setCurrent('');
 
-              case 25:
+              case 31:
               case "end":
                 return _context.stop();
             }
