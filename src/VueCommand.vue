@@ -269,16 +269,16 @@ export default {
 
         this.setExecuted(executed)
 
-        const isBuiltin = has(this.builtIn, program)
+        const isBuiltIn = has(this.builtIn, program)
         const isCommand = has(this.commands, program)
 
         // Check if command has been found
-        if (or(isBuiltin, isCommand)) {
+        if (or(isBuiltIn, isCommand)) {
           this.history.push('')
           this.setIsInProgress(true)
 
           let stdout = ''
-          if (isBuiltin) {
+          if (isBuiltIn) {
             stdout = await Promise.resolve(
               invoke(this.builtIn, program, yargsParser(command, this.yargsOptions), this.$data)
             )

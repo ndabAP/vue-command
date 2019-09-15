@@ -12569,7 +12569,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6cc4aa1e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=7d5beb63&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6cc4aa1e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueCommand.vue?vue&type=template&id=579dd17a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.mutatePointerHandler($event)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.mutatePointerHandler($event)}],"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{
           'dark-font': _vm.whiteTheme,
           'white-font': !_vm.whiteTheme
@@ -12577,7 +12577,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=7d5beb63&
+// CONCATENATED MODULE: ./src/VueCommand.vue?vue&type=template&id=579dd17a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.promise.js
 var es6_promise = __webpack_require__("551c");
@@ -13418,7 +13418,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
       var _handle = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee(command) {
-        var program, executed, isBuiltin, isCommand, stdout;
+        var program, executed, isBuiltIn, isCommand, stdout;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -13444,10 +13444,10 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
                 executed = without_default()(executed, command);
                 executed.push(command);
                 this.setExecuted(executed);
-                isBuiltin = has_default()(this.builtIn, program);
+                isBuiltIn = has_default()(this.builtIn, program);
                 isCommand = has_default()(this.commands, program); // Check if command has been found
 
-                if (!es_or(isBuiltin, isCommand)) {
+                if (!es_or(isBuiltIn, isCommand)) {
                   _context.next = 29;
                   break;
                 }
@@ -13456,7 +13456,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
                 this.setIsInProgress(true);
                 stdout = '';
 
-                if (!isBuiltin) {
+                if (!isBuiltIn) {
                   _context.next = 19;
                   break;
                 }
