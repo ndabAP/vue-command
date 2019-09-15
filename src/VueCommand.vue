@@ -197,6 +197,12 @@ export default {
     current () {
       // Emit the current input as an event
       this.$emit('input', this.current)
+
+      // Make searching history work again
+      if (isEmpty(this.current)) {
+        this.setPointer(size(this.executed))
+        this.setLast('')
+      }
     }
   },
 
