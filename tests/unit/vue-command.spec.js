@@ -169,4 +169,21 @@ describe('VueCommand.vue', () => {
 
     expect(wrapper.find('input').element.value).toBe(command)
   })
+
+  it('executes built-in commands', async () => {
+    const command = Math.random().toString(36).substring(6)
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        builtIn: { [command]: () => command },
+        commands: { [command]: () => command }
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keyup.enter')
+
+    await flushPromises()
+
+    expect(wrapper.find('.term-stdout').text()).toBe(command)
+  })
 })
