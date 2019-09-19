@@ -92,11 +92,6 @@ export default {
   components: { Stdin, Stdout },
 
   props: {
-    autocompleteResolver: {
-      type: Object,
-      default: () => ({})
-    },
-
     builtIn: {
       type: Object,
       default: () => ({})
