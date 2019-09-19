@@ -77,7 +77,8 @@ import eq from 'lodash/eq'
 import gt from 'lodash/gt'
 import lt from 'lodash/lt'
 import get from 'lodash/get'
-import { and, or } from 'ramda'
+import startsWith from 'lodash/startsWith'
+import { and, or, inc, dec } from 'ramda'
 import yargsParser from 'yargs-parser'
 
 import Stdin from './Stdin'
@@ -91,6 +92,11 @@ export default {
   components: { Stdin, Stdout },
 
   props: {
+    autocompleteResolver: {
+      type: Object,
+      default: () => ({})
+    },
+
     builtIn: {
       type: Object,
       default: () => ({})
@@ -216,7 +222,7 @@ export default {
       )
 
       if (isMutablePointerAndUpKey) {
-        this.setPointer(this.pointer - 1)
+        this.setPointer(dec(this.pointer))
         this.setLast(get(this.executed, this.pointer))
       }
 
@@ -227,7 +233,7 @@ export default {
       )
 
       if (isMutablePointerAndDownKey) {
-        this.setPointer(this.pointer + 1)
+        this.setPointer(inc(this.pointer))
         this.setLast(get(this.executed, this.pointer))
       }
     },
@@ -236,7 +242,8 @@ export default {
     autocomplete ({ key }) {
       if (and(eq(key, TAB_KEY), !isEmpty(this.current))) {
         each(keys(this.commands).sort(), command => {
-          if (command.startsWith(this.current)) {
+          if (startsWith(command, this.current)) {
+            // Communicate the autocompletion through the event bus
             this.bus.$emit('autocomplete', { command, uid: this._uid })
 
             // Terminate iteration because of successful hit

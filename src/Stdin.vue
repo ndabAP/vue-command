@@ -2,8 +2,8 @@
   <div v-show="!isLast || !isInProgress">
     <span
       v-if="!hidePrompt"
-      class="term-ps"
-      :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }">
+      :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
+      class="term-ps">
       <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
       <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
     </span>
