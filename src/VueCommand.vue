@@ -78,6 +78,8 @@ import gt from 'lodash/gt'
 import lt from 'lodash/lt'
 import get from 'lodash/get'
 import startsWith from 'lodash/startsWith'
+import last from 'lodash/last'
+import split from 'lodash/split'
 import { and, or, inc, dec } from 'ramda'
 import yargsParser from 'yargs-parser'
 
@@ -243,22 +245,26 @@ export default {
       if (and(eq(key, TAB_KEY), !isEmpty(this.current))) {
         each(keys(this.commands).sort(), command => {
           if (startsWith(command, this.current)) {
-            const isAutocompleteable = has(this.autocompletionResolver, trim(command))
-            console.log(command)
-            if (isAutocompleteable) {
-              const program = head(yargsParser(command, this.yargsOptions)._)
-
-              console.log(program)
-
-              return invoke(this.autocompletionResolver)
-            }
             // Communicate the autocompletion through the event bus
             this.bus.$emit('autocomplete', { command, uid: this._uid })
-
             // Terminate iteration because of successful hit
             return false
           }
         })
+      }
+
+      const isAutocompleteable = and(
+        eq(key, TAB_KEY),
+        !isEmpty(this.current),
+        !isEmpty(this.autocompletionResolver)
+      )
+
+      if (isAutocompleteable) {
+        const program = head(yargsParser(command, this.yargsOptions)._)
+        const rest = last(split(this.current, program))
+        const autocomplete = invoke(this.autocompletionResolver, program, rest)
+
+        this.bus.$emit('autocomplete', { autocomplete: `${this.current}${autocomplete}`, uid: this._uid })
       }
     },
 
