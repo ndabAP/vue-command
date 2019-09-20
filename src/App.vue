@@ -24,6 +24,14 @@ export default {
   },
 
   data: () => ({
+    autocompletionResolver: {
+      pokedex: command => {
+        if (command.startsWith('-')) {
+          return '--color'
+        }
+      }
+    },
+
     commands: {
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {

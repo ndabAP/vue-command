@@ -92,7 +92,7 @@ export default {
   components: { Stdin, Stdout },
 
   props: {
-    autocompleteResolver: {
+    autocompletionResolver: {
       type: Object,
       default: () => ({})
     },
@@ -243,6 +243,15 @@ export default {
       if (and(eq(key, TAB_KEY), !isEmpty(this.current))) {
         each(keys(this.commands).sort(), command => {
           if (startsWith(command, this.current)) {
+            const isAutocompleteable = has(this.autocompletionResolver, trim(command))
+            console.log(command)
+            if (isAutocompleteable) {
+              const program = head(yargsParser(command, this.yargsOptions)._)
+
+              console.log(program)
+
+              return invoke(this.autocompletionResolver)
+            }
             // Communicate the autocompletion through the event bus
             this.bus.$emit('autocomplete', { command, uid: this._uid })
 
