@@ -16,7 +16,7 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import VueCommand from './VueCommand'
+import VueCommand from '../components/VueCommand'
 
 export default {
   components: {

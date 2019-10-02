@@ -16,6 +16,8 @@
         :disabled="!isLast"
         :placeholder="placeholder"
         type="text"
+        @click="emitCursor"
+        @keyup="emitCursor"
         @keyup.enter="handle"/>
     </span>
   </div>
@@ -104,6 +106,8 @@ export default {
     command () {
       // Emit current command as event
       this.$emit('typing', this.command)
+      // Emit current cursor position
+      this.$emit('cursor', this.$refs.input.selectionStart)
     },
 
     async isInProgress () {
@@ -141,11 +145,21 @@ export default {
   methods: {
     // Handle current command
     handle () {
-      if (this.isInProgress) return
+      // Wait for other commands to finish
+      if (this.isInProgress) {
+        return
+      }
 
+      // Persist the current prompt
       this.setLocalPrompt(this.prompt)
+      // Request to handle the current command
       this.$emit('handle', this.command)
       this.setPlaceholder('')
+    },
+
+    // Emits the current cursor position
+    emitCursor () {
+      this.$emit('cursor', this.$refs.input.selectionStart)
     },
 
     setPlaceholder (placeholder) {
@@ -164,7 +178,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './scss/mixins';
+  @import '../scss/mixins';
 
   .vue-command {
     .term-ps {

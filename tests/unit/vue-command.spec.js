@@ -1,8 +1,8 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
-import VueCommand from '../../src/VueCommand'
-import Stdin from '../../src/Stdin'
+import VueCommand from '../../src/components/VueCommand'
+import Stdin from '../../src/components/Stdin'
 
 const EMPTY_COMMANDS = { commands: { null: () => null } }
 
@@ -185,5 +185,23 @@ describe('VueCommand.vue', () => {
     await flushPromises()
 
     expect(wrapper.find('.term-stdout').text()).toBe(command)
+  })
+
+  it('calls the autocompletion resolver with arguments', () => {
+    const command = Math.random().toString(36).substring(6)
+    const autocompletionResolver = jest.fn(() => undefined)
+
+    const wrapper = mount(VueCommand, {
+      propsData: {
+        commands: { [command]: () => command },
+        autocompletionResolver
+      }
+    })
+
+    wrapper.find('input').setValue(command)
+    wrapper.find('input').trigger('keydown.tab.prevent')
+
+    expect(autocompletionResolver.mock.calls[0][0]).toBe(command)
+    expect(autocompletionResolver.mock.calls[0][1]).toBe(0)
   })
 })

@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "6.5.2",
+  "version": "7.0.0",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "npm run build:lib && npm run build:docs",
-    "build:lib": "vue-cli-service build --target lib --name vue-command ./src/index.js",
+    "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "build:docs": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint:fix",
