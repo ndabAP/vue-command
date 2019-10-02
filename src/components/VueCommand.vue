@@ -91,6 +91,11 @@ export default {
   mixins: [Autocomplete, Handle],
 
   props: {
+    autocompletionResolver: {
+      type: Function,
+      default: null
+    },
+
     builtIn: {
       type: Object,
       default: () => ({})

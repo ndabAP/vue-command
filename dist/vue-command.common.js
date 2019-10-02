@@ -16502,12 +16502,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"10b063e0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueCommand.vue?vue&type=template&id=cb805ff0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"10b063e0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueCommand.vue?vue&type=template&id=0f2b38fe&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":_vm.mutatePointerHandler,"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n        "+_vm._s(_vm.title)+"\n      ")])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[(_vm.showIntro)?_c('div',{class:{ 'white-font': !_vm.whiteTheme, 'dark-font': _vm.whiteTheme }},[_vm._v("\n          "+_vm._s(_vm.intro)+"\n        ")]):_vm._e(),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[(index !== 0)?_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}):_vm._e(),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"cursor":_vm.setCursor,"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VueCommand.vue?vue&type=template&id=cb805ff0&
+// CONCATENATED MODULE: ./src/components/VueCommand.vue?vue&type=template&id=0f2b38fe&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
@@ -17509,6 +17509,10 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
   },
   mixins: [mixins_autocomplete, mixins_handle],
   props: {
+    autocompletionResolver: {
+      type: Function,
+      default: null
+    },
     builtIn: {
       type: Object,
       default: function _default() {
