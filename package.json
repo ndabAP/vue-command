@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "npm run build:lib && npm run build:docs",
-    "build:lib": "vue-cli-service build --target lib --name vue-command ./src/index.js",
+    "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "build:docs": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint:fix",

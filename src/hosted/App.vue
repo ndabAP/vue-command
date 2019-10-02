@@ -17,7 +17,7 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import VueCommand from './VueCommand'
+import VueCommand from '../components/VueCommand'
 
 export default {
   components: {
@@ -26,9 +26,15 @@ export default {
 
   data: () => ({
     autocompletionResolver: {
-      pokedex: command => {
-        console.log(command)
-        return command
+      pokedex: (parsed) => {
+        console.log(parsed)
+        if (parsed._[1] && parsed._[1].startsWith('p')) {
+          return 'pikachu'
+        }
+
+        if (parsed._[2] && parsed._[2].startsWith('-')) {
+          return '--color'
+        }
       }
     },
 

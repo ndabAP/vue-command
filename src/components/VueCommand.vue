@@ -11,10 +11,7 @@
         v-if="!hideBar"
         class="term-bar">
         <span
-          :class="{
-            'dark-font': whiteTheme,
-            'white-font': !whiteTheme
-          }"
+          :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
           class="term-title">
           {{ title }}
         </span>
@@ -52,6 +49,7 @@
               :show-help="showHelp"
               :white-theme="whiteTheme"
               :uid="_uid"
+              @cursor="setCursor"
               @handle="handle"
               @typing="setCurrent"/>
           </div>
@@ -63,35 +61,35 @@
 
 <script>
 import Vue from 'vue'
-import has from 'lodash/has'
 import head from 'lodash/head'
-import cloneDeep from 'lodash/cloneDeep'
 import size from 'lodash/size'
 import isEmpty from 'lodash/isEmpty'
-import each from 'lodash/each'
+import isUndefined from 'lodash/isUndefined'
 import keys from 'lodash/keys'
-import invoke from 'lodash/invoke'
 import trim from 'lodash/trim'
-import without from 'lodash/without'
 import eq from 'lodash/eq'
 import gt from 'lodash/gt'
 import lt from 'lodash/lt'
 import get from 'lodash/get'
-import startsWith from 'lodash/startsWith'
-import last from 'lodash/last'
-import split from 'lodash/split'
-import { and, or, inc, dec } from 'ramda'
-import yargsParser from 'yargs-parser'
+import constant from 'lodash/constant'
+import find from 'lodash/find'
+import flow from 'lodash/flow'
+import split from 'lodash/fp/split'
+import { and, inc, dec, when } from 'ramda'
 
 import Stdin from './Stdin'
 import Stdout from './Stdout'
-import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants'
+import Autocomplete from '../mixins/autocomplete'
+import Handle from '../mixins/handle'
+import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../keys'
 
 // Event bus for communication
 const EventBus = new Vue()
 
 export default {
   components: { Stdin, Stdout },
+
+  mixins: [Autocomplete, Handle],
 
   props: {
     autocompletionResolver: {
@@ -178,6 +176,8 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
+    // Current cursor position at STDIN
+    cursor: 0,
     // All executed commands
     history: [''],
     // Indicates if a command is in progress
@@ -197,6 +197,31 @@ export default {
     progress: {
       get () {
         return size(this.history)
+      }
+    },
+
+    // Is the current input part of available programs
+    isCurrentCommand: {
+      get () {
+        const command = find(keys(this.commands), command => eq(command, trim(this.current)))
+
+        return !isUndefined(command)
+      }
+    },
+
+    // Returns the program of the current input, if given
+    currentProgram: {
+      get () {
+        return flow([
+          split(' '),
+          head,
+          current => {
+            return when(
+              () => isUndefined(find(keys(this.commands), command => eq(command, trim(current)))),
+              constant(undefined)
+            )(current)
+          }
+        ])(this.current)
       }
     }
   },
@@ -231,7 +256,7 @@ export default {
       // Check if pointer is mutable and input key is down key
       const isMutablePointerAndDownKey = and(
         eq(key, ARROW_DOWN_KEY),
-        lt(this.pointer, size(this.executed) - 1)
+        lt(this.pointer, dec(size(this.executed)))
       )
 
       if (isMutablePointerAndDownKey) {
@@ -240,93 +265,12 @@ export default {
       }
     },
 
-    // Provides autocompletion for tab key
-    autocomplete ({ key }) {
-      if (and(eq(key, TAB_KEY), !isEmpty(this.current))) {
-        each(keys(this.commands).sort(), command => {
-          if (startsWith(command, this.current)) {
-            // Communicate the autocompletion through the event bus
-            this.bus.$emit('autocomplete', { command, uid: this._uid })
-            // Terminate iteration because of successful hit
-            return false
-          }
-        })
-      }
-
-      const isAutocompleteable = and(
-        eq(key, TAB_KEY),
-        !isEmpty(this.current),
-        !isEmpty(this.autocompletionResolver)
-      )
-
-      if (isAutocompleteable) {
-        const program = head(yargsParser(command, this.yargsOptions)._)
-        const rest = last(split(this.current, program))
-        const autocomplete = invoke(this.autocompletionResolver, program, rest)
-
-        this.bus.$emit('autocomplete', { autocomplete: `${this.current}${autocomplete}`, uid: this._uid })
-      }
-    },
-
-    // Handles the command
-    async handle (command) {
-      // Remove leading and trailing whitespace
-      command = trim(command)
-
-      this.$emit('execute', command)
-
-      // Parse the command and try to get the program
-      const program = head(yargsParser(command, this.yargsOptions)._)
-
-      if (isEmpty(program)) {
-        // Empty command
-        this.history.push(null)
-      }
-
-      if (!isEmpty(program)) {
-        let executed = cloneDeep(this.executed)
-        // Remove duplicate commands for a clear history
-        executed = without(executed, command)
-        executed.push(command)
-
-        this.setExecuted(executed)
-
-        const isBuiltIn = has(this.builtIn, program)
-        const isCommand = has(this.commands, program)
-
-        // Check if command has been found
-        if (or(isBuiltIn, isCommand)) {
-          this.history.push('')
-          this.setIsInProgress(true)
-
-          let stdout = ''
-          if (isBuiltIn) {
-            stdout = await Promise.resolve(
-              invoke(this.builtIn, program, yargsParser(command, this.yargsOptions), this.$data)
-            )
-          }
-
-          if (isCommand) {
-            stdout = await Promise.resolve(
-              invoke(this.commands, program, yargsParser(command, this.yargsOptions))
-            )
-          }
-
-          // Add program result to history
-          Vue.set(this.history, size(this.history) - 1, stdout)
-          // Point to latest command plus one
-          this.setPointer(size(executed))
-
-          this.setIsInProgress(false)
-          this.$emit('executed', command)
-        } else this.history.push(`${command}: ${this.notFound}`)
-      }
-
-      this.setCurrent('')
-    },
-
     setCurrent (current) {
       this.current = current
+    },
+
+    setCursor (cursor) {
+      this.cursor = cursor
     },
 
     setIsInProgress (isInProgress) {
@@ -349,7 +293,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './scss/mixins';
+  @import '../scss/mixins';
 
   .vue-command {
     ::-webkit-scrollbar {
