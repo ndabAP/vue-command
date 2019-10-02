@@ -1,8 +1,7 @@
 <template>
   <div
     class="vue-command"
-    @keyup.down="mutatePointerHandler"
-    @keyup.up="mutatePointerHandler"
+    @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete">
     <div
       :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
@@ -81,7 +80,7 @@ import Stdin from './Stdin'
 import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
-import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../keys'
+import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -93,8 +92,8 @@ export default {
 
   props: {
     autocompletionResolver: {
-      type: Object,
-      default: () => ({})
+      type: Function,
+      default: null
     },
 
     builtIn: {
@@ -215,12 +214,10 @@ export default {
         return flow([
           split(' '),
           head,
-          current => {
-            return when(
-              () => isUndefined(find(keys(this.commands), command => eq(command, trim(current)))),
-              constant(undefined)
-            )(current)
-          }
+          current => when(
+            () => isUndefined(find(keys(this.commands), command => eq(command, trim(current)))),
+            constant(undefined)
+          )(current)
         ])(this.current)
       }
     }

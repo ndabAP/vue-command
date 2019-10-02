@@ -5,7 +5,6 @@
 
     <vue-command
       :help-timeout="1250"
-      :autocompletion-resolver="autocompletionResolver"
       :commands="commands"
       show-help/>
     <pre>
@@ -25,19 +24,6 @@ export default {
   },
 
   data: () => ({
-    autocompletionResolver: {
-      pokedex: (parsed) => {
-        console.log(parsed)
-        if (parsed._[1] && parsed._[1].startsWith('p')) {
-          return 'pikachu'
-        }
-
-        if (parsed._[2] && parsed._[2].startsWith('-')) {
-          return '--color'
-        }
-      }
-    },
-
     commands: {
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {

@@ -1,3 +1,3 @@
-import VueCommand from './VueCommand'
+import VueCommand from './components/VueCommand'
 
 export default VueCommand

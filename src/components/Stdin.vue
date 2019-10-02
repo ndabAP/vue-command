@@ -145,9 +145,14 @@ export default {
   methods: {
     // Handle current command
     handle () {
-      if (this.isInProgress) return
+      // Wait for other commands to finish
+      if (this.isInProgress) {
+        return
+      }
 
+      // Persist the current prompt
       this.setLocalPrompt(this.prompt)
+      // Request to handle the current command
       this.$emit('handle', this.command)
       this.setPlaceholder('')
     },
