@@ -175,16 +175,16 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
+    // Current input
+    current: '',
     // Current cursor position at STDIN
     cursor: 0,
+    // Non-empty executed commands
+    executed: [],
     // All executed commands
     history: [''],
     // Indicates if a command is in progress
     isInProgress: false,
-    // Non-empty executed commands
-    executed: [],
-    // Current input
-    current: '',
     // Last pointed command
     last: '',
     // History command pointer
