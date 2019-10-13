@@ -16511,12 +16511,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"10b063e0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueCommand.vue?vue&type=template&id=0f2b38fe&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"10b063e0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueCommand.vue?vue&type=template&id=1b94550f&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-command",on:{"keyup":_vm.mutatePointerHandler,"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"tab",9,$event.key,"Tab")){ return null; }$event.preventDefault();return _vm.autocomplete($event)}}},[_c('div',{staticClass:"term",class:{ 'white-bg': _vm.whiteTheme, 'dark-bg': !_vm.whiteTheme }},[(!_vm.hideBar)?_c('div',{staticClass:"term-bar"},[_c('span',{staticClass:"term-title",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[_vm._v("\n        "+_vm._s(_vm.title)+"\n      ")])]):_vm._e(),_c('div',{ref:"term-std",staticClass:"term-std"},[_c('div',{staticClass:"term-cont"},[(_vm.showIntro)?_c('div',{class:{ 'white-font': !_vm.whiteTheme, 'dark-font': _vm.whiteTheme }},[_vm._v("\n          "+_vm._s(_vm.intro)+"\n        ")]):_vm._e(),_vm._l((_vm.history),function(stdout,index){return _c('div',{key:index},[(index !== 0)?_c('stdout',{staticClass:"term-stdout",attrs:{"white-theme":_vm.whiteTheme,"stdout":stdout}}):_vm._e(),_c('stdin',{attrs:{"bus":_vm.bus,"hide-prompt":_vm.hidePrompt,"is-in-progress":_vm.isInProgress,"is-last":index === _vm.progress - 1,"last-command":_vm.last,"prompt":_vm.prompt,"help-text":_vm.helpText,"keep-prompt":_vm.keepPrompt,"help-timeout":_vm.helpTimeout,"show-help":_vm.showHelp,"white-theme":_vm.whiteTheme,"uid":_vm._uid},on:{"cursor":_vm.setCursor,"handle":_vm.handle,"typing":_vm.setCurrent}})],1)})],2)])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VueCommand.vue?vue&type=template&id=0f2b38fe&
+// CONCATENATED MODULE: ./src/components/VueCommand.vue?vue&type=template&id=1b94550f&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
@@ -16552,18 +16552,6 @@ var trim_default = /*#__PURE__*/__webpack_require__.n(trim);
 // EXTERNAL MODULE: ./node_modules/lodash/eq.js
 var eq = __webpack_require__("9638");
 var eq_default = /*#__PURE__*/__webpack_require__.n(eq);
-
-// EXTERNAL MODULE: ./node_modules/lodash/gt.js
-var gt = __webpack_require__("f2d7");
-var gt_default = /*#__PURE__*/__webpack_require__.n(gt);
-
-// EXTERNAL MODULE: ./node_modules/lodash/lt.js
-var lt = __webpack_require__("0863");
-var lt_default = /*#__PURE__*/__webpack_require__.n(lt);
-
-// EXTERNAL MODULE: ./node_modules/lodash/get.js
-var lodash_get = __webpack_require__("9b02");
-var get_default = /*#__PURE__*/__webpack_require__.n(lodash_get);
 
 // EXTERNAL MODULE: ./node_modules/lodash/constant.js
 var constant = __webpack_require__("72f0");
@@ -16717,96 +16705,6 @@ var when = /*#__PURE__*/_curry3(function when(pred, whenTrueFn, x) {
   return pred(x) ? whenTrueFn(x) : x;
 });
 /* harmony default export */ var es_when = (when);
-// CONCATENATED MODULE: ./node_modules/ramda/es/and.js
-
-
-/**
- * Returns `true` if both arguments are `true`; `false` otherwise.
- *
- * @func
- * @memberOf R
- * @since v0.1.0
- * @category Logic
- * @sig a -> b -> a | b
- * @param {Any} a
- * @param {Any} b
- * @return {Any} the first argument if it is falsy, otherwise the second argument.
- * @see R.both
- * @example
- *
- *      R.and(true, true); //=> true
- *      R.and(true, false); //=> false
- *      R.and(false, true); //=> false
- *      R.and(false, false); //=> false
- */
-var and = /*#__PURE__*/_curry2(function and(a, b) {
-  return a && b;
-});
-/* harmony default export */ var es_and = (and);
-// CONCATENATED MODULE: ./node_modules/ramda/es/add.js
-
-
-/**
- * Adds two values.
- *
- * @func
- * @memberOf R
- * @since v0.1.0
- * @category Math
- * @sig Number -> Number -> Number
- * @param {Number} a
- * @param {Number} b
- * @return {Number}
- * @see R.subtract
- * @example
- *
- *      R.add(2, 3);       //=>  5
- *      R.add(7)(10);      //=> 17
- */
-var add = /*#__PURE__*/_curry2(function add(a, b) {
-  return Number(a) + Number(b);
-});
-/* harmony default export */ var es_add = (add);
-// CONCATENATED MODULE: ./node_modules/ramda/es/dec.js
-
-
-/**
- * Decrements its argument.
- *
- * @func
- * @memberOf R
- * @since v0.9.0
- * @category Math
- * @sig Number -> Number
- * @param {Number} n
- * @return {Number} n - 1
- * @see R.inc
- * @example
- *
- *      R.dec(42); //=> 41
- */
-var dec = /*#__PURE__*/es_add(-1);
-/* harmony default export */ var es_dec = (dec);
-// CONCATENATED MODULE: ./node_modules/ramda/es/inc.js
-
-
-/**
- * Increments its argument.
- *
- * @func
- * @memberOf R
- * @since v0.9.0
- * @category Math
- * @sig Number -> Number
- * @param {Number} n
- * @return {Number} n + 1
- * @see R.dec
- * @example
- *
- *      R.inc(42); //=> 43
- */
-var inc = /*#__PURE__*/es_add(1);
-/* harmony default export */ var es_inc = (inc);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"10b063e0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Stdin.vue?vue&type=template&id=90cd75f0&
 var Stdinvue_type_template_id_90cd75f0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isLast || !_vm.isInProgress),expression:"!isLast || !isInProgress"}]},[(!_vm.hidePrompt)?_c('span',{staticClass:"term-ps",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme }},[(_vm.isLast || !_vm.keepPrompt)?[_vm._v(_vm._s(_vm.prompt))]:_vm._e(),(!_vm.isLast && _vm.keepPrompt)?[_vm._v(_vm._s(_vm.localPrompt))]:_vm._e()],2):_vm._e(),_c('span',{staticClass:"term-stdin"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.command),expression:"command"}],ref:"input",class:{ 'dark-font': _vm.whiteTheme, 'white-font': !_vm.whiteTheme },attrs:{"autofocus":_vm.isLast,"disabled":!_vm.isLast,"placeholder":_vm.placeholder,"type":"text"},domProps:{"value":(_vm.command)},on:{"click":_vm.emitCursor,"keyup":[_vm.emitCursor,function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handle($event)}],"input":function($event){if($event.target.composing){ return; }_vm.command=$event.target.value}}})])])}
 var Stdinvue_type_template_id_90cd75f0_staticRenderFns = []
@@ -16863,6 +16761,32 @@ function _asyncToGenerator(fn) {
 var clone = __webpack_require__("b8ce");
 var clone_default = /*#__PURE__*/__webpack_require__.n(clone);
 
+// CONCATENATED MODULE: ./node_modules/ramda/es/and.js
+
+
+/**
+ * Returns `true` if both arguments are `true`; `false` otherwise.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Logic
+ * @sig a -> b -> a | b
+ * @param {Any} a
+ * @param {Any} b
+ * @return {Any} the first argument if it is falsy, otherwise the second argument.
+ * @see R.both
+ * @example
+ *
+ *      R.and(true, true); //=> true
+ *      R.and(true, false); //=> false
+ *      R.and(false, true); //=> false
+ *      R.and(false, false); //=> false
+ */
+var and = /*#__PURE__*/_curry2(function and(a, b) {
+  return a && b;
+});
+/* harmony default export */ var es_and = (and);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Stdin.vue?vue&type=script&lang=js&
 
 
@@ -17238,6 +17162,12 @@ var isNull_default = /*#__PURE__*/__webpack_require__.n(isNull);
  // @vue/component
 
 /* harmony default export */ var mixins_autocomplete = ({
+  data: function data() {
+    return {
+      // Current cursor position at STDIN
+      cursor: 0
+    };
+  },
   methods: {
     // Calls the user given autocompletion resolver and sets the input accordingly
     autocomplete: function autocomplete(_ref) {
@@ -17250,6 +17180,9 @@ var isNull_default = /*#__PURE__*/__webpack_require__.n(isNull);
           uid: this._uid
         });
       }
+    },
+    setCursor: function setCursor(cursor) {
+      this.cursor = cursor;
     }
   }
 });
@@ -17299,6 +17232,50 @@ var or = /*#__PURE__*/_curry2(function or(a, b) {
   return a || b;
 });
 /* harmony default export */ var es_or = (or);
+// CONCATENATED MODULE: ./node_modules/ramda/es/add.js
+
+
+/**
+ * Adds two values.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Math
+ * @sig Number -> Number -> Number
+ * @param {Number} a
+ * @param {Number} b
+ * @return {Number}
+ * @see R.subtract
+ * @example
+ *
+ *      R.add(2, 3);       //=>  5
+ *      R.add(7)(10);      //=> 17
+ */
+var add = /*#__PURE__*/_curry2(function add(a, b) {
+  return Number(a) + Number(b);
+});
+/* harmony default export */ var es_add = (add);
+// CONCATENATED MODULE: ./node_modules/ramda/es/dec.js
+
+
+/**
+ * Decrements its argument.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.9.0
+ * @category Math
+ * @sig Number -> Number
+ * @param {Number} n
+ * @return {Number} n - 1
+ * @see R.inc
+ * @example
+ *
+ *      R.dec(42); //=> 41
+ */
+var dec = /*#__PURE__*/es_add(-1);
+/* harmony default export */ var es_dec = (dec);
 // EXTERNAL MODULE: ./node_modules/yargs-parser/index.js
 var yargs_parser = __webpack_require__("afab");
 var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
@@ -17419,6 +17396,38 @@ var yargs_parser_default = /*#__PURE__*/__webpack_require__.n(yargs_parser);
     }()
   }
 });
+// EXTERNAL MODULE: ./node_modules/lodash/gt.js
+var gt = __webpack_require__("f2d7");
+var gt_default = /*#__PURE__*/__webpack_require__.n(gt);
+
+// EXTERNAL MODULE: ./node_modules/lodash/lt.js
+var lt = __webpack_require__("0863");
+var lt_default = /*#__PURE__*/__webpack_require__.n(lt);
+
+// EXTERNAL MODULE: ./node_modules/lodash/get.js
+var lodash_get = __webpack_require__("9b02");
+var get_default = /*#__PURE__*/__webpack_require__.n(lodash_get);
+
+// CONCATENATED MODULE: ./node_modules/ramda/es/inc.js
+
+
+/**
+ * Increments its argument.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.9.0
+ * @category Math
+ * @sig Number -> Number
+ * @param {Number} n
+ * @return {Number} n + 1
+ * @see R.dec
+ * @example
+ *
+ *      R.inc(42); //=> 43
+ */
+var inc = /*#__PURE__*/es_add(1);
+/* harmony default export */ var es_inc = (inc);
 // CONCATENATED MODULE: ./src/constants/keys.js
 var ARROW_UP_KEY = 'ArrowUp';
 var ARROW_DOWN_KEY = 'ArrowDown';
@@ -17426,6 +17435,51 @@ var ARROW_LEFT_KEY = 'ArrowLeft';
 var ARROW_RIGHT_KEY = 'ArrowRight';
 var DELETE_KEY = 'Delete';
 var TAB_KEY = 'Tab';
+// CONCATENATED MODULE: ./src/mixins/history.js
+
+
+
+
+
+
+ // @vue/component
+
+/* harmony default export */ var mixins_history = ({
+  data: function data() {
+    return {
+      // All executed commands
+      history: [''],
+      // Last pointed command
+      last: '',
+      // History command pointer
+      pointer: 0
+    };
+  },
+  methods: {
+    // Lets user navigate through history based on input key
+    mutatePointerHandler: function mutatePointerHandler(_ref) {
+      var key = _ref.key;
+      // Check if pointer is mutable and input key is up key
+      var isMutablePointerAndUpKey = es_and(eq_default()(key, ARROW_UP_KEY), gt_default()(this.pointer, 0));
+
+      if (isMutablePointerAndUpKey) {
+        this.setPointer(es_dec(this.pointer));
+        this.setLast(get_default()(this.executed, this.pointer));
+      } // Check if pointer is mutable and input key is down key
+
+
+      var isMutablePointerAndDownKey = es_and(eq_default()(key, ARROW_DOWN_KEY), lt_default()(this.pointer, es_dec(size_default()(this.executed))));
+
+      if (isMutablePointerAndDownKey) {
+        this.setPointer(es_inc(this.pointer));
+        this.setLast(get_default()(this.executed, this.pointer));
+      }
+    },
+    setPointer: function setPointer(pointer) {
+      this.pointer = pointer;
+    }
+  }
+});
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueCommand.vue?vue&type=script&lang=js&
 
 //
@@ -17505,9 +17559,6 @@ var TAB_KEY = 'Tab';
 
 
 
-
-
-
  // Event bus for communication
 
 var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
@@ -17516,7 +17567,7 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     Stdin: Stdin,
     Stdout: Stdout
   },
-  mixins: [mixins_autocomplete, mixins_handle],
+  mixins: [mixins_autocomplete, mixins_handle, mixins_history],
   props: {
     autocompletionResolver: {
       type: Function,
@@ -17591,20 +17642,12 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     return {
       // Bus for communication
       bus: EventBus,
-      // Current cursor position at STDIN
-      cursor: 0,
-      // All executed commands
-      history: [''],
-      // Indicates if a command is in progress
-      isInProgress: false,
-      // Non-empty executed commands
-      executed: [],
       // Current input
       current: '',
-      // Last pointed command
-      last: '',
-      // History command pointer
-      pointer: 0
+      // Non-empty executed commands
+      executed: [],
+      // Indicates if a command is in progress
+      isInProgress: false
     };
   },
   computed: {
@@ -17652,39 +17695,14 @@ var EventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     }
   },
   methods: {
-    // Lets user navigate through history based on input key
-    mutatePointerHandler: function mutatePointerHandler(_ref) {
-      var key = _ref.key;
-      // Check if pointer is mutable and input key is up key
-      var isMutablePointerAndUpKey = es_and(eq_default()(key, ARROW_UP_KEY), gt_default()(this.pointer, 0));
-
-      if (isMutablePointerAndUpKey) {
-        this.setPointer(es_dec(this.pointer));
-        this.setLast(get_default()(this.executed, this.pointer));
-      } // Check if pointer is mutable and input key is down key
-
-
-      var isMutablePointerAndDownKey = es_and(eq_default()(key, ARROW_DOWN_KEY), lt_default()(this.pointer, es_dec(size_default()(this.executed))));
-
-      if (isMutablePointerAndDownKey) {
-        this.setPointer(es_inc(this.pointer));
-        this.setLast(get_default()(this.executed, this.pointer));
-      }
-    },
     setCurrent: function setCurrent(current) {
       this.current = current;
-    },
-    setCursor: function setCursor(cursor) {
-      this.cursor = cursor;
     },
     setIsInProgress: function setIsInProgress(isInProgress) {
       this.isInProgress = isInProgress;
     },
     setExecuted: function setExecuted(executed) {
       this.executed = executed;
-    },
-    setPointer: function setPointer(pointer) {
-      this.pointer = pointer;
     },
     setLast: function setLast(last) {
       this.last = last;

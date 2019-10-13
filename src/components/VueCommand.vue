@@ -67,20 +67,17 @@ import isUndefined from 'lodash/isUndefined'
 import keys from 'lodash/keys'
 import trim from 'lodash/trim'
 import eq from 'lodash/eq'
-import gt from 'lodash/gt'
-import lt from 'lodash/lt'
-import get from 'lodash/get'
 import constant from 'lodash/constant'
 import find from 'lodash/find'
 import flow from 'lodash/flow'
 import split from 'lodash/fp/split'
-import { and, inc, dec, when } from 'ramda'
+import { when } from 'ramda'
 
 import Stdin from './Stdin'
 import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
-import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
+import History from '../mixins/history'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -88,7 +85,7 @@ const EventBus = new Vue()
 export default {
   components: { Stdin, Stdout },
 
-  mixins: [Autocomplete, Handle],
+  mixins: [Autocomplete, Handle, History],
 
   props: {
     autocompletionResolver: {
@@ -177,18 +174,10 @@ export default {
     bus: EventBus,
     // Current input
     current: '',
-    // Current cursor position at STDIN
-    cursor: 0,
     // Non-empty executed commands
     executed: [],
-    // All executed commands
-    history: [''],
     // Indicates if a command is in progress
-    isInProgress: false,
-    // Last pointed command
-    last: '',
-    // History command pointer
-    pointer: 0
+    isInProgress: false
   }),
 
   computed: {
@@ -237,37 +226,8 @@ export default {
   },
 
   methods: {
-    // Lets user navigate through history based on input key
-    mutatePointerHandler ({ key }) {
-      // Check if pointer is mutable and input key is up key
-      const isMutablePointerAndUpKey = and(
-        eq(key, ARROW_UP_KEY),
-        gt(this.pointer, 0)
-      )
-
-      if (isMutablePointerAndUpKey) {
-        this.setPointer(dec(this.pointer))
-        this.setLast(get(this.executed, this.pointer))
-      }
-
-      // Check if pointer is mutable and input key is down key
-      const isMutablePointerAndDownKey = and(
-        eq(key, ARROW_DOWN_KEY),
-        lt(this.pointer, dec(size(this.executed)))
-      )
-
-      if (isMutablePointerAndDownKey) {
-        this.setPointer(inc(this.pointer))
-        this.setLast(get(this.executed, this.pointer))
-      }
-    },
-
     setCurrent (current) {
       this.current = current
-    },
-
-    setCursor (cursor) {
-      this.cursor = cursor
     },
 
     setIsInProgress (isInProgress) {
@@ -276,10 +236,6 @@ export default {
 
     setExecuted (executed) {
       this.executed = executed
-    },
-
-    setPointer (pointer) {
-      this.pointer = pointer
     },
 
     setLast (last) {
