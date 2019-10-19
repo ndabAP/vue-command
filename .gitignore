@@ -21,3 +21,6 @@ yarn-error.log*
 
 # Jest files
 coverage
+
+# Only yarn allowed
+package-lock.json
