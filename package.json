@@ -15,9 +15,8 @@
     "emulator"
   ],
   "files": [
-    "dist/*",
-    "*.js",
-    "*.css"
+    "dist/*.js",
+    "dist/*.css"
   ],
   "scripts": {
     "build": "yarn build:lib && yarn build:docs",
