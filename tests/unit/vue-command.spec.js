@@ -1,72 +1,47 @@
-import { mount, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
+import { randomString, generateWrapper, enterAndTrigger } from './utils'
 
-import VueCommand from '../../src/components/VueCommand'
 import Stdin from '../../src/components/Stdin'
-
-const EMPTY_COMMANDS = { commands: { null: () => null } }
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
 
 describe('VueCommand.vue', () => {
   it('hides the bar', () => {
-    const wrapper = shallowMount(VueCommand, {
-      propsData: {
-        hideBar: true,
-        ...EMPTY_COMMANDS
-      }
+    const wrapper = generateWrapper({
+      hideBar: true
     })
 
     expect(wrapper.contains('.term-bar')).toBe(false)
   })
 
   it('sets the intro', () => {
-    const intro = Array.from(VueCommand.props.intro.default).reverse().join('')
-    const wrapper = shallowMount(VueCommand, {
-      propsData: {
-        showIntro: true,
-        intro,
-        ...EMPTY_COMMANDS
-      }
+    const intro = randomString()
+    const wrapper = generateWrapper({
+      showIntro: true,
+      intro
     })
 
-    expect(wrapper.find('.term-cont:first-child').text()).toBe(intro)
+    expect(wrapper.find('.term-cont > div:first-child').text()).toBe(intro)
   })
 
   it('sets the title', () => {
-    const title = Array.from(VueCommand.props.title.default).reverse().join('')
-    const wrapper = shallowMount(VueCommand, {
-      propsData: {
-        title,
-        ...EMPTY_COMMANDS
-      }
-    })
+    const title = randomString()
+    const wrapper = generateWrapper({ title })
 
     expect(wrapper.find('.term-title').text()).toBe(title)
   })
 
   it('sets the prompt', () => {
-    const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        prompt,
-        ...EMPTY_COMMANDS
-      }
-    })
+    const prompt = randomString()
+    const wrapper = generateWrapper({ prompt })
 
     expect(wrapper.find(Stdin).find('span').text()).toBe(prompt)
   })
 
   it('hides the prompt', () => {
-    const prompt = Array.from(VueCommand.props.title.default).reverse().join('')
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        prompt,
-        hidePrompt: true,
-        ...EMPTY_COMMANDS
-      }
-    })
+    const prompt = randomString()
+    const wrapper = generateWrapper({ prompt, hidePrompt: true })
 
     expect(wrapper.find(Stdin).find('span').text()).not.toBe(prompt)
   })
@@ -74,14 +49,11 @@ describe('VueCommand.vue', () => {
   it('sets the placeholder', () => {
     jest.useFakeTimers()
 
-    const helpText = Array.from(VueCommand.props.helpText.default).reverse().join('')
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        showHelp: true,
-        helpTimeout: 0,
-        helpText,
-        ...EMPTY_COMMANDS
-      }
+    const helpText = randomString()
+    const wrapper = generateWrapper({
+      showHelp: true,
+      helpTimeout: 0,
+      helpText
     })
 
     jest.runAllTimers()
@@ -90,45 +62,27 @@ describe('VueCommand.vue', () => {
   })
 
   it('sets command not found text', () => {
-    const command = Math.random().toString(36).substring(6)
-    const notFound = Math.random().toString(36).substring(6)
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        notFound,
-        ...EMPTY_COMMANDS
-      }
-    })
+    const command = randomString()
+    const notFound = randomString()
+    const wrapper = generateWrapper({ notFound })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
-
+    enterAndTrigger(wrapper, command)
     expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
   })
 
   it('doesn\'t find the command', () => {
-    const command = Math.random().toString(36).substring(6)
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        ...EMPTY_COMMANDS
-      }
-    })
+    const command = randomString()
+    const wrapper = generateWrapper({ commands: {} })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
-
+    enterAndTrigger(wrapper, command)
     expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
   })
 
   it('finds the command', async () => {
-    const command = Math.random().toString(36).substring(6)
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        commands: { [command]: () => command }
-      }
-    })
+    const command = randomString()
+    const wrapper = generateWrapper({ commands: { [command]: () => command } })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
+    enterAndTrigger(wrapper, command)
 
     await flushPromises()
 
@@ -136,66 +90,50 @@ describe('VueCommand.vue', () => {
   })
 
   it('finds the asynchronous command', async () => {
-    const command = Math.random().toString(36).substring(6)
+    const command = randomString()
     const timeout = 2000
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        commands: { [command]: () => new Promise(resolve => setTimeout(resolve(command), timeout)) }
-      }
+    const wrapper = generateWrapper({
+      commands: { [command]: () => new Promise(resolve => setTimeout(resolve(command), timeout)) }
     })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
-
+    enterAndTrigger(wrapper, command)
     await flushPromises()
 
     expect(wrapper.find('.term-stdout').text()).toBe(command)
   })
 
   it('finds the previous command', async () => {
-    const command = Math.random().toString(36).substring(6)
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        commands: { [command]: () => command }
-      }
+    const command = randomString()
+    const wrapper = generateWrapper({
+      commands: { [command]: () => command }
     })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
-
+    enterAndTrigger(wrapper, command)
     await flushPromises()
-
     wrapper.find('input').trigger('keyup.ArrowUp')
 
     expect(wrapper.find('input').element.value).toBe(command)
   })
 
   it('executes built-in commands', async () => {
-    const command = Math.random().toString(36).substring(6)
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        builtIn: { [command]: () => command },
-        commands: { [command]: () => command }
-      }
+    const command = randomString()
+    const wrapper = generateWrapper({
+      builtIn: { [command]: () => command },
+      commands: {}
     })
 
-    wrapper.find('input').setValue(command)
-    wrapper.find('input').trigger('keyup.enter')
-
+    enterAndTrigger(wrapper, command)
     await flushPromises()
-
     expect(wrapper.find('.term-stdout').text()).toBe(command)
   })
 
   it('calls the autocompletion resolver with arguments', () => {
-    const command = Math.random().toString(36).substring(6)
-    const autocompletionResolver = jest.fn(() => undefined)
+    const command = randomString()
+    const autocompletionResolver = jest.fn(() => command)
 
-    const wrapper = mount(VueCommand, {
-      propsData: {
-        commands: { [command]: () => command },
-        autocompletionResolver
-      }
+    const wrapper = generateWrapper({
+      commands: { [command]: () => command },
+      autocompletionResolver
     })
 
     wrapper.find('input').setValue(command)
