@@ -6,9 +6,7 @@
     <div
       :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
       class="term">
-      <div
-        v-if="!hideBar"
-        class="term-bar">
+      <div v-if="!hideBar" class="term-bar">
         <span
           :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
           class="term-title">
@@ -16,9 +14,7 @@
         </span>
       </div>
 
-      <div
-        ref="term-std"
-        class="term-std">
+      <div ref="term-std" class="term-std">
         <div class="term-cont">
           <div
             v-if="showIntro"
@@ -26,9 +22,7 @@
             {{ intro }}
           </div>
 
-          <div
-            v-for="(stdout, index) in history"
-            :key="index">
+          <div v-for="(stdout, index) in history" :key="index">
             <stdout
               v-if="index !== 0"
               :white-theme="whiteTheme"
@@ -60,18 +54,6 @@
 
 <script>
 import Vue from 'vue'
-import head from 'lodash/head'
-import size from 'lodash/size'
-import isEmpty from 'lodash/isEmpty'
-import isUndefined from 'lodash/isUndefined'
-import keys from 'lodash/keys'
-import trim from 'lodash/trim'
-import eq from 'lodash/eq'
-import constant from 'lodash/constant'
-import find from 'lodash/find'
-import flow from 'lodash/flow'
-import split from 'lodash/fp/split'
-import { when } from 'ramda'
 
 import Stdin from './Stdin'
 import Stdout from './Stdout'
@@ -89,8 +71,7 @@ export default {
 
   props: {
     autocompletionResolver: {
-      type: Function,
-      default: null
+      type: Function
     },
 
     builtIn: {
@@ -175,7 +156,7 @@ export default {
     // Current input
     current: '',
     // Non-empty executed commands
-    executed: [],
+    executed: new Set(),
     // Indicates if a command is in progress
     isInProgress: false
   }),
@@ -184,30 +165,25 @@ export default {
     // Amount of executed commands
     progress: {
       get () {
-        return size(this.history)
+        return this.history.length
       }
     },
 
     // Is the current input part of available programs
     isCurrentCommand: {
       get () {
-        const command = find(keys(this.commands), command => eq(command, trim(this.current)))
+        const command = Object.keys(this.commands).find(
+          command => command === this.current.trim()
+        )
 
-        return !isUndefined(command)
+        return !!command
       }
     },
 
     // Returns the program of the current input, if given
     currentProgram: {
       get () {
-        return flow([
-          split(' '),
-          head,
-          current => when(
-            () => isUndefined(find(keys(this.commands), command => eq(command, trim(current)))),
-            constant(undefined)
-          )(current)
-        ])(this.current)
+        return this.findCommand(this.current)
       }
     }
   },
@@ -218,8 +194,8 @@ export default {
       this.$emit('input', this.current)
 
       // Make searching history work again
-      if (isEmpty(this.current)) {
-        this.setPointer(size(this.executed))
+      if (!this.current) {
+        this.setPointer(this.executed.size)
         this.setLast('')
       }
     }
@@ -227,64 +203,66 @@ export default {
 
   methods: {
     setCurrent (current) {
-      this.current = current
+      this.current = current.trim()
     },
 
     setIsInProgress (isInProgress) {
       this.isInProgress = isInProgress
     },
 
-    setExecuted (executed) {
-      this.executed = executed
-    },
-
     setLast (last) {
       this.last = last
+    },
+
+    findCommand (command) {
+      return Object.keys(this.commands).find(
+        command => command === this.current
+      )
     }
   }
 }
 </script>
 
 <style lang="scss">
-  @import '../scss/mixins';
+@import "../scss/mixins";
 
-  .vue-command {
-    ::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #ddd;
-      -webkit-border-radius: 8px;
-      border-radius: 8px;
-    }
-
-    .term {
-      border: 1px solid $background;
-    }
-
-    .term-bar {
-      border-bottom: 1px solid #252525;
-      margin-bottom: 0.5rem;
-      display: flex;
-      flex-direction: row;
-      height: 32px;
-      justify-content: center;
-      top: 0;
-      width: 100%;
-    }
-
-    .term-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.85rem;
-      margin: auto 0;
-    }
-
-    .term-cont {
-      font-family: 'Inconsolata', monospace;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      padding-bottom: 0.5rem;
-    }
+.vue-command {
+  ::-webkit-scrollbar {
+    width: 5px;
   }
+
+  ::-webkit-scrollbar-thumb {
+    background: #ddd;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+  }
+
+  .term {
+    border: 1px solid $background;
+  }
+
+  .term-bar {
+    border-bottom: 1px solid #252525;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    height: 32px;
+    justify-content: center;
+    top: 0;
+    width: 100%;
+  }
+
+  .term-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    margin: auto 0;
+  }
+
+  .term-cont {
+    font-family: "Inconsolata", monospace;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
 </style>

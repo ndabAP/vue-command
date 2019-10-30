@@ -28,8 +28,6 @@
     "serve": "vue-cli-service serve"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
-    "ramda": "^0.26.1",
     "yargs-parser": "^13.0.0"
   },
   "devDependencies": {
