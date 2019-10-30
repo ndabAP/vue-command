@@ -27,24 +27,54 @@ export default {
 
         // Check if command has been found
         if (fn) {
-          this.history.push('')
+          this.history.push(undefined)
           this.setIsInProgress(true)
 
-          const stdout = await Promise.resolve(
+          let stdout = await Promise.resolve(
             fn(yargsParser(command, this.yargsOptions), isBuiltIn ? this.$data : undefined)
           )
 
-          // Add program result to history
-          this.history[this.history.length - 1] = stdout
-          // Point to latest command plus one
-          this.setPointer(this.executed.size)
+          if (typeof stdout === 'string') {
+            stdout = stringAsComponent(stdout)
+          }
 
+          if (!stdout.mixins) stdout.mixins = []
+
+          stdout.mixins.push({
+            methods: {
+              $done: () => {
+                this.setPointer(this.executed.size)
+                this.setIsInProgress(false)
+                this.$emit('executed', command)
+              }
+            }
+          })
+
+          // Add program result to history
+          this.history.pop()
+          this.history.push(stdout)
+        } else {
+          const component = stringAsComponent(`${command}: ${this.notFound}`)
+
+          this.history.push(component)
           this.setIsInProgress(false)
-          this.$emit('executed', command)
-        } else this.history.push(`${command}: ${this.notFound}`)
+        }
       }
 
       this.setCurrent('')
+    }
+  }
+}
+
+function stringAsComponent (innerHTML) {
+  return {
+    render (h) {
+      return h('span', {
+        domProps: { innerHTML }
+      })
+    },
+    mounted () {
+      this.$done()
     }
   }
 }

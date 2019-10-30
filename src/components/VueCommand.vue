@@ -18,7 +18,11 @@
           </div>
 
           <div v-for="(stdout, index) in history" :key="index">
-            <stdout v-if="index !== 0" :stdout="stdout" class="term-stdout" />
+            <stdout
+              v-if="index !== 0"
+              :component="stdout"
+              class="term-stdout"
+            />
 
             <stdin
               :bus="bus"
