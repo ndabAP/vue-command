@@ -2,7 +2,8 @@
   <div
     class="vue-command"
     @keyup="mutatePointerHandler"
-    @keydown.tab.prevent="autocomplete">
+    @keydown.tab.prevent="autocomplete"
+  >
     <div :class="{ 'white-theme': whiteTheme }" class="term">
       <div v-if="!hideBar" class="term-bar">
         <span class="term-title">
@@ -17,10 +18,7 @@
           </div>
 
           <div v-for="(stdout, index) in history" :key="index">
-            <stdout
-              v-if="index !== 0"
-              :stdout="stdout"
-              class="term-stdout"/>
+            <stdout v-if="index !== 0" :stdout="stdout" class="term-stdout" />
 
             <stdin
               :bus="bus"
@@ -36,7 +34,8 @@
               :uid="_uid"
               @cursor="setCursor"
               @handle="handle"
-              @typing="setCurrent"/>
+              @typing="setCurrent"
+            />
           </div>
         </div>
       </div>
@@ -45,16 +44,16 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 
-import Stdin from './Stdin'
-import Stdout from './Stdout'
-import Autocomplete from '../mixins/autocomplete'
-import Handle from '../mixins/handle'
-import History from '../mixins/history'
+import Stdin from "./Stdin";
+import Stdout from "./Stdout";
+import Autocomplete from "../mixins/autocomplete";
+import Handle from "../mixins/handle";
+import History from "../mixins/history";
 
 // Event bus for communication
-const EventBus = new Vue()
+const EventBus = new Vue();
 
 export default {
   components: { Stdin, Stdout },
@@ -93,12 +92,12 @@ export default {
 
     helpText: {
       type: String,
-      default: 'Type help'
+      default: "Type help"
     },
 
     intro: {
       type: String,
-      default: 'Fasten your seatbelts!'
+      default: "Fasten your seatbelts!"
     },
 
     keepPrompt: {
@@ -108,12 +107,12 @@ export default {
 
     notFound: {
       type: String,
-      default: 'command not found'
+      default: "command not found"
     },
 
     prompt: {
       type: String,
-      default: '~neil@moon:#'
+      default: "~neil@moon:#"
     },
 
     showHelp: {
@@ -128,7 +127,7 @@ export default {
 
     title: {
       type: String,
-      default: 'neil@moon: ~'
+      default: "neil@moon: ~"
     },
 
     whiteTheme: {
@@ -146,7 +145,7 @@ export default {
     // Bus for communication
     bus: EventBus,
     // Current input
-    current: '',
+    current: "",
     // Non-empty executed commands
     executed: new Set(),
     // Indicates if a command is in progress
@@ -156,63 +155,63 @@ export default {
   computed: {
     // Amount of executed commands
     progress: {
-      get () {
-        return this.history.length
+      get() {
+        return this.history.length;
       }
     },
 
     // Is the current input part of available programs
     isCurrentCommand: {
-      get () {
+      get() {
         const command = Object.keys(this.commands).find(
           command => command === this.current.trim()
-        )
+        );
 
-        return !!command
+        return !!command;
       }
     },
 
     // Returns the program of the current input, if given
     currentProgram: {
-      get () {
-        return this.findCommand(this.current)
+      get() {
+        return this.findCommand(this.current);
       }
     }
   },
 
   watch: {
-    current () {
+    current() {
       // Emit the current input as an event
-      this.$emit('input', this.current)
+      this.$emit("input", this.current);
 
       // Make searching history work again
       if (!this.current) {
-        this.setPointer(this.executed.size)
-        this.setLast('')
+        this.setPointer(this.executed.size);
+        this.setLast("");
       }
     }
   },
 
   methods: {
-    setCurrent (current) {
-      this.current = current.trim()
+    setCurrent(current) {
+      this.current = current.trim();
     },
 
-    setIsInProgress (isInProgress) {
-      this.isInProgress = isInProgress
+    setIsInProgress(isInProgress) {
+      this.isInProgress = isInProgress;
     },
 
-    setLast (last) {
-      this.last = last
+    setLast(last) {
+      this.last = last;
     },
 
-    findCommand (command) {
+    findCommand(command) {
       return Object.keys(this.commands).find(
         command => command === this.current
-      )
+      );
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
