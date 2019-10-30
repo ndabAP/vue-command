@@ -1,16 +1,21 @@
 <template>
-  <span v-html="stdout" />
+  <span>
+    <component :is="component" />
+  </span>
 </template>
 
 <script>
 export default {
   props: {
-    stdout: {
-      type: String,
-      default: ''
+    component: {
+      default: () => ({
+        render(h) {
+          h("span");
+        }
+      })
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

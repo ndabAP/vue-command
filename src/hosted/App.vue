@@ -18,6 +18,7 @@ $ npm i --save vue-command
 
 <script>
 import VueCommand from '../components/VueCommand'
+import loading from './LoadingAnimation'
 
 export default {
   components: {
@@ -38,63 +39,66 @@ export default {
         `
       },
 
-      help: () => (`Usage: pokedex pokemon [option]<br><br>
+      help: () => `Usage: pokedex pokemon [option]<br><br>
 
         Example: pokedex pikachu --color
-      `)
+      `,
+      loading: () => loading
     }
   })
 }
 </script>
 
 <style lang="scss">
-  body {
-    display: grid;
-    place-items: center;
-    height: 95vh;
-    margin: 0;
+body {
+  display: grid;
+  place-items: center;
+  height: 95vh;
+  margin: 0;
 
-    main {
-      margin: 1rem;
+  main {
+    margin: 1rem;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Inconsolata", monospace;
+  }
+
+  p {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  pre {
+    width: 100%;
+    padding: 0;
+    margin-top: 1em;
+    overflow: auto;
+    overflow-y: hidden;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+    code {
+      padding: 10px;
+      color: #333;
+      margin: 5px;
     }
+  }
 
-    h1, h2, h3 {
-      font-family: 'Inconsolata', monospace;
-    }
-
-    p {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    pre {
-      width: 100%;
-      padding: 0;
-      margin-top: 1em;
-      overflow: auto;
-      overflow-y: hidden;
+  .vue-command {
+    .term {
       -webkit-border-radius: 8px;
       -moz-border-radius: 8px;
       border-radius: 8px;
-
-      code {
-        padding: 10px;
-        color: #333;
-        margin: 5px;
-      }
     }
 
-    .vue-command {
-      .term {
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-      }
-
-      .term-std {
-        min-height: 300px;
-        max-height: 300px;
-        overflow-y: scroll;
-      }
+    .term-std {
+      min-height: 300px;
+      max-height: 300px;
+      overflow-y: scroll;
     }
   }
+}
 </style>
