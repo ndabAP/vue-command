@@ -1,9 +1,6 @@
 <template>
   <div v-show="!isLast || !isInProgress">
-    <span
-      v-if="!hidePrompt"
-      :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
-      class="term-ps">
+    <span v-if="!hidePrompt" class="term-ps">
       <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
       <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
     </span>
@@ -12,7 +9,6 @@
         ref="input"
         v-model="command"
         :autofocus="isLast"
-        :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
         :disabled="!isLast"
         :placeholder="placeholder"
         type="text"
@@ -77,10 +73,6 @@ export default {
     uid: {
       type: Number,
       required: true
-    },
-
-    whiteTheme: {
-      type: Boolean
     }
   },
 

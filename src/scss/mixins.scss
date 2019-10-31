@@ -1,27 +1,23 @@
 $background: #111;
 
 .vue-command {
-  .dark-bg {
-    background: $background;
+  background: $background;
+  color: #ffffff;
+
+  span,
+  a,
+  input {
+    color: #ffffff;
   }
 
-  .dark-font {
+  .white-theme {
+    background: #fff;
     color: #000;
 
-    a {
+    span,
+    a,
+    input {
       color: #000;
-    }
-  }
-
-  .white-bg {
-    background: #ffffff;
-  }
-
-  .white-font {
-    color: #ffffff;
-
-    a {
-      color: #ffffff;
     }
   }
 }
