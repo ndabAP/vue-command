@@ -1,15 +1,14 @@
 <template>
-  <div v-show="!isLast || !isInProgress">
+  <div v-show="!fullscreen && (!isLast || !isInProgress)">
     <span v-if="!hidePrompt" class="term-ps">
-      <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
-      <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
+      {{ prompt }}
     </span>
     <span class="term-stdin">
       <input
         ref="input"
         v-model="command"
         :autofocus="isLast"
-        :disabled="!isLast"
+        :disabled="!isLast || isInProgress"
         :placeholder="placeholder"
         type="text"
         @click="emitCursor"
@@ -47,7 +46,6 @@ export default {
 
     isLast: {
       type: Boolean,
-      default: false,
       required: true
     },
 
@@ -56,9 +54,9 @@ export default {
       default: ''
     },
 
-    keepPrompt: {
+    fullscreen: {
       type: Boolean,
-      default: false
+      required: true
     },
 
     prompt: {
@@ -103,6 +101,10 @@ export default {
 
         this.$refs.input.scrollIntoView()
         this.$refs.input.focus()
+      }
+
+      if (this.isInProgress && !this.isLast) {
+        this.$refs.input.blur()
       }
     }
   },
@@ -168,35 +170,25 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
-  .term-ps {
-    margin-right: 0.5rem;
-  }
+  display: flex;
 
-  input {
+  input, textarea {
     background: none;
     border: none;
     font-family: "Inconsolata", monospace;
     font-size: 1rem;
     outline: none;
-    width: 60%;
+    flex: 1;
+    width: auto;
+
+    &::placeholder {
+      color: transparent;
+    }
   }
 
   @media only screen and (max-width: 400px) {
     input {
       width: 40%;
-    }
-
-    ::-webkit-input-placeholder {
-      color: transparent;
-    }
-    :-moz-placeholder {
-      color: transparent;
-    }
-    ::-moz-placeholder {
-      color: transparent;
-    }
-    :-ms-input-placeholder {
-      color: transparent;
     }
   }
 
