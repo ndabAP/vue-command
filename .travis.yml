@@ -2,6 +2,6 @@ language: node_js
 node_js:
   - "10"
 before_script:
-  - npm i
+  - yarn install
 script:
-  - npm run lint && npm run test
+  - yarn lint && yarn test
