@@ -1,7 +1,6 @@
 import flushPromises from 'flush-promises'
-
-import Stdin from '../../src/components/Stdin'
 import { getRandom, getMountedWrapper, enterAndTrigger, getEmptyCommands, getCommands } from './test-utilities'
+import Stdin from '../../src/components/Stdin'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
@@ -63,6 +62,7 @@ describe('VueCommand.vue', () => {
 
     await wrapper.vm.$nextTick()
 
+    enterAndTrigger(wrapper, command)
     expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
   })
 
@@ -74,6 +74,7 @@ describe('VueCommand.vue', () => {
 
     await wrapper.vm.$nextTick()
 
+    enterAndTrigger(wrapper, command)
     expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
   })
 
@@ -110,7 +111,6 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await flushPromises()
-
     wrapper.find('input').trigger('keyup.ArrowUp')
 
     expect(wrapper.find('input').element.value).toBe(command)
@@ -123,7 +123,6 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await flushPromises()
-
     expect(wrapper.find('.term-stdout').text()).toBe(command)
   })
 

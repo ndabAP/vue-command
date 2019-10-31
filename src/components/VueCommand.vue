@@ -6,9 +6,7 @@
     <div
       :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
       class="term">
-      <div
-        v-if="!hideBar"
-        class="term-bar">
+      <div v-if="!hideBar" class="term-bar">
         <span
           :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
           class="term-title">
@@ -16,9 +14,7 @@
         </span>
       </div>
 
-      <div
-        ref="term-std"
-        class="term-std">
+      <div ref="term-std" class="term-std">
         <div class="term-cont">
           <div
             v-if="showIntro"
@@ -26,9 +22,7 @@
             {{ intro }}
           </div>
 
-          <div
-            v-for="(stdout, index) in history"
-            :key="index">
+          <div v-for="(stdout, index) in history" :key="index">
             <stdout
               v-if="index !== 0"
               :white-theme="whiteTheme"
