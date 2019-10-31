@@ -15,7 +15,7 @@ export default {
 
       if (!program) {
         // Empty command
-        this.history.push(null)
+        this.history.push(undefined)
       } else {
         // Remove duplicate commands for a clear history
         this.executed.delete(command)
@@ -25,40 +25,52 @@ export default {
         const isCommand = this.commands[program]
         const fn = isBuiltIn || isCommand
 
+        let component
+
         // Check if command has been found
         if (fn) {
           this.history.push(undefined)
           this.setIsInProgress(true)
 
+          const args = yargsParser(command, this.yargsOptions)
           let stdout = await Promise.resolve(
-            fn(yargsParser(command, this.yargsOptions), isBuiltIn ? this.$data : undefined)
+            fn(args, isBuiltIn ? this.$data : undefined)
           )
 
           if (typeof stdout === 'string') {
-            stdout = stringAsComponent(stdout)
+            component = stringAsComponent(stdout)
+          } else {
+            component = stdout
           }
 
-          if (!stdout.mixins) stdout.mixins = []
+          if (!component.computed) component.computed = {}
+          component.computed.$arguments = () => args
 
-          stdout.mixins.push({
-            methods: {
-              $done: () => {
-                this.setPointer(this.executed.size)
-                this.setIsInProgress(false)
-                this.$emit('executed', command)
-              }
-            }
-          })
-
-          // Add program result to history
           this.history.pop()
-          this.history.push(stdout)
         } else {
-          const component = stringAsComponent(`${command}: ${this.notFound}`)
-
-          this.history.push(component)
-          this.setIsInProgress(false)
+          component = stringAsComponent(`${command}: ${this.notFound}`)
         }
+
+        if (!component.mixins) component.mixins = []
+
+        component.mixins.push({
+          methods: {
+            $done: () => {
+              this.setPointer(this.executed.size)
+              this.setIsInProgress(false)
+              this.fullscreen = false
+              this.$emit('executed', command)
+            },
+            $goFullscreen: () => {
+              this.fullscreen = true
+            },
+            $leaveFullscreen: () => {
+              this.fullscreen = false
+            }
+          }
+        })
+
+        this.history.push(component)
       }
 
       this.setCurrent('')

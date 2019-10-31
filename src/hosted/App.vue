@@ -19,6 +19,8 @@ $ npm i --save vue-command
 <script>
 import VueCommand from '../components/VueCommand'
 import loading from './LoadingAnimation'
+import nano from './NanoEditor'
+import klieh from './KliehParty'
 
 export default {
   components: {
@@ -43,7 +45,9 @@ export default {
 
         Example: pokedex pikachu --color
       `,
-      loading: () => loading
+      loading: () => loading,
+      nano: () => nano,
+      klieh: () => klieh
     }
   })
 }
@@ -58,6 +62,8 @@ body {
 
   main {
     margin: 1rem;
+    max-width: 400px;
+    width: calc(100% - 2rem);
   }
 
   h1,
