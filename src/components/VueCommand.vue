@@ -3,29 +3,22 @@
     class="vue-command"
     @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete">
-    <div
-      :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
-      class="term">
+    <div :class="{ 'white-theme': whiteTheme }" class="term">
       <div v-if="!hideBar" class="term-bar">
-        <span
-          :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
-          class="term-title">
+        <span class="term-title">
           {{ title }}
         </span>
       </div>
 
       <div ref="term-std" class="term-std">
         <div class="term-cont">
-          <div
-            v-if="showIntro"
-            :class="{ 'white-font': !whiteTheme, 'dark-font': whiteTheme }">
+          <div v-if="showIntro">
             {{ intro }}
           </div>
 
           <div v-for="(stdout, index) in history" :key="index">
             <stdout
               v-if="index !== 0"
-              :white-theme="whiteTheme"
               :stdout="stdout"
               class="term-stdout"/>
 
@@ -40,7 +33,6 @@
               :keep-prompt="keepPrompt"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
-              :white-theme="whiteTheme"
               :uid="_uid"
               @cursor="setCursor"
               @handle="handle"
