@@ -10358,10 +10358,18 @@ yargs-parser@^11.1.1:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
-yargs-parser@^13.0.0, yargs-parser@^13.1.1:
+yargs-parser@^13.1.1:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-13.1.1.tgz#d26058532aa06d365fe091f6a1fc06b2f7e5eca0"
   integrity sha512-oVAVsHz6uFrg3XQheFII8ESO2ssAf9luWuAd6Wexsu4F3OtIW0o8IribPXYrD4WC24LWtPrJlGy87y5udK+dxQ==
+  dependencies:
+    camelcase "^5.0.0"
+    decamelize "^1.2.0"
+
+yargs-parser@^16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-16.0.0.tgz#534baab6f1c1c0c80adc2f57d1bcd55117a56bb2"
+  integrity sha512-WyNdFYED0penIaLqLSDSeFksC5lVjrjp9vNkG7IKfgQNiAYa6FfHuJXjuaQgt0eOVN2z+gJhHJSX7uRhJKPc7Q==
   dependencies:
     camelcase "^5.0.0"
     decamelize "^1.2.0"

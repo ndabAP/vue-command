@@ -36,7 +36,7 @@
     "sass-loader": "^8.0.0",
     "tar": ">=4.4.10",
     "vue": "^2.6.10",
-    "yargs-parser": "^13.0.0"
+    "yargs-parser": "^16.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",
