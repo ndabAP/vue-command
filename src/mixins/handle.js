@@ -37,11 +37,10 @@ export default {
           let stdout = await Promise.resolve(
             fn(args, isBuiltIn ? this.$data : undefined)
           )
-          
+
           if (!stdout) {
             component = stringAsComponent('')
-          }
-          else if (typeof stdout === 'string') {
+          } else if (typeof stdout === 'string') {
             component = stringAsComponent(stdout)
           } else {
             component = stdout
@@ -71,6 +70,13 @@ export default {
             },
             $leaveFullscreen: () => {
               this.fullscreen = false
+            },
+            $executeCommand: async command => {
+              if (!this.isInProgress) {
+                this.bus.$emit('setCommand', command)
+                await this.$nextTick()
+                this.handle(command)
+              }
             }
           }
         })

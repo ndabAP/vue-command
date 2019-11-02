@@ -13,11 +13,12 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/html-closing-bracket-newline': ['error', {
       'singleline': 'never',
-      'multiline': 'nerver'
+      'multiline': 'never'
     }],
     'vue/attributes-order': 'error',
     'vue/order-in-components': 'error',
-    'vue/html-indent': 'error'
+    'vue/html-indent': 'error',
+    'quotes': ['error', 'single']
   },
   parserOptions: {
     parser: 'babel-eslint'
