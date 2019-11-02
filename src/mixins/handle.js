@@ -30,14 +30,18 @@ export default {
         // Check if command has been found
         if (fn) {
           this.history.push(undefined)
+          const i = this.history.length
           this.setIsInProgress(true)
 
           const args = yargsParser(command, this.yargsOptions)
           let stdout = await Promise.resolve(
             fn(args, isBuiltIn ? this.$data : undefined)
           )
-
-          if (typeof stdout === 'string') {
+          
+          if (!stdout) {
+            component = stringAsComponent('')
+          }
+          else if (typeof stdout === 'string') {
             component = stringAsComponent(stdout)
           } else {
             component = stdout
@@ -45,6 +49,7 @@ export default {
 
           if (!component.computed) component.computed = {}
           component.computed.$arguments = () => args
+          component.computed.$running = () => this.isInProgress && this.history.length === i
 
           this.history.pop()
         } else {
