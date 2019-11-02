@@ -128,7 +128,11 @@ export default {
       }
     }
 
-    const onSetCommand = command => this.setCommand(command)
+    const onSetCommand = command => {
+      if (this.isLast) {
+        this.setCommand(command)
+      }
+    }
 
     this.bus.$on('autocomplete', onAutocomplete)
     this.bus.$on('setCommand', onSetCommand)
