@@ -128,7 +128,10 @@ export default {
       }
     }
 
+    const onSetCommand = command => this.setCommand(command)
+
     this.bus.$on('autocomplete', onAutocomplete)
+    this.bus.$on('setCommand', onSetCommand)
   },
 
   methods: {
@@ -172,7 +175,8 @@ export default {
 .vue-command {
   display: flex;
 
-  input, textarea {
+  input,
+  textarea {
     background: none;
     border: none;
     font-family: "Inconsolata", monospace;

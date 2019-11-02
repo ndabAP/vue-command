@@ -25,7 +25,8 @@ module.exports = {
 
     'vue/attributes-order': 'error',
     'vue/order-in-components': 'error',
-    'vue/html-indent': 'error'
+    'vue/html-indent': 'error',
+    'quotes': ['error', 'single']
   },
 
   parserOptions: {
