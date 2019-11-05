@@ -52,7 +52,7 @@ export default {
 
           this.history.pop()
         } else {
-          component = stringAsComponent(`${command}: ${this.notFound}`)
+          component = stringAsComponent(`${command}: ${this.notFound}`, true)
         }
 
         if (!component.mixins) component.mixins = []
@@ -89,11 +89,11 @@ export default {
   }
 }
 
-function stringAsComponent (innerHTML) {
+function stringAsComponent (content, escapeHtml) {
   return {
     render (h) {
       return h('span', {
-        domProps: { innerHTML }
+        domProps: { [escapeHtml ? 'innerText' : 'innerHTML']: content }
       })
     },
     mounted () {
