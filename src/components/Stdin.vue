@@ -1,5 +1,7 @@
 <template>
-  <div v-show="!fullscreen && (!isLast || !isInProgress)">
+  <div
+    v-show="!fullscreen && (!isLast || !isInProgress)"
+    class="stdin-container">
     <span v-if="!hidePrompt" class="term-ps">
       {{ prompt }}
     </span>
@@ -179,6 +181,10 @@ export default {
 .vue-command {
   display: flex;
 
+  .stdin-container {
+    display: flex;
+  }
+
   input,
   textarea {
     background: none;
@@ -187,22 +193,18 @@ export default {
     font-size: 1rem;
     outline: none;
     flex: 1;
-    width: auto;
+    width: 100%;
 
     &::placeholder {
       color: transparent;
     }
   }
 
-  @media only screen and (max-width: 400px) {
-    input {
-      width: 40%;
-    }
-  }
-
   .term-stdin {
+    flex: 1;
     background: none;
     margin: 0;
+    margin-left: 0.5rem;
     border: 0;
     color: inherit;
     font-family: inherit;
