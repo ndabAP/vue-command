@@ -6594,10 +6594,10 @@ minizlib@^1.2.1:
   dependencies:
     minipass "^2.9.0"
 
-minizlib@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-2.0.0.tgz#1c26c23055feaaaf8f8a86b166819d8ad906e697"
-  integrity sha512-8f6fgftVu7S2bYKe4Ks9jS5ViU/3As9kEmCg6p9T5OCDAzxVooUmhhSqGar19ZR07xh0rknj9ZmGme0bv0d+Nw==
+minizlib@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-2.1.0.tgz#fd52c645301ef09a63a2c209697c294c6ce02cf3"
+  integrity sha512-EzTZN/fjSvifSX0SlqUERCN39o6T40AMarPbv0MrarSFtIITCBh7bi+dU8nxGFHuqs9jdIAeoYoKuQAAASsPPA==
   dependencies:
     minipass "^3.0.0"
     yallist "^4.0.0"
@@ -9394,14 +9394,14 @@ tapable@^1.0.0, tapable@^1.1.3:
   integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
 
 tar@>=4.4.10:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-5.0.2.tgz#d75a50cf8a37539f8c1b2077bef5c991920d45d2"
-  integrity sha512-s6QnhHIoyEPImp1Y4Tq3UOhPMT6/4kgHwzeZc9fbgq0/+s6RAzezIT43Meepn5RdUFpxdzQkd5x2PkcFdVIEPw==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-5.0.5.tgz#03fcdb7105bc8ea3ce6c86642b9c942495b04f93"
+  integrity sha512-MNIgJddrV2TkuwChwcSNds/5E9VijOiw7kAc1y5hTNJoLDSuIyid2QtLYiCYNnICebpuvjhPQZsXwUL0O3l7OQ==
   dependencies:
     chownr "^1.1.3"
     fs-minipass "^2.0.0"
     minipass "^3.0.0"
-    minizlib "^2.0.0"
+    minizlib "^2.1.0"
     mkdirp "^0.5.0"
     yallist "^4.0.0"
 
