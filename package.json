@@ -49,7 +49,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.2.3",
+    "eslint-plugin-vue": "^6.0.1",
     "flush-promises": "^1.0.2",
     "js-yaml": "^3.13.1",
     "querystringify": "^2.1.1",
