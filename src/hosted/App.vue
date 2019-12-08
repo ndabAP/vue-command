@@ -4,6 +4,7 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
+      :autocompletion-resolver="() => 'test'"
       :help-timeout="1250"
       :commands="commands"
       show-help/>
