@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "7.0.5",
+  "version": "7.0.6",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -52,6 +52,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "flush-promises": "^1.0.2",
     "js-yaml": "^3.13.1",
+    "serialize-javascript": "~2.1.1",
     "querystringify": "^2.1.1",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.40.1"
