@@ -101,6 +101,12 @@ export default {
 </style>
 ```
 
+## Projects using vue-command
+
+- [docker-management-dashboard](https://github.com/zero4994/docker-management-dashboard) - A management dashboard for your local docker containers
+- [saber-theme-klieh](https://github.com/krmax44/saber-theme-klieh) - A Saber theme mimicking a terminal
+- [ts-git](https://github.com/nfriend/ts-git) - A naïve implementation of git, written in TypeScript
+
 ## Author
 
 [Julian Claus](https://www.julian-claus.de) and contributors.
