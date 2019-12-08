@@ -1,10 +1,3 @@
-import size from 'lodash/size'
-import eq from 'lodash/eq'
-import gt from 'lodash/gt'
-import lt from 'lodash/lt'
-import get from 'lodash/get'
-import { and, inc, dec } from 'ramda'
-
 import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
 
 // @vue/component
@@ -21,27 +14,21 @@ export default {
   methods: {
     // Lets user navigate through history based on input key
     mutatePointerHandler ({ key }) {
-      // Check if pointer is mutable and input key is up key
-      const isMutablePointerAndUpKey = and(
-        eq(key, ARROW_UP_KEY),
-        gt(this.pointer, 0)
-      )
-
-      if (isMutablePointerAndUpKey) {
-        this.setPointer(dec(this.pointer))
-        this.setLast(get(this.executed, this.pointer))
+      if (key === ARROW_UP_KEY && this.pointer > 0) {
+        // Check if pointer is mutable and input key is up key
+        this.pointer--
+      } else if (key === ARROW_DOWN_KEY && this.pointer < (this.executed.size - 1)) {
+        // Check if pointer is mutable and input key is down key
+        this.pointer++
+      } else {
+        return
       }
 
-      // Check if pointer is mutable and input key is down key
-      const isMutablePointerAndDownKey = and(
-        eq(key, ARROW_DOWN_KEY),
-        lt(this.pointer, dec(size(this.executed)))
-      )
+      this.last = [...this.executed][this.pointer]
+    },
 
-      if (isMutablePointerAndDownKey) {
-        this.setPointer(inc(this.pointer))
-        this.setLast(get(this.executed, this.pointer))
-      }
+    addToHistory (stdout) {
+      this.history.push(stdout)
     },
 
     setPointer (pointer) {

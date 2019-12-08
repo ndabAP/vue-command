@@ -24,11 +24,6 @@
 </template>
 
 <script>
-import isEmpty from 'lodash/isEmpty'
-import eq from 'lodash/eq'
-import clone from 'lodash/clone'
-import { and } from 'ramda'
-
 export default {
   props: {
     bus: {
@@ -98,8 +93,8 @@ export default {
 
   watch: {
     lastCommand () {
-      if (and(!isEmpty(this.lastCommand), this.isLast)) {
-        this.setCommand(clone(this.lastCommand))
+      if (this.lastCommand && this.isLast) {
+        this.setCommand(this.lastCommand)
       }
     },
 
@@ -111,7 +106,7 @@ export default {
     },
 
     async isInProgress () {
-      if (and(!this.isInProgress, this.isLast)) {
+      if (!this.isInProgress && this.isLast) {
         await this.$nextTick()
 
         this.$refs.input.scrollIntoView()
@@ -122,7 +117,7 @@ export default {
 
   created () {
     setTimeout(() => {
-      if (and(this.isLast, this.showHelp)) {
+      if (this.isLast && this.showHelp) {
         this.setPlaceholder(this.helpText)
       }
     }, this.helpTimeout)
@@ -134,7 +129,7 @@ export default {
     this.$refs.input.focus()
 
     const onAutocomplete = ({ command, uid }) => {
-      if (and(this.isLast, eq(this.uid, uid))) {
+      if (this.isLast && this.uid === uid) {
         this.setCommand(command)
       }
     }
@@ -178,48 +173,48 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../scss/mixins';
+@import "../scss/mixins";
 
-  .vue-command {
-    .term-ps {
-      margin-right: 0.5rem;
-    }
+.vue-command {
+  .term-ps {
+    margin-right: 0.5rem;
+  }
 
+  input {
+    background: none;
+    border: none;
+    font-family: "Inconsolata", monospace;
+    font-size: 1rem;
+    outline: none;
+    width: 60%;
+  }
+
+  @media only screen and (max-width: 400px) {
     input {
-      background: none;
-      border: none;
-      font-family: 'Inconsolata', monospace;
-      font-size: 1rem;
-      outline: none;
-      width: 60%;
+      width: 40%;
     }
 
-    @media only screen and (max-width: 400px) {
-      input {
-        width: 40%;
-      }
-
-      ::-webkit-input-placeholder {
-        color: transparent;
-      }
-      :-moz-placeholder {
-        color: transparent;
-      }
-      ::-moz-placeholder {
-        color: transparent;
-      }
-      :-ms-input-placeholder {
-        color: transparent;
-      }
+    ::-webkit-input-placeholder {
+      color: transparent;
     }
-
-    .term-stdin {
-      background: none;
-      margin: 0;
-      border: 0;
-      color: inherit;
-      font-family: inherit;
-      font-size: 1rem;
+    :-moz-placeholder {
+      color: transparent;
+    }
+    ::-moz-placeholder {
+      color: transparent;
+    }
+    :-ms-input-placeholder {
+      color: transparent;
     }
   }
+
+  .term-stdin {
+    background: none;
+    margin: 0;
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+}
 </style>
