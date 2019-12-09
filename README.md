@@ -106,6 +106,7 @@ export default {
 - [docker-management-dashboard](https://github.com/zero4994/docker-management-dashboard) - A management dashboard for your local docker containers
 - [saber-theme-klieh](https://github.com/krmax44/saber-theme-klieh) - A Saber theme mimicking a terminal
 - [ts-git](https://github.com/nfriend/ts-git) - A naïve implementation of git, written in TypeScript
+- [curvy-idle-game](https://github.com/n4n0GH/curvy-idle-game) - Short idle game where you get to pat her
 
 ## Author
 
