@@ -14,8 +14,11 @@ jobs:
           node-version: '10'
       
       - name: Lint
-        run: npm ci
-        run: npm run lint
+        run: |
+          npm i
+          npm run lint
 
       - name: Test
-        run: npm run test
+        run: |
+          npm i
+          npm run test
