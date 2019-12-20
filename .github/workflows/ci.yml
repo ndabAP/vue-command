@@ -8,11 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
-      - run: npm ci
-
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10'
+      
       - name: Lint
-      - run: npm run lint
+        run: npm ci
+        run: npm run lint
 
       - name: Test
-      - run: npm run test
+        run: npm run test
