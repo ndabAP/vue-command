@@ -19,7 +19,7 @@
     "dist/*.css"
   ],
   "scripts": {
-    "build": "npm build:lib && npm build:docs",
+    "build": "npm run build:lib && npm run build:docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "build:docs": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
@@ -52,5 +52,8 @@
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.40.1"
+  },
+  "engines" : { 
+    "node" : ">=12.0.0" 
   }
 }
