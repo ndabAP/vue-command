@@ -4,7 +4,15 @@ on: [push]
 
 jobs:
   build:
-    name: Test
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+
+      - run: npm ci
+
+      - name: Lint
+      - run: npm run lint
+
+      - name: Test
+      - run: npm run test

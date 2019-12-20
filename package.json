@@ -19,7 +19,7 @@
     "dist/*.css"
   ],
   "scripts": {
-    "build": "yarn build:lib && yarn build:docs",
+    "build": "npm build:lib && npm build:docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "build:docs": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
