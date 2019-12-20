@@ -4,34 +4,42 @@ import yargsParser from 'yargs-parser'
 export default {
   methods: {
     // Handles the command
-    async handle (command) {
+    async handle (stdin) {
       // Remove leading and trailing whitespace
-      command = command.trim()
+      stdin = stdin.trim()
 
-      this.$emit('execute', command)
+      this.$emit('execute', stdin)
 
       // Parse the command and try to get the program
-      const program = yargsParser(command, this.yargsOptions)._[0]
+      const program = yargsParser(stdin, this.yargsOptions)._[0]
 
       if (!program) {
         // Empty command
         this.history.push(null)
       } else {
         // Remove duplicate commands for a clear history
-        this.executed.delete(command)
-        this.executed.add(command)
+        this.executed.delete(stdin)
+        this.executed.add(stdin)
 
-        const isBuiltIn = this.builtIn[program]
-        const isCommand = this.commands[program]
-        const fn = isBuiltIn || isCommand
+        const builtIn = this.builtIn[program]
+        const command = this.commands[program]
 
-        // Check if command has been found
-        if (fn) {
+        const builtInOrCommand = builtIn || command
+
+        const isBuiltIn = typeof builtIn === 'function'
+        const isCommand = typeof command === 'function'
+
+        // Check if built-in or command has been found
+        if (isBuiltIn || isCommand) {
           this.history.push('')
           this.setIsInProgress(true)
 
           const stdout = await Promise.resolve(
-            fn(yargsParser(command, this.yargsOptions), isBuiltIn ? this.$data : undefined)
+            builtInOrCommand(yargsParser(stdin, this.yargsOptions), isBuiltIn ? {
+              current: this.current,
+              executed: this.executed,
+              isInProgress: this.isInProgress
+            } : undefined)
           )
 
           // Add program result to history
@@ -40,8 +48,8 @@ export default {
           this.setPointer(this.executed.size)
 
           this.setIsInProgress(false)
-          this.$emit('executed', command)
-        } else this.history.push(`${command}: ${this.notFound}`)
+          this.$emit('executed', stdin)
+        } else this.history.push(`${stdin}: ${this.notFound}`)
       }
 
       this.setCurrent('')

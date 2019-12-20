@@ -4,7 +4,7 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :autocompletion-resolver="() => 'test'"
+      :built-in="{ test: (test, obj) => log(null, obj)}"
       :help-timeout="1250"
       :commands="commands"
       show-help/>
@@ -43,7 +43,13 @@ export default {
         Example: pokedex pikachu --color
       `)
     }
-  })
+  }),
+
+  methods: {
+    log (obj, test) {
+      console.log(test)
+    }
+  }
 }
 </script>
 

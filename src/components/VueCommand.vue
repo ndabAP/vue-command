@@ -178,9 +178,9 @@ export default {
     // Is the current input part of available programs
     isCurrentCommand: {
       get () {
-        const command = Object.keys(this.commands).find(
-          command => command === this.current.trim()
-        )
+        const command = Object
+          .keys(this.commands)
+          .find(command => command === this.current.trim())
 
         return !!command
       }
@@ -221,9 +221,9 @@ export default {
     },
 
     findCommand (command) {
-      return Object.keys(this.commands).find(
-        command => command === this.current
-      )
+      return Object
+        .keys(this.commands)
+        .find(command => command === this.current)
     }
   }
 }
