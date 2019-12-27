@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$_running">
+  <div v-if="$_isRunning">
     <textarea
       ref="editor"
       @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>

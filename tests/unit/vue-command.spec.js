@@ -1,4 +1,5 @@
 import flushPromises from 'flush-promises'
+
 import { getRandom, getMountedWrapper, enterAndTrigger, getEmptyCommands, getCommands } from './test-utilities'
 import Stdin from '../../src/components/Stdin'
 
@@ -56,13 +57,12 @@ describe('VueCommand.vue', () => {
   it('sets command not found text', async () => {
     const command = getRandom()
     const notFound = getRandom()
-    const wrapper = getMountedWrapper({ notFound }, getEmptyCommands())
+    const wrapper = getMountedWrapper({ notFound }, getCommands(command))
 
     enterAndTrigger(wrapper, command)
 
     await wrapper.vm.$nextTick()
 
-    enterAndTrigger(wrapper, command)
     expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
   })
 

@@ -54,7 +54,7 @@ export default {
           // Check if given component has computed properties
           if (!component.computed) { component.computed = {} }
           component.computed.$_arguments = () => parsed
-          component.computed.$_running = () => this.isInProgress && this.history.length === history
+          component.computed.$_isRunning = () => this.isInProgress && this.history.length === history
 
           this.history.pop()
         } else {

@@ -45,7 +45,7 @@ $ npm i vue-command --save
 | --- | --- | --- |
 | `this.$_arguments` | `Object` | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme). |
 | `this.$_done` | `Function` | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change any further from this point on. **Make sure to eventually call this method.** Also leaves fullscreen mode. |
-| `this.$_running` | `Boolean` | Indicates whether your command is still running or if it has terminated. |
+| `this.$_isRunning` | `Boolean` | Indicates whether your command is still running or if it has terminated. |
 | `this.$_executeCommand(command: String)` | `Function` | After executing `this.$_done()`, you can use this method to run a subsequent command. |
 | `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Your command will be the only visible element in the shell. |
 
@@ -122,7 +122,7 @@ export default {
 ```vue
 <template>
   <!-- this will hide the editor from the shell history -->
-  <div v-if="$_running">
+  <div v-if="$_isRunning">
     <textarea ref="editor" @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
