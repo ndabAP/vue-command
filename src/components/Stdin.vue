@@ -1,8 +1,10 @@
 <template>
   <div
-    v-show="!fullscreen && (!isLast || !isInProgress)"
+    v-show="!isFullscreen && (!isLast || !isInProgress)"
     class="stdin-container">
-    <span v-if="!hidePrompt" class="term-ps">
+    <span
+      v-if="!hidePrompt"
+      class="term-ps">
       {{ prompt }}
     </span>
     <span class="term-stdin">
@@ -56,7 +58,7 @@ export default {
       default: ''
     },
 
-    fullscreen: {
+    isFullscreen: {
       type: Boolean,
       required: true
     },

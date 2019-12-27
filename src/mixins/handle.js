@@ -4,74 +4,79 @@ import yargsParser from 'yargs-parser'
 export default {
   methods: {
     // Handles the command
-    async handle (command) {
+    async handle (stdin) {
       // Remove leading and trailing whitespace
-      command = command.trim()
+      stdin = stdin.trim()
 
-      this.$emit('execute', command)
+      this.$emit('execute', stdin)
 
       // Parse the command and try to get the program
-      const program = yargsParser(command, this.yargsOptions)._[0]
+      const program = yargsParser(stdin, this.yargsOptions)._[0]
 
       if (!program) {
         // Empty command
         this.history.push(undefined)
       } else {
         // Remove duplicate commands for a clear history
-        this.executed.delete(command)
-        this.executed.add(command)
+        this.executed.delete(stdin)
+        this.executed.add(stdin)
 
-        const isBuiltIn = this.builtIn[program]
-        const isCommand = this.commands[program]
-        const fn = isBuiltIn || isCommand
+        const builtIn = this.builtIn[program]
+        const command = this.commands[program]
+
+        const builtInOrCommand = builtIn || command
 
         let component
 
         // Check if command has been found
-        if (fn) {
+        if (typeof builtin === 'function' || typeof command === 'function') {
           this.history.push(undefined)
-          const i = this.history.length
+          const history = this.history.length
+
           this.setIsInProgress(true)
 
-          const args = yargsParser(command, this.yargsOptions)
-          let stdout = await Promise.resolve(
-            fn(args, isBuiltIn ? this.$data : undefined)
+          const parsed = yargsParser(stdin, this.yargsOptions)
+          const stdout = await Promise.resolve(
+            builtInOrCommand(parsed, typeof builtin === 'function' ? this.$data : undefined)
           )
 
           if (!stdout) {
+            // If result is empty, return empty string
             component = stringAsComponent('')
           } else if (typeof stdout === 'string') {
+            // Result is non-empty string
             component = stringAsComponent(stdout)
           } else {
+            // Result is component
             component = stdout
           }
 
-          if (!component.computed) component.computed = {}
-          component.computed.$arguments = () => args
-          component.computed.$running = () => this.isInProgress && this.history.length === i
+          // Check if given component has computed properties
+          if (!component.computed) { component.computed = {} }
+          component.computed.$_arguments = () => parsed
+          component.computed.$_running = () => this.isInProgress && this.history.length === history
 
           this.history.pop()
         } else {
-          component = stringAsComponent(`${command}: ${this.notFound}`, true)
+          component = stringAsComponent(`${stdin}: ${this.notFound}`, true)
         }
 
-        if (!component.mixins) component.mixins = []
-
+        // Check if given component has mixins
+        if (!hasOwnProperty.call(component, 'mixins')) { component.mixins = [] }
         component.mixins.push({
           methods: {
-            $done: () => {
+            $_done: () => {
               this.setPointer(this.executed.size)
               this.setIsInProgress(false)
-              this.fullscreen = false
-              this.$emit('executed', command)
+              this.setIsFullscreen(false)
+              this.$emit('executed', stdin)
             },
-            $goFullscreen: () => {
-              this.fullscreen = true
+
+            $_setIsFullscreen: isFullscreen => {
+              this.isFullscreen = isFullscreen
             },
-            $leaveFullscreen: () => {
-              this.fullscreen = false
-            },
-            $executeCommand: async command => {
+
+            $_executeCommand: async command => {
               if (!this.isInProgress) {
                 this.bus.$emit('setCommand', command)
                 await this.$nextTick()
@@ -89,15 +94,12 @@ export default {
   }
 }
 
-function stringAsComponent (content, escapeHtml) {
-  return {
-    render (h) {
-      return h('span', {
-        domProps: { [escapeHtml ? 'innerText' : 'innerHTML']: content }
-      })
-    },
-    mounted () {
-      this.$done()
-    }
+const stringAsComponent = (content, escapeHtml) => ({
+  render: h => h('span', {
+    domProps: { [escapeHtml ? 'innerText' : 'innerHTML']: content }
+  }),
+
+  mounted () {
+    this.$_done()
   }
-}
+})

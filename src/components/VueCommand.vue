@@ -3,33 +3,42 @@
     class="vue-command"
     @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete">
-    <div :class="{ 'white-theme': whiteTheme }" class="term">
-      <div v-if="!hideBar" class="term-bar">
+    <div
+      :class="{ 'white-theme': whiteTheme }"
+      class="term">
+      <div
+        v-if="!hideBar"
+        class="term-bar">
         <span class="term-title">
           {{ title }}
         </span>
       </div>
 
-      <div ref="term-std" class="term-std">
+      <div
+        ref="term-std"
+        class="term-std">
         <div class="term-cont">
           <div v-if="showIntro">
             {{ intro }}
           </div>
 
-          <div v-for="(stdout, index) in history" :key="index" :class="{ fullscreen : (fullscreen && index === progress - 1)}">
+          <div
+            v-for="(stdout, index) in history"
+            :key="index"
+            :class="{ fullscreen : (isFullscreen && index === progress - 1)}">
             <stdout
               v-if="index !== 0"
-              v-show="(!fullscreen || index === progress - 1)"
+              v-show="(!isFullscreen || index === progress - 1)"
               :component="stdout"
               class="term-stdout"/>
 
             <stdin
               :bus="bus"
               :hide-prompt="hidePrompt"
+              :is-fullscreen="isFullscreen"
               :is-in-progress="isInProgress"
               :is-last="index === progress - 1"
               :last-command="last"
-              :fullscreen="fullscreen"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
@@ -148,7 +157,7 @@ export default {
     // Indicates if a command is in progress
     isInProgress: false,
     // run command in fullscreen
-    fullscreen: false
+    isFullscreen: false
   }),
 
   computed: {
@@ -162,9 +171,9 @@ export default {
     // Is the current input part of available programs
     isCurrentCommand: {
       get () {
-        const command = Object.keys(this.commands).find(
-          command => command === this.current.trim()
-        )
+        const command = Object
+          .keys(this.commands)
+          .find(command => command === this.current.trim())
 
         return !!command
       }
@@ -201,9 +210,13 @@ export default {
     },
 
     findCommand (command) {
-      return Object.keys(this.commands).find(
-        command => command === this.current
-      )
+      return Object
+        .keys(this.commands)
+        .find(command => command === this.current)
+    },
+
+    setIsFullscreen (isFullscreen) {
+      this.isFullscreen = isFullscreen
     }
   }
 }

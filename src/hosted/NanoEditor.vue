@@ -1,13 +1,15 @@
 <template>
-  <div v-if="$running">
-    <textarea ref="editor" @keydown.ctrl.88="$done()">This is a text editor! Press Ctrl + X to leave.</textarea>
+  <div v-if="$_running">
+    <textarea
+      ref="editor"
+      @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
 
 <script>
 export default {
   mounted () {
-    this.$goFullscreen()
+    this.$_setIsFullscreen(true)
     this.$refs.editor.focus()
   }
 }
