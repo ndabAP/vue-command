@@ -1,45 +1,54 @@
 <template>
   <div>
     <span
-      v-for="(char, i) in 'KLIEH'"
-      :key="i"
-      :style="{ color: color(i) }">
-      {{ char }}
+      v-for="(character, index) in 'KLIEH'"
+      :key="index"
+      :style="{ color: color(index) }">
+      {{ character }}
     </span>
   </div>
 </template>
 
 <script>
-const colors = ['#FF0000', '#FF9900', '#CCFF00', '#33FF00', '#00FF66', '#00FFFF', '#0066FF', '#3300FF', '#CC00FF', '#FF0099']
+const colors = [
+  '#FF0000',
+  '#FF9900',
+  '#CCFF00',
+  '#33FF00',
+  '#00FF66',
+  '#00FFFF',
+  '#0066FF',
+  '#3300FF',
+  '#CC00FF',
+  '#FF0099'
+]
+const INTERVAL_TIMEOUT = 40
 
 export default {
   data: () => ({
-    i: 0,
+    index: 0,
     interval: undefined
   }),
 
   mounted () {
     this.interval = setInterval(() => {
-      this.i++
-    }, 40)
+      this.index++
+    }, INTERVAL_TIMEOUT)
 
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'c' && e.getModifierState('Control')) {
-        this.finish()
+    window.addEventListener('keydown', event => {
+      if (event.key === 'c' && event.getModifierState('Control')) {
+        clearInterval(this.interval)
+        this.$_done()
       }
     }, true)
   },
 
   methods: {
-    color (i) {
-      i += this.i
-      const offset = Math.floor(i / colors.length) * colors.length
-      return colors[i - offset]
-    },
+    color (index) {
+      index += this.index
+      const offset = Math.floor(index / colors.length) * colors.length
 
-    finish () {
-      clearInterval(this.interval)
-      this.$_done()
+      return colors[index - offset]
     }
   }
 }
