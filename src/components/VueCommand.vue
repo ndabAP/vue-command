@@ -166,24 +166,6 @@ export default {
       get () {
         return this.history.length
       }
-    },
-
-    // Is the current input part of available programs
-    isCurrentCommand: {
-      get () {
-        const command = Object
-          .keys(this.commands)
-          .find(command => command === this.current.trim())
-
-        return !!command
-      }
-    },
-
-    // Returns the program of the current input, if given
-    currentProgram: {
-      get () {
-        return this.findCommand(this.current)
-      }
     }
   },
 
@@ -207,12 +189,6 @@ export default {
 
     setIsInProgress (isInProgress) {
       this.isInProgress = isInProgress
-    },
-
-    findCommand (command) {
-      return Object
-        .keys(this.commands)
-        .find(command => command === this.current)
     },
 
     setIsFullscreen (isFullscreen) {

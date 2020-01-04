@@ -4,7 +4,6 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :autocompletion-resolver="() => 'test'"
       :help-timeout="1250"
       :commands="commands"
       show-help/>
@@ -45,6 +44,7 @@ export default {
 
         Example: pokedex pikachu --color
       `,
+
       loading: () => loading,
       nano: () => nano,
       klieh: () => klieh
@@ -94,12 +94,6 @@ body {
   }
 
   .vue-command {
-    .term {
-      -webkit-border-radius: 8px;
-      -moz-border-radius: 8px;
-      border-radius: 8px;
-    }
-
     .term-std {
       min-height: 300px;
       max-height: 300px;
