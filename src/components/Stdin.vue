@@ -4,8 +4,11 @@
       v-if="!hidePrompt"
       :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
       class="term-ps">
-      <template v-if="isLast || !keepPrompt">{{ prompt }}</template>
-      <template v-if="!isLast && keepPrompt">{{ localPrompt }}</template>
+      <slot
+        name="prompt"
+        :prompt="localPrompt">
+        {{ localPrompt }}
+      </slot>
     </span>
     <span class="term-stdin">
       <input
@@ -58,11 +61,6 @@ export default {
     lastCommand: {
       type: String,
       default: ''
-    },
-
-    keepPrompt: {
-      type: Boolean,
-      default: false
     },
 
     prompt: {

@@ -43,14 +43,19 @@
               :last-command="last"
               :prompt="prompt"
               :help-text="helpText"
-              :keep-prompt="keepPrompt"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :white-theme="whiteTheme"
               :uid="_uid"
               @cursor="setCursor"
               @handle="handle"
-              @typing="setCurrent"/>
+              @typing="setCurrent">
+              <template v-slot:prompt="prompt">
+                <slot
+                  name="prompt"
+                  :prompt="prompt" />
+              </template>
+            </stdin>
           </div>
         </div>
       </div>
@@ -113,11 +118,6 @@ export default {
     intro: {
       type: String,
       default: 'Fasten your seatbelts!'
-    },
-
-    keepPrompt: {
-      type: Boolean,
-      default: false
     },
 
     notFound: {
