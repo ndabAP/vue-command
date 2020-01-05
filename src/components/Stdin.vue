@@ -6,8 +6,8 @@
       class="term-ps">
       <slot
         name="prompt"
-        :prompt="localPrompt">
-        {{ localPrompt }}
+        :prompt="promptText">
+        {{ promptText }}
       </slot>
     </span>
     <span class="term-stdin">
@@ -88,6 +88,12 @@ export default {
     localPrompt: '',
     placeholder: ''
   }),
+
+  computed: {
+    promptText () {
+      return this.localPrompt || this.prompt
+    }
+  },
 
   watch: {
     lastCommand () {
