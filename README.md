@@ -28,7 +28,6 @@ $ npm i vue-command --save
 | `hide-bar`                | `Boolean`  | `false`                  | No       | Hides the bar                                                                                                                                                                                                                     |
 | `hide-prompt`             | `Boolean`  | `false`                  | No       | Hides the prompt                                                                                                                                                                                                                  |
 | `intro`                   | `String`   | `Fasten your seatbelts!` | No       | Sets the intro                                                                                                                                                                                                                    |
-| `keep-prompt`             | `Boolean`  | `false`                  | No       | Keeps the prompt for already executed commands                                                                                                                                                                                    |
 | `not-found`               | `String`   | `not found`              | No       | Sets the command not found text                                                                                                                                                                                                   |
 | `prompt`                  | `String`   | `~neil@moon:#`           | No       | Sets the prompt                                                                                                                                                                                                                   |
 | `show-help`               | `Boolean`  | `false`                  | No       | Shows the placeholder                                                                                                                                                                                                             |
@@ -37,6 +36,22 @@ $ npm i vue-command --save
 | `white-theme`             | `Boolean`  | `false`                  | No       | Enables the white theme                                                                                                                                                                                                           |
 | `yargs-options`           | `Object`   | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                            |
 
+## Slots
+
+### prompt
+
+You can set a custom prompt component using scoped named slots.
+
+```vue
+<vue-command ...>
+  <template v-slot:prompt="prompt">
+    <span>
+      <span>{{ prompt }}</span>
+      <span style="color: red">$</span>
+    </span>
+  </template>
+</vue-command>
+```
 
 ## Events
 
