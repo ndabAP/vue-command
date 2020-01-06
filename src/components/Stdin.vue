@@ -6,8 +6,8 @@
       class="term-ps">
       <slot
         name="prompt"
-        :prompt="promptText">
-        {{ promptText }}
+        :prompt="localPrompt">
+        {{ localPrompt }}
       </slot>
     </span>
     <span class="term-stdin">
@@ -89,12 +89,6 @@ export default {
     placeholder: ''
   }),
 
-  computed: {
-    promptText () {
-      return this.localPrompt || this.prompt
-    }
-  },
-
   watch: {
     lastCommand () {
       if (this.lastCommand && this.isLast) {
@@ -120,6 +114,9 @@ export default {
   },
 
   created () {
+    // Persist the current prompt
+    this.setLocalPrompt(this.prompt)
+
     setTimeout(() => {
       if (this.isLast && this.showHelp) {
         this.setPlaceholder(this.helpText)
@@ -149,8 +146,6 @@ export default {
         return
       }
 
-      // Persist the current prompt
-      this.setLocalPrompt(this.prompt)
       // Request to handle the current command
       this.$emit('handle', this.command)
       this.setPlaceholder('')
