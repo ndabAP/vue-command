@@ -4,13 +4,13 @@
     --timeout (default: 50)<br>
     --amount (default: 10)
   </span>
-  <span v-else>{{ "#".repeat(i) }}</span>
+  <span v-else>{{ "#".repeat(index) }}</span>
 </template>
 
 <script>
 export default {
   data: () => ({
-    i: 0
+    index: 0
   }),
 
   mounted () {
@@ -21,11 +21,11 @@ export default {
 
     const load = () =>
       setTimeout(() => {
-        this.i++
-        if (this.i < amount) {
+        this.index++
+        if (this.index < amount) {
           load()
         } else {
-          // given by vue-command, marks the process as done and allows the user to enter a new command
+          // Given by vue-command, marks the process as done and allows the user to enter a new command
           this.$_done()
         }
       }, timeout)

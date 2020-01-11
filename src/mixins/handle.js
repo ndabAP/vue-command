@@ -40,7 +40,7 @@ export default {
             builtInOrCommand(parsed, typeof builtin === 'function' ? this.$data : undefined)
           )
 
-          if (!stdout) {
+          if (stdout === '') {
             // If result is empty, return empty string
             component = stringAsComponent('')
           } else if (typeof stdout === 'string') {
@@ -52,23 +52,30 @@ export default {
           }
 
           // Check if given component has computed properties
-          if (!component.computed) { component.computed = {} }
+          if (!hasOwnProperty.call(component, 'computed')) {
+            component.computed = {}
+          }
           component.computed.$_arguments = () => parsed
           component.computed.$_isRunning = () => this.isInProgress && this.history.length === history
 
           this.history.pop()
         } else {
+          // No command found
           component = stringAsComponent(`${stdin}: ${this.notFound}`, true)
         }
 
         // Check if given component has mixins
-        if (!hasOwnProperty.call(component, 'mixins')) { component.mixins = [] }
+        if (!hasOwnProperty.call(component, 'mixins')) {
+          component.mixins = []
+        }
         component.mixins.push({
+          // Add helper methods
           methods: {
             $_done: () => {
               this.setPointer(this.executed.size)
               this.setIsInProgress(false)
               this.setIsFullscreen(false)
+
               this.$emit('executed', stdin)
             },
 
@@ -79,7 +86,9 @@ export default {
             $_executeCommand: async command => {
               if (!this.isInProgress) {
                 this.bus.$emit('setCommand', command)
+
                 await this.$nextTick()
+
                 this.handle(command)
               }
             }
