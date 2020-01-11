@@ -29,7 +29,7 @@ export default {
         let component
 
         // Check if command has been found
-        if (typeof builtin === 'function' || typeof command === 'function') {
+        if (typeof builtInOrCommand === 'function') {
           this.history.push(undefined)
           const history = this.history.length
 
@@ -95,9 +95,12 @@ export default {
 }
 
 const stringAsComponent = (content, escapeHtml) => ({
-  render: h => h('span', {
-    domProps: { [escapeHtml ? 'innerText' : 'innerHTML']: content }
-  }),
+  render: h => {
+    if (escapeHtml) {
+      return h('span', {}, content)
+    }
+    return h('span', { domProps: { innerHTML: content } })
+  },
 
   mounted () {
     this.$_done()
