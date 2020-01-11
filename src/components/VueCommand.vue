@@ -81,13 +81,24 @@ export default {
     },
 
     builtIn: {
-      type: Object,
-      default: () => ({})
+      type: Object
     },
 
     commands: {
       type: Object,
       required: true
+    },
+
+    // Current input
+    current: {
+      type: String,
+      default: ''
+    },
+
+    // Non-empty executed commands
+    executed: {
+      type: Set,
+      default: () => new Set()
     },
 
     helpTimeout: {
@@ -108,6 +119,12 @@ export default {
     helpText: {
       type: String,
       default: 'Type help'
+    },
+
+    // All executed commands
+    history: {
+      type: Array,
+      default: () => ['']
     },
 
     intro: {
@@ -159,10 +176,6 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
-    // Current input
-    current: '',
-    // Non-empty executed commands
-    executed: new Set(),
     // Indicates if a command is in progress
     isInProgress: false
   }),
@@ -209,7 +222,7 @@ export default {
 
   methods: {
     setCurrent (current) {
-      this.current = current.trim()
+      this.$emit('update:current', current.trim())
     },
 
     setIsInProgress (isInProgress) {

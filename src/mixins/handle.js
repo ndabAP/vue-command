@@ -17,29 +17,23 @@ export default {
         // Empty command
         this.history.push(null)
       } else {
-        // Remove duplicate commands for a clear history
-        this.executed.delete(stdin)
-        this.executed.add(stdin)
-
-        const builtIn = this.builtIn[program]
         const command = this.commands[program]
-
-        const builtInOrCommand = builtIn || command
+        const builtIn = this.builtIn[program]
 
         const isBuiltIn = typeof builtIn === 'function'
         const isCommand = typeof command === 'function'
 
         // Check if built-in or command has been found
-        if (isBuiltIn || isCommand) {
+        if (isCommand) {
+          // Remove duplicate commands for a clear history
+          this.executed.delete(stdin)
+          this.executed.add(stdin)
+
           this.history.push('')
           this.setIsInProgress(true)
 
           const stdout = await Promise.resolve(
-            builtInOrCommand(yargsParser(stdin, this.yargsOptions), isBuiltIn ? {
-              current: this.current,
-              executed: this.executed,
-              isInProgress: this.isInProgress
-            } : undefined)
+            command(yargsParser(stdin, this.yargsOptions))
           )
 
           // Add program result to history
@@ -48,11 +42,20 @@ export default {
           this.setPointer(this.executed.size)
 
           this.setIsInProgress(false)
-          this.$emit('executed', stdin)
+        } else if (isBuiltIn) {
+          this.setIsInProgress(true)
+
+          await Promise.resolve(builtIn(yargsParser(stdin, this.yargsOptions)))
+
+          this.setPointer(this.executed.size)
+          this.setIsInProgress(false)
         } else this.history.push(`${stdin}: ${this.notFound}`)
       }
 
       this.setCurrent('')
+      this.setCursor(0)
+
+      this.$emit('executed', stdin)
     }
   }
 }

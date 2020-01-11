@@ -3,8 +3,6 @@ import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
 // @vue/component
 export default {
   data: () => ({
-    // All executed commands
-    history: [''],
     // Last pointed command
     last: '',
     // History command pointer
@@ -25,10 +23,6 @@ export default {
       }
 
       this.last = [...this.executed][this.pointer]
-    },
-
-    addToHistory (stdout) {
-      this.history.push(stdout)
     },
 
     setPointer (pointer) {

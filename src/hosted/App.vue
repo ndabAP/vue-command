@@ -4,9 +4,12 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :built-in="{ test: (test, obj) => log(null, obj)}"
-      :help-timeout="1250"
+      :built-in="builtIn"
       :commands="commands"
+      :current.sync="current"
+      :help-timeout="1250"
+      :executed="executed"
+      :history="history"
       show-help/>
     <pre>
       <code>
@@ -25,6 +28,11 @@ export default {
   },
 
   data: () => ({
+    builtIn: {
+      clear: undefined,
+      pwd: undefined
+    },
+
     commands: {
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {
@@ -38,16 +46,34 @@ export default {
         `
       },
 
-      help: () => (`Usage: pokedex pokemon [option]<br><br>
+      help: () => (`List of commands<br><br>
 
-        Example: pokedex pikachu --color
+        clear<br>
+        pokedex pokemon [option]<br>
+        pwd
       `)
-    }
+    },
+
+    current: '',
+    executed: new Set(),
+    history: ['']
   }),
 
-  methods: {
-    log (obj, test) {
-      console.log(test)
+  created () {
+    this.builtIn.clear = async () => {
+      this.history = []
+      // Wait for DOM
+      await this.$nextTick()
+      this.history = ['']
+
+      this.executed.clear()
+    }
+
+    this.builtIn.pwd = () => {
+      this.executed.delete('pwd')
+      this.executed.add('pwd')
+
+      this.history.push('/home/neil')
     }
   }
 }
