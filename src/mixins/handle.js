@@ -42,10 +42,10 @@ export default {
 
           if (stdout === '') {
             // If result is empty, return empty string
-            component = stringAsComponent('')
+            component = getComponent('')
           } else if (typeof stdout === 'string') {
             // Result is non-empty string
-            component = stringAsComponent(stdout)
+            component = getComponent(stdout)
           } else {
             // Result is component
             component = stdout
@@ -61,7 +61,7 @@ export default {
           this.history.pop()
         } else {
           // No command found
-          component = stringAsComponent(`${stdin}: ${this.notFound}`, true)
+          component = getComponent(`${stdin}: ${this.notFound}`, true)
         }
 
         // Check if given component has mixins
@@ -103,9 +103,10 @@ export default {
   }
 }
 
-const stringAsComponent = (content, escapeHtml) => ({
+// Returns a component containing a span element with given inner content
+const getComponent = (content, isEscapeHtml) => ({
   render: h => h('span', {
-    domProps: { [escapeHtml ? 'innerText' : 'innerHTML']: content }
+    domProps: { [isEscapeHtml ? 'innerText' : 'innerHTML']: content }
   }),
 
   mounted () {
