@@ -1,11 +1,15 @@
 import flushPromises from 'flush-promises'
 
 import { getRandom, getMountedWrapper, enterAndTrigger, getEmptyCommands, getCommands } from './test-utilities'
+import { ResizeObserver } from './polyfills'
 import Stdin from '../../src/components/Stdin'
 import Stdout from '../../src/components/Stdout'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
+
+/* global jest */
+global.ResizeObserver = ResizeObserver
 
 describe('VueCommand.vue', () => {
   it('hides the bar', () => {
