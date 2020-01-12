@@ -37,7 +37,7 @@ $ npm i vue-command --save
 | `yargs-options`           | `Object`   | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                            |
 
 
-## Commands
+### Commands
 
 `commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a HTML `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. In your component, you have access to the following instance properties:
 
@@ -48,7 +48,7 @@ $ npm i vue-command --save
 | `this.$_executeCommand(command: String)`        | `Function` | Method   | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                  |
 | `this.$_isRunning`                              | `Boolean`  | Computed | Indicates whether your command is still running or if it has terminated                                                                                                               |
 | `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Method   | Toggle if your command will be the only visible element in the shell                                                                                                                  |
-## Built-in
+### Built-in
 
 Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.
 
@@ -155,7 +155,7 @@ textarea {
 </style>
 ```
 
-The command has to return the component.
+Now the command has to return the component.
 
 ```vue
 <template>
