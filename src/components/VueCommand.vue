@@ -256,7 +256,6 @@ export default {
 
   .term-bar {
     border-bottom: 1px solid #252525;
-    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
     height: 32px;
@@ -288,6 +287,7 @@ export default {
     flex-direction: column;
     flex: 1;
     height: 100%;
+    margin-top: 5px;
   }
 }
 </style>
