@@ -29,7 +29,7 @@ export default {
         let component
 
         // Check if command has been found
-        if (typeof builtin === 'function' || typeof command === 'function') {
+        if (typeof builtInOrCommand === 'function') {
           this.history.push(undefined)
           const history = this.history.length
 
@@ -105,9 +105,12 @@ export default {
 
 // Returns a component containing a span element with given inner content
 const getComponent = (content, isEscapeHtml) => ({
-  render: h => h('span', {
-    domProps: { [isEscapeHtml ? 'innerText' : 'innerHTML']: content }
-  }),
+  render: h => {
+    if (isEscapeHtml) {
+      return h('span', {}, content)
+    }
+    return h('span', { domProps: { innerHTML: content } })
+  },
 
   mounted () {
     this.$_done()

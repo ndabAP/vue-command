@@ -2,6 +2,7 @@ import flushPromises from 'flush-promises'
 
 import { getRandom, getMountedWrapper, enterAndTrigger, getEmptyCommands, getCommands } from './test-utilities'
 import Stdin from '../../src/components/Stdin'
+import Stdout from '../../src/components/Stdout'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
@@ -57,13 +58,14 @@ describe('VueCommand.vue', () => {
   it('sets command not found text', async () => {
     const command = getRandom()
     const notFound = getRandom()
-    const wrapper = getMountedWrapper({ notFound }, getCommands(command))
+    const wrapper = getMountedWrapper({ notFound }, getEmptyCommands())
 
     enterAndTrigger(wrapper, command)
 
+    await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
+    expect(wrapper.find(Stdout).text()).toBe(`${command}: ${notFound}`)
   })
 
   it('doesn\'t find the command', async () => {
@@ -75,7 +77,7 @@ describe('VueCommand.vue', () => {
     await wrapper.vm.$nextTick()
 
     enterAndTrigger(wrapper, command)
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
+    expect(wrapper.find(Stdout).text()).toBe(`${command}: command not found`)
   })
 
   it('finds the command', async () => {
@@ -87,7 +89,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('finds the asynchronous command', async () => {
@@ -102,7 +104,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('finds the previous command', async () => {
@@ -123,7 +125,7 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await flushPromises()
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('calls the autocompletion resolver with arguments', async () => {
