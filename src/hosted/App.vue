@@ -28,6 +28,14 @@ export default {
 
   data: () => ({
     commands: {
+      help: () => `Available programms:<br><br>
+
+        &nbsp;klieh<br>
+        &nbsp;loading [--timeout n] [--amount n]<br>
+        &nbsp;nano<br>
+        &nbsp;pokedex pokemon --color<br>
+      `,
+
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {
           return 'yellow'
@@ -40,14 +48,9 @@ export default {
         `
       },
 
-      help: () => `Usage: pokedex pokemon [option]<br><br>
-
-        Example: pokedex pikachu --color
-      `,
-
+      klieh: () => klieh,
       loading: () => loading,
-      nano: () => nano,
-      klieh: () => klieh
+      nano: () => nano
     }
   })
 }
