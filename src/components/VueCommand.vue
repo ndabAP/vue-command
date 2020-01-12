@@ -159,7 +159,13 @@ export default {
     // Indicates if a command is in progress
     isInProgress: false,
     // run command in fullscreen
-    isFullscreen: false
+    isFullscreen: false,
+    // Handle scroll behaviour
+    scroll: {
+      eventListener: undefined,
+      isBottom: true,
+      resizeObserver: undefined
+    }
   }),
 
   computed: {
@@ -186,13 +192,29 @@ export default {
 
   mounted () {
     // Scroll to bottom if stdout mutates terminal height
-    const resizeObserver = new ResizeObserver(async () => {
+    this.scroll.resizeObserver = new ResizeObserver(async event => {
       await this.$nextTick()
 
-      this.$refs['term-std'].scrollTop = this.$refs['term-std'].scrollHeight
+      // Only scroll to bottom if it was scrolled to bottom before
+      if (this.scroll.isBottom) {
+        this.$refs['term-std'].scrollTop = this.$refs['term-std'].scrollHeight
+      }
     })
 
-    resizeObserver.observe(this.$refs['term-cont'])
+    this.scroll.resizeObserver.observe(this.$refs['term-cont'])
+
+    // Check if scrolled to bottom
+    this.scroll.eventListener = () => {
+      const terminal = this.$refs['term-std']
+      this.scroll.isBottom = (terminal.scrollHeight - terminal.scrollTop - terminal.clientHeight) === 0
+    }
+
+    this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
+  },
+
+  beforeDestroy () {
+    this.scroll.resizeObserver.unobserve(this.$refs['term-cont'])
+    this.$refs['term-std'].removeEventListener('scroll', this.scroll.eventListener)
   },
 
   methods: {

@@ -180,6 +180,10 @@ export default {
 </script>
 ```
 
+## Browser support
+
+This library uses the `ResizeObserver` to track if the terminals inner height changes. You may need a pollyfill to support your target browser.
+
 ## Projects using vue-command
 
 - [docker-management-dashboard](https://github.com/zero4994/docker-management-dashboard) - A management dashboard for your local docker containers

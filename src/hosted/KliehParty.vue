@@ -1,7 +1,7 @@
 <template>
   <div>
     <span
-      v-for="(character, index) in 'KLIEH'"
+      v-for="(character, index) in characters"
       :key="index"
       :style="{ color: color(index) }">
       {{ character }}
@@ -27,6 +27,7 @@ const INTERVAL_TIMEOUT = 40
 
 export default {
   data: () => ({
+    characters: 'KLIEH',
     index: 0,
     interval: undefined
   }),
