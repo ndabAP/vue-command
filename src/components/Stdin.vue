@@ -198,7 +198,7 @@ export default {
     width: 100%;
 
     &::placeholder {
-      color: transparent;
+      color: rgba(255, 255, 255, 0.5);
     }
   }
 
