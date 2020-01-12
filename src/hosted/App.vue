@@ -57,6 +57,8 @@ export default {
 </script>
 
 <style lang="scss">
+$border-radius: 8px;
+
 body {
   display: grid;
   place-items: center;
@@ -85,9 +87,6 @@ body {
     margin-top: 1em;
     overflow: auto;
     overflow-y: hidden;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
 
     code {
       padding: 10px;
@@ -97,16 +96,18 @@ body {
   }
 
   .vue-command {
-    border-radius: 8px;
+    border-radius: $border-radius;
+
+    .term {
+      -webkit-border-radius: $border-radius;
+      -moz-border-radius: $border-radius;
+      border-radius: $border-radius;
+    }
 
     .term-std {
       min-height: 300px;
       max-height: 300px;
       overflow-y: scroll;
-    }
-
-    .term {
-      border-radius: 8px;
     }
   }
 }
