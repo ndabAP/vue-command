@@ -249,7 +249,7 @@ export default {
 
   .term-bar {
     border-bottom: 1px solid #252525;
-    margin-bottom: 0.5rem;
+    // margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
     height: 32px;
@@ -269,6 +269,7 @@ export default {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-bottom: 0.5rem;
+    margin-top: 5px;
   }
 }
 </style>
