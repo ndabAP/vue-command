@@ -39,7 +39,9 @@ $ npm i vue-command --save
 
 ## Commands
 
-`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a HTML `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. In your component, you have access to the following instance properties:
+`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a HTML `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. 
+
+In your component, you have access to the following instance properties:
 
 | Name                                            | Type       | Property | Description                                                                                                                                                                           |
 |-------------------------------------------------|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
