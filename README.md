@@ -121,9 +121,7 @@ export default {
 </style>
 ```
 
-## Component
-
-### Nano editor
+### Component
 
 Simulates the Nano editor available in many shells.
 
@@ -153,7 +151,7 @@ textarea {
 </style>
 ```
 
-### App.vue
+The command has to return the component.
 
 ```vue
 <template>
