@@ -128,7 +128,11 @@ Simulates the Nano editor available in many shells.
 ```vue
 <template>
   <div v-if="$_isRunning">
-    <textarea ref="nano" @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
+    <textarea 
+      ref="nano" 
+      @keydown.ctrl.88="$_done()">
+      This is a text editor! Press Ctrl + X to leave.
+    </textarea>
   </div>
 </template>
 
