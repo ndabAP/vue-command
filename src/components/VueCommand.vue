@@ -272,6 +272,7 @@ export default {
 
   .term-std {
     @extend .fullscreen;
+    margin-top: 10px;
   }
 
   .term-cont {
@@ -287,7 +288,6 @@ export default {
     flex-direction: column;
     flex: 1;
     height: 100%;
-    margin-top: 5px;
   }
 }
 </style>
