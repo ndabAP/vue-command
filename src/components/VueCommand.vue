@@ -272,7 +272,6 @@ export default {
 
   .term-std {
     @extend .fullscreen;
-    margin-top: 10px;
   }
 
   .term-cont {
@@ -281,6 +280,7 @@ export default {
     padding-right: 0.5rem;
     padding-bottom: 0.5rem;
     flex: 1;
+    margin-top: 10px;
   }
 
   .fullscreen {
