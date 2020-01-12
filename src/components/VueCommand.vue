@@ -17,7 +17,9 @@
       <div
         ref="term-std"
         class="term-std">
-        <div class="term-cont">
+        <div
+          ref="term-cont"
+          class="term-cont">
           <div v-if="showIntro">
             {{ intro }}
           </div>
@@ -180,6 +182,17 @@ export default {
         this.last = ''
       }
     }
+  },
+
+  mounted () {
+    // Scroll to bottom if stdout mutates terminal height
+    const resizeObserver = new ResizeObserver(async () => {
+      await this.$nextTick()
+
+      this.$refs['term-std'].scrollTop = this.$refs['term-std'].scrollHeight
+    })
+
+    resizeObserver.observe(this.$refs['term-cont'])
   },
 
   methods: {
