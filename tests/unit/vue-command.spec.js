@@ -1,10 +1,15 @@
 import flushPromises from 'flush-promises'
 
-import Stdin from '../../src/components/Stdin'
 import { getRandom, getMountedWrapper, enterAndTrigger, getEmptyCommands, getCommands } from './test-utilities'
+import { ResizeObserver } from './polyfills'
+import Stdin from '../../src/components/Stdin'
+import Stdout from '../../src/components/Stdout'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
+
+/* global jest */
+global.ResizeObserver = ResizeObserver
 
 describe('VueCommand.vue', () => {
   it('hides the bar', () => {
@@ -61,9 +66,10 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
 
+    await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
+    expect(wrapper.find(Stdout).text()).toBe(`${command}: ${notFound}`)
   })
 
   it('doesn\'t find the command', async () => {
@@ -74,7 +80,8 @@ describe('VueCommand.vue', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
+    enterAndTrigger(wrapper, command)
+    expect(wrapper.find(Stdout).text()).toBe(`${command}: command not found`)
   })
 
   it('finds the command', async () => {
@@ -86,7 +93,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('finds the asynchronous command', async () => {
@@ -101,7 +108,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('finds the previous command', async () => {
@@ -110,7 +117,6 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await flushPromises()
-
     wrapper.find('input').trigger('keyup.ArrowUp')
 
     expect(wrapper.find('input').element.value).toBe(command)
@@ -123,8 +129,7 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await flushPromises()
-
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.find(Stdout).text()).toBe(command)
   })
 
   it('calls the autocompletion resolver with arguments', async () => {

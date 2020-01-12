@@ -4,14 +4,12 @@
     @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete">
     <div
-      :class="{ 'white-bg': whiteTheme, 'dark-bg': !whiteTheme }"
+      :class="{ 'white-theme': whiteTheme }"
       class="term">
       <div
         v-if="!hideBar"
         class="term-bar">
-        <span
-          :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
-          class="term-title">
+        <span class="term-title">
           {{ title }}
         </span>
       </div>
@@ -19,38 +17,38 @@
       <div
         ref="term-std"
         class="term-std">
-        <div class="term-cont">
-          <div
-            v-if="showIntro"
-            :class="{ 'white-font': !whiteTheme, 'dark-font': whiteTheme }">
+        <div
+          ref="term-cont"
+          class="term-cont">
+          <div v-if="showIntro">
             {{ intro }}
           </div>
 
           <div
             v-for="(stdout, index) in history"
-            :key="index">
+            :key="index"
+            :class="{ fullscreen : (isFullscreen && index === progress - 1)}">
             <stdout
               v-if="index !== 0"
-              :white-theme="whiteTheme"
-              :stdout="stdout"
+              v-show="(!isFullscreen || index === progress - 1)"
+              :component="stdout"
               class="term-stdout"/>
 
             <stdin
               :bus="bus"
               :hide-prompt="hidePrompt"
+              :is-fullscreen="isFullscreen"
               :is-in-progress="isInProgress"
               :is-last="index === progress - 1"
               :last-command="last"
               :prompt="prompt"
               :help-text="helpText"
-              :keep-prompt="keepPrompt"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
-              :white-theme="whiteTheme"
               :uid="_uid"
               @cursor="setCursor"
               @handle="handle"
-              @typing="setCurrent"/>
+              @typing="setCurrent" />
           </div>
         </div>
       </div>
@@ -115,11 +113,6 @@ export default {
       default: 'Fasten your seatbelts!'
     },
 
-    keepPrompt: {
-      type: Boolean,
-      default: false
-    },
-
     notFound: {
       type: String,
       default: 'command not found'
@@ -164,7 +157,15 @@ export default {
     // Non-empty executed commands
     executed: new Set(),
     // Indicates if a command is in progress
-    isInProgress: false
+    isInProgress: false,
+    // run command in fullscreen
+    isFullscreen: false,
+    // Handle scroll behaviour
+    scroll: {
+      eventListener: undefined,
+      isBottom: true,
+      resizeObserver: undefined
+    }
   }),
 
   computed: {
@@ -172,24 +173,6 @@ export default {
     progress: {
       get () {
         return this.history.length
-      }
-    },
-
-    // Is the current input part of available programs
-    isCurrentCommand: {
-      get () {
-        const command = Object.keys(this.commands).find(
-          command => command === this.current.trim()
-        )
-
-        return !!command
-      }
-    },
-
-    // Returns the program of the current input, if given
-    currentProgram: {
-      get () {
-        return this.findCommand(this.current)
       }
     }
   },
@@ -202,9 +185,36 @@ export default {
       // Make searching history work again
       if (!this.current) {
         this.setPointer(this.executed.size)
-        this.setLast('')
+        this.last = ''
       }
     }
+  },
+
+  mounted () {
+    // Scroll to bottom if stdout mutates terminal height
+    this.scroll.resizeObserver = new ResizeObserver(async event => {
+      await this.$nextTick()
+
+      // Only scroll to bottom if it was scrolled to bottom before
+      if (this.scroll.isBottom) {
+        this.$refs['term-std'].scrollTop = this.$refs['term-std'].scrollHeight
+      }
+    })
+
+    this.scroll.resizeObserver.observe(this.$refs['term-cont'])
+
+    // Check if scrolled to bottom
+    this.scroll.eventListener = () => {
+      const terminal = this.$refs['term-std']
+      this.scroll.isBottom = (terminal.scrollHeight - terminal.scrollTop - terminal.clientHeight) === 0
+    }
+
+    this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
+  },
+
+  beforeDestroy () {
+    this.scroll.resizeObserver.unobserve(this.$refs['term-cont'])
+    this.$refs['term-std'].removeEventListener('scroll', this.scroll.eventListener)
   },
 
   methods: {
@@ -216,14 +226,8 @@ export default {
       this.isInProgress = isInProgress
     },
 
-    setLast (last) {
-      this.last = last
-    },
-
-    findCommand (command) {
-      return Object.keys(this.commands).find(
-        command => command === this.current
-      )
+    setIsFullscreen (isFullscreen) {
+      this.isFullscreen = isFullscreen
     }
   }
 }
@@ -244,12 +248,14 @@ export default {
   }
 
   .term {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     border: 1px solid $background;
   }
 
   .term-bar {
     border-bottom: 1px solid #252525;
-    // margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
     height: 32px;
@@ -264,12 +270,24 @@ export default {
     margin: auto 0;
   }
 
+  .term-std {
+    @extend .fullscreen;
+    margin-top: 10px;
+  }
+
   .term-cont {
     font-family: "Inconsolata", monospace;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-bottom: 0.5rem;
-    margin-top: 5px;
+    flex: 1;
+  }
+
+  .fullscreen {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
   }
 }
 </style>

@@ -4,7 +4,6 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :autocompletion-resolver="() => 'test'"
       :help-timeout="1250"
       :commands="commands"
       show-help/>
@@ -18,6 +17,9 @@ $ npm i --save vue-command
 
 <script>
 import VueCommand from '../components/VueCommand'
+import loading from './LoadingAnimation'
+import nano from './NanoEditor'
+import klieh from './KliehParty'
 
 export default {
   components: {
@@ -26,6 +28,14 @@ export default {
 
   data: () => ({
     commands: {
+      help: () => `Available programms:<br><br>
+
+        &nbsp;klieh<br>
+        &nbsp;loading [--timeout n] [--amount n]<br>
+        &nbsp;nano<br>
+        &nbsp;pokedex pokemon --color<br>
+      `,
+
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {
           return 'yellow'
@@ -38,63 +48,67 @@ export default {
         `
       },
 
-      help: () => (`Usage: pokedex pokemon [option]<br><br>
-
-        Example: pokedex pikachu --color
-      `)
+      klieh: () => klieh,
+      loading: () => loading,
+      nano: () => nano
     }
   })
 }
 </script>
 
 <style lang="scss">
-  body {
-    display: grid;
-    place-items: center;
-    height: 95vh;
-    margin: 0;
+$border-radius: 8px;
 
-    main {
-      margin: 1rem;
-    }
+body {
+  display: grid;
+  place-items: center;
+  height: 95vh;
+  margin: 0;
 
-    h1, h2, h3 {
-      font-family: 'Inconsolata', monospace;
-    }
+  main {
+    margin: 1rem;
+    max-width: 400px;
+    width: calc(100% - 2rem);
+  }
 
-    p {
-      font-family: 'Montserrat', sans-serif;
-    }
+  h1,
+  h2,
+  h3 {
+    font-family: "Inconsolata", monospace;
+  }
 
-    pre {
-      width: 100%;
-      padding: 0;
-      margin-top: 1em;
-      overflow: auto;
-      overflow-y: hidden;
-      -webkit-border-radius: 8px;
-      -moz-border-radius: 8px;
-      border-radius: 8px;
+  p {
+    font-family: "Montserrat", sans-serif;
+  }
 
-      code {
-        padding: 10px;
-        color: #333;
-        margin: 5px;
-      }
-    }
+  pre {
+    width: 100%;
+    padding: 0;
+    margin-top: 1em;
+    overflow: auto;
+    overflow-y: hidden;
 
-    .vue-command {
-      .term {
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-      }
-
-      .term-std {
-        min-height: 300px;
-        max-height: 300px;
-        overflow-y: scroll;
-      }
+    code {
+      padding: 10px;
+      color: #333;
+      margin: 5px;
     }
   }
+
+  .vue-command {
+    border-radius: $border-radius;
+
+    .term {
+      -webkit-border-radius: $border-radius;
+      -moz-border-radius: $border-radius;
+      border-radius: $border-radius;
+    }
+
+    .term-std {
+      min-height: 300px;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+  }
+}
 </style>

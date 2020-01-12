@@ -1,20 +1,16 @@
 <template>
-  <span
-    :class="{ 'dark-font': whiteTheme, 'white-font': !whiteTheme }"
-    v-html="stdout">
-  </span>
+  <component :is="component" />
 </template>
 
 <script>
 export default {
   props: {
-    stdout: {
-      type: String,
-      default: ''
-    },
-
-    whiteTheme: {
-      type: Boolean
+    component: {
+      default: () => ({
+        render (h) {
+          h('span')
+        }
+      })
     }
   }
 }
