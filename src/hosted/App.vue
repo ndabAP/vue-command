@@ -97,10 +97,16 @@ body {
   }
 
   .vue-command {
+    border-radius: 8px;
+
     .term-std {
       min-height: 300px;
       max-height: 300px;
       overflow-y: scroll;
+    }
+
+    .term {
+      border-radius: 8px;
     }
   }
 }
