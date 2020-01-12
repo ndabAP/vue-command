@@ -5,12 +5,13 @@
       :key="index"
       :style="{ color: color(index) }">
       {{ character }}
-    </span>
+    </span><br><br>
+    Press Ctrl + C to leave.
   </div>
 </template>
 
 <script>
-const colors = [
+const COLORS = [
   '#FF0000',
   '#FF9900',
   '#CCFF00',
@@ -38,6 +39,7 @@ export default {
     window.addEventListener('keydown', event => {
       if (event.key === 'c' && event.getModifierState('Control')) {
         clearInterval(this.interval)
+
         this.$_done()
       }
     }, true)
@@ -46,9 +48,9 @@ export default {
   methods: {
     color (index) {
       index += this.index
-      const offset = Math.floor(index / colors.length) * colors.length
+      const offset = Math.floor(index / COLORS.length) * COLORS.length
 
-      return colors[index - offset]
+      return COLORS[index - offset]
     }
   }
 }

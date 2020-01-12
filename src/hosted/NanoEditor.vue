@@ -1,7 +1,7 @@
 <template>
   <div v-if="$_isRunning">
     <textarea
-      ref="editor"
+      ref="nano"
       @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
@@ -10,7 +10,7 @@
 export default {
   mounted () {
     this.$_setIsFullscreen(true)
-    this.$refs.editor.focus()
+    this.$refs.nano.focus()
   }
 }
 </script>

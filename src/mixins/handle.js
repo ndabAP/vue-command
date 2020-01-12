@@ -27,7 +27,6 @@ export default {
         const builtInOrCommand = builtIn || command
 
         let component
-
         // Check if command has been found
         if (typeof builtInOrCommand === 'function') {
           this.history.push(undefined)
@@ -109,6 +108,7 @@ const getComponent = (content, isEscapeHtml) => ({
     if (isEscapeHtml) {
       return h('span', {}, content)
     }
+
     return h('span', { domProps: { innerHTML: content } })
   },
 

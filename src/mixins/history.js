@@ -27,10 +27,6 @@ export default {
       this.last = [...this.executed][this.pointer]
     },
 
-    addToHistory (stdout) {
-      this.history.push(stdout)
-    },
-
     setPointer (pointer) {
       this.pointer = pointer
     }
