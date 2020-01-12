@@ -177,7 +177,7 @@ export default {
     commands: { 
       nano: () => nano 
     }
-  }
+  })
 }
 </script>
 ```
