@@ -19,10 +19,10 @@ $ npm i vue-command --save
 ## Properties
 
 | Property                  | Type       | Default                  | Required | Description                                                                                                                                                                                                                       |
-|---------------------------|------------|--------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------- | ---------- | ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `autocompletion-resolver` | `Function` | `null`                   | No       | Gets the current input as first and cursor position as the second argument. Must return the whole command                                                                                                                         |
-| `built-in`                | `Object`   | `{}`                     | No       | Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String` |
-| `commands`                | `Object`   |                          | Yes      | See Commands below.                           |
+| `built-in`                | `Object`   | `{}`                     | No       | See [built-in](#built-in) section |
+| `commands`                | `Object`   |                          | Yes      | See [commands](#commands) section                                                                                                                                                                                           |
 | `help-text`               | `String`   | `Type help`              | No       | Sets the placeholder                                                                                                                                                                                                              |
 | `help-timeout`            | `Number`   | `4000`                   | No       | Sets the placeholder timeout                                                                                                                                                                                                      |
 | `hide-bar`                | `Boolean`  | `false`                  | No       | Hides the bar                                                                                                                                                                                                                     |
@@ -39,16 +39,18 @@ $ npm i vue-command --save
 
 ## Commands
 
-`commands` is an object containing key-value pairs where key is the command and the value is an (async) function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme) as an argument. It can return either an HTML string, that will be used as the output or a Vue component which you can use for more complex functions. In your component, you will have access to the following methods and computed properties:
+`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a HTML `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. In your component, you have access to the following methods and computed properties:
 
-| Name | Type | Description |
-| --- | --- | --- |
-| `this.$_arguments` | `Object` | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme). |
-| `this.$_done` | `Function` | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change any further from this point on. **Make sure to eventually call this method.** Also leaves fullscreen mode. |
-| `this.$_isRunning` | `Boolean` | Indicates whether your command is still running or if it has terminated. |
-| `this.$_executeCommand(command: String)` | `Function` | After executing `this.$_done()`, you can use this method to run a subsequent command. |
-| `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Your command will be the only visible element in the shell. |
+| Name                                            | Type       | Description                                                                                                                                                                                                                                      |
+| ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `this.$_arguments`                              | `Object`   | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                                          |
+| `this.$_done`                                   | `Function` | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change from this point on. Also leaves fullscreen mode |
+| `this.$_executeCommand(command: String)`        | `Function` | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                                                                            |
+| `this.$_isRunning`                              | `Boolean`  | Indicates whether your command is still running or if it has terminated                                                                                                                                                                         |
+| `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Toggle if your command will be the only visible element in the shell                                                                                                                                                                                      |
+## Built-in
 
+Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.
 
 ## Events
 
@@ -60,7 +62,11 @@ $ npm i vue-command --save
 
 ## Usage
 
-### Function
+You can either return a `String` or a Vue.js component.
+
+### String
+
+Returns the color of the Pokémon "Pikachu".
 
 ```vue
 <template>
@@ -117,13 +123,14 @@ export default {
 
 ## Component
 
-### NanoEditor.vue
+### Nano editor
+
+Simulates the Nano editor available in many shells.
 
 ```vue
 <template>
-  <!-- this will hide the editor from the shell history -->
   <div v-if="$_isRunning">
-    <textarea ref="editor" @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
+    <textarea ref="nano" @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
 
@@ -131,7 +138,7 @@ export default {
 export default {
   mounted () {
     this.$_setIsFullscreen(true)
-    this.$refs.editor.focus()
+    this.$refs.nano.focus()
   }
 }
 </script>
@@ -156,15 +163,17 @@ textarea {
 <script>
 import VueCommand from 'vue-command'
 import 'vue-command/dist/vue-command.css'
+
 import nano from './NanoEditor.vue'
 
 export default {
   components: {
     VueCommand
   },
-  data() {
-    return {
-      commands: { nano: () => nano }
+
+  data: () =>  ({
+    commands: { 
+      nano: () => nano 
     }
   }
 }
@@ -180,7 +189,7 @@ export default {
 
 ## Author
 
-[Julian Claus](https://www.julian-claus.de) and contributors.
+[Julian Claus](https://www.julian-claus.de) and contributors. Special thanks to [krmax44](https://github.com/krmax44) for the amazing work!
 
 ## License
 
