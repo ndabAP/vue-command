@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "7.0.8",
+  "version": "7.1.0",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -16,7 +16,9 @@
   ],
   "files": [
     "dist/*.js",
-    "dist/*.css"
+    "dist/*.js.map",
+    "dist/*.css",
+    "dist/*.css.map"
   ],
   "scripts": {
     "build": "npm run build:lib && npm run build:docs",
