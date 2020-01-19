@@ -15,6 +15,8 @@
         :disabled="!isLast || isInProgress"
         :placeholder="placeholder"
         type="text"
+        autocorrect="off"
+        autocapitalize="none"
         @click="emitCursor"
         @keyup="emitCursor"
         @keyup.enter="handle"/>
