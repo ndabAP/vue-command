@@ -9,12 +9,12 @@ export const ResizeObserver = class ResizeObserver {
   }
 
   observe (element) {
-    if (this.observables.some(observable => observable.el === element)) {
+    if (this.observables.some(observable => observable.element === element)) {
       return
     }
 
     const newObservable = {
-      el: element,
+      element,
       size: {
         height: element.clientHeight,
         width: element.clientWidth
@@ -25,7 +25,7 @@ export const ResizeObserver = class ResizeObserver {
   }
 
   unobserve (element) {
-    this.observables = this.observables.filter(object => object.el !== element)
+    this.observables = this.observables.filter(object => object.element !== element)
   }
 
   disconnect () {
@@ -35,8 +35,8 @@ export const ResizeObserver = class ResizeObserver {
   check () {
     const changedEntries = this.observables
       .filter(object => {
-        const currentHeight = object.el.clientHeight
-        const currentWidth = object.el.clientWidth
+        const currentHeight = object.element.clientHeight
+        const currentWidth = object.element.clientWidth
         if (object.size.height !== currentHeight || object.size.width !== currentWidth) {
           object.size.height = currentHeight
           object.size.width = currentWidth
@@ -44,7 +44,7 @@ export const ResizeObserver = class ResizeObserver {
           return true
         }
       })
-      .map(object => object.el)
+      .map(object => object.element)
 
     if (changedEntries.length > 0) {
       this.callback(changedEntries)
