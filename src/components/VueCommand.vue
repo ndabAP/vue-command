@@ -25,13 +25,13 @@
           </div>
 
           <div
-            v-for="(stdout, index) in history"
+            v-for="(entry, index) in history"
             :key="index"
             :class="{ fullscreen : (isFullscreen && index === progress - 1)}">
             <stdout
               v-if="index !== 0"
               v-show="(!isFullscreen || index === progress - 1)"
-              :component="stdout"
+              :component="entry.stdout"
               class="term-stdout"/>
 
             <stdin
@@ -41,7 +41,7 @@
               :is-in-progress="isInProgress"
               :is-last="index === progress - 1"
               :last-command="last"
-              :prompt="prompt"
+              :prompt="entry.prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
               :show-help="showHelp"

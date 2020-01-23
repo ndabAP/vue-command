@@ -15,7 +15,7 @@ export default {
 
       if (!program) {
         // Empty command
-        this.history.push(undefined)
+        this.history.push({ component: undefined, prompt: this.$props.prompt })
       } else {
         // Remove duplicate commands for a clear history
         this.executed.delete(stdin)
@@ -29,7 +29,7 @@ export default {
         let component
         // Check if command has been found
         if (typeof builtInOrCommand === 'function') {
-          this.history.push(undefined)
+          this.history.push({ component: undefined, prompt: this.$props.prompt })
           const history = this.history.length
 
           this.setIsInProgress(true)
@@ -94,7 +94,7 @@ export default {
           }
         })
 
-        this.history.push(component)
+        this.history.push({ stdout: component, prompt: this.$props.prompt })
       }
 
       this.setCurrent('')

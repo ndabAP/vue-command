@@ -2,14 +2,16 @@ import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
 
 // @vue/component
 export default {
-  data: () => ({
-    // All executed commands
-    history: [undefined],
-    // Last pointed command
-    last: '',
-    // History command pointer
-    pointer: 0
-  }),
+  data: function () {
+    return {
+      // All executed commands
+      history: [{ stdout: undefined, prompt: this.$props.prompt }],
+      // Last pointed command
+      last: '',
+      // History command pointer
+      pointer: 0
+    }
+  },
 
   methods: {
     // Lets user navigate through history based on input key
