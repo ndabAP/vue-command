@@ -4,8 +4,8 @@
     class="stdin-container">
     <span
       v-if="!hidePrompt"
-      class="term-ps">
-      {{ prompt }}
+      class="term-ps"
+      v-html="prompt">
     </span>
     <span class="term-stdin">
       <input
@@ -180,39 +180,39 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../scss/mixins";
+  @import "../scss/mixins";
 
-.vue-command {
-  display: flex;
-
-  .stdin-container {
+  .vue-command {
     display: flex;
-  }
 
-  input,
-  textarea {
-    background: none;
-    border: none;
-    font-family: "Inconsolata", monospace;
-    font-size: 1rem;
-    outline: none;
-    flex: 1;
-    width: 100%;
+    .stdin-container {
+      display: flex;
+    }
 
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+    input,
+    textarea {
+      background: none;
+      border: none;
+      font-family: "Inconsolata", monospace;
+      font-size: 1rem;
+      outline: none;
+      flex: 1;
+      width: 100%;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .term-stdin {
+      flex: 1;
+      background: none;
+      margin: 0;
+      margin-left: 0.5rem;
+      border: 0;
+      color: inherit;
+      font-family: inherit;
+      font-size: 1rem;
     }
   }
-
-  .term-stdin {
-    flex: 1;
-    background: none;
-    margin: 0;
-    margin-left: 0.5rem;
-    border: 0;
-    color: inherit;
-    font-family: inherit;
-    font-size: 1rem;
-  }
-}
 </style>
