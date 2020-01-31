@@ -20,9 +20,9 @@
         <div
           ref="term-cont"
           class="term-cont">
-          <div v-if="showIntro">
-            {{ intro }}
-          </div>
+          <span
+            v-if="showIntro"
+            v-html="intro" />
 
           <div
             v-for="(stdout, index) in history"
