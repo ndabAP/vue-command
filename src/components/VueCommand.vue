@@ -79,8 +79,7 @@ export default {
     },
 
     builtIn: {
-      type: Object,
-      default: () => ({})
+      type: Object
     },
 
     commands: {
@@ -124,6 +123,12 @@ export default {
     helpText: {
       type: String,
       default: 'Type help'
+    },
+
+    // All executed commands
+    history: {
+      type: Array,
+      default: () => ['']
     },
 
     intro: {

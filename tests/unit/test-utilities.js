@@ -5,7 +5,6 @@ import VueCommand from '../../src/components/VueCommand'
 export const getRandom = () => Math.random().toString(36).substring(6)
 
 export const getEmptyCommands = () => ({ [null]: () => null })
-
 export const getCommands = command => ({ [command]: () => command })
 
 export const getMountedWrapper = (props, commands) => mount(VueCommand, {
