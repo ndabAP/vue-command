@@ -125,12 +125,6 @@ export default {
       default: 'Type help'
     },
 
-    // All executed commands
-    history: {
-      type: Array,
-      default: () => ['']
-    },
-
     intro: {
       type: String,
       default: 'Fasten your seatbelts!'
