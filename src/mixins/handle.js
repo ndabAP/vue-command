@@ -13,31 +13,30 @@ export default {
       // Parse the command and try to get the program
       const program = yargsParser(stdin, this.yargsOptions)._[0]
 
+      // Remove duplicate commands for a clear history
+      let executed = new Set(this.executed)
+
+      executed.delete(stdin)
+      executed.add(stdin)
+
+      let component
       if (!program) {
         // Empty command
-        this.history.push(undefined)
+        component = getComponent('')
       } else {
-        // Remove duplicate commands for a clear history
-        this.executed.delete(stdin)
-        this.executed.add(stdin)
+        this.$emit('update:executed', executed)
 
         const builtIn = this.builtIn[program]
         const command = this.commands[program]
 
-        const builtInOrCommand = builtIn || command
-
-        let component
+        const isBuiltIn = typeof builtIn === 'function'
+        const isCommand = typeof command === 'function'
         // Check if command has been found
-        if (typeof builtInOrCommand === 'function') {
-          this.history.push(undefined)
-          const history = this.history.length
-
+        if (isCommand) {
           this.setIsInProgress(true)
 
           const parsed = yargsParser(stdin, this.yargsOptions)
-          const stdout = await Promise.resolve(
-            builtInOrCommand(parsed, typeof builtin === 'function' ? this.$data : undefined)
-          )
+          const stdout = await Promise.resolve(command(parsed))
 
           if (stdout === '') {
             // If result is empty, return empty string
@@ -54,62 +53,67 @@ export default {
           if (!hasOwnProperty.call(component, 'computed')) {
             component.computed = {}
           }
+
+          const history = this.history.length
           component.computed.$_arguments = () => parsed
           component.computed.$_isRunning = () => this.isInProgress && this.history.length === history
-
-          this.history.pop()
+        } else if (isBuiltIn) {
+          // Builtin
         } else {
           // No command found
           component = getComponent(`${stdin}: ${this.notFound}`, true)
         }
-
-        // Check if given component has mixins
-        if (!hasOwnProperty.call(component, 'mixins')) {
-          component.mixins = []
-        }
-        component.mixins.push({
-          // Add helper methods
-          methods: {
-            $_done: () => {
-              this.setPointer(this.executed.size)
-              this.setIsInProgress(false)
-              this.setIsFullscreen(false)
-
-              this.$emit('executed', stdin)
-            },
-
-            $_setIsFullscreen: isFullscreen => {
-              this.isFullscreen = isFullscreen
-            },
-
-            $_executeCommand: async command => {
-              if (!this.isInProgress) {
-                this.bus.$emit('setCommand', command)
-
-                await this.$nextTick()
-
-                this.handle(command)
-              }
-            }
-          }
-        })
-
-        this.history.push(component)
       }
 
-      this.setCurrent('')
+      // Check if given component has mixins
+      if (!hasOwnProperty.call(component, 'mixins')) {
+        component.mixins = []
+      }
+
+      component.mixins.push({
+        // Add helper methods
+        methods: {
+          $_done: () => {
+            this.setPointer(executed.size)
+            this.setIsInProgress(false)
+            this.setIsFullscreen(false)
+
+            this.$emit('executed', stdin)
+          },
+
+          $_setIsFullscreen: isFullscreen => {
+            this.isFullscreen = isFullscreen
+          },
+
+          $_executeCommand: async command => {
+            if (!this.isInProgress) {
+              this.bus.$emit('setCommand', command)
+
+              await this.$nextTick()
+
+              this.handle(command)
+            }
+          }
+        }
+      })
+
+      let history = [...this.history]
+      history.push(component)
+      this.$emit('update:history', [...history])
+
+      this.$emit('update:current', '')
     }
   }
 }
 
 // Returns a component containing a span element with given inner content
 const getComponent = (content, isEscapeHtml) => ({
-  render: h => {
+  render: createElement => {
     if (isEscapeHtml) {
-      return h('span', {}, content)
+      return createElement('span', {}, content)
     }
 
-    return h('span', { domProps: { innerHTML: content } })
+    return createElement('span', { domProps: { innerHTML: content } })
   },
 
   mounted () {

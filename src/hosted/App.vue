@@ -6,6 +6,9 @@
     <vue-command
       :help-timeout="1250"
       :commands="commands"
+      :current.sync="current"
+      :executed.sync="executed"
+      :history.sync="history"
       show-help/>
     <pre>
       <code>
@@ -27,6 +30,11 @@ export default {
   },
 
   data: () => ({
+    builtIn: {
+      clear: undefined,
+      pwd: undefined
+    },
+
     commands: {
       help: () => `Available programms:<br><br>
 
@@ -51,8 +59,28 @@ export default {
       klieh: () => klieh,
       loading: () => loading,
       nano: () => nano
+    },
+
+    current: '',
+    executed: new Set(),
+    history: ['']
+  }),
+
+  created () {
+    this.builtIn.clear = async () => {
+      this.history = []
+      // Wait for DOM
+      await this.$nextTick()
+      this.history = ['']
+      this.executed.clear()
+
+      this.builtIn.pwd = () => {
+        this.executed.delete('pwd')
+        this.executed.add('pwd')
+        this.history.push('/home/neil')
+      }
     }
-  })
+  }
 }
 </script>
 

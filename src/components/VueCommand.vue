@@ -88,6 +88,18 @@ export default {
       required: true
     },
 
+    // Current input
+    current: {
+      type: String,
+      default: ''
+    },
+
+    // Non-empty executed commands
+    executed: {
+      type: Set,
+      default: () => new Set()
+    },
+
     helpTimeout: {
       type: Number,
       default: 4000
@@ -101,6 +113,12 @@ export default {
     hidePrompt: {
       type: Boolean,
       default: false
+    },
+
+    // All executed commands
+    history: {
+      type: Array,
+      default: () => ['']
     },
 
     helpText: {
@@ -152,10 +170,6 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
-    // Current input
-    current: '',
-    // Non-empty executed commands
-    executed: new Set(),
     // Indicates if a command is in progress
     isInProgress: false,
     // run command in fullscreen
@@ -219,7 +233,7 @@ export default {
 
   methods: {
     setCurrent (current) {
-      this.current = current.trim()
+      this.$emit('update:current', current.trim())
     },
 
     setIsInProgress (isInProgress) {
