@@ -2,7 +2,8 @@
   <div
     class="vue-command"
     @keyup="mutatePointerHandler"
-    @keydown.tab.prevent="autocomplete">
+    @keydown.tab.prevent="autocomplete"
+    @click="focusLastStdinInput">
     <div
       :class="{ 'white-theme': whiteTheme }"
       class="term">
@@ -35,6 +36,7 @@
               class="term-stdout"/>
 
             <stdin
+              ref="stdin"
               :bus="bus"
               :hide-prompt="hidePrompt"
               :is-fullscreen="isFullscreen"
@@ -228,6 +230,13 @@ export default {
 
     setIsFullscreen (isFullscreen) {
       this.isFullscreen = isFullscreen
+    },
+
+    focusLastStdinInput () {
+      const stdinRefs = this.$refs.stdin
+      const stdinToFocus = stdinRefs[stdinRefs.length - 1]
+
+      stdinToFocus.focusInput()
     }
   }
 }
