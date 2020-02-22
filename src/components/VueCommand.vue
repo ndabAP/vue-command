@@ -9,9 +9,16 @@
       <div
         v-if="!hideBar"
         class="term-bar">
-        <span class="term-title">
-          {{ title }}
-        </span>
+        <template v-if="customBar">
+          <slot
+            name="bar">
+          </slot>
+        </template>
+        <template v-else>
+          <span class="term-title">
+            {{ title }}
+          </span>
+        </template>
       </div>
 
       <div
@@ -94,6 +101,12 @@ export default {
     },
 
     hideBar: {
+      type: Boolean,
+      default: false
+    },
+
+    // enables user to use a custom bar for the term (eg. bar with 3 buttons)
+    customBar: {
       type: Boolean,
       default: false
     },

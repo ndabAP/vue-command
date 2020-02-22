@@ -18,6 +18,12 @@ describe('VueCommand.vue', () => {
     expect(wrapper.contains('.term-bar')).toBe(false)
   })
 
+  it('has custom bar', () => {
+    const wrapper = getMountedWrapper({ customBar: true }, getEmptyCommands(), { bar: '<div class="foo-bar"></div>' })
+    console.log(wrapper.html())
+    expect(wrapper.contains('.foo-bar')).toBe(true)
+  })
+
   it('sets the intro', () => {
     const intro = getRandom()
     const wrapper = getMountedWrapper({ showIntro: true, intro }, getEmptyCommands())
