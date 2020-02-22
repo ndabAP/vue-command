@@ -14,17 +14,10 @@
             {{ title }}
           </span>
         </slot>
-          <slot
-            name="bar">
-          </slot>
-        </template>
-        <template v-else>
-          <span class="term-title">
-            {{ title }}
-          </span>
-        </template>
+        <slot
+          name="bar">
+        </slot>
       </div>
-
       <div
         ref="term-std"
         class="term-std">
@@ -108,13 +101,7 @@ export default {
       type: Boolean,
       default: false
     },
-
-    // enables user to use a custom bar for the term (eg. bar with 3 buttons)
-    customBar: {
-      type: Boolean,
-      default: false
-    },
-
+    
     hidePrompt: {
       type: Boolean,
       default: false
