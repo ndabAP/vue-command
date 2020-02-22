@@ -101,7 +101,7 @@ export default {
       type: Boolean,
       default: false
     },
-    
+
     hidePrompt: {
       type: Boolean,
       default: false
