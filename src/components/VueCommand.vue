@@ -9,7 +9,11 @@
       <div
         v-if="!hideBar"
         class="term-bar">
-        <template v-if="customBar">
+        <slot name="customBar">
+          <span class="term-title">
+            {{ title }}
+          </span>
+        </slot>
           <slot
             name="bar">
           </slot>
