@@ -174,6 +174,10 @@ export default {
 
     setLocalPrompt (localPrompt) {
       this.localPrompt = localPrompt
+    },
+
+    focus () {
+      this.$refs.input.focus()
     }
   }
 }
