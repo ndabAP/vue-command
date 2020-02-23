@@ -9,6 +9,7 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 - White/Dark theme support
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Supports asynchronous commands
+- Ability to customize terminal bar using `customBar` slot
 
 ## Installation
 
