@@ -176,7 +176,7 @@ export default {
       this.localPrompt = localPrompt
     },
 
-    focusInput () {
+    focus () {
       this.$refs.input.focus()
     }
   }

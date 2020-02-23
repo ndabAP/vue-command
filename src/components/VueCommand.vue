@@ -3,7 +3,7 @@
     class="vue-command"
     @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
-    @click="focusLastStdinInput">
+    @click="focusLastStdin">
     <div
       :class="{ 'white-theme': whiteTheme }"
       class="term">
@@ -232,11 +232,13 @@ export default {
       this.isFullscreen = isFullscreen
     },
 
-    focusLastStdinInput () {
-      const stdinRefs = this.$refs.stdin
-      const stdinToFocus = stdinRefs[stdinRefs.length - 1]
+    // Focus on last STDIN
+    focusLastStdin () {
+      const stdins = this.$refs.stdin
+      // Latest STDIN is latest history entry
+      const stdin = stdins[this.history.length - 1]
 
-      stdinToFocus.focusInput()
+      stdin.focus()
     }
   }
 }
