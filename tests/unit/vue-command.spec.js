@@ -19,7 +19,7 @@ describe('VueCommand.vue', () => {
   })
 
   it('has custom bar', () => {
-    const wrapper = getMountedWrapper({}, getEmptyCommands(), { customBar: '<div class="foo-bar"></div>' })
+    const wrapper = getMountedWrapper({}, getEmptyCommands(), { bar: '<div class="foo-bar"></div>' })
     expect(wrapper.contains('.foo-bar')).toBe(true)
   })
 
