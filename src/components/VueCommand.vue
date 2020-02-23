@@ -14,9 +14,6 @@
             {{ title }}
           </span>
         </slot>
-        <slot
-          name="bar">
-        </slot>
       </div>
       <div
         ref="term-std"
