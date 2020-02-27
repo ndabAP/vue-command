@@ -67,8 +67,7 @@ Key-value pairs where key is command and value is function with [yargs arguments
 
 ### Bar
 
-It's possible to fully customize the terminal bar using slots. Note: If using the bar slot, the property `hide-bar`
-will be ignored.
+It's possible to fully customize the terminal bar using slots as shown in the following. **Note**: If using the bar slot, the property `hide-bar` will be ignored.
 
 ```vue
 <template>
