@@ -9,6 +9,7 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 - White/Dark theme support
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Supports asynchronous commands
+- Customize terminal with slots
 
 ## Installation
 
@@ -61,6 +62,23 @@ Key-value pairs where key is command and value is function with [yargs arguments
 | `input`   | `String`    | Emits the current input           |
 | `execute` | `String`    | Emits the whole executing command |
 | `executed`| `String`    | Emits after command execution     |
+
+## Slots
+
+### Bar
+
+It's possible to fully customize the terminal bar using slots as shown in the following. **Note**: If using the bar slot, the property `hide-bar` will be ignored.
+
+```vue
+<template>
+  <vue-command
+    :commands="commands">
+    <div slot="bar">
+      Pokedex
+    </div>
+  </vue-command>
+</template>
+```
 
 ## Usage
 

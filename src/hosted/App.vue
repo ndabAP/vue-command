@@ -124,12 +124,13 @@ body {
   }
 
   .vue-command {
-    border-radius: $border-radius;
-
-    .term {
-      -webkit-border-radius: $border-radius;
-      -moz-border-radius: $border-radius;
-      border-radius: $border-radius;
+    .term-bar {
+      -webkit-border-top-left-radius: $border-radius;
+      -webkit-border-top-left-radius: $border-radius;
+      -moz-border-top-right-radius: $border-radius;
+      -moz-border-top-left-radius: $border-radius;
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
     }
 
     .term-std {

@@ -2,10 +2,9 @@
   <div
     class="vue-command"
     @keyup="mutatePointerHandler"
-    @keydown.tab.prevent="autocomplete">
-    <div
-      :class="{ 'white-theme': whiteTheme }"
-      class="term">
+    @keydown.tab.prevent="autocomplete"
+    @click="focusLastStdin">
+    <slot name="bar">
       <div
         v-if="!hideBar"
         class="term-bar">
@@ -13,7 +12,10 @@
           {{ title }}
         </span>
       </div>
-
+    </slot>
+    <div
+      :class="{ 'white-theme': whiteTheme }"
+      class="term">
       <div
         ref="term-std"
         class="term-std">
@@ -35,6 +37,7 @@
               class="term-stdout"/>
 
             <stdin
+              ref="stdin"
               :bus="bus"
               :hide-prompt="hidePrompt"
               :is-fullscreen="isFullscreen"
@@ -241,6 +244,15 @@ export default {
 
     setIsFullscreen (isFullscreen) {
       this.isFullscreen = isFullscreen
+    },
+
+    // Focus on last STDIN
+    focusLastStdin () {
+      const stdins = this.$refs.stdin
+      // Latest STDIN is latest history entry
+      const stdin = stdins[this.history.length - 1]
+
+      stdin.focus()
     }
   }
 }
@@ -250,6 +262,9 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
+  overflow-y: auto;
+  overflow-x: hidden;
+
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -261,20 +276,22 @@ export default {
   }
 
   .term {
-    display: flex;
+    background: $background;
+    display: block;
     flex-direction: column;
     width: 100%;
     border: 1px solid $background;
   }
 
   .term-bar {
+    background: $background;
     border-bottom: 1px solid #252525;
-    display: flex;
-    flex-direction: row;
+    display: block;
     height: 32px;
     justify-content: center;
     top: 0;
     width: 100%;
+    display: flex;
   }
 
   .term-title {

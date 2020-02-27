@@ -174,6 +174,10 @@ export default {
 
     setLocalPrompt (localPrompt) {
       this.localPrompt = localPrompt
+    },
+
+    focus () {
+      this.$refs.input.focus()
     }
   }
 }
@@ -183,8 +187,6 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
-  display: flex;
-
   .stdin-container {
     display: flex;
   }
