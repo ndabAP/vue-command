@@ -187,8 +187,6 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
-  display: flex;
-
   .stdin-container {
     display: flex;
   }

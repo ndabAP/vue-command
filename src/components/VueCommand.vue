@@ -4,18 +4,18 @@
     @keyup="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
     @click="focusLastStdin">
-    <div
-      :class="{ 'white-theme': whiteTheme }"
-      class="term">
+    <slot name="bar">
       <div
         v-if="!hideBar"
         class="term-bar">
-        <slot name="bar">
-          <span class="term-title">
-            {{ title }}
-          </span>
-        </slot>
+        <span class="term-title">
+          {{ title }}
+        </span>
       </div>
+    </slot>
+    <div
+      :class="{ 'white-theme': whiteTheme }"
+      class="term">
       <div
         ref="term-std"
         class="term-std">
@@ -249,6 +249,9 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
+  overflow-y: auto;
+  overflow-x: hidden;
+
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -260,20 +263,22 @@ export default {
   }
 
   .term {
-    display: flex;
+    background: $background;
+    display: block;
     flex-direction: column;
     width: 100%;
     border: 1px solid $background;
   }
 
   .term-bar {
+    background: $background;
     border-bottom: 1px solid #252525;
-    display: flex;
-    flex-direction: row;
+    display: block;
     height: 32px;
     justify-content: center;
     top: 0;
     width: 100%;
+    display: flex;
   }
 
   .term-title {
