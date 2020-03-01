@@ -51,6 +51,7 @@ In your component, you have access to the following instance properties:
 | `this.$_executeCommand(command: String)`        | `Function` | Method   | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                  |
 | `this.$_isRunning`                              | `Boolean`  | Computed | Indicates whether your command is still running or if it has terminated                                                                                                               |
 | `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Method   | Toggle if your command will be the only visible element in the shell                                                                                                                  |
+
 ### Built-in
 
 Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.

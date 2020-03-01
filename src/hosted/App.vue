@@ -7,6 +7,9 @@
       :help-timeout="1250"
       :commands="commands"
       show-help>
+      <template v-slot:prompt="prompt">
+        Test
+      </template>
     </vue-command>
     <pre>
       <code>

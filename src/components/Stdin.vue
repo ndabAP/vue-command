@@ -5,7 +5,11 @@
     <span
       v-if="!hidePrompt"
       class="term-ps">
-      {{ prompt }}
+      <slot
+        name="prompt"
+        :prompt="localPrompt">
+        {{ localPrompt }}
+      </slot>
     </span>
     <span class="term-stdin">
       <input
@@ -116,6 +120,9 @@ export default {
   },
 
   created () {
+    // Persist the current prompt
+    this.setLocalPrompt(this.prompt)
+
     setTimeout(() => {
       if (this.isLast && this.showHelp) {
         this.setPlaceholder(this.helpText)
