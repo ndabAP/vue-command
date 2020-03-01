@@ -45,7 +45,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^25.1.0",
     "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.2.3",
+    "eslint-plugin-vue": "^6.2.1",
     "flush-promises": "^1.0.2",
     "js-yaml": "^3.13.1",
     "serialize-javascript": "~2.1.1",
