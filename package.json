@@ -32,7 +32,7 @@
     "serve": "vue-cli-service serve"
   },
   "dependencies": {
-    "yargs-parser": "^13.0.0"
+    "yargs-parser": "^17.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",
