@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { FullscreenMixin } from '../../lib/index'
+
 const COLORS = [
   '#FF0000',
   '#FF9900',
@@ -26,6 +28,8 @@ const COLORS = [
 const INTERVAL_TIMEOUT = 40
 
 export default {
+  mixins: [FullscreenMixin],
+
   data: () => ({
     characters: 'KLIEH',
     index: 0,

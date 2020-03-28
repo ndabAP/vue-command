@@ -4,6 +4,7 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
+      :built-in="builtIn"
       :help-timeout="1250"
       :commands="commands"
       :current.sync="current"
@@ -19,10 +20,11 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import VueCommand from '../components/VueCommand'
+import klieh from './KliehParty'
 import loading from './LoadingAnimation'
 import nano from './NanoEditor'
-import klieh from './KliehParty'
+import VueCommand from '../components/VueCommand'
+import { createComponent } from '../../lib/index'
 
 export default {
   components: {
@@ -32,18 +34,11 @@ export default {
   data: () => ({
     builtIn: {
       clear: undefined,
+      help: undefined,
       pwd: undefined
     },
 
     commands: {
-      help: () => `Available programms:<br><br>
-
-        &nbsp;klieh<br>
-        &nbsp;loading [--timeout n] [--amount n]<br>
-        &nbsp;nano<br>
-        &nbsp;pokedex pokemon --color<br>
-      `,
-
       pokedex: ({ color, _ }) => {
         if (color && _[1] === 'pikachu') {
           return 'yellow'
@@ -67,19 +62,36 @@ export default {
   }),
 
   created () {
-    this.builtIn.clear = async () => {
+    const pwd = () => {
+      this.executed.delete('pwd')
+      this.executed.add('pwd')
+      this.history.push(createComponent('/home/neil'))
+    }
+
+    const clear = async () => {
       this.history = []
       // Wait for DOM
       await this.$nextTick()
-      this.history = ['']
       this.executed.clear()
-
-      this.builtIn.pwd = () => {
-        this.executed.delete('pwd')
-        this.executed.add('pwd')
-        this.history.push('/home/neil')
-      }
+      this.history = ['']
     }
+
+    const help = async () => {
+      this.executed.delete('help')
+      await this.$nextTick()
+      this.executed.add('help')
+      this.history.push(createComponent(`Available programms:<br><br>
+
+        &nbsp;klieh<br>
+        &nbsp;loading [--timeout n] [--amount n]<br>
+        &nbsp;nano<br>
+        &nbsp;pokedex pokemon --color<br>
+      `))
+    }
+
+    this.builtIn.pwd = pwd
+    this.builtIn.clear = clear
+    this.builtIn.help = help
   }
 }
 </script>

@@ -1,14 +1,19 @@
 import yargsParser from 'yargs-parser'
 
+import { createComponent } from '../../lib/index'
+
 // @vue/component
 export default {
   methods: {
     // Handles the command
     async handle (stdin) {
+      this.$emit('execute', stdin)
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
-      this.$emit('execute', stdin)
+      if (this.builtIn[stdin] !== undefined) {
+        return this.builtIn[stdin]()
+      }
 
       // Parse the command and try to get the program
       const program = yargsParser(stdin, this.yargsOptions)._[0]
@@ -22,14 +27,15 @@ export default {
       let component
       if (!program) {
         // Empty command
-        component = getComponent('')
+        component = createComponent('')
+
+        let history = [...this.history]
+        history.push(component)
+        this.$emit('update:history', [...history])
+
+        this.$emit('update:current', '')
       } else {
-        this.$emit('update:executed', executed)
-
-        const builtIn = this.builtIn[program]
         const command = this.commands[program]
-
-        const isBuiltIn = typeof builtIn === 'function'
         const isCommand = typeof command === 'function'
         // Check if command has been found
         if (isCommand) {
@@ -40,83 +46,30 @@ export default {
 
           if (stdout === '') {
             // If result is empty, return empty string
-            component = getComponent('')
-          } else if (typeof stdout === 'string') {
-            // Result is non-empty string
-            component = getComponent(stdout)
+            component = createComponent('')
           } else {
             // Result is component
             component = stdout
           }
 
-          // Check if given component has computed properties
-          if (!hasOwnProperty.call(component, 'computed')) {
-            component.computed = {}
-          }
+          this.$emit('update:executed', executed)
 
-          const history = this.history.length
-          component.computed.$_arguments = () => parsed
-          component.computed.$_isRunning = () => this.isInProgress && this.history.length === history
-        } else if (isBuiltIn) {
-          // Builtin
+          let history = [...this.history]
+          history.push(component)
+          this.$emit('update:history', [...history])
+
+          this.$emit('update:current', '')
         } else {
           // No command found
-          component = getComponent(`${stdin}: ${this.notFound}`, true)
+          component = createComponent(`${stdin}: ${this.notFound}`, true)
+
+          let history = [...this.history]
+          history.push(component)
+
+          this.$emit('update:history', [...history])
+          this.$emit('update:current', '')
         }
       }
-
-      // Check if given component has mixins
-      if (!hasOwnProperty.call(component, 'mixins')) {
-        component.mixins = []
-      }
-
-      component.mixins.push({
-        // Add helper methods
-        methods: {
-          $_done: () => {
-            this.setPointer(executed.size)
-            this.setIsInProgress(false)
-            this.setIsFullscreen(false)
-
-            this.$emit('executed', stdin)
-          },
-
-          $_setIsFullscreen: isFullscreen => {
-            this.isFullscreen = isFullscreen
-          },
-
-          $_executeCommand: async command => {
-            if (!this.isInProgress) {
-              this.bus.$emit('setCommand', command)
-
-              await this.$nextTick()
-
-              this.handle(command)
-            }
-          }
-        }
-      })
-
-      let history = [...this.history]
-      history.push(component)
-      this.$emit('update:history', [...history])
-
-      this.$emit('update:current', '')
     }
   }
 }
-
-// Returns a component containing a span element with given inner content
-const getComponent = (content, isEscapeHtml) => ({
-  render: createElement => {
-    if (isEscapeHtml) {
-      return createElement('span', {}, content)
-    }
-
-    return createElement('span', { domProps: { innerHTML: content } })
-  },
-
-  mounted () {
-    this.$_done()
-  }
-})

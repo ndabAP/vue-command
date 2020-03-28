@@ -51,6 +51,7 @@
               :uid="_uid"
               @cursor="setCursor"
               @handle="handle"
+              @setIsFullscreen="setIsFullscreen"
               @typing="setCurrent" />
           </div>
         </div>
