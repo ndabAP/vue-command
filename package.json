@@ -20,7 +20,8 @@
     "dist/*.js",
     "dist/*.js.map",
     "dist/*.css",
-    "dist/*.css.map"
+    "dist/*.css.map",
+    "lib/*"
   ],
   "scripts": {
     "build": "npm run build:lib && npm run build:docs",

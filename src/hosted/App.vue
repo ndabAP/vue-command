@@ -20,11 +20,11 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import klieh from './KliehParty'
-import loading from './LoadingAnimation'
-import nano from './NanoEditor'
+import KliehParty from './KliehParty'
+import LoadingAnimation from './LoadingAnimation'
+import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createComponent } from '../../lib/index'
+import { createStdout } from '../../lib'
 
 export default {
   components: {
@@ -40,47 +40,47 @@ export default {
 
     commands: {
       pokedex: ({ color, _ }) => {
+        let stdout = createStdout(`Usage: pokedex pokemon [option]<br><br>
+
+          Example: pokedex pikachu --color
+        `)
         if (color && _[1] === 'pikachu') {
-          return 'yellow'
+          stdout = createStdout('yellow')
         }
 
         // Return help since no match
-        return `Usage: pokedex pokemon [option]<br><br>
-
-          Example: pokedex pikachu --color
-        `
+        return stdout
       },
 
-      klieh: () => klieh,
-      loading: () => loading,
-      nano: () => nano
+      klieh: () => KliehParty,
+      loading: () => LoadingAnimation,
+      nano: () => NanoEditor
     },
 
     current: '',
     executed: new Set(),
-    history: ['']
+    history: []
   }),
 
   created () {
     const pwd = () => {
       this.executed.delete('pwd')
       this.executed.add('pwd')
-      this.history.push(createComponent('/home/neil'))
+      this.history.push(createStdout('/home/neil'))
     }
 
     const clear = async () => {
       this.history = []
-      // Wait for DOM
       await this.$nextTick()
+      this.history = [createStdout('')]
+
       this.executed.clear()
-      this.history = ['']
     }
 
     const help = async () => {
       this.executed.delete('help')
-      await this.$nextTick()
       this.executed.add('help')
-      this.history.push(createComponent(`Available programms:<br><br>
+      this.history.push(createStdout(`Available programms:<br><br>
 
         &nbsp;klieh<br>
         &nbsp;loading [--timeout n] [--amount n]<br>

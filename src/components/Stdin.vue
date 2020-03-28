@@ -1,6 +1,5 @@
 <template>
   <div
-    v-show="!isFullscreen && (!isLast || !isInProgress)"
     class="stdin-container">
     <span
       v-if="!hidePrompt"
@@ -26,6 +25,8 @@
 
 <script>
 export default {
+  inject: ['setCurrent', 'setCursor'],
+
   props: {
     bus: {
       type: Object,
@@ -96,9 +97,9 @@ export default {
 
     command () {
       // Emit current command as event
-      this.$emit('typing', this.command)
+      this.setCurrent(this.command)
       // Emit current cursor position
-      this.$emit('cursor', this.$refs.input.selectionStart)
+      this.setCursor(this.$refs.input.selectionStart)
     },
 
     async isInProgress () {
@@ -161,7 +162,7 @@ export default {
 
     // Emits the current cursor position
     emitCursor () {
-      this.$emit('cursor', this.$refs.input.selectionStart)
+      this.setCursor(this.$refs.input.selectionStart)
     },
 
     setPlaceholder (placeholder) {

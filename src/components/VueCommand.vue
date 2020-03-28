@@ -29,7 +29,7 @@
           <div
             v-for="(stdout, index) in history"
             :key="index"
-            :class="{ fullscreen : (isFullscreen && index === progress - 1)}">
+            :class="{ fullscreen : (isFullscreen && index === progress - 1) }">
             <stdout
               v-if="index !== 0"
               v-show="(!isFullscreen || index === progress - 1)"
@@ -37,6 +37,7 @@
               class="term-stdout"/>
 
             <stdin
+              v-show="!isFullscreen && ((index < progress - 1) || (isStdin && index === progress - 1))"
               ref="stdin"
               :bus="bus"
               :hide-prompt="hidePrompt"
@@ -49,10 +50,7 @@
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :uid="_uid"
-              @cursor="setCursor"
-              @handle="handle"
-              @setIsFullscreen="setIsFullscreen"
-              @typing="setCurrent" />
+              @handle="handle"/>
           </div>
         </div>
       </div>
@@ -68,6 +66,7 @@ import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
+import { createStdout } from '../../lib'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -121,7 +120,7 @@ export default {
     // All executed commands
     history: {
       type: Array,
-      default: () => ['']
+      default: () => []
     },
 
     helpText: {
@@ -173,17 +172,32 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
+    // Run command in fullscreen
+    isFullscreen: false,
     // Indicates if a command is in progress
     isInProgress: false,
-    // run command in fullscreen
-    isFullscreen: false,
+    // Determinates if latest STDIN should be shown
+    isStdin: true,
     // Handle scroll behaviour
     scroll: {
       eventListener: undefined,
+      // Determinates if scolled to bottom
       isBottom: true,
       resizeObserver: undefined
     }
   }),
+
+  provide () {
+    return {
+      setCurrent: this.setCurrent,
+      setCursor: this.setCursor,
+      setIsFullscreen: this.setIsFullscreen,
+      setIsInProgress: this.setIsInProgress,
+      setIsStdin: this.setIsStdin,
+      setPointer: this.setPointer,
+      terminateCommand: this.terminateCommand
+    }
+  },
 
   computed: {
     // Amount of executed commands
@@ -227,6 +241,10 @@ export default {
     }
 
     this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
+
+    let history = [...this.history]
+    history.push(createStdout(''))
+    this.$emit('update:history', [...history])
   },
 
   beforeDestroy () {
@@ -239,12 +257,16 @@ export default {
       this.$emit('update:current', current.trim())
     },
 
+    setIsFullscreen (isFullscreen) {
+      this.isFullscreen = isFullscreen
+    },
+
     setIsInProgress (isInProgress) {
       this.isInProgress = isInProgress
     },
 
-    setIsFullscreen (isFullscreen) {
-      this.isFullscreen = isFullscreen
+    setIsStdin (isStdin) {
+      this.isStdin = isStdin
     },
 
     // Focus on last STDIN
@@ -254,6 +276,16 @@ export default {
       const stdin = stdins[this.history.length - 1]
 
       stdin.focus()
+    },
+
+    // Executes common final tasks after command has been finished
+    terminateCommand () {
+      this.setPointer(this.executed.size)
+      this.setIsFullscreen(false)
+      this.setIsStdin(true)
+      this.$emit('executed', this.current)
+
+      this.setIsInProgress(false)
     }
   }
 }

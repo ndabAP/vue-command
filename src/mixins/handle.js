@@ -1,6 +1,6 @@
 import yargsParser from 'yargs-parser'
 
-import { createComponent } from '../../lib/index'
+import { createStdout } from '../../lib'
 
 // @vue/component
 export default {
@@ -11,65 +11,49 @@ export default {
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
-      if (this.builtIn[stdin] !== undefined) {
-        return this.builtIn[stdin]()
-      }
-
-      // Parse the command and try to get the program
       const program = yargsParser(stdin, this.yargsOptions)._[0]
 
-      // Remove duplicate commands for a clear history
-      let executed = new Set(this.executed)
+      // Check if function is built in
+      if (this.builtIn[program] !== undefined) {
+        // Parse the command
+        const parsed = yargsParser(stdin, this.yargsOptions)
+        // Execute built in function
+        await Promise.resolve(this.builtIn[program](parsed))
 
+        // The built in function must take care of all other steps
+        return
+      }
+
+      // Remove duplicate commands to push to latest entry
+      let executed = new Set(this.executed)
       executed.delete(stdin)
       executed.add(stdin)
 
-      let component
-      if (!program) {
-        // Empty command
-        component = createComponent('')
-
-        let history = [...this.history]
-        history.push(component)
-        this.$emit('update:history', [...history])
-
-        this.$emit('update:current', '')
-      } else {
+      // Create empty component in case no program has been found
+      let component = createStdout('')
+      if (program) {
         const command = this.commands[program]
+        // Command is not empty
         const isCommand = typeof command === 'function'
         // Check if command has been found
         if (isCommand) {
           this.setIsInProgress(true)
-
+          // Parse the command and try to get the program
           const parsed = yargsParser(stdin, this.yargsOptions)
-          const stdout = await Promise.resolve(command(parsed))
-
-          if (stdout === '') {
-            // If result is empty, return empty string
-            component = createComponent('')
-          } else {
-            // Result is component
-            component = stdout
-          }
+          component = await Promise.resolve(command(parsed))
 
           this.$emit('update:executed', executed)
-
-          let history = [...this.history]
-          history.push(component)
-          this.$emit('update:history', [...history])
-
-          this.$emit('update:current', '')
         } else {
           // No command found
-          component = createComponent(`${stdin}: ${this.notFound}`, true)
-
-          let history = [...this.history]
-          history.push(component)
-
-          this.$emit('update:history', [...history])
-          this.$emit('update:current', '')
+          component = createStdout(`${stdin}: ${this.notFound}`, true)
         }
       }
+
+      let history = [...this.history]
+      history.push(component)
+      this.$emit('update:history', [...history])
+
+      this.$emit('update:current', '')
     }
   }
 }

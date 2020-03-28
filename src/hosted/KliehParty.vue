@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import { FullscreenMixin } from '../../lib/index'
-
 const COLORS = [
   '#FF0000',
   '#FF9900',
@@ -28,7 +26,7 @@ const COLORS = [
 const INTERVAL_TIMEOUT = 40
 
 export default {
-  mixins: [FullscreenMixin],
+  inject: ['setIsStdin', 'terminateCommand'],
 
   data: () => ({
     characters: 'KLIEH',
@@ -37,6 +35,8 @@ export default {
   }),
 
   mounted () {
+    this.setIsStdin(false)
+
     this.interval = setInterval(() => {
       this.index++
     }, INTERVAL_TIMEOUT)
@@ -45,7 +45,7 @@ export default {
       if (event.key === 'c' && event.getModifierState('Control')) {
         clearInterval(this.interval)
 
-        this.$_done()
+        this.terminateCommand()
       }
     }, true)
   },

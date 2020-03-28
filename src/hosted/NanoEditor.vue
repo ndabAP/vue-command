@@ -1,15 +1,17 @@
 <template>
-  <div v-if="$_isRunning">
+  <div>
     <textarea
       ref="nano"
-      @keydown.ctrl.88="$_done()">This is a text editor! Press Ctrl + X to leave.</textarea>
+      @keydown.ctrl.88="terminateCommand">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
 
 <script>
 export default {
+  inject: ['setIsFullscreen', 'terminateCommand'],
+
   mounted () {
-    this.$_setIsFullscreen(true)
+    this.setIsFullscreen(true)
     this.$refs.nano.focus()
   }
 }
