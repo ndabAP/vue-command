@@ -196,7 +196,7 @@ export default {
       setIsInProgress: this.setIsInProgress,
       setIsStdin: this.setIsStdin,
       setPointer: this.setPointer,
-      terminateCommand: this.terminateCommand
+      terminate: this.terminate
     }
   },
 
@@ -280,12 +280,13 @@ export default {
     },
 
     // Executes common final tasks after command has been finished
-    terminateCommand () {
+    terminate () {
       this.setPointer(this.executed.size)
       this.setIsFullscreen(false)
       this.setIsStdin(true)
       this.$emit('executed', this.current)
 
+      console.log(this)
       this.setIsInProgress(false)
     }
   }

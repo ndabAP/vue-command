@@ -69,12 +69,13 @@ export default {
       this.history.push(createStdout('/home/neil'))
     }
 
+    // @todo Pointer is not set to 0 and isInProgress is still true because wrong this context
     const clear = async () => {
       this.history = []
-      await this.$nextTick()
-      this.history = [createStdout('')]
-
       this.executed.clear()
+      await this.$nextTick()
+
+      this.history = [createStdout('')]
     }
 
     const help = async () => {
