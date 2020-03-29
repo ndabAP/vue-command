@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="environment.isExecuting">
     <textarea
       ref="nano"
       @keydown.ctrl.88="terminateCommand">This is a text editor! Press Ctrl + X to leave.</textarea>

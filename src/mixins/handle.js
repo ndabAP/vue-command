@@ -8,6 +8,9 @@ export default {
     // Handles the command
     async handle (stdin) {
       this.$emit('execute', stdin)
+
+      this.setIsInProgress(true)
+
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
@@ -24,11 +27,6 @@ export default {
         return
       }
 
-      // Remove duplicate commands to push to latest entry
-      let executed = new Set(this.executed)
-      executed.delete(stdin)
-      executed.add(stdin)
-
       // Create empty component in case no program has been found
       let component = createStdout('')
       if (program) {
@@ -37,11 +35,26 @@ export default {
         const isCommand = typeof command === 'function'
         // Check if command has been found
         if (isCommand) {
-          this.setIsInProgress(true)
           // Parse the command and try to get the program
           const parsed = yargsParser(stdin, this.yargsOptions)
           component = await Promise.resolve(command(parsed))
 
+          if (!hasOwnProperty.call(component, 'computed')) {
+            component.computed = {}
+          }
+
+          // Preserve history length
+          const history = this.history.length
+          component.computed.environment = () => ({
+            isExecuting: this.isInProgress && (this.history.length - 1 === history),
+            isFullscreen: this.isFullscreen,
+            isInProgress: this.isInProgress
+          })
+
+          // Remove duplicate commands to push to latest entry
+          let executed = new Set(this.executed)
+          executed.delete(stdin)
+          executed.add(stdin)
           this.$emit('update:executed', executed)
         } else {
           // No command found
@@ -52,6 +65,8 @@ export default {
       let history = [...this.history]
       history.push(component)
       this.$emit('update:history', [...history])
+
+      this.$emit('executed', stdin)
 
       this.$emit('update:current', '')
     }

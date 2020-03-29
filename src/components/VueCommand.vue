@@ -178,7 +178,8 @@ export default {
     isInProgress: false,
     // Determinates if latest STDIN should be shown
     isStdin: true,
-    // Handle scroll behaviour
+
+    // Detect scroll and resize events
     scroll: {
       eventListener: undefined,
       // Determinates if scolled to bottom
