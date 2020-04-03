@@ -26,7 +26,7 @@ const COLORS = [
 const INTERVAL_TIMEOUT = 40
 
 export default {
-  inject: ['setIsStdin', 'terminateCommand'],
+  inject: ['terminate'],
 
   data: () => ({
     characters: 'KLIEH',
@@ -35,17 +35,16 @@ export default {
   }),
 
   mounted () {
-    this.setIsStdin(false)
-
     this.interval = setInterval(() => {
       this.index++
     }, INTERVAL_TIMEOUT)
 
     window.addEventListener('keydown', event => {
+      // Ctrl and C simultaneously
       if (event.key === 'c' && event.getModifierState('Control')) {
         clearInterval(this.interval)
 
-        this.terminateCommand()
+        this.terminate()
       }
     }, true)
   },

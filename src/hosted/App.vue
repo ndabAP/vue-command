@@ -40,15 +40,16 @@ export default {
 
     commands: {
       pokedex: ({ color, _ }) => {
+        // Return help since no match
         let stdout = createStdout(`Usage: pokedex pokemon [option]<br><br>
 
           Example: pokedex pikachu --color
         `)
+
         if (color && _[1] === 'pikachu') {
           stdout = createStdout('yellow')
         }
 
-        // Return help since no match
         return stdout
       },
 
@@ -66,28 +67,30 @@ export default {
     const pwd = () => {
       this.executed.delete('pwd')
       this.executed.add('pwd')
-      this.history.push(createStdout('/home/neil'))
+
+      return createStdout('/home/neil')
     }
 
-    // @todo Pointer is not set to 0 and isInProgress is still true because wrong this context
     const clear = async () => {
+      this.executed.delete('clear')
+      this.executed.add('clear')
       this.history = []
-      this.executed.clear()
-      await this.$nextTick()
 
-      this.history = [createStdout('')]
+      // @todo Add correct this binding
+      return createStdout('')
     }
 
-    const help = async () => {
+    const help = () => {
       this.executed.delete('help')
       this.executed.add('help')
-      this.history.push(createStdout(`Available programms:<br><br>
+
+      return createStdout(`Available programms:<br><br>
 
         &nbsp;klieh<br>
         &nbsp;loading [--timeout n] [--amount n]<br>
         &nbsp;nano<br>
         &nbsp;pokedex pokemon --color<br>
-      `))
+      `)
     }
 
     this.builtIn.pwd = pwd

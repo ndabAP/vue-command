@@ -6,11 +6,8 @@
 export default {
   props: {
     component: {
-      default: () => ({
-        render (h) {
-          h('span')
-        }
-      })
+      type: Object,
+      required: true
     }
   }
 }

@@ -16,8 +16,8 @@
         type="text"
         autocorrect="off"
         autocapitalize="none"
-        @click="emitCursor"
-        @keyup="emitCursor"
+        @click="setCursor($refs.input.selectionStart)"
+        @keyup="setCursor($refs.input.selectionStart)"
         @keyup.enter="handle"/>
     </span>
   </div>
@@ -148,21 +148,11 @@ export default {
   methods: {
     // Handle current command
     handle () {
-      // Wait for other commands to finish
-      if (this.isInProgress) {
-        return
-      }
-
       // Persist the current prompt
       this.setLocalPrompt(this.prompt)
       // Request to handle the current command
       this.$emit('handle', this.command)
       this.setPlaceholder('')
-    },
-
-    // Emits the current cursor position
-    emitCursor () {
-      this.setCursor(this.$refs.input.selectionStart)
     },
 
     setPlaceholder (placeholder) {

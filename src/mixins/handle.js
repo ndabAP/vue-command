@@ -7,10 +7,6 @@ export default {
   methods: {
     // Handles the command
     async handle (stdin) {
-      this.$emit('execute', stdin)
-
-      this.setIsInProgress(true)
-
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
@@ -20,36 +16,32 @@ export default {
       if (this.builtIn[program] !== undefined) {
         // Parse the command
         const parsed = yargsParser(stdin, this.yargsOptions)
-        // Execute built in function
-        await Promise.resolve(this.builtIn[program](parsed))
+        let component = await Promise.resolve(this.builtIn[program](parsed))
+        component = this.setupComponent(component, this.history.length, parsed)
+
+        let history = [...this.history]
+        history.push(component)
+        this.$emit('update:history', [...history])
 
         // The built in function must take care of all other steps
         return
       }
 
+      this.setIsInProgress(true)
+
+      this.$emit('execute', stdin)
+
       // Create empty component in case no program has been found
       let component = createStdout('')
       if (program) {
-        const command = this.commands[program]
-        // Command is not empty
-        const isCommand = typeof command === 'function'
         // Check if command has been found
-        if (isCommand) {
+        if (typeof this.commands[program] === 'function') {
           // Parse the command and try to get the program
           const parsed = yargsParser(stdin, this.yargsOptions)
-          component = await Promise.resolve(command(parsed))
+          component = await Promise.resolve(this.commands[program](parsed))
+          component = this.setupComponent(component, this.history.length, parsed)
 
-          if (!hasOwnProperty.call(component, 'computed')) {
-            component.computed = {}
-          }
-
-          // Preserve history length
-          const history = this.history.length
-          component.computed.environment = () => ({
-            isExecuting: this.isInProgress && (this.history.length - 1 === history),
-            isFullscreen: this.isFullscreen,
-            isInProgress: this.isInProgress
-          })
+          component.bind(this)
 
           // Remove duplicate commands to push to latest entry
           let executed = new Set(this.executed)
@@ -65,10 +57,32 @@ export default {
       let history = [...this.history]
       history.push(component)
       this.$emit('update:history', [...history])
+    },
 
-      this.$emit('executed', stdin)
+    setupComponent (component, history, parsed) {
+      // Prevent to work with same reference
+      component = { ...component }
 
-      this.$emit('update:current', '')
+      if (!hasOwnProperty.call(component, 'computed')) {
+        component.computed = {}
+      }
+
+      component.computed = {
+        environment: () => ({
+          isExecuting: this.isInProgress && (this.history.length - 1 === history),
+          isFullscreen: this.isFullscreen,
+          isInProgress: this.isInProgress
+        }),
+
+        context: () => ({
+          cursor: this.cursor,
+          parsed
+        }),
+
+        ...component.computed
+      }
+
+      return component
     }
   }
 }

@@ -36,8 +36,9 @@
               :component="stdout"
               class="term-stdout"/>
 
+            <!-- @todo Get rid of isStdin -->
             <stdin
-              v-show="!isFullscreen && ((index < progress - 1) || (isStdin && index === progress - 1))"
+              v-show="(index === 0 && !isFullscreen) || !(index === progress - 1 && isInProgress) && !isFullscreen"
               ref="stdin"
               :bus="bus"
               :hide-prompt="hidePrompt"
@@ -176,8 +177,6 @@ export default {
     isFullscreen: false,
     // Indicates if a command is in progress
     isInProgress: false,
-    // Determinates if latest STDIN should be shown
-    isStdin: true,
 
     // Detect scroll and resize events
     scroll: {
@@ -194,7 +193,6 @@ export default {
       setCursor: this.setCursor,
       setIsFullscreen: this.setIsFullscreen,
       setIsInProgress: this.setIsInProgress,
-      setIsStdin: this.setIsStdin,
       setPointer: this.setPointer,
       terminate: this.terminate
     }
@@ -266,10 +264,6 @@ export default {
       this.isInProgress = isInProgress
     },
 
-    setIsStdin (isStdin) {
-      this.isStdin = isStdin
-    },
-
     // Focus on last STDIN
     focusLastStdin () {
       const stdins = this.$refs.stdin
@@ -283,10 +277,9 @@ export default {
     terminate () {
       this.setPointer(this.executed.size)
       this.setIsFullscreen(false)
-      this.setIsStdin(true)
       this.$emit('executed', this.current)
+      this.setCurrent('')
 
-      console.log(this)
       this.setIsInProgress(false)
     }
   }
