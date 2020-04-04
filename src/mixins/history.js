@@ -4,7 +4,7 @@ import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
 export default {
   data: () => ({
     // Last pointed command
-    last: '',
+    lastCommand: '',
     // History command pointer
     pointer: 0
   }),
@@ -22,7 +22,7 @@ export default {
         return
       }
 
-      this.last = [...this.executed][this.pointer]
+      this.lastCommand = [...this.executed][this.pointer]
     },
 
     setPointer (pointer) {

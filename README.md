@@ -59,7 +59,7 @@ Key-value pairs where key is command and value is function with [yargs arguments
 
 | Event     | Type        | Description                       |
 |-----------|-------------|-----------------------------------|
-| `input`   | `String`    | Emits the current input           |
+| `current` | `String`    | Emits the current input           |
 | `execute` | `String`    | Emits the whole executing command |
 | `executed`| `String`    | Emits after command execution     |
 

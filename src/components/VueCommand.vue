@@ -36,7 +36,6 @@
               :component="stdout"
               class="term-stdout"/>
 
-            <!-- @todo Get rid of isStdin -->
             <stdin
               v-show="(index === 0 && !isFullscreen) || !(index === progress - 1 && isInProgress) && !isFullscreen"
               ref="stdin"
@@ -45,7 +44,7 @@
               :is-fullscreen="isFullscreen"
               :is-in-progress="isInProgress"
               :is-last="index === progress - 1"
-              :last-command="last"
+              :last-command="lastCommand"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
@@ -83,96 +82,93 @@ export default {
     },
 
     builtIn: {
+      default: () => ({}),
       type: Object
     },
 
     commands: {
-      type: Object,
-      required: true
-    },
-
-    // Current input
-    current: {
-      type: String,
-      default: ''
+      required: true,
+      type: Object
     },
 
     // Non-empty executed commands
     executed: {
-      type: Set,
-      default: () => new Set()
+      required: true,
+      type: Set
     },
 
     helpTimeout: {
-      type: Number,
-      default: 4000
+      default: 4000,
+      type: Number
     },
 
     hideBar: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     hidePrompt: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
+    },
+
+    helpText: {
+      default: 'Type help',
+      type: String
     },
 
     // All executed commands
     history: {
-      type: Array,
-      default: () => []
-    },
-
-    helpText: {
-      type: String,
-      default: 'Type help'
+      required: true,
+      type: Array
     },
 
     intro: {
-      type: String,
-      default: 'Fasten your seatbelts!'
+      default: 'Fasten your seatbelts!',
+      type: String
     },
 
     notFound: {
-      type: String,
-      default: 'command not found'
+      default: 'command not found',
+      type: String
     },
 
     prompt: {
-      type: String,
-      default: '~neil@moon:#'
+      default: '~neil@moon:#',
+      type: String
     },
 
     showHelp: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     showIntro: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     title: {
-      type: String,
-      default: 'neil@moon: ~'
+      default: 'neil@moon: ~',
+      type: String
     },
 
     whiteTheme: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     yargsOptions: {
-      type: Object,
-      default: () => ({})
+      default: () => ({}),
+      type: Object
     }
   },
 
   data: () => ({
     // Bus for communication
     bus: EventBus,
+    // Current input
+    current: '',
     // Run command in fullscreen
     isFullscreen: false,
     // Indicates if a command is in progress
@@ -210,12 +206,12 @@ export default {
   watch: {
     current () {
       // Emit the current input as an event
-      this.$emit('input', this.current)
+      this.$emit('current', this.current)
 
       // Make searching history work again
       if (!this.current) {
         this.setPointer(this.executed.size)
-        this.last = ''
+        this.lastCommand = ''
       }
     }
   },
@@ -253,7 +249,7 @@ export default {
 
   methods: {
     setCurrent (current) {
-      this.$emit('update:current', current.trim())
+      this.current = current
     },
 
     setIsFullscreen (isFullscreen) {
@@ -292,16 +288,6 @@ export default {
 .vue-command {
   overflow-y: auto;
   overflow-x: hidden;
-
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #ddd;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-  }
 
   .term {
     background: $background;

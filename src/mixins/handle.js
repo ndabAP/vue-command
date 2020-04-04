@@ -19,6 +19,7 @@ export default {
       if (this.builtIn[program] !== undefined) {
         // Parse the command
         const parsed = yargsParser(stdin, this.yargsOptions)
+
         let component = await Promise.resolve(this.builtIn[program](parsed))
         component = this.setupComponent(component, this.history.length, parsed, IS_BUILT_IN)
 
@@ -36,22 +37,19 @@ export default {
 
       // Create empty component in case no program has been found
       let component = createDummyStdout(!IS_INSTANCE)
-      if (typeof program !== 'undefined') {
-        // Check if command has been found
-        if (typeof this.commands[program] === 'function') {
-          // Parse the command and try to get the program
-          const parsed = yargsParser(stdin, this.yargsOptions)
-          component = await Promise.resolve(this.commands[program](parsed))
-          component = this.setupComponent(component, this.history.length, parsed)
+      // Check if command has been found
+      if (typeof this.commands[program] === 'function') {
+        // Parse the command and try to get the program
+        const parsed = yargsParser(stdin, this.yargsOptions)
 
-          // Remove duplicate commands to push to latest entry
-          let executed = new Set(this.executed)
-          executed.delete(stdin)
-          executed.add(stdin)
-          this.$emit('update:executed', executed)
-        } else {
-          throw new Error('Error: Program is not a function')
-        }
+        component = await Promise.resolve(this.commands[program](parsed))
+        component = this.setupComponent(component, this.history.length, parsed)
+
+        // Remove duplicate commands to push to latest entry
+        let executed = new Set(this.executed)
+        executed.delete(stdin)
+        executed.add(stdin)
+        this.$emit('update:executed', executed)
       } else {
         // No command found
         if (stdin !== '') {
@@ -75,7 +73,6 @@ export default {
         if (!hasOwnProperty.call(component, 'mounted')) {
           component.mounted = async () => {
             await this.$nextTick()
-            // Component is a string
             this.terminate()
           }
         }

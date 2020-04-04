@@ -5,10 +5,9 @@
 
     <vue-command
       :built-in="builtIn"
-      :help-timeout="1250"
       :commands="commands"
-      :current.sync="current"
       :executed.sync="executed"
+      :help-timeout="1250"
       :history.sync="history"
       show-help/>
     <pre>
@@ -58,7 +57,6 @@ export default {
       nano: () => NanoEditor
     },
 
-    current: '',
     executed: new Set(),
     history: []
   }),
