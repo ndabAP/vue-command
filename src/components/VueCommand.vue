@@ -67,7 +67,7 @@ import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
-import { createStdout } from '../../lib'
+import { createDummyStdout } from '../../lib'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -242,7 +242,7 @@ export default {
     this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
 
     let history = [...this.history]
-    history.push(createStdout(''))
+    history.push(createDummyStdout())
     this.$emit('update:history', [...history])
   },
 

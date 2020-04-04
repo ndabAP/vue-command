@@ -24,7 +24,7 @@ import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout } from '../../lib'
+import { createStdout, createDummyStdout } from '../../lib'
 
 export default {
   components: {
@@ -76,8 +76,7 @@ export default {
       this.executed.add('clear')
       this.history = []
 
-      // @todo Add correct this binding
-      return createStdout('')
+      return createDummyStdout()
     }
 
     const help = () => {

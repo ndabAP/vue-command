@@ -1,6 +1,9 @@
 import yargsParser from 'yargs-parser'
 
-import { createStdout } from '../../lib'
+import { createStdout, createDummyStdout } from '../../lib'
+
+const IS_BUILT_IN = true
+const IS_INSTANCE = true
 
 // @vue/component
 export default {
@@ -17,7 +20,7 @@ export default {
         // Parse the command
         const parsed = yargsParser(stdin, this.yargsOptions)
         let component = await Promise.resolve(this.builtIn[program](parsed))
-        component = this.setupComponent(component, this.history.length, parsed)
+        component = this.setupComponent(component, this.history.length, parsed, IS_BUILT_IN)
 
         let history = [...this.history]
         history.push(component)
@@ -32,8 +35,8 @@ export default {
       this.$emit('execute', stdin)
 
       // Create empty component in case no program has been found
-      let component = createStdout('')
-      if (program) {
+      let component = createDummyStdout(!IS_INSTANCE)
+      if (typeof program !== 'undefined') {
         // Check if command has been found
         if (typeof this.commands[program] === 'function') {
           // Parse the command and try to get the program
@@ -41,17 +44,21 @@ export default {
           component = await Promise.resolve(this.commands[program](parsed))
           component = this.setupComponent(component, this.history.length, parsed)
 
-          component.bind(this)
-
           // Remove duplicate commands to push to latest entry
           let executed = new Set(this.executed)
           executed.delete(stdin)
           executed.add(stdin)
           this.$emit('update:executed', executed)
         } else {
-          // No command found
+          throw new Error('Error: Program is not a function')
+        }
+      } else {
+        // No command found
+        if (stdin !== '') {
           component = createStdout(`${stdin}: ${this.notFound}`, true)
         }
+
+        component = this.setupComponent(component, this.history.length)
       }
 
       let history = [...this.history]
@@ -59,9 +66,20 @@ export default {
       this.$emit('update:history', [...history])
     },
 
-    setupComponent (component, history, parsed) {
+    // Extend component about
+    setupComponent (component, history = 0, parsed = {}, isBuiltIn) {
       // Prevent to work with same reference
       component = { ...component }
+
+      if (!isBuiltIn) {
+        if (!hasOwnProperty.call(component, 'mounted')) {
+          component.mounted = async () => {
+            await this.$nextTick()
+            // Component is a string
+            this.terminate()
+          }
+        }
+      }
 
       if (!hasOwnProperty.call(component, 'computed')) {
         component.computed = {}
