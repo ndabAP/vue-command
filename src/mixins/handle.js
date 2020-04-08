@@ -64,15 +64,18 @@ export default {
       this.$emit('update:history', [...history])
     },
 
-    // Extend component about
+    // Add environment and instantly terminate
     setupComponent (component, history = 0, parsed = {}, isBuiltIn) {
       // Prevent to work with same reference
       component = { ...component }
 
+      // Built in commands can decide when to terminate
       if (!isBuiltIn) {
         if (!hasOwnProperty.call(component, 'mounted')) {
           component.mounted = async () => {
+            // Wait for user mutations
             await this.$nextTick()
+            
             this.terminate()
           }
         }
@@ -81,7 +84,6 @@ export default {
       if (!hasOwnProperty.call(component, 'computed')) {
         component.computed = {}
       }
-
       component.computed = {
         environment: () => ({
           isExecuting: this.isInProgress && (this.history.length - 1 === history),

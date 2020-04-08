@@ -173,7 +173,6 @@ export default {
     isFullscreen: false,
     // Indicates if a command is in progress
     isInProgress: false,
-
     // Detect scroll and resize events
     scroll: {
       eventListener: undefined,

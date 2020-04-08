@@ -69,7 +69,7 @@ export default {
       return createStdout('/home/neil')
     }
 
-    const clear = async () => {
+    const clear = () => {
       this.executed.delete('clear')
       this.executed.add('clear')
       this.history = []
