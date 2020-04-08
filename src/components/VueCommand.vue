@@ -66,7 +66,7 @@ import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
-import { createDummyStdout } from '../../lib'
+import { createDummyStdout } from '../library'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -171,7 +171,7 @@ export default {
     current: '',
     // Run command in fullscreen
     isFullscreen: false,
-    // Indicates if a command is in progress
+    // Indicates if a not built in command is in progress
     isInProgress: false,
     // Detect scroll and resize events
     scroll: {
@@ -188,7 +188,6 @@ export default {
       setCursor: this.setCursor,
       setIsFullscreen: this.setIsFullscreen,
       setIsInProgress: this.setIsInProgress,
-      setPointer: this.setPointer,
       terminate: this.terminate
     }
   },
@@ -212,6 +211,10 @@ export default {
         this.setPointer(this.executed.size)
         this.lastCommand = ''
       }
+    },
+
+    history () {
+      this.setPointer(this.executed.size)
     }
   },
 

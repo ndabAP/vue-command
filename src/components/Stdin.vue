@@ -106,12 +106,12 @@ export default {
       if (!this.isInProgress && this.isLast) {
         await this.$nextTick()
 
-        this.$refs.input.scrollIntoView()
-        this.$refs.input.focus()
+        this.scrollIntoView()
+        this.focus()
       }
 
       if (this.isInProgress && !this.isLast) {
-        this.$refs.input.blur()
+        this.blur()
       }
     }
   },
@@ -126,23 +126,14 @@ export default {
 
   mounted () {
     // Scroll to current input and focus it
-    this.$refs.input.scrollIntoView()
-    this.$refs.input.focus()
+    this.scrollIntoView()
+    this.focus()
 
-    const onAutocomplete = ({ command, uid }) => {
+    this.bus.$on('autocomplete', ({ command, uid }) => {
       if (this.isLast && this.uid === uid) {
         this.setCommand(command)
       }
-    }
-
-    const onSetCommand = command => {
-      if (this.isLast) {
-        this.setCommand(command)
-      }
-    }
-
-    this.bus.$on('autocomplete', onAutocomplete)
-    this.bus.$on('setCommand', onSetCommand)
+    })
   },
 
   methods: {
@@ -150,8 +141,11 @@ export default {
     handle () {
       // Persist the current prompt
       this.setLocalPrompt(this.prompt)
+      // Allow components to get into focus
+      this.blur()
       // Request to handle the current command
       this.$emit('handle', this.command)
+      // Hide the current placeholder
       this.setPlaceholder('')
     },
 
@@ -167,8 +161,16 @@ export default {
       this.localPrompt = localPrompt
     },
 
+    blur () {
+      this.$refs.input.blur()
+    },
+
     focus () {
       this.$refs.input.focus()
+    },
+
+    scrollIntoView () {
+      this.$refs.input.scrollIntoView()
     }
   }
 }

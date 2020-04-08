@@ -19,11 +19,12 @@ $ npm i --save vue-command
 </template>
 
 <script>
+import ChuckNorris from './ChuckNorris'
 import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout, createDummyStdout } from '../../lib'
+import { createStdout, createDummyStdout } from '../library'
 
 export default {
   components: {
@@ -38,6 +39,10 @@ export default {
     },
 
     commands: {
+      klieh: () => KliehParty,
+      loading: () => LoadingAnimation,
+      nano: () => NanoEditor,
+      norris: () => ChuckNorris,
       pokedex: ({ color, _ }) => {
         // Return help since no match
         let stdout = createStdout(`Usage: pokedex pokemon [option]<br><br>
@@ -50,11 +55,7 @@ export default {
         }
 
         return stdout
-      },
-
-      klieh: () => KliehParty,
-      loading: () => LoadingAnimation,
-      nano: () => NanoEditor
+      }
     },
 
     executed: new Set(),
@@ -62,14 +63,7 @@ export default {
   }),
 
   created () {
-    const pwd = () => {
-      this.executed.delete('pwd')
-      this.executed.add('pwd')
-
-      return createStdout('/home/neil')
-    }
-
-    const clear = () => {
+    this.builtIn.clear = () => {
       this.executed.delete('clear')
       this.executed.add('clear')
       this.history = []
@@ -77,22 +71,27 @@ export default {
       return createDummyStdout()
     }
 
-    const help = () => {
+    this.builtIn.help = () => {
       this.executed.delete('help')
       this.executed.add('help')
 
       return createStdout(`Available programms:<br><br>
-
+        &nbsp;clear<br>
         &nbsp;klieh<br>
         &nbsp;loading [--timeout n] [--amount n]<br>
         &nbsp;nano<br>
+        &nbsp;norris<br>
         &nbsp;pokedex pokemon --color<br>
+        &nbsp;pwd<br>
       `)
     }
 
-    this.builtIn.pwd = pwd
-    this.builtIn.clear = clear
-    this.builtIn.help = help
+    this.builtIn.pwd = () => {
+      this.executed.delete('pwd')
+      this.executed.add('pwd')
+
+      return createStdout('/home/neil')
+    }
   }
 }
 </script>

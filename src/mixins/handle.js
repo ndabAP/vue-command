@@ -1,6 +1,6 @@
 import yargsParser from 'yargs-parser'
 
-import { createStdout, createDummyStdout } from '../../lib'
+import { createStdout, createDummyStdout } from '../library'
 
 const IS_BUILT_IN = true
 const IS_INSTANCE = true
