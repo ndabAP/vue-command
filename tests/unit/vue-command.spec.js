@@ -1,10 +1,8 @@
 import flushPromises from 'flush-promises'
-import Vue from 'vue'
 
 import { ResizeObserver } from './polyfills'
 // import VueCommand from '../../src/library'
 import { 
-  getChildMountedWrapper,
   getRandom, 
   getMountedWrapper, 
   enterAndTrigger, 
