@@ -17,69 +17,6 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 $ npm i vue-command --save
 ```
 
-## Properties
-
-| Property                  | Type       | Default                  | Required | Description                                                                                                                                                                                                                       |
-| ------------------------- | ---------- | ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `autocompletion-resolver` | `Function` | `null`                   | No       | Gets the current input as first and cursor position as the second argument. Must return the whole command                                                                                                                         |
-| `built-in`                | `Object`   | `{}`                     | No       | See [built-in](#built-in) section |
-| `commands`                | `Object`   |                          | Yes      | See [commands](#commands) section                                                                                                                                                                                           |
-| `help-text`               | `String`   | `Type help`              | No       | Sets the placeholder                                                                                                                                                                                                              |
-| `help-timeout`            | `Number`   | `4000`                   | No       | Sets the placeholder timeout                                                                                                                                                                                                      |
-| `hide-bar`                | `Boolean`  | `false`                  | No       | Hides the bar                                                                                                                                                                                                                     |
-| `hide-prompt`             | `Boolean`  | `false`                  | No       | Hides the prompt                                                                                                                                                                                                                  |
-| `intro`                   | `String`   | `Fasten your seatbelts!` | No       | Sets the intro                                                                                                                                                                                                                    |
-| `not-found`               | `String`   | `not found`              | No       | Sets the command not found text                                                                                                                                                                                                   |
-| `prompt`                  | `String`   | `~neil@moon:#`           | No       | Sets the prompt                                                                                                                                                                                                                   |
-| `show-help`               | `Boolean`  | `false`                  | No       | Shows the placeholder                                                                                                                                                                                                             |
-| `show-intro`              | `Boolean`  | `false`                  | No       | Shows the intro                                                                                                                                                                                                                   |
-| `title`                   | `String`   | `neil@moon: ~`           | No       | Sets the title                                                                                                                                                                                                                    |
-| `white-theme`             | `Boolean`  | `false`                  | No       | Enables the white theme                                                                                                                                                                                                           |
-| `yargs-options`           | `Object`   | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                            |
-
-
-### Commands
-
-`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a HTML `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. 
-
-In your component, you have access to the following instance properties:
-
-| Name                                            | Type       | Property | Description                                                                                                                                                                           |
-|-------------------------------------------------|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `this.$_arguments`                              | `Object`   | Computed | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme)                                                                                                                |
-| `this.$_done`                                   | `Function` | Method   | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change from this point on. Also leaves fullscreen mode |
-| `this.$_executeCommand(command: String)`        | `Function` | Method   | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                  |
-| `this.$_isRunning`                              | `Boolean`  | Computed | Indicates whether your command is still running or if it has terminated                                                                                                               |
-| `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Method   | Toggle if your command will be the only visible element in the shell                                                                                                                  |
-### Built-in
-
-Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.
-
-## Events
-
-| Event     | Type        | Description                       |
-|-----------|-------------|-----------------------------------|
-| `input`   | `String`    | Emits the current input           |
-| `execute` | `String`    | Emits the whole executing command |
-| `executed`| `String`    | Emits after command execution     |
-
-## Slots
-
-### Bar
-
-It's possible to fully customize the terminal bar using slots as shown in the following. **Note**: If using the bar slot, the properties `hide-bar` and `title` will be ignored.
-
-```vue
-<template>
-  <vue-command
-    :commands="commands">
-    <div slot="bar">
-      Pokedex
-    </div>
-  </vue-command>
-</template>
-```
-
 ## Usage
 
 You can either return a `String` or a Vue.js component.
@@ -201,6 +138,69 @@ export default {
 }
 </script>
 ```
+
+## Properties
+
+| Property                  | Type       | Default                  | Required | Description                                                                                                                                                                                                                       |
+| ------------------------- | ---------- | ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `autocompletion-resolver` | `Function` | `null`                   | No       | Gets the current input as first and cursor position as the second argument. Must return the whole command                                                                                                                         |
+| `built-in`                | `Object`   | `{}`                     | No       | See [built-in](#built-in) section |
+| `commands`                | `Object`   |                          | Yes      | See [commands](#commands) section                                                                                                                                                                                           |
+| `help-text`               | `String`   | `Type help`              | No       | Sets the placeholder                                                                                                                                                                                                              |
+| `help-timeout`            | `Number`   | `4000`                   | No       | Sets the placeholder timeout                                                                                                                                                                                                      |
+| `hide-bar`                | `Boolean`  | `false`                  | No       | Hides the bar                                                                                                                                                                                                                     |
+| `hide-prompt`             | `Boolean`  | `false`                  | No       | Hides the prompt                                                                                                                                                                                                                  |
+| `intro`                   | `String`   | `Fasten your seatbelts!` | No       | Sets the intro                                                                                                                                                                                                                    |
+| `not-found`               | `String`   | `not found`              | No       | Sets the command not found text                                                                                                                                                                                                   |
+| `prompt`                  | `String`   | `~neil@moon:#`           | No       | Sets the prompt                                                                                                                                                                                                                   |
+| `show-help`               | `Boolean`  | `false`                  | No       | Shows the placeholder                                                                                                                                                                                                             |
+| `show-intro`              | `Boolean`  | `false`                  | No       | Shows the intro                                                                                                                                                                                                                   |
+| `title`                   | `String`   | `neil@moon: ~`           | No       | Sets the title                                                                                                                                                                                                                    |
+| `white-theme`             | `Boolean`  | `false`                  | No       | Enables the white theme                                                                                                                                                                                                           |
+| `yargs-options`           | `Object`   | `{}`                     | No       | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                                                                                                                                            |
+
+### Commands
+
+`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. 
+
+In your component, you have access to the following instance properties:
+
+| Name                                            | Type       | Property | Description                                                                                                                                                                           |
+|-------------------------------------------------|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `this.$_arguments`                              | `Object`   | Computed | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme)                                                                                                                |
+| `this.$_done`                                   | `Function` | Method   | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change from this point on. Also leaves fullscreen mode |
+| `this.$_executeCommand(command: String)`        | `Function` | Method   | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                  |
+| `this.$_isRunning`                              | `Boolean`  | Computed | Indicates whether your command is still running or if it has terminated                                                                                                               |
+| `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Method   | Toggle if your command will be the only visible element in the shell                                                                                                                  |
+
+### Built-in
+
+Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.
+
+## Slots
+
+### Bar
+
+It's possible to fully customize the terminal bar using slots as shown in the following. **Note**: If using the bar slot, the properties `hide-bar` and `title` will be ignored.
+
+```vue
+<template>
+  <vue-command
+    :commands="commands">
+    <div slot="bar">
+      Pokedex
+    </div>
+  </vue-command>
+</template>
+```
+
+## Events
+
+| Event     | Type        | Description                       |
+|-----------|-------------|-----------------------------------|
+| `input`   | `String`    | Emits the current input           |
+| `execute` | `String`    | Emits the whole executing command |
+| `executed`| `String`    | Emits after command execution     |
 
 ## Browser support
 
