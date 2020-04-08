@@ -10,7 +10,7 @@ import {
   getCommands, 
   getDefaultProps 
 } from './test-utilities'
-import { createDummyStdout, createStdout } from '../../lib'
+import { createDummyStdout, createStdout } from '../../src/library'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
@@ -155,7 +155,6 @@ describe('VueCommand.vue', () => {
 
   //   await wrapper.vm.$nextTick()
   //   enterAndTrigger(wrapper, command)
-  //   await wrapper.vm.$nextTick()
   //   await wrapper.vm.$nextTick()
     
   //   expect(wrapper.find('.term-stdout').text()).toBe(command)

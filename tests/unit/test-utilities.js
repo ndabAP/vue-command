@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import VueCommand from '../../src/components/VueCommand'
 import VueCommandWrapper from './VueCommandWrapper'
-import { createStdout, createDummyStdout } from '../../lib'
+import { createStdout, createDummyStdout } from '../../src/library'
 
 export const getRandom = () => Math.random().toString(36).substring(7)
 
