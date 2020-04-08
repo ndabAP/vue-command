@@ -75,7 +75,7 @@ export default {
           component.mounted = async () => {
             // Wait for user mutations
             await this.$nextTick()
-            
+
             this.terminate()
           }
         }
