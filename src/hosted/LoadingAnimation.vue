@@ -17,7 +17,9 @@ export default {
 
   mounted () {
     if (this.context.parsed.help) {
-      return this.terminate()
+      this.terminate()
+
+      return
     }
 
     const timeout = this.context.parsed.timeout || 50
@@ -29,7 +31,6 @@ export default {
         if (this.index < amount) {
           load()
         } else {
-          // Provided by vue-command, marks the process as done and allows the user to enter a new command
           this.terminate()
         }
       }, timeout)
