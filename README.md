@@ -19,84 +19,23 @@ $ npm i vue-command --save
 
 ## Usage
 
-You can either return a `String` or a Vue.js component.
-
-### String
-
-Returns the color of the Pokémon "Pikachu".
+The following illustrates how to use this library to build a Nano editor available in many shells.
 
 ```vue
 <template>
-  <vue-command
-    :yargs-options="{ alias: { color: ['colour'] } }"
-    :commands="commands"
-  />
-</template>
-
-<script>
-import VueCommand from 'vue-command'
-import 'vue-command/dist/vue-command.css'
-
-export default {
-  components: {
-    VueCommand
-  },
-
-  data: () => ({
-    commands: {
-      // yargs arguments
-      pokedex: ({ color, _ }) => {
-        if (color && _[1] === 'pikachu') {
-          return 'yellow'
-        }
-        
-        // Return help since no match
-        return `Usage: pokedex pokemon [option]<br><br>
-
-        Example: pokedex pikachu --color
-        `
-      }
-    }
-  })
-}
-</script>
-
-<style lang="scss">
-  .vue-command {
-    .term {
-      -webkit-border-radius: 8px;
-      -moz-border-radius: 8px;
-      border-radius: 8px;
-    }
-
-    .term-std {
-      min-height: 300px;
-      max-height: 300px;
-      overflow-y: scroll;
-    }
-  }
-</style>
-```
-
-### Component
-
-Simulates the Nano editor available in many shells.
-
-```vue
-<template>
-  <div v-if="$_isRunning">
-    <textarea 
-      ref="nano" 
-      @keydown.ctrl.88="$_done()">
-      This is a text editor! Press Ctrl + X to leave.
-    </textarea>
+  <div v-if="environment.isExecuting">
+    <textarea
+      ref="nano"
+      @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
 
 <script>
 export default {
+  inject: ['setIsFullscreen', 'terminate'],
+
   mounted () {
-    this.$_setIsFullscreen(true)
+    this.setIsFullscreen(true)
     this.$refs.nano.focus()
   }
 }
@@ -112,18 +51,22 @@ textarea {
 </style>
 ```
 
-Now the command has to return the component.
+Now the command has to return the component. Additionally, we have to pass the terminals history
+and executed commands.
 
 ```vue
 <template>
-  <vue-command :commands="commands" />
+  <vue-command 
+    :commands="commands" 
+    :executed.sync="executed"
+    :history.sync="history"  />
 </template>
 
 <script>
 import VueCommand from 'vue-command'
 import 'vue-command/dist/vue-command.css'
 
-import nano from './NanoEditor.vue'
+import NanoEditor from './NanoEditor.vue'
 
 export default {
   components: {
@@ -132,8 +75,11 @@ export default {
 
   data: () =>  ({
     commands: { 
-      nano: () => nano 
-    }
+      nano: () => NanoEditor 
+    },
+    
+    executed: new Set(),
+    history: []
   })
 }
 </script>
@@ -161,21 +107,50 @@ export default {
 
 ### Commands
 
-`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` resolving to a `String`, that will be used as the output or a Vue.js component, which you can use for more complex functions. 
+`commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
 
-In your component, you have access to the following instance properties:
+| Function                                                             | Description                                                                   |
+|----------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `createStdout(content: String, isEscapeHtml: Boolean, name: String): Object` | Returns a Stdout component containing a span element with given inner content |
+| `createStderr(content: String, isEscapeHtml: Boolean, name: String): Object` | Returns a Stderr component containing a span element with given inner content |
+| `createDummyStdout(isInstance: Boolean): Object | DummyStdout`                             | Returns a dummy Stdout component to not show a Stdout                         |
 
-| Name                                            | Type       | Property | Description                                                                                                                                                                           |
-|-------------------------------------------------|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `this.$_arguments`                              | `Object`   | Computed | Parsed [yargs arguments](https://github.com/yargs/yargs-parser#readme)                                                                                                                |
-| `this.$_done`                                   | `Function` | Method   | Once your command is finished, call `this.$_done()` to allow the user to enter a new command. Make sure your component doesn't change from this point on. Also leaves fullscreen mode |
-| `this.$_executeCommand(command: String)`        | `Function` | Method   | After executing `this.$_done()`, you can use this method to run a subsequent command                                                                                                  |
-| `this.$_isRunning`                              | `Boolean`  | Computed | Indicates whether your command is still running or if it has terminated                                                                                                               |
-| `this.$_setIsFullscreen(isFullscreen: Boolean)` | `Function` | Method   | Toggle if your command will be the only visible element in the shell                                                                                                                  |
+If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination
+it's possible to inject the following functions to manipulate the terminal:
+
+| Function                                 | Description                                                 |
+|------------------------------------------|-------------------------------------------------------------|
+| `setCurrent(current: String)`            | Set the current `STDIN`                                     |
+| `setCursor(cursor: Number)`              | Set cursor position                                         |
+| `setIsFullscreen(isFullscreen: Boolean)` | Change the terminal into fullscreen mode                    |
+| `setIsInProgress(isInProgress: Boolean)` | Change the if terminal is in progress                       |
+| `terminate`                              | Executes common final tasks after command has been finished |
+
+In your component you have access to a context and an environment variable. The environment variable contains these properties:
+
+| Property                | Description                                        |
+|-------------------------|----------------------------------------------------|
+| `isExecuting: Boolean`  | Is the current component executing                 |
+| `isFullscreen: Boolean` | Is the terminal in fullscreen mode                 |
+| `isInProgress: Boolean` | Is any command active                              |
+
+The context variable contains these properties:
+
+| Property         | Description                        |
+|------------------|------------------------------------|
+| `cursor: Number` | Current cursor position at `STDIN` |
+| `parsed: Object` | Parsed yargs arguments             |
 
 ### Built-in
 
-Key-value pairs where key is command and value is function with [yargs arguments](https://github.com/yargs/yargs-parser#readme) and `$data` from instance. Function should return `String` or `Promise` that resolves to `String`.
+`builtIn` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` and must return or resolve a Vue.js component. To return simple strings or nothing use one of the convenient helper methods listed [here](#commands).
+
+In your component you have access to a context and an environment variable listed [here](#commands).
+
+If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination
+it's possible to inject functions to manipulate the terminal listed [here](#commands).
+
+The difference to commands is the ability to manipulate when the component terminates.
 
 ## Slots
 
@@ -186,7 +161,9 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 ```vue
 <template>
   <vue-command
-    :commands="commands">
+    :commands="commands"
+    :executed="new Set()"
+    :history="[]">
     <div slot="bar">
       Pokedex
     </div>
@@ -199,8 +176,8 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 | Event     | Type        | Description                       |
 |-----------|-------------|-----------------------------------|
 | `current` | `String`    | Emits the current input           |
-| `execute` | `String`    | Emits the whole executing command |
-| `executed`| `String`    | Emits after command execution     |
+| `execute` | `String`    | Emits when executing command      |
+| `executed`| `String`    | Emits after command execution (only emitted when called `terminate`)    |
 
 ## Browser support
 

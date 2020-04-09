@@ -2,14 +2,14 @@ import yargsParser from 'yargs-parser'
 
 import { createStdout, createDummyStdout } from '../library'
 
-const IS_BUILT_IN = true
-const IS_INSTANCE = true
-
 // @vue/component
 export default {
   methods: {
     // Handles the command
     async handle (stdin) {
+      this.$emit('execute')
+      this.setIsInProgress(true)
+
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
@@ -21,7 +21,7 @@ export default {
         const parsed = yargsParser(stdin, this.yargsOptions)
 
         let component = await Promise.resolve(this.builtIn[program](parsed))
-        component = this.setupComponent(component, this.history.length, parsed, IS_BUILT_IN)
+        component = this.setupComponent(component, this.history.length, parsed)
 
         let history = [...this.history]
         history.push(component)
@@ -31,12 +31,8 @@ export default {
         return
       }
 
-      this.setIsInProgress(true)
-
-      this.$emit('execute', stdin)
-
       // Create empty component in case no program has been found
-      let component = createDummyStdout(!IS_INSTANCE)
+      let component = createDummyStdout()
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
@@ -65,21 +61,9 @@ export default {
     },
 
     // Add environment and instantly terminate
-    setupComponent (component, history = 0, parsed = {}, isBuiltIn) {
+    setupComponent (component, history = 0, parsed = {}) {
       // Prevent to work with same reference
       component = { ...component }
-
-      // Built in commands can decide when to terminate
-      if (!isBuiltIn) {
-        if (!hasOwnProperty.call(component, 'mounted')) {
-          component.mounted = async () => {
-            // Wait for user mutations
-            await this.$nextTick()
-
-            this.terminate()
-          }
-        }
-      }
 
       if (!hasOwnProperty.call(component, 'computed')) {
         component.computed = {}

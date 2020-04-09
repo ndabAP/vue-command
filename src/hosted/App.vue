@@ -35,7 +35,8 @@ export default {
     builtIn: {
       clear: undefined,
       help: undefined,
-      pwd: undefined
+      pwd: undefined,
+      test: () => ChuckNorris
     },
 
     commands: {

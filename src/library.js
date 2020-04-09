@@ -1,10 +1,16 @@
 import VueCommand from './components/VueCommand'
 
-import Vue from 'vue'
-
 // Returns a Stdout component containing a span element with given inner content
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout') => ({
   name,
+  inject: ['terminate'],
+  async mounted () {
+    // Wait for user mutations
+    await this.$nextTick()
+
+    this.terminate()
+  },
+
   render: createElement => {
     if (isEscapeHtml) {
       return createElement('span', {}, content)
@@ -17,6 +23,14 @@ export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandSt
 // Returns a Stderr component containing a span element with given inner content
 export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr') => ({
   name,
+  inject: ['terminate'],
+  async mounted () {
+    // Wait for user mutations
+    await this.$nextTick()
+
+    this.terminate()
+  },
+
   render: createElement => {
     if (isEscapeHtml) {
       return createElement('span', {}, content)
@@ -27,20 +41,17 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 })
 
 // Returns a dummy Stdout component to not show a Stdout
-export const createDummyStdout = (isInstance = true) => {
-  if (isInstance) {
-    const DummyStdout = Vue.extend({
-      name: 'VueCommandDummyStdout',
-      render: createElement => createElement('span', {}, '')
-    })
+export const createDummyStdout = () => ({
+  name: 'VueCommandDummyStdout',
+  inject: ['terminate'],
+  async mounted () {
+    // Wait for user mutations
+    await this.$nextTick()
 
-    return new DummyStdout()
-  }
+    this.terminate()
+  },
 
-  return {
-    name: 'VueCommandDummyStdout',
-    render: createElement => createElement('span', {}, '')
-  }
-}
+  render: createElement => createElement('span', {}, '')
+})
 
 export default VueCommand

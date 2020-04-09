@@ -31,7 +31,6 @@
             :key="index"
             :class="{ fullscreen : (isFullscreen && index === progress - 1) }">
             <stdout
-              v-if="index !== 0"
               v-show="(!isFullscreen || index === progress - 1)"
               :component="stdout"
               class="term-stdout"/>
