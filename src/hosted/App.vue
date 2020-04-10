@@ -4,12 +4,12 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
+      :built-in="builtIn"
       :current="current"
       :commands="commands"
       :executed.sync="executed"
       :history.sync="history"
       :help-timeout="1250"
-      :is-in-progress.sync="isInProgress"
       show-help/>
     <pre>
       <code>
@@ -33,6 +33,10 @@ export default {
   },
 
   data: () => ({
+    builtIn: {
+      reverse: undefined
+    },
+
     commands: {
       clear: undefined,
       help: () => createStdout(`Available programms:<br><br>
@@ -43,6 +47,7 @@ export default {
         &nbsp;norris<br>
         &nbsp;pokedex pokemon --color<br>
         &nbsp;pwd<br>
+        &nbsp;reverse text<br>
       `),
 
       klieh: () => KliehParty,
@@ -68,8 +73,7 @@ export default {
 
     current: '',
     executed: new Set(),
-    history: [],
-    isInProgress: true
+    history: []
   }),
 
   created () {
@@ -77,6 +81,15 @@ export default {
       this.history = []
       // Push dummy Stdout to show Stdin
       return createDummyStdout()
+    }
+
+    // Reverse current Stdin
+    this.builtIn.reverse = stdin => {
+      stdin = stdin.trim()
+      const argument = stdin.split(' ')[1]
+
+      // Reverse argument
+      this.current = argument.split('').reverse().join('')
     }
   }
 }

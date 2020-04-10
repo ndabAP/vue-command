@@ -112,6 +112,13 @@ export default {
       if (this.isInProgress && !this.isLast) {
         this.blur()
       }
+    },
+
+    isLast (isLast, wasLast) {
+      if (wasLast && !isLast) {
+      // Allow components to get into focus
+        this.blur()
+      }
     }
   },
 
@@ -138,8 +145,6 @@ export default {
   methods: {
     // Handle current command
     handle () {
-      // Allow components to get into focus
-      this.blur()
       // Persist the current prompt
       this.setLocalPrompt(this.prompt)
       // Request to handle the current command
