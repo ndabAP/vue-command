@@ -20,7 +20,7 @@ export default {
 
   watch: {
     history () {
-      this.setHistor([...this.history])
+      this.setHistory([...this.history])
     },
 
     pointer () {

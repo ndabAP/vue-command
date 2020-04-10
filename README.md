@@ -19,7 +19,7 @@
 
   ## Usage
 
-  The following illustrates how to use this library to build a Nano editor available in many shells. We will use the provided `environment` variable and inject a function called `terminate` to tell the terminal that the command has been finished. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
+  Let's assume we want to build the Nano editor available in many shells. We will use the provided `environment` variable and inject a function called `terminate` to tell the terminal that the command has been finished. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
   ```vue
   <template>
@@ -85,7 +85,7 @@
 
   ## Properties
 
-  There are two types of commands: Built-in and regular commands. Built-in commands come with higher flexibility, see section [Built-in](#built-in).
+  There are two types of commands: Built-in and regular commands. Built-in commands come with higher flexibility, see section [Built-in](#built-in) for more information.
 
   | Property                  | Type       | Default                  | Required | Description                                                                                               |
   |---------------------------|------------|--------------------------|----------|-----------------------------------------------------------------------------------------------------------|
@@ -100,8 +100,8 @@
   | `hide-prompt`             | `Boolean`  | `false`                  | No       | Hides the prompt                                                                                          |
   | `history`                 | `Array`    | `[]`                     | No       | Executed commands                                                                                         |
   | `intro`                   | `String`   | `Fasten your seatbelts!` | No       | Sets the intro                                                                                            |
-  | `isFullscreen`            | `Boolean`  | `false`                  | No       | Sets terminals fullscreen mode                                                                            |
-  | `isInProgress`            | `Boolean`  | `false`                  | No       | Sets terminal progress status                                                                             |
+  | `isFullscreen`            | `Boolean`  | `false`                  | No       | Sets the terminal fullscreen mode                                                                            |
+  | `isInProgress`            | `Boolean`  | `false`                  | No       | Sets the terminal progress status                                                                             |
   | `not-found`               | `String`   | `not found`              | No       | Sets the command not found text                                                                           |
   | `pointer`                 | `Number`   | `0`                      | No       | Sets the command pointer                                                                                  |
   | `prompt`                  | `String`   | `~neil@moon:#`           | No       | Sets the prompt                                                                                           |
@@ -121,22 +121,21 @@
   | `createStderr(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stderr` component containing a span element with given inner content |
   | `createDummyStdout(...mixins: Array): Object`                             | Returns a dummy `Stdout` to show a `Stdin`                                      |
 
-  If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination it's possible to inject the following functions to manipulate the terminal:
+  If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination it's possible to inject the following functions to manipulate the terminal or signal an event:
 
   | Function                                 | Description                                                 |
   |------------------------------------------|-------------------------------------------------------------|
-  | `emitInput`                              | Emit the current input                                      |
+  | `emitInput(input: String)`                              | Emit the current input                                      |
   | `emitExecute`                            | Emit command execution event                                |
   | `emitExecuted`                           | Emit command executed event                                 |
-  | `execute`                                | Start common command tasks                                  |
   | `setCurrent(current: String)`            | Set the current `Stdin`                                     |
   | `setCursor(cursor: Number)`              | Set cursor position                                         |
-  | `setIsFullscreen(isFullscreen: Boolean)` | Change the terminal into fullscreen mode                    |
-  | `setIsInProgress(isInProgress: Boolean)` | Change the if terminal is in progress                       |
+  | `setIsFullscreen(isFullscreen: Boolean)` | Change if the terminal is in fullscreen mode                    |
+  | `setIsInProgress(isInProgress: Boolean)` | Change if the terminal is in progress                       |
   | `setPointer(pointer: Number)`            | Set command history pointer                                 |
   | `terminate`                              | Executes common final tasks after command has been finished |
 
-  In your component you have access to a context and an environment variable. The environment variable contains the following properties:
+  In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties:
 
   | Property                | Description                                        |
   |-------------------------|----------------------------------------------------|
@@ -144,7 +143,7 @@
   | `isFullscreen: Boolean` | Is the terminal in fullscreen mode                 |
   | `isInProgress: Boolean` | Is any command active                              |
 
-  The context variable contains the following properties:
+  The `context` variable contains the following properties:
 
   | Property         | Description                        |
   |------------------|------------------------------------|
@@ -153,15 +152,17 @@
 
   ### Built-in
 
-  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands call are just calling helper methods or change properties which could be also called by built-in commands. Regular commands can be seen as a facade to built-in commands. The API is less stable.
+  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called by built-in commands. Regular commands can be seen as a facade to built-in commands. The API is less stable.
 
   To fully simulate a full command circle a built-in command has to follow these steps:
 
-  1. Add the programm to the `executed` `Set`
+  1. Add the programm to the `executed` `Set` property
   2. Increase the history pointer
-  3. Push the `Stdout` component into the `history` property
-  4. Emit command executing started
-  5. Tell terminal there is a command in progress  
+  3. Emit command executing started
+  4. Tell terminal there is a command in progress  
+  5. Push the `Stdout` component into the `history` property
+  6. Execute actual task
+  7. Terminate the command with the injected `terminate` function
 
   ## Slots
 

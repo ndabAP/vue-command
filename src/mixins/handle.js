@@ -4,12 +4,6 @@ import { createStdout, createDummyStdout } from '../library'
 
 // @vue/component
 export default {
-  provide () {
-    return {
-      execute: this.execute
-    }
-  },
-
   methods: {
     // Executes a regular command
     async execute (stdin) {
@@ -43,12 +37,13 @@ export default {
 
       let history = [...this.local.history]
       history.push(component)
-      this.setHistory(history)
 
       // Emit command executing started
       this.emitExecute()
       // Tell terminal there is a command in progress
       this.setIsInProgress(true)
+
+      this.setHistory(history)
     },
 
     // Handles the command
