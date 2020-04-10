@@ -144,22 +144,6 @@ describe('VueCommand.vue', () => {
     expect(wrapper.find('input').element.value).toBe(command)
   })
 
-  // See: https://github.com/vuejs/vue-test-utils/issues/1497
-  // it('executes built-in commands', async () => {
-  //   const command = getRandom()
-  //   const stdout = createStdout(command)
-  //   const wrapper = getChildMountedWrapper(
-  //     { [command]: () => stdout },
-  //     getEmptyCommands()
-  //   )
-
-  //   await wrapper.vm.$nextTick()
-  //   enterAndTrigger(wrapper, command)
-  //   await wrapper.vm.$nextTick()
-    
-  //   expect(wrapper.find('.term-stdout').text()).toBe(command)
-  // })
-
   it('calls the autocompletion resolver with arguments', async () => {
     const command = getRandom()
     const autocompletionResolver = jest.fn(() => command)

@@ -7,9 +7,6 @@ export default {
   methods: {
     // Handles the command
     async handle (stdin) {
-      this.$emit('execute')
-      this.setIsInProgress(true)
-
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
@@ -17,19 +14,14 @@ export default {
 
       // Check if function is built in
       if (this.builtIn[program] !== undefined) {
-        // Parse the command
-        const parsed = yargsParser(stdin, this.yargsOptions)
-
-        let component = await Promise.resolve(this.builtIn[program](parsed))
-        component = this.setupComponent(component, this.history.length, parsed)
-
-        let history = [...this.history]
-        history.push(component)
-        this.$emit('update:history', [...history])
+        await Promise.resolve(this.builtIn[program](stdin))
 
         // The built in function must take care of all other steps
         return
       }
+
+      this.$emit('execute')
+      this.setIsInProgress(true)
 
       // Create empty component in case no program has been found
       let component = createDummyStdout()

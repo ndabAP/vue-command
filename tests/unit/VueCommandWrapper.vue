@@ -1,6 +1,5 @@
 <template>
   <VueCommand
-    :built-in="builtIn"
     :commands="commands"
     :executed.sync="executed"
     :history.sync="history" />
@@ -16,11 +15,6 @@ export default {
 
   props: {
     commands: {
-      default: () => ({}),
-      type: Object
-    },
-
-    builtIn: {
       default: () => ({}),
       type: Object
     }

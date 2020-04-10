@@ -17,11 +17,10 @@ export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
 })
 
 export const getChildMountedWrapper = (
-  builtIn,
   commands,
   props, 
 ) => mount(VueCommandWrapper, {
-  propsData: { commands, builtIn, ...props}
+  propsData: { commands, ...props}
 })
 
 export const enterAndTrigger = (wrapper, value, event = 'keyup.enter') => {

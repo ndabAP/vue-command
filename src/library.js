@@ -41,8 +41,9 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 })
 
 // Returns a dummy Stdout component to not show a Stdout
-export const createDummyStdout = () => ({
+export const createDummyStdout = (...mixins) => ({
   name: 'VueCommandDummyStdout',
+  mixins,
   inject: ['terminate'],
   async mounted () {
     // Wait for user mutations

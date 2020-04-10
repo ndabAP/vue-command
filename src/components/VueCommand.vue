@@ -170,7 +170,7 @@ export default {
     current: '',
     // Run command in fullscreen
     isFullscreen: false,
-    // Indicates if a not built in command is in progress
+    // Indicates if a command is in progress
     isInProgress: false,
     // Detect scroll and resize events
     scroll: {
@@ -187,6 +187,8 @@ export default {
       setCursor: this.setCursor,
       setIsFullscreen: this.setIsFullscreen,
       setIsInProgress: this.setIsInProgress,
+      setLastCommand: this.setLastCommand,
+      setPointer: this.setPointer,
       terminate: this.terminate
     }
   },
@@ -203,12 +205,12 @@ export default {
   watch: {
     current () {
       // Emit the current input as an event
-      this.$emit('current', this.current)
+      this.$emit('input', this.current)
 
       // Make searching history work again
       if (!this.current) {
         this.setPointer(this.executed.size)
-        this.lastCommand = ''
+        this.setLastCommand('')
       }
     },
 
@@ -261,7 +263,11 @@ export default {
       this.isInProgress = isInProgress
     },
 
-    // Focus on last STDIN
+    setLastCommand (lastCommand) {
+      this.lastCommand = lastCommand
+    },
+
+    // Focus on last Stdin
     focusLastStdin () {
       const stdins = this.$refs.stdin
       // Latest STDIN is latest history entry

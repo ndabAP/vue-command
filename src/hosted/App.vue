@@ -33,13 +33,20 @@ export default {
 
   data: () => ({
     builtIn: {
-      clear: undefined,
-      help: undefined,
-      pwd: undefined,
-      test: () => ChuckNorris
+      clear: undefined
     },
 
     commands: {
+      help: () => createStdout(`Available programms:<br><br>
+        &nbsp;clear<br>
+        &nbsp;klieh<br>
+        &nbsp;loading [--timeout n] [--amount n]<br>
+        &nbsp;nano<br>
+        &nbsp;norris<br>
+        &nbsp;pokedex pokemon --color<br>
+        &nbsp;pwd<br>
+      `),
+
       klieh: () => KliehParty,
       loading: () => LoadingAnimation,
       nano: () => NanoEditor,
@@ -56,7 +63,9 @@ export default {
         }
 
         return stdout
-      }
+      },
+
+      pwd: () => createStdout('/home/neil')
     },
 
     executed: new Set(),
@@ -64,34 +73,8 @@ export default {
   }),
 
   created () {
-    this.builtIn.clear = () => {
-      this.executed.delete('clear')
-      this.executed.add('clear')
-      this.history = []
-
-      return createDummyStdout()
-    }
-
-    this.builtIn.help = () => {
-      this.executed.delete('help')
-      this.executed.add('help')
-
-      return createStdout(`Available programms:<br><br>
-        &nbsp;clear<br>
-        &nbsp;klieh<br>
-        &nbsp;loading [--timeout n] [--amount n]<br>
-        &nbsp;nano<br>
-        &nbsp;norris<br>
-        &nbsp;pokedex pokemon --color<br>
-        &nbsp;pwd<br>
-      `)
-    }
-
-    this.builtIn.pwd = () => {
-      this.executed.delete('pwd')
-      this.executed.add('pwd')
-
-      return createStdout('/home/neil')
+    this.builtIn.clear = async () => {
+      this.history = [createDummyStdout()]
     }
   }
 }
