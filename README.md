@@ -19,7 +19,9 @@
 
   ## Usage
 
-  Let's assume we want to build the Nano editor available in many shells. We will use the provided `environment` variable and inject a function called `terminate` to tell the terminal that the command has been finished. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
+  Let's assume we want to build the Nano editor available in many shells. 
+  
+  We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>C</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
   ```vue
   <template>
@@ -54,7 +56,7 @@
   </style>
   ```
 
-  Now the command has to return the component. Additionally, we have to pass a `Set` which will contain all executed programs.
+  Now the command has to return the component. Additionally, we have to pass a `Set` which will contain all executed programs. This property can be changed at any time.
 
   ```vue
   <template>
