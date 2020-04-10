@@ -5,10 +5,12 @@
 
     <vue-command
       :built-in="builtIn"
+      :current="current"
       :commands="commands"
       :executed.sync="executed"
-      :help-timeout="1250"
       :history.sync="history"
+      :help-timeout="1250"
+      :is-in-progress.sync="isInProgress"
       show-help/>
     <pre>
       <code>
@@ -37,6 +39,7 @@ export default {
     },
 
     commands: {
+      clearer: undefined,
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;clear<br>
         &nbsp;klieh<br>
@@ -68,13 +71,17 @@ export default {
       pwd: () => createStdout('/home/neil')
     },
 
+    current: '',
     executed: new Set(),
-    history: []
+    history: [],
+    isInProgress: false
   }),
 
   created () {
-    this.builtIn.clear = async () => {
-      this.history = [createDummyStdout()]
+    this.commands.clear = () => {
+      this.history = []
+      // Push dummy Stdout to show Stdin
+      return createDummyStdout()
     }
   }
 }

@@ -1,32 +1,65 @@
 import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
+import { createDummyStdout } from '../library'
 
 // @vue/component
 export default {
   data: () => ({
-    // Last pointed command
-    lastCommand: '',
-    // History command pointer
-    pointer: 0
+    local: {
+      // All executed commands
+      history: [],
+      // History command pointer
+      pointer: 0
+    }
   }),
+
+  watch: {
+    history () {
+      this.local.history = [...this.history]
+    },
+
+    pointer () {
+      this.local.pointer = this.pointer
+    }
+  },
+
+  created () {
+    // Let user provide the starting history
+    let history = [...this.history]
+
+    // If there is no entry push dummy Stdout to show Stdin
+    if (history.length === 0) {
+      history.push(createDummyStdout())
+    }
+
+    // Copy to local history
+    this.local.history = history
+    // Update the history property
+    this.$emit('update:history', [...history])
+  },
 
   methods: {
     // Lets user navigate through history based on input key
     mutatePointerHandler ({ key }) {
-      if (key === ARROW_UP_KEY && this.pointer > 0) {
+      if (key === ARROW_UP_KEY && this.local.pointer > 0) {
         // Check if pointer is mutable and input key is up key
-        this.pointer--
-      } else if (key === ARROW_DOWN_KEY && this.pointer < (this.executed.size - 1)) {
+        this.local.pointer--
+      } else if (key === ARROW_DOWN_KEY && this.local.pointer < (this.executed.size - 1)) {
         // Check if pointer is mutable and input key is down key
-        this.pointer++
+        this.local.pointer++
       } else {
         return
       }
 
-      this.lastCommand = [...this.executed][this.pointer]
+      // Set current Stdin to pointed command
+      this.local.current = [...this.executed][this.local.pointer]
+    },
+
+    setHistory (history) {
+      this.local.history = [...history]
     },
 
     setPointer (pointer) {
-      this.pointer = pointer
+      this.local.pointer = pointer
     }
   }
 }

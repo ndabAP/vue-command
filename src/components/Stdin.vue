@@ -29,8 +29,12 @@ export default {
 
   props: {
     bus: {
-      type: Object,
-      required: true
+      required: true,
+      type: Object
+    },
+
+    current: {
+      type: String
     },
 
     helpText: {
@@ -42,28 +46,23 @@ export default {
     },
 
     hidePrompt: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     isInProgress: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     isLast: {
-      type: Boolean,
-      required: true
-    },
-
-    lastCommand: {
-      type: String,
-      default: ''
+      required: true,
+      type: Boolean
     },
 
     isFullscreen: {
-      type: Boolean,
-      required: true
+      required: true,
+      type: Boolean
     },
 
     prompt: {
@@ -71,13 +70,13 @@ export default {
     },
 
     showHelp: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     uid: {
-      type: Number,
-      required: true
+      required: true,
+      type: Number
     }
   },
 
@@ -89,9 +88,9 @@ export default {
   }),
 
   watch: {
-    lastCommand () {
-      if (this.lastCommand && this.isLast) {
-        this.setCommand(this.lastCommand)
+    current () {
+      if (this.isLast) {
+        this.setCommand(this.current)
       }
     },
 

@@ -31,12 +31,13 @@ export default {
         const parsed = yargsParser(stdin, this.yargsOptions)
 
         component = await Promise.resolve(this.commands[program](parsed))
-        component = this.setupComponent(component, this.history.length, parsed)
+        component = this.setupComponent(component, this.local.history.length, parsed)
 
         // Remove duplicate commands to push to latest entry
         let executed = new Set(this.executed)
         executed.delete(stdin)
         executed.add(stdin)
+        // Mutate property
         this.$emit('update:executed', executed)
       } else {
         // No command found
@@ -44,12 +45,14 @@ export default {
           component = createStdout(`${stdin}: ${this.notFound}`, true)
         }
 
-        component = this.setupComponent(component, this.history.length)
+        component = this.setupComponent(component, this.local.history.length)
       }
 
-      let history = [...this.history]
+      this.setPointer(this.executed.size)
+
+      let history = [...this.local.history]
       history.push(component)
-      this.$emit('update:history', [...history])
+      this.setHistory(history)
     },
 
     // Add environment and instantly terminate
@@ -62,13 +65,13 @@ export default {
       }
       component.computed = {
         environment: () => ({
-          isExecuting: this.isInProgress && (this.history.length - 1 === history),
-          isFullscreen: this.isFullscreen,
-          isInProgress: this.isInProgress
+          isExecuting: this.local.isInProgress && (this.local.history.length - 1 === history),
+          isFullscreen: this.local.isFullscreen,
+          isInProgress: this.local.isInProgress
         }),
 
         context: () => ({
-          cursor: this.cursor,
+          cursor: this.local.cursor,
           parsed
         }),
 

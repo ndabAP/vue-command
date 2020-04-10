@@ -1,8 +1,9 @@
 import VueCommand from './components/VueCommand'
 
 // Returns a Stdout component containing a span element with given inner content
-export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout') => ({
+export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
   name,
+  mixins,
   inject: ['terminate'],
   async mounted () {
     // Wait for user mutations
@@ -21,8 +22,9 @@ export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandSt
 })
 
 // Returns a Stderr component containing a span element with given inner content
-export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr') => ({
+export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr', ...mixins) => ({
   name,
+  mixins,
   inject: ['terminate'],
   async mounted () {
     // Wait for user mutations

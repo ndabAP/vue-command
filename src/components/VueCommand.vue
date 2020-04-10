@@ -1,9 +1,10 @@
 <template>
   <div
     class="vue-command"
-    @keyup="mutatePointerHandler"
+    @keydown.38="mutatePointerHandler"
+    @keydown.40="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
-    @click="focusLastStdin">
+    @click="focus">
     <slot name="bar">
       <div
         v-if="!hideBar"
@@ -27,23 +28,23 @@
           </div>
 
           <div
-            v-for="(stdout, index) in history"
+            v-for="(stdout, index) in local.history"
             :key="index"
-            :class="{ fullscreen : (isFullscreen && index === progress - 1) }">
+            :class="{ fullscreen : (local.isFullscreen && index === progress - 1) }">
             <stdout
-              v-show="(!isFullscreen || index === progress - 1)"
+              v-show="(!local.isFullscreen || index === progress - 1)"
               :component="stdout"
               class="term-stdout"/>
 
             <stdin
-              v-show="(index === 0 && !isFullscreen) || !(index === progress - 1 && isInProgress) && !isFullscreen"
+              v-show="(index === 0 && !local.isFullscreen) || !(index === progress - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
+              :current="local.current"
               :hide-prompt="hidePrompt"
-              :is-fullscreen="isFullscreen"
-              :is-in-progress="isInProgress"
+              :is-fullscreen="local.isFullscreen"
+              :is-in-progress="local.isInProgress"
               :is-last="index === progress - 1"
-              :last-command="lastCommand"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
@@ -65,7 +66,6 @@ import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
-import { createDummyStdout } from '../library'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -74,6 +74,20 @@ export default {
   components: { Stdin, Stdout },
 
   mixins: [Autocomplete, Handle, History],
+
+  provide () {
+    return {
+      emitInput: this.emitInput,
+      emitExecute: this.emitExecute,
+      emitExecuted: this.emitExecuted,
+      setCurrent: this.setCurrent,
+      setCursor: this.setCursor,
+      setIsFullscreen: this.setIsFullscreen,
+      setIsInProgress: this.setIsInProgress,
+      setPointer: this.setPointer,
+      terminate: this.terminate
+    }
+  },
 
   props: {
     autocompletionResolver: {
@@ -88,6 +102,11 @@ export default {
     commands: {
       required: true,
       type: Object
+    },
+
+    current: {
+      default: '',
+      type: String
     },
 
     // Non-empty executed commands
@@ -118,13 +137,21 @@ export default {
 
     // All executed commands
     history: {
-      required: true,
+      default: () => [],
       type: Array
     },
 
     intro: {
       default: 'Fasten your seatbelts!',
       type: String
+    },
+
+    isFullscreen: {
+      type: Boolean
+    },
+
+    isInProgress: {
+      type: Boolean
     },
 
     notFound: {
@@ -166,12 +193,17 @@ export default {
   data: () => ({
     // Bus for communication
     bus: EventBus,
-    // Current input
-    current: '',
-    // Run command in fullscreen
-    isFullscreen: false,
-    // Indicates if a command is in progress
-    isInProgress: false,
+
+    // A local copy to allow the absence of properties
+    local: {
+      // Current input
+      current: '',
+      // Run command in fullscreen
+      isFullscreen: false,
+      // Indicates if a command is in progress
+      isInProgress: false
+    },
+
     // Detect scroll and resize events
     scroll: {
       eventListener: undefined,
@@ -181,41 +213,36 @@ export default {
     }
   }),
 
-  provide () {
-    return {
-      setCurrent: this.setCurrent,
-      setCursor: this.setCursor,
-      setIsFullscreen: this.setIsFullscreen,
-      setIsInProgress: this.setIsInProgress,
-      setLastCommand: this.setLastCommand,
-      setPointer: this.setPointer,
-      terminate: this.terminate
-    }
-  },
-
   computed: {
     // Amount of executed commands
     progress: {
       get () {
-        return this.history.length
+        return this.local.history.length
       }
     }
   },
 
   watch: {
     current () {
-      // Emit the current input as an event
-      this.$emit('input', this.current)
-
-      // Make searching history work again
-      if (!this.current) {
-        this.setPointer(this.executed.size)
-        this.setLastCommand('')
-      }
+      this.local.current = this.current
     },
 
-    history () {
-      this.setPointer(this.executed.size)
+    isFullscreen () {
+      this.local.isFullscreen = this.isFullscreen
+    },
+
+    isInProgress () {
+      this.local.isInProgress = this.isInProgress
+    },
+
+    'local.current' () {
+      // Emit the current input as an event
+      this.$emit('input', this.local.current)
+
+      // Make searching history work again
+      if (!this.local.current) {
+        this.setPointer(this.executed.size)
+      }
     }
   },
 
@@ -239,10 +266,6 @@ export default {
     }
 
     this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
-
-    let history = [...this.history]
-    history.push(createDummyStdout())
-    this.$emit('update:history', [...history])
   },
 
   beforeDestroy () {
@@ -251,38 +274,51 @@ export default {
   },
 
   methods: {
+    emitInput (input) {
+      this.$emit('input', input)
+    },
+
+    emitExecute () {
+      this.$emit('execute')
+    },
+
+    emitExecuted () {
+      this.$emit('executed')
+    },
+
     setCurrent (current) {
-      this.current = current
+      this.local.current = current
     },
 
     setIsFullscreen (isFullscreen) {
-      this.isFullscreen = isFullscreen
+      this.local.isFullscreen = isFullscreen
     },
 
     setIsInProgress (isInProgress) {
-      this.isInProgress = isInProgress
-    },
-
-    setLastCommand (lastCommand) {
-      this.lastCommand = lastCommand
+      this.local.isInProgress = isInProgress
     },
 
     // Focus on last Stdin
-    focusLastStdin () {
+    focus () {
       const stdins = this.$refs.stdin
-      // Latest STDIN is latest history entry
-      const stdin = stdins[this.history.length - 1]
+      // Latest Stdin is latest history entry
+      const stdin = stdins[this.local.history.length - 1]
 
+      // Call component method
       stdin.focus()
     },
 
     // Executes common final tasks after command has been finished
     terminate () {
+      // Point history to new command
       this.setPointer(this.executed.size)
+      // Exit fullscreen if necessary
       this.setIsFullscreen(false)
-      this.$emit('executed', this.current)
+      // Set new Stdin to empty
       this.setCurrent('')
-
+      // Indicate end of command
+      this.$emit('executed')
+      // Allow new Stdin
       this.setIsInProgress(false)
     }
   }
