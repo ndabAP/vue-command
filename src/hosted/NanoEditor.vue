@@ -10,8 +10,11 @@
 export default {
   inject: ['setIsFullscreen', 'terminate'],
 
-  mounted () {
+  created () {
     this.setIsFullscreen(true)
+  },
+
+  mounted () {
     this.$refs.nano.focus()
   }
 }

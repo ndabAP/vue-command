@@ -3,6 +3,12 @@ import { createDummyStdout } from '../library'
 
 // @vue/component
 export default {
+  provide () {
+    return {
+      setPointer: this.setPointer
+    }
+  },
+
   data: () => ({
     local: {
       // All executed commands
@@ -14,11 +20,11 @@ export default {
 
   watch: {
     history () {
-      this.local.history = [...this.history]
+      this.setHistor([...this.history])
     },
 
     pointer () {
-      this.local.pointer = this.pointer
+      this.setPointer(this.pointer)
     }
   },
 
@@ -31,8 +37,6 @@ export default {
       history.push(createDummyStdout())
     }
 
-    // Copy to local history
-    this.local.history = history
     // Update the history property
     this.$emit('update:history', [...history])
   },
@@ -55,7 +59,7 @@ export default {
     },
 
     setHistory (history) {
-      this.local.history = [...history]
+      this.local.history = history
     },
 
     setPointer (pointer) {

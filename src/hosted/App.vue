@@ -4,7 +4,6 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :built-in="builtIn"
       :current="current"
       :commands="commands"
       :executed.sync="executed"
@@ -34,12 +33,8 @@ export default {
   },
 
   data: () => ({
-    builtIn: {
-      clear: undefined
-    },
-
     commands: {
-      clearer: undefined,
+      clear: undefined,
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;clear<br>
         &nbsp;klieh<br>
@@ -74,7 +69,7 @@ export default {
     current: '',
     executed: new Set(),
     history: [],
-    isInProgress: false
+    isInProgress: true
   }),
 
   created () {

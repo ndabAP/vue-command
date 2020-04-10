@@ -81,10 +81,8 @@ export default {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       setCurrent: this.setCurrent,
-      setCursor: this.setCursor,
       setIsFullscreen: this.setIsFullscreen,
       setIsInProgress: this.setIsInProgress,
-      setPointer: this.setPointer,
       terminate: this.terminate
     }
   },
@@ -159,6 +157,10 @@ export default {
       type: String
     },
 
+    pointer: {
+      type: Number
+    },
+
     prompt: {
       default: '~neil@moon:#',
       type: String
@@ -224,15 +226,15 @@ export default {
 
   watch: {
     current () {
-      this.local.current = this.current
+      this.setCurrent(this.current)
     },
 
     isFullscreen () {
-      this.local.isFullscreen = this.isFullscreen
+      this.setIsFullscreen(this.isFullscreen)
     },
 
     isInProgress () {
-      this.local.isInProgress = this.isInProgress
+      this.setIsInProgress(this.isInProgress)
     },
 
     'local.current' () {
@@ -271,6 +273,14 @@ export default {
   beforeDestroy () {
     this.scroll.resizeObserver.unobserve(this.$refs['term-cont'])
     this.$refs['term-std'].removeEventListener('scroll', this.scroll.eventListener)
+  },
+
+  created () {
+    this.setCurrent(this.current)
+    this.setHistory([...this.history])
+    this.setIsFullscreen(this.isFullscreen)
+    this.setIsInProgress(this.isInProgress)
+    this.setPointer(this.pointer)
   },
 
   methods: {

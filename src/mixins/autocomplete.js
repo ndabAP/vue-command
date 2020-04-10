@@ -1,5 +1,11 @@
 // @vue/component
 export default {
+  provide () {
+    return {
+      setCursor: this.setCursor
+    }
+  },
+
   data: () => ({
     local: {
       // Current cursor position at STDIN
@@ -19,7 +25,6 @@ export default {
 
     setCursor (cursor) {
       this.local.cursor = cursor
-      this.$emit('update:cursor', cursor)
     }
   }
 }

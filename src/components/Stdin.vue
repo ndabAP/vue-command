@@ -138,10 +138,10 @@ export default {
   methods: {
     // Handle current command
     handle () {
-      // Persist the current prompt
-      this.setLocalPrompt(this.prompt)
       // Allow components to get into focus
       this.blur()
+      // Persist the current prompt
+      this.setLocalPrompt(this.prompt)
       // Request to handle the current command
       this.$emit('handle', this.command)
       // Hide the current placeholder

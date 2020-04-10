@@ -4,25 +4,16 @@ import { createStdout, createDummyStdout } from '../library'
 
 // @vue/component
 export default {
+  provide () {
+    return {
+      execute: this.execute
+    }
+  },
+
   methods: {
-    // Handles the command
-    async handle (stdin) {
-      // Remove leading and trailing whitespace
-      stdin = stdin.trim()
-
+    // Executes a regular command
+    async execute (stdin) {
       const program = yargsParser(stdin, this.yargsOptions)._[0]
-
-      // Check if function is built in
-      if (this.builtIn[program] !== undefined) {
-        await Promise.resolve(this.builtIn[program](stdin))
-
-        // The built in function must take care of all other steps
-        return
-      }
-
-      this.$emit('execute')
-      this.setIsInProgress(true)
-
       // Create empty component in case no program has been found
       let component = createDummyStdout()
       // Check if command has been found
@@ -53,6 +44,30 @@ export default {
       let history = [...this.local.history]
       history.push(component)
       this.setHistory(history)
+
+      // Emit command executing started
+      this.emitExecute()
+      // Tell terminal there is a command in progress
+      this.setIsInProgress(true)
+    },
+
+    // Handles the command
+    async handle (stdin) {
+      // Remove leading and trailing whitespace
+      stdin = stdin.trim()
+
+      const program = yargsParser(stdin, this.yargsOptions)._[0]
+
+      // Check if function is built in
+      if (this.builtIn[program] !== undefined) {
+        await Promise.resolve(this.builtIn[program](stdin))
+
+        // The built in function must take care of all other steps
+        return
+      }
+
+      // Start common command tasks
+      this.execute(stdin)
     },
 
     // Add environment and instantly terminate

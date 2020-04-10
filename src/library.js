@@ -4,7 +4,7 @@ import VueCommand from './components/VueCommand'
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
   name,
   mixins,
-  inject: ['terminate'],
+  inject: ['terminate', 'emitExecute', 'setIsInProgress'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
@@ -25,7 +25,7 @@ export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandSt
 export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr', ...mixins) => ({
   name,
   mixins,
-  inject: ['terminate'],
+  inject: ['terminate', 'setIsInProgress', 'emitExecute'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
@@ -46,7 +46,7 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 export const createDummyStdout = (...mixins) => ({
   name: 'VueCommandDummyStdout',
   mixins,
-  inject: ['terminate'],
+  inject: ['terminate', 'setIsInProgress', 'emitExecute'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
