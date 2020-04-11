@@ -2,6 +2,7 @@
   <div v-if="environment.isExecuting">
     <textarea
       ref="nano"
+      rows="14"
       @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
@@ -21,10 +22,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div,
 textarea {
   display: block;
   width: 100%;
   height: 100%;
+  resize: none;
+  overflow: hidden;
 }
 </style>

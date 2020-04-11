@@ -22,6 +22,7 @@
         class="term-std">
         <div
           ref="term-cont"
+          :class="{ 'term-cont-fullscreen': local.isFullscreen }"
           class="term-cont">
           <div v-if="showIntro">
             {{ intro }}
@@ -30,7 +31,8 @@
           <div
             v-for="(stdout, index) in local.history"
             :key="index"
-            :class="{ fullscreen : (local.isFullscreen && index === progress - 1) }">
+            class="term-hist"
+            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === progress - 1) }">
             <stdout
               v-show="(!local.isFullscreen || index === progress - 1)"
               :component="stdout"
@@ -369,7 +371,7 @@ export default {
   }
 
   .term-std {
-    @extend .fullscreen;
+    @extend .term-hist-container-fullscreen;
   }
 
   .term-cont {
@@ -381,7 +383,7 @@ export default {
     margin-top: 10px;
   }
 
-  .fullscreen {
+  .term-hist-container-fullscreen {
     display: flex;
     flex-direction: column;
     flex: 1;

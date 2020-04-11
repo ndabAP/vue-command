@@ -149,8 +149,8 @@ body {
     }
 
     .term-std {
-      min-height: 300px;
-      max-height: 300px;
+      min-height: 291px;
+      max-height: 291px;
       overflow-y: scroll;
     }
   }
