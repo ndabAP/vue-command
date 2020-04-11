@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -54,7 +54,6 @@
     "serialize-javascript": "~2.1.1",
     "tar": ">=4.4.10",
     "vue": "^2.6.11",
-    "vue-command": "7.3.5",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.42.1"
   },

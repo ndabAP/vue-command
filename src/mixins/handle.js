@@ -1,6 +1,6 @@
 import yargsParser from 'yargs-parser'
 
-import { createStdout, createDummyStdout } from '../library'
+import { createStderr, createDummyStdout } from '../library'
 
 // @vue/component
 export default {
@@ -52,7 +52,7 @@ export default {
       } else {
         // No command found
         if (stdin !== '') {
-          component = createStdout(`${stdin}: ${this.notFound}`, true)
+          component = createStderr(`${stdin}: ${this.notFound}`, true)
         }
 
         component = this.setupComponent(component, this.local.history.length)
