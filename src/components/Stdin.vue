@@ -1,6 +1,6 @@
 <template>
   <div
-    class="stdin-container">
+    class="term-stdin-container">
     <span
       v-if="!hidePrompt"
       class="term-ps">
@@ -190,7 +190,7 @@ export default {
 @import "../scss/mixins";
 
 .vue-command {
-  .stdin-container {
+  .term-stdin-container {
     display: flex;
   }
 

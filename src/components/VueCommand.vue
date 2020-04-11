@@ -266,7 +266,7 @@ export default {
   },
 
   mounted () {
-    // Scroll to bottom if stdout mutates terminal height
+    // Scroll to bottom if Stdout mutates terminal height
     this.scroll.resizeObserver = new ResizeObserver(async event => {
       await this.$nextTick()
 
@@ -388,6 +388,10 @@ export default {
     flex-direction: column;
     flex: 1;
     height: 100%;
+  }
+
+  .term-stdout {
+    word-break: break-all;
   }
 }
 </style>

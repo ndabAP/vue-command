@@ -37,13 +37,20 @@ export default {
 
   data: () => ({
     builtIn: {
+      // Reverse current Stdin
       reverse: undefined
     },
 
     commands: {
+    // Navigate to home, self and back
       cd: undefined,
+
+      // Clear terminals history
       clear: undefined,
+
+      // Show help
       help: () => createStdout(`Available programms:<br><br>
+        &nbsp;cd<br>
         &nbsp;clear<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
@@ -55,23 +62,32 @@ export default {
         &nbsp;reverse text<br>
       `),
 
+      // Return simple text
       'hello-world': () => createStdout('Hello world'),
+
+      // Show a animation
       klieh: () => KliehParty,
+
+      // Simulate a loading animation
       loading: () => LoadingAnimation,
+
+      // Nano editor available in many shells
       nano: () => NanoEditor,
+
+      // Return a Chuck Norris joke
       norris: () => ChuckNorris,
+
+      // Return color for Pokemon Pikachu
       pokedex: ({ color, _ }) => {
+        if (color && _[1] === 'pikachu') {
+          return createStdout('yellow')
+        }
+
         // Return help since no match
-        let stdout = createStdout(`Usage: pokedex pokemon [option]<br><br>
+        return createStderr(`Usage: pokedex pokemon [option]<br><br>
 
           Example: pokedex pikachu --color
         `)
-
-        if (color && _[1] === 'pikachu') {
-          stdout = createStdout('yellow')
-        }
-
-        return stdout
       },
 
       pwd: () => createStdout('/home/neil')
@@ -84,7 +100,6 @@ export default {
   }),
 
   created () {
-    // Clear terminals history
     this.commands.clear = () => {
       this.history = []
       // Push dummy Stdout to show Stdin
@@ -111,7 +126,6 @@ export default {
       return createStderr(`cd: ${_[1]}: No such file or directory`)
     }
 
-    // Reverse current Stdin
     this.builtIn.reverse = stdin => {
       stdin = stdin.trim()
       // Get second argument
@@ -164,6 +178,15 @@ body {
   }
 
   .vue-command {
+    .term {
+      -webkit-border-bottom-left-radius: $border-radius;
+      -webkit-border-bottom-left-radius: $border-radius;
+      -moz-border-bottom-right-radius: $border-radius;
+      -moz-border-bottom-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
     .term-bar {
       -webkit-border-top-left-radius: $border-radius;
       -webkit-border-top-left-radius: $border-radius;
@@ -176,7 +199,7 @@ body {
     .term-std {
       min-height: 291px;
       max-height: 291px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
   }
 }
