@@ -1,7 +1,4 @@
-import flushPromises from 'flush-promises'
-
 import { ResizeObserver } from './polyfills'
-// import VueCommand from '../../src/library'
 import {
   getRandom,
   getMountedWrapper,
@@ -10,7 +7,7 @@ import {
   getCommands,
   getDefaultProps
 } from './test-utilities'
-import { createDummyStdout, createStdout } from '../../src/library'
+import { createStdout } from '../../src/library'
 
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
@@ -28,7 +25,7 @@ describe('VueCommand.vue', () => {
 
   it('has custom bar', () => {
     const wrapper = getMountedWrapper({ ...getDefaultProps() }, getEmptyCommands(), { bar: '<div class="foo-bar"></div>' })
-    
+
     expect(wrapper.contains('.foo-bar')).toBe(true)
   })
 
