@@ -26,6 +26,8 @@ const COLORS = [
 const INTERVAL_TIMEOUT = 40
 
 export default {
+  inject: ['terminate'],
+
   data: () => ({
     characters: 'KLIEH',
     index: 0,
@@ -38,10 +40,11 @@ export default {
     }, INTERVAL_TIMEOUT)
 
     window.addEventListener('keydown', event => {
+      // Ctrl and C simultaneously
       if (event.key === 'c' && event.getModifierState('Control')) {
         clearInterval(this.interval)
 
-        this.$_done()
+        this.terminate()
       }
     }, true)
   },

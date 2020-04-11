@@ -1,9 +1,10 @@
 <template>
   <div
     class="vue-command"
-    @keyup="mutatePointerHandler"
+    @keyup.38="mutatePointerHandler"
+    @keyup.40="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
-    @click="focusLastStdin">
+    @click="focus">
     <slot name="bar">
       <div
         v-if="!hideBar"
@@ -27,31 +28,29 @@
           </div>
 
           <div
-            v-for="(stdout, index) in history"
+            v-for="(stdout, index) in local.history"
             :key="index"
-            :class="{ fullscreen : (isFullscreen && index === progress - 1)}">
+            :class="{ fullscreen : (local.isFullscreen && index === progress - 1) }">
             <stdout
-              v-if="index !== 0"
-              v-show="(!isFullscreen || index === progress - 1)"
+              v-show="(!local.isFullscreen || index === progress - 1)"
               :component="stdout"
               class="term-stdout"/>
 
             <stdin
+              v-show="(index === 0 && !local.isFullscreen) || !(index === progress - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
+              :current="local.current"
               :hide-prompt="hidePrompt"
-              :is-fullscreen="isFullscreen"
-              :is-in-progress="isInProgress"
+              :is-fullscreen="local.isFullscreen"
+              :is-in-progress="local.isInProgress"
               :is-last="index === progress - 1"
-              :last-command="last"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
               :uid="_uid"
-              @cursor="setCursor"
-              @handle="handle"
-              @typing="setCurrent" />
+              @handle="handle"/>
           </div>
         </div>
       </div>
@@ -76,96 +75,145 @@ export default {
 
   mixins: [Autocomplete, Handle, History],
 
+  provide () {
+    return {
+      emitInput: this.emitInput,
+      emitExecute: this.emitExecute,
+      emitExecuted: this.emitExecuted,
+      setCurrent: this.setCurrent,
+      setCursor: this.setCursor,
+      setIsFullscreen: this.setIsFullscreen,
+      setIsInProgress: this.setIsInProgress
+    }
+  },
+
   props: {
     autocompletionResolver: {
       type: Function
     },
 
     builtIn: {
-      type: Object,
-      default: () => ({})
+      default: () => ({}),
+      type: Object
     },
 
     commands: {
-      type: Object,
-      required: true
+      required: true,
+      type: Object
+    },
+
+    current: {
+      default: '',
+      type: String
+    },
+
+    cursor: {
+      type: Number
+    },
+
+    // Non-empty executed commands
+    executed: {
+      required: true,
+      type: Set
     },
 
     helpTimeout: {
-      type: Number,
-      default: 4000
+      default: 4000,
+      type: Number
     },
 
     hideBar: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     hidePrompt: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     helpText: {
-      type: String,
-      default: 'Type help'
+      default: 'Type help',
+      type: String
+    },
+
+    // All executed commands
+    history: {
+      default: () => [],
+      type: Array
     },
 
     intro: {
-      type: String,
-      default: 'Fasten your seatbelts!'
+      default: 'Fasten your seatbelts!',
+      type: String
+    },
+
+    isFullscreen: {
+      type: Boolean
+    },
+
+    isInProgress: {
+      type: Boolean
     },
 
     notFound: {
-      type: String,
-      default: 'command not found'
+      default: 'command not found',
+      type: String
+    },
+
+    pointer: {
+      type: Number
     },
 
     prompt: {
-      type: String,
-      default: '~neil@moon:#'
+      default: '~neil@moon:#',
+      type: String
     },
 
     showHelp: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     showIntro: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     title: {
-      type: String,
-      default: 'neil@moon: ~'
+      default: 'neil@moon: ~',
+      type: String
     },
 
     whiteTheme: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     yargsOptions: {
-      type: Object,
-      default: () => ({})
+      default: () => ({}),
+      type: Object
     }
   },
 
   data: () => ({
     // Bus for communication
     bus: EventBus,
-    // Current input
-    current: '',
-    // Non-empty executed commands
-    executed: new Set(),
-    // Indicates if a command is in progress
-    isInProgress: false,
-    // run command in fullscreen
-    isFullscreen: false,
-    // Handle scroll behaviour
+
+    // A local copy to allow the absence of properties
+    local: {
+      // Current input
+      current: '',
+      // Run command in fullscreen
+      isFullscreen: false,
+      // Indicates if a command is in progress
+      isInProgress: false
+    },
+
+    // Detect scroll and resize events
     scroll: {
       eventListener: undefined,
+      // Determinates if scolled to bottom
       isBottom: true,
       resizeObserver: undefined
     }
@@ -175,21 +223,43 @@ export default {
     // Amount of executed commands
     progress: {
       get () {
-        return this.history.length
+        return this.local.history.length
       }
     }
   },
 
   watch: {
     current () {
+      this.setCurrent(this.current)
+    },
+
+    isFullscreen () {
+      this.setIsFullscreen(this.isFullscreen)
+    },
+
+    isInProgress () {
+      this.setIsInProgress(this.isInProgress)
+    },
+
+    'local.current' () {
       // Emit the current input as an event
-      this.$emit('input', this.current)
+      this.$emit('input', this.local.current)
+
+      // Update given property
+      this.$emit('update:current', this.local.current)
 
       // Make searching history work again
-      if (!this.current) {
+      if (!this.local.current) {
         this.setPointer(this.executed.size)
-        this.last = ''
       }
+    },
+
+    'local.isFullscreen' () {
+      this.$emit('update:isFullscreen', this.local.isFullscreen)
+    },
+
+    'local.isInProgress' () {
+      this.$emit('update:isInProgress', this.local.isInProgress)
     }
   },
 
@@ -220,25 +290,46 @@ export default {
     this.$refs['term-std'].removeEventListener('scroll', this.scroll.eventListener)
   },
 
+  created () {
+    this.setCurrent(this.current)
+    this.setHistory([...this.history])
+    this.setIsFullscreen(this.isFullscreen)
+    this.setIsInProgress(this.isInProgress)
+    this.setPointer(this.pointer)
+  },
+
   methods: {
-    setCurrent (current) {
-      this.current = current.trim()
+    emitInput (input) {
+      this.$emit('input', input)
     },
 
-    setIsInProgress (isInProgress) {
-      this.isInProgress = isInProgress
+    emitExecute () {
+      this.$emit('execute')
+    },
+
+    emitExecuted () {
+      this.$emit('executed')
+    },
+
+    setCurrent (current) {
+      this.local.current = current
     },
 
     setIsFullscreen (isFullscreen) {
-      this.isFullscreen = isFullscreen
+      this.local.isFullscreen = isFullscreen
     },
 
-    // Focus on last STDIN
-    focusLastStdin () {
-      const stdins = this.$refs.stdin
-      // Latest STDIN is latest history entry
-      const stdin = stdins[this.history.length - 1]
+    setIsInProgress (isInProgress) {
+      this.local.isInProgress = isInProgress
+    },
 
+    // Focus on last Stdin
+    focus () {
+      const stdins = this.$refs.stdin
+      // Latest Stdin is latest history entry
+      const stdin = stdins[this.local.history.length - 1]
+
+      // Call component method
       stdin.focus()
     }
   }
@@ -251,16 +342,6 @@ export default {
 .vue-command {
   overflow-y: auto;
   overflow-x: hidden;
-
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #ddd;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-  }
 
   .term {
     background: $background;

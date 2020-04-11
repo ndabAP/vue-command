@@ -1,6 +1,5 @@
 <template>
   <div
-    v-show="!isFullscreen && (!isLast || !isInProgress)"
     class="stdin-container">
     <span
       v-if="!hidePrompt"
@@ -10,15 +9,15 @@
     <span class="term-stdin">
       <input
         ref="input"
-        v-model="command"
+        v-model="stdin"
         :autofocus="isLast"
         :disabled="!isLast || isInProgress"
         :placeholder="placeholder"
         type="text"
         autocorrect="off"
         autocapitalize="none"
-        @click="emitCursor"
-        @keyup="emitCursor"
+        @click="setCursor($refs.input.selectionStart)"
+        @keyup="setCursor($refs.input.selectionStart)"
         @keyup.enter="handle"/>
     </span>
   </div>
@@ -26,10 +25,16 @@
 
 <script>
 export default {
+  inject: ['setCurrent', 'setCursor'],
+
   props: {
     bus: {
-      type: Object,
-      required: true
+      required: true,
+      type: Object
+    },
+
+    current: {
+      type: String
     },
 
     helpText: {
@@ -41,28 +46,23 @@ export default {
     },
 
     hidePrompt: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     isInProgress: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     isLast: {
-      type: Boolean,
-      required: true
-    },
-
-    lastCommand: {
-      type: String,
-      default: ''
+      required: true,
+      type: Boolean
     },
 
     isFullscreen: {
-      type: Boolean,
-      required: true
+      required: true,
+      type: Boolean
     },
 
     prompt: {
@@ -70,48 +70,59 @@ export default {
     },
 
     showHelp: {
-      type: Boolean,
-      default: false
+      default: false,
+      type: Boolean
     },
 
     uid: {
-      type: Number,
-      required: true
+      required: true,
+      type: Number
     }
   },
 
   data: () => ({
-    command: '',
     // For virtual path simulation
     localPrompt: '',
-    placeholder: ''
+    placeholder: '',
+    stdin: ''
   }),
 
   watch: {
-    lastCommand () {
-      if (this.lastCommand && this.isLast) {
-        this.setCommand(this.lastCommand)
+    async current () {
+      if (this.isLast) {
+        this.setStdin(this.current)
       }
-    },
 
-    command () {
-      // Emit current command as event
-      this.$emit('typing', this.command)
-      // Emit current cursor position
-      this.$emit('cursor', this.$refs.input.selectionStart)
+      await this.$nextTick()
+      // Set current cursor position
+      this.setCursor(this.$refs.input.selectionStart)
     },
 
     async isInProgress () {
       if (!this.isInProgress && this.isLast) {
         await this.$nextTick()
 
-        this.$refs.input.scrollIntoView()
-        this.$refs.input.focus()
+        this.scrollIntoView()
+        this.focus()
       }
 
       if (this.isInProgress && !this.isLast) {
-        this.$refs.input.blur()
+        this.blur()
       }
+    },
+
+    isLast (isLast, wasLast) {
+      if (wasLast && !isLast) {
+      // Allow components to get into focus
+        this.blur()
+      }
+    },
+
+    stdin () {
+      // Set current Stdin
+      this.setCurrent(this.stdin)
+      // Set current cursor position
+      this.setCursor(this.$refs.input.selectionStart)
     }
   },
 
@@ -125,59 +136,49 @@ export default {
 
   mounted () {
     // Scroll to current input and focus it
-    this.$refs.input.scrollIntoView()
-    this.$refs.input.focus()
+    this.scrollIntoView()
+    this.focus()
 
-    const onAutocomplete = ({ command, uid }) => {
+    this.bus.$on('autocomplete', ({ stdin, uid }) => {
       if (this.isLast && this.uid === uid) {
-        this.setCommand(command)
+        this.setStdin(stdin)
       }
-    }
-
-    const onSetCommand = command => {
-      if (this.isLast) {
-        this.setCommand(command)
-      }
-    }
-
-    this.bus.$on('autocomplete', onAutocomplete)
-    this.bus.$on('setCommand', onSetCommand)
+    })
   },
 
   methods: {
     // Handle current command
     handle () {
-      // Wait for other commands to finish
-      if (this.isInProgress) {
-        return
-      }
-
       // Persist the current prompt
       this.setLocalPrompt(this.prompt)
-      // Request to handle the current command
-      this.$emit('handle', this.command)
+      // Request to handle the current Stdin
+      this.$emit('handle', this.stdin)
+      // Hide the current placeholder
       this.setPlaceholder('')
-    },
-
-    // Emits the current cursor position
-    emitCursor () {
-      this.$emit('cursor', this.$refs.input.selectionStart)
     },
 
     setPlaceholder (placeholder) {
       this.placeholder = placeholder
     },
 
-    setCommand (command) {
-      this.command = command
-    },
-
     setLocalPrompt (localPrompt) {
       this.localPrompt = localPrompt
     },
 
+    setStdin (stdin) {
+      this.stdin = stdin
+    },
+
+    blur () {
+      this.$refs.input.blur()
+    },
+
     focus () {
       this.$refs.input.focus()
+    },
+
+    scrollIntoView () {
+      this.$refs.input.scrollIntoView()
     }
   }
 }

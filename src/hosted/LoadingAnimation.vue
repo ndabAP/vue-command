@@ -1,25 +1,29 @@
 <template>
-  <span v-if="$_arguments.help">
+  <span v-if="context.parsed.help">
     Options: <br>
-    --timeout (default: 50)<br>
-    --amount (default: 10)
+    &nbsp;--timeout (default: 50)<br>
+    &nbsp;--amount (default: 10)
   </span>
   <span v-else>{{ "#".repeat(index) }}</span>
 </template>
 
 <script>
 export default {
+  inject: ['terminate'],
+
   data: () => ({
     index: 0
   }),
 
   mounted () {
-    if (this.$_arguments.help) {
-      return this.$_done()
+    if (this.context.parsed.help) {
+      this.terminate()
+
+      return
     }
 
-    const timeout = this.$_arguments.timeout || 50
-    const amount = this.$_arguments.amount || 10
+    const timeout = this.context.parsed.timeout || 50
+    const amount = this.context.parsed.amount || 10
 
     const load = () =>
       setTimeout(() => {
@@ -27,8 +31,7 @@ export default {
         if (this.index < amount) {
           load()
         } else {
-          // Provided by vue-command, marks the process as done and allows the user to enter a new command
-          this.$_done()
+          this.terminate()
         }
       }, timeout)
 

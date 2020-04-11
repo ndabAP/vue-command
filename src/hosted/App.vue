@@ -4,10 +4,13 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
-      :help-timeout="1250"
+      :built-in="builtIn"
+      :current.sync="current"
       :commands="commands"
-      show-help>
-    </vue-command>
+      :executed.sync="executed"
+      :history.sync="history"
+      :help-timeout="1250"
+      show-help/>
     <pre>
       <code>
 $ npm i --save vue-command
@@ -17,10 +20,12 @@ $ npm i --save vue-command
 </template>
 
 <script>
+import ChuckNorris from './ChuckNorris'
+import KliehParty from './KliehParty'
+import LoadingAnimation from './LoadingAnimation'
+import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import loading from './LoadingAnimation'
-import nano from './NanoEditor'
-import klieh from './KliehParty'
+import { createStdout, createDummyStdout } from '../library'
 
 export default {
   components: {
@@ -28,32 +33,69 @@ export default {
   },
 
   data: () => ({
-    commands: {
-      help: () => `Available programms:<br><br>
+    builtIn: {
+      reverse: undefined
+    },
 
+    commands: {
+      clear: undefined,
+      help: () => createStdout(`Available programms:<br><br>
+        &nbsp;clear<br>
+        &nbsp;hello-world<br>
         &nbsp;klieh<br>
         &nbsp;loading [--timeout n] [--amount n]<br>
         &nbsp;nano<br>
+        &nbsp;norris<br>
         &nbsp;pokedex pokemon --color<br>
-      `,
+        &nbsp;pwd<br>
+        &nbsp;reverse text<br>
+      `),
 
+      'hello-world': () => createStdout('Hello world'),
+      klieh: () => KliehParty,
+      loading: () => LoadingAnimation,
+      nano: () => NanoEditor,
+      norris: () => ChuckNorris,
       pokedex: ({ color, _ }) => {
-        if (color && _[1] === 'pikachu') {
-          return 'yellow'
-        }
-
         // Return help since no match
-        return `Usage: pokedex pokemon [option]<br><br>
+        let stdout = createStdout(`Usage: pokedex pokemon [option]<br><br>
 
           Example: pokedex pikachu --color
-        `
+        `)
+
+        if (color && _[1] === 'pikachu') {
+          stdout = createStdout('yellow')
+        }
+
+        return stdout
       },
 
-      klieh: () => klieh,
-      loading: () => loading,
-      nano: () => nano
+      pwd: () => createStdout('/home/neil')
+    },
+
+    current: '',
+    executed: new Set(),
+    history: []
+  }),
+
+  created () {
+    // Clear terminals history
+    this.commands.clear = () => {
+      this.history = []
+      // Push dummy Stdout to show Stdin
+      return createDummyStdout()
     }
-  })
+
+    // Reverse current Stdin
+    this.builtIn.reverse = stdin => {
+      stdin = stdin.trim()
+      // Get second argument
+      const argument = stdin.split(' ')[1]
+
+      // Reverse argument
+      this.current = argument.split('').reverse().join('')
+    }
+  }
 }
 </script>
 

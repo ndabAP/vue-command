@@ -1,118 +1,115 @@
 import yargsParser from 'yargs-parser'
 
+import { createStderr, createDummyStdout } from '../library'
+
 // @vue/component
 export default {
+  provide () {
+    return {
+      terminate: this.terminate
+    }
+  },
+
   methods: {
     // Handles the command
     async handle (stdin) {
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
-      this.$emit('execute', stdin)
-
-      // Parse the command and try to get the program
       const program = yargsParser(stdin, this.yargsOptions)._[0]
 
-      if (!program) {
-        // Empty command
-        this.history.push(undefined)
-      } else {
-        // Remove duplicate commands for a clear history
-        this.executed.delete(stdin)
-        this.executed.add(stdin)
+      // Check if function is built in
+      if (this.builtIn[program] !== undefined) {
+        await Promise.resolve(this.builtIn[program](stdin))
 
-        const builtIn = this.builtIn[program]
-        const command = this.commands[program]
-
-        const builtInOrCommand = builtIn || command
-
-        let component
-        // Check if command has been found
-        if (typeof builtInOrCommand === 'function') {
-          this.history.push(undefined)
-          const history = this.history.length
-
-          this.setIsInProgress(true)
-
-          const parsed = yargsParser(stdin, this.yargsOptions)
-          const stdout = await Promise.resolve(
-            builtInOrCommand(parsed, typeof builtin === 'function' ? this.$data : undefined)
-          )
-
-          if (stdout === '') {
-            // If result is empty, return empty string
-            component = getComponent('')
-          } else if (typeof stdout === 'string') {
-            // Result is non-empty string
-            component = getComponent(stdout)
-          } else {
-            // Result is component
-            component = stdout
-          }
-
-          // Check if given component has computed properties
-          if (!hasOwnProperty.call(component, 'computed')) {
-            component.computed = {}
-          }
-          component.computed.$_arguments = () => parsed
-          component.computed.$_isRunning = () => this.isInProgress && this.history.length === history
-
-          this.history.pop()
-        } else {
-          // No command found
-          component = getComponent(`${stdin}: ${this.notFound}`, true)
-        }
-
-        // Check if given component has mixins
-        if (!hasOwnProperty.call(component, 'mixins')) {
-          component.mixins = []
-        }
-        component.mixins.push({
-          // Add helper methods
-          methods: {
-            $_done: () => {
-              this.setPointer(this.executed.size)
-              this.setIsInProgress(false)
-              this.setIsFullscreen(false)
-
-              this.$emit('executed', stdin)
-            },
-
-            $_setIsFullscreen: isFullscreen => {
-              this.isFullscreen = isFullscreen
-            },
-
-            $_executeCommand: async command => {
-              if (!this.isInProgress) {
-                this.bus.$emit('setCommand', command)
-
-                await this.$nextTick()
-
-                this.handle(command)
-              }
-            }
-          }
-        })
-
-        this.history.push(component)
+        // The built in function must take care of all other steps
+        return
       }
 
+      // Execute the regular command
+      this.execute(stdin)
+    },
+
+    // Executes a regular command
+    async execute (stdin) {
+      const program = yargsParser(stdin, this.yargsOptions)._[0]
+      // Create empty component in case no program has been found
+      let component = createDummyStdout()
+      // Check if command has been found
+      if (typeof this.commands[program] === 'function') {
+        // Parse the command and try to get the program
+        const parsed = yargsParser(stdin, this.yargsOptions)
+
+        component = await Promise.resolve(this.commands[program](parsed))
+        component = this.setupComponent(component, this.local.history.length, parsed)
+
+        // Remove duplicate commands to push to latest entry
+        let executed = new Set(this.executed)
+        executed.delete(stdin)
+        executed.add(stdin)
+        // Mutate property
+        this.$emit('update:executed', executed)
+      } else {
+        // No command found
+        if (stdin !== '') {
+          component = createStderr(`${stdin}: ${this.notFound}`, true)
+        }
+
+        component = this.setupComponent(component, this.local.history.length)
+      }
+
+      // Point history to new command
+      this.setPointer(this.executed.size)
+
+      let history = [...this.local.history]
+      history.push(component)
+
+      // Emit command executing started
+      this.emitExecute()
+      // Tell terminal there is a command in progress
+      this.setIsInProgress(true)
+
+      this.setHistory(history)
+      // Update the history property
+      this.$emit('update:history', [...history])
+    },
+
+    // Add environment and instantly terminate
+    setupComponent (component, history = 0, parsed = {}) {
+      // Prevent to work with same reference
+      component = { ...component }
+
+      if (!hasOwnProperty.call(component, 'computed')) {
+        component.computed = {}
+      }
+      component.computed = {
+        environment: () => ({
+          isExecuting: this.local.isInProgress && (this.local.history.length - 1 === history),
+          isFullscreen: this.local.isFullscreen,
+          isInProgress: this.local.isInProgress
+        }),
+
+        context: () => ({
+          cursor: this.local.cursor,
+          parsed
+        }),
+
+        ...component.computed
+      }
+
+      return component
+    },
+
+    // Executes common final tasks after command has been finished
+    terminate () {
+      // Exit fullscreen if necessary
+      this.setIsFullscreen(false)
+      // Set new Stdin to empty
       this.setCurrent('')
+      // Indicate end of command
+      this.$emit('executed')
+      // Allow new Stdin
+      this.setIsInProgress(false)
     }
   }
 }
-
-// Returns a component containing a span element with given inner content
-const getComponent = (content, isEscapeHtml) => ({
-  render: h => {
-    if (isEscapeHtml) {
-      return h('span', {}, content)
-    }
-
-    return h('span', { domProps: { innerHTML: content } })
-  },
-
-  mounted () {
-    this.$_done()
-  }
-})
