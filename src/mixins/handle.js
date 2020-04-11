@@ -4,7 +4,32 @@ import { createStdout, createDummyStdout } from '../library'
 
 // @vue/component
 export default {
+  provide () {
+    return {
+      terminate: this.terminate
+    }
+  },
+
   methods: {
+    // Handles the command
+    async handle (stdin) {
+      // Remove leading and trailing whitespace
+      stdin = stdin.trim()
+
+      const program = yargsParser(stdin, this.yargsOptions)._[0]
+
+      // Check if function is built in
+      if (this.builtIn[program] !== undefined) {
+        await Promise.resolve(this.builtIn[program](stdin))
+
+        // The built in function must take care of all other steps
+        return
+      }
+
+      // Execute the regular command
+      this.execute(stdin)
+    },
+
     // Executes a regular command
     async execute (stdin) {
       const program = yargsParser(stdin, this.yargsOptions)._[0]
@@ -33,6 +58,7 @@ export default {
         component = this.setupComponent(component, this.local.history.length)
       }
 
+      // Point history to new command
       this.setPointer(this.executed.size)
 
       let history = [...this.local.history]
@@ -44,25 +70,8 @@ export default {
       this.setIsInProgress(true)
 
       this.setHistory(history)
-    },
-
-    // Handles the command
-    async handle (stdin) {
-      // Remove leading and trailing whitespace
-      stdin = stdin.trim()
-
-      const program = yargsParser(stdin, this.yargsOptions)._[0]
-
-      // Check if function is built in
-      if (this.builtIn[program] !== undefined) {
-        await Promise.resolve(this.builtIn[program](stdin))
-
-        // The built in function must take care of all other steps
-        return
-      }
-
-      // Start common command tasks
-      this.execute(stdin)
+      // Update the history property
+      this.$emit('update:history', [...history])
     },
 
     // Add environment and instantly terminate
@@ -89,6 +98,18 @@ export default {
       }
 
       return component
+    },
+
+    // Executes common final tasks after command has been finished
+    terminate () {
+      // Exit fullscreen if necessary
+      this.setIsFullscreen(false)
+      // Set new Stdin to empty
+      this.setCurrent('')
+      // Indicate end of command
+      this.$emit('executed')
+      // Allow new Stdin
+      this.setIsInProgress(false)
     }
   }
 }

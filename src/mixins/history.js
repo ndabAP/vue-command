@@ -25,6 +25,10 @@ export default {
 
     pointer () {
       this.setPointer(this.pointer)
+    },
+
+    'local.pointer' () {
+      this.$emit('update:pointer', this.local.pointer)
     }
   },
 

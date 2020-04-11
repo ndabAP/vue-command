@@ -5,7 +5,7 @@
 
     <vue-command
       :built-in="builtIn"
-      :current="current"
+      :current.sync="current"
       :commands="commands"
       :executed.sync="executed"
       :history.sync="history"
@@ -77,6 +77,7 @@ export default {
   }),
 
   created () {
+    // Clear terminals history
     this.commands.clear = () => {
       this.history = []
       // Push dummy Stdout to show Stdin
@@ -86,6 +87,7 @@ export default {
     // Reverse current Stdin
     this.builtIn.reverse = stdin => {
       stdin = stdin.trim()
+      // Get second argument
       const argument = stdin.split(' ')[1]
 
       // Reverse argument

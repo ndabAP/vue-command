@@ -9,7 +9,7 @@
     <span class="term-stdin">
       <input
         ref="input"
-        v-model="command"
+        v-model="stdin"
         :autofocus="isLast"
         :disabled="!isLast || isInProgress"
         :placeholder="placeholder"
@@ -81,23 +81,20 @@ export default {
   },
 
   data: () => ({
-    command: '',
     // For virtual path simulation
     localPrompt: '',
-    placeholder: ''
+    placeholder: '',
+    stdin: ''
   }),
 
   watch: {
-    current () {
+    async current () {
       if (this.isLast) {
-        this.setCommand(this.current)
+        this.setStdin(this.current)
       }
-    },
 
-    command () {
-      // Emit current command as event
-      this.setCurrent(this.command)
-      // Emit current cursor position
+      await this.$nextTick()
+      // Set current cursor position
       this.setCursor(this.$refs.input.selectionStart)
     },
 
@@ -119,6 +116,13 @@ export default {
       // Allow components to get into focus
         this.blur()
       }
+    },
+
+    stdin () {
+      // Set current Stdin
+      this.setCurrent(this.stdin)
+      // Set current cursor position
+      this.setCursor(this.$refs.input.selectionStart)
     }
   },
 
@@ -135,9 +139,9 @@ export default {
     this.scrollIntoView()
     this.focus()
 
-    this.bus.$on('autocomplete', ({ command, uid }) => {
+    this.bus.$on('autocomplete', ({ stdin, uid }) => {
       if (this.isLast && this.uid === uid) {
-        this.setCommand(command)
+        this.setStdin(stdin)
       }
     })
   },
@@ -147,8 +151,8 @@ export default {
     handle () {
       // Persist the current prompt
       this.setLocalPrompt(this.prompt)
-      // Request to handle the current command
-      this.$emit('handle', this.command)
+      // Request to handle the current Stdin
+      this.$emit('handle', this.stdin)
       // Hide the current placeholder
       this.setPlaceholder('')
     },
@@ -157,12 +161,12 @@ export default {
       this.placeholder = placeholder
     },
 
-    setCommand (command) {
-      this.command = command
-    },
-
     setLocalPrompt (localPrompt) {
       this.localPrompt = localPrompt
+    },
+
+    setStdin (stdin) {
+      this.stdin = stdin
     },
 
     blur () {

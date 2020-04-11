@@ -83,9 +83,9 @@ describe('VueCommand.vue', () => {
     enterAndTrigger(wrapper, command)
 
     history.push(createStdout(`${command}: ${notFound}`, true))
-    await flushPromises()
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: ${notFound}`)
+    expect(wrapper.findAll('.term-stdout').at(1).text()).toBe(`${command}: ${notFound}`)
   })
 
   it('doesn\'t find the command', async () => {
@@ -96,9 +96,9 @@ describe('VueCommand.vue', () => {
     enterAndTrigger(wrapper, command)
 
     history.push(createStdout(`${command}: command not found`, true))
-    await flushPromises()
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(`${command}: command not found`)
+    expect(wrapper.findAll('.term-stdout').at(1).text()).toBe(`${command}: command not found`)
   })
 
   it('finds the command', async () => {
@@ -113,7 +113,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.findAll('.term-stdout').at(1).text()).toBe(command)
   })
 
   it('finds the asynchronous command', async () => {
@@ -130,7 +130,7 @@ describe('VueCommand.vue', () => {
     await flushPromises()
     await wrapper.vm.$nextTick()
     
-    expect(wrapper.find('.term-stdout').text()).toBe(command)
+    expect(wrapper.findAll('.term-stdout').at(1).text()).toBe(command)
   })
 
   it('finds the previous command', async () => {
@@ -144,11 +144,25 @@ describe('VueCommand.vue', () => {
     expect(wrapper.find('input').element.value).toBe(command)
   })
 
+  it('finds the built-in command', async () => {
+    const command = getRandom()
+    let history = [createDummyStdout()]
+    const builtIn = jest.fn()
+    const wrapper = getMountedWrapper({ builtIn: { [command]: builtIn }, executed: new Set(), history }, getEmptyCommands())
+
+    enterAndTrigger(wrapper, command)
+
+    await wrapper.vm.$nextTick()
+
+    expect(builtIn.mock.calls[0][0]).toBe(command)
+  })
+
   it('calls the autocompletion resolver with arguments', async () => {
     const command = getRandom()
     const autocompletionResolver = jest.fn(() => command)
     const wrapper = getMountedWrapper({ autocompletionResolver, ...getDefaultProps() }, getCommands(command))
 
+    await wrapper.vm.$nextTick()
     wrapper.find('input').setValue(command)
     await wrapper.vm.$nextTick()
 

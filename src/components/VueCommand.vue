@@ -1,8 +1,8 @@
 <template>
   <div
     class="vue-command"
-    @keydown.38="mutatePointerHandler"
-    @keydown.40="mutatePointerHandler"
+    @keyup.38="mutatePointerHandler"
+    @keyup.40="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
     @click="focus">
     <slot name="bar">
@@ -82,8 +82,7 @@ export default {
       emitExecuted: this.emitExecuted,
       setCurrent: this.setCurrent,
       setIsFullscreen: this.setIsFullscreen,
-      setIsInProgress: this.setIsInProgress,
-      terminate: this.terminate
+      setIsInProgress: this.setIsInProgress
     }
   },
 
@@ -241,10 +240,21 @@ export default {
       // Emit the current input as an event
       this.$emit('input', this.local.current)
 
+      // Update given property
+      this.$emit('update:current', this.local.current)
+
       // Make searching history work again
       if (!this.local.current) {
         this.setPointer(this.executed.size)
       }
+    },
+
+    'local.isFullscreen' () {
+      this.$emit('update:isFullscreen', this.local.isFullscreen)
+    },
+
+    'local.isInProgress' () {
+      this.$emit('update:isInProgress', this.local.isInProgress)
     }
   },
 
@@ -316,20 +326,6 @@ export default {
 
       // Call component method
       stdin.focus()
-    },
-
-    // Executes common final tasks after command has been finished
-    terminate () {
-      // Point history to new command
-      this.setPointer(this.executed.size)
-      // Exit fullscreen if necessary
-      this.setIsFullscreen(false)
-      // Set new Stdin to empty
-      this.setCurrent('')
-      // Indicate end of command
-      this.$emit('executed')
-      // Allow new Stdin
-      this.setIsInProgress(false)
     }
   }
 }
