@@ -40,10 +40,12 @@ export default {
     // If there is no entry push dummy Stdout to show Stdin
     if (history.length === 0) {
       history.push(createDummyStdout())
-    }
 
-    // Update the history property
-    this.$emit('update:history', [...history])
+      this.setHistory([...history])
+    } else {
+      // Update the history property
+      this.$emit('update:history', [...history])
+    }
   },
 
   methods: {

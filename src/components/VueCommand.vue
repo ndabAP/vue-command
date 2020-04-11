@@ -271,7 +271,6 @@ export default {
 
   created () {
     this.setCurrent(this.current)
-    this.setHistory([...this.history])
     this.setIsFullscreen(this.isFullscreen)
     this.setIsInProgress(this.isInProgress)
     this.setPointer(this.pointer)
