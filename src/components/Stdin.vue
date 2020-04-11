@@ -4,7 +4,7 @@
     <span
       v-if="!hidePrompt"
       class="term-ps">
-      {{ prompt }}
+      {{ localPrompt }}
     </span>
     <span class="term-stdin">
       <input
@@ -132,6 +132,8 @@ export default {
         this.setPlaceholder(this.helpText)
       }
     }, this.helpTimeout)
+
+    this.localPrompt = this.prompt
   },
 
   mounted () {

@@ -10,6 +10,7 @@
       :executed.sync="executed"
       :history.sync="history"
       :help-timeout="1250"
+      :prompt="prompt"
       show-help/>
     <pre>
       <code>
@@ -25,7 +26,9 @@ import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout, createDummyStdout } from '../library'
+import { createStdout, createStderr, createDummyStdout } from '../library'
+
+const PROMPT = '~neil@moon:#'
 
 export default {
   components: {
@@ -38,6 +41,7 @@ export default {
     },
 
     commands: {
+      cd: undefined,
       clear: undefined,
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;clear<br>
@@ -75,7 +79,8 @@ export default {
 
     current: '',
     executed: new Set(),
-    history: []
+    history: [],
+    prompt: '~neil@moon:#'
   }),
 
   created () {
@@ -84,6 +89,26 @@ export default {
       this.history = []
       // Push dummy Stdout to show Stdin
       return createDummyStdout()
+    }
+
+    this.commands.cd = ({ _ }) => {
+      if (_[1] === 'home' && this.prompt === PROMPT) {
+        this.prompt = `${PROMPT}/home`
+
+        return createDummyStdout()
+      }
+
+      if (_[1] === '../' && this.prompt === `${PROMPT}/home`) {
+        this.prompt = PROMPT
+
+        return createDummyStdout()
+      }
+
+      if (_[1] === '.') {
+        return createDummyStdout()
+      }
+
+      return createStderr(`cd: ${_[1]}: No such file or directory`)
     }
 
     // Reverse current Stdin
