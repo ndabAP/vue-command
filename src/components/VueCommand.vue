@@ -35,21 +35,21 @@
             v-for="(stdout, index) in local.history"
             :key="index"
             class="term-hist"
-            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === progress - 1) }">
+            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }">
             <stdout
-              v-show="(!local.isFullscreen || index === progress - 1)"
+              v-show="(!local.isFullscreen || index === local.history.length - 1)"
               :component="stdout"
               class="term-stdout"/>
 
             <stdin
-              v-show="(index === 0 && !local.isFullscreen) || !(index === progress - 1 && local.isInProgress) && !local.isFullscreen"
+              v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
               :current="local.current"
               :hide-prompt="hidePrompt"
               :is-fullscreen="local.isFullscreen"
               :is-in-progress="local.isInProgress"
-              :is-last="index === progress - 1"
+              :is-last="index === local.history.length - 1"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
@@ -222,15 +222,6 @@ export default {
       resizeObserver: undefined
     }
   }),
-
-  computed: {
-    // Amount of executed commands
-    progress: {
-      get () {
-        return this.local.history.length
-      }
-    }
-  },
 
   watch: {
     current () {

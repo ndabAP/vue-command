@@ -19,6 +19,7 @@ export default {
   }),
 
   watch: {
+    // Creates a new copy
     history () {
       this.setHistory([...this.history])
     },

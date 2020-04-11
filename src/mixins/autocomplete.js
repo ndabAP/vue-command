@@ -14,6 +14,10 @@ export default {
   }),
 
   watch: {
+    cursor () {
+      this.local.cursor = this.cursor
+    },
+
     'local.cursor' () {
       this.$emit('update:cursor', this.local.cursor)
     }
