@@ -83,7 +83,6 @@ export default {
 
   provide () {
     return {
-      emitInput: this.emitInput,
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       emitInput: this.emitInput,

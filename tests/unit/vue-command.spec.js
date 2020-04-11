@@ -2,13 +2,13 @@ import flushPromises from 'flush-promises'
 
 import { ResizeObserver } from './polyfills'
 // import VueCommand from '../../src/library'
-import { 
-  getRandom, 
-  getMountedWrapper, 
-  enterAndTrigger, 
-  getEmptyCommands, 
-  getCommands, 
-  getDefaultProps 
+import {
+  getRandom,
+  getMountedWrapper,
+  enterAndTrigger,
+  getEmptyCommands,
+  getCommands,
+  getDefaultProps
 } from './test-utilities'
 import { createDummyStdout, createStdout } from '../../src/library'
 
@@ -129,7 +129,7 @@ describe('VueCommand.vue', () => {
 
     await flushPromises()
     await wrapper.vm.$nextTick()
-    
+
     expect(wrapper.findAll('.term-stdout').at(1).text()).toBe(command)
   })
 

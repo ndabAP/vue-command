@@ -13,14 +13,14 @@ export const getDefaultProps = () => ({ executed: new Set(), history: [createDum
 
 export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
   propsData: { commands, ...props },
-  slots,
+  slots
 })
 
 export const getChildMountedWrapper = (
   commands,
-  props, 
+  props
 ) => mount(VueCommandWrapper, {
-  propsData: { commands, ...props}
+  propsData: { commands, ...props }
 })
 
 export const enterAndTrigger = (wrapper, value, event = 'keyup.enter') => {
