@@ -186,7 +186,7 @@
 
   Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. 
   
-  The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`.
+  The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place.
 
   To fully simulate a full command circle a built-in command has to follow these steps:
 
