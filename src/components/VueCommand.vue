@@ -68,6 +68,7 @@ import Stdout from './Stdout'
 import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
+import UI from '../mixins/ui'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -75,7 +76,7 @@ const EventBus = new Vue()
 export default {
   components: { Stdin, Stdout },
 
-  mixins: [Autocomplete, Handle, History],
+  mixins: [Autocomplete, Handle, History, UI],
 
   provide () {
     return {
@@ -83,9 +84,7 @@ export default {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       setCurrent: this.setCurrent,
-      setCursor: this.setCursor,
-      setIsFullscreen: this.setIsFullscreen,
-      setIsInProgress: this.setIsInProgress
+      setCursor: this.setCursor
     }
   },
 
@@ -205,11 +204,7 @@ export default {
     // A local copy to allow the absence of properties
     local: {
       // Current input
-      current: '',
-      // Run command in fullscreen
-      isFullscreen: false,
-      // Indicates if a command is in progress
-      isInProgress: false
+      current: ''
     },
 
     // Detect scroll and resize events
@@ -235,14 +230,6 @@ export default {
       this.setCurrent(this.current)
     },
 
-    isFullscreen () {
-      this.setIsFullscreen(this.isFullscreen)
-    },
-
-    isInProgress () {
-      this.setIsInProgress(this.isInProgress)
-    },
-
     'local.current' () {
       // Emit the current input as an event
       this.$emit('input', this.local.current)
@@ -254,14 +241,6 @@ export default {
       if (!this.local.current) {
         this.setPointer(this.executed.size)
       }
-    },
-
-    'local.isFullscreen' () {
-      this.$emit('update:isFullscreen', this.local.isFullscreen)
-    },
-
-    'local.isInProgress' () {
-      this.$emit('update:isInProgress', this.local.isInProgress)
     }
   },
 
@@ -315,14 +294,6 @@ export default {
 
     setCurrent (current) {
       this.local.current = current
-    },
-
-    setIsFullscreen (isFullscreen) {
-      this.local.isFullscreen = isFullscreen
-    },
-
-    setIsInProgress (isInProgress) {
-      this.local.isInProgress = isInProgress
     },
 
     // Focus on last Stdin

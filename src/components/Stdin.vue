@@ -140,12 +140,6 @@ export default {
     // Scroll to current input and focus it
     this.scrollIntoView()
     this.focus()
-
-    this.bus.$on('autocomplete', ({ stdin, uid }) => {
-      if (this.isLast && this.uid === uid) {
-        this.setStdin(stdin)
-      }
-    })
   },
 
   methods: {
