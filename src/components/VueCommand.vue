@@ -1,9 +1,10 @@
 <template>
   <div
+    ref="vue-command"
     class="vue-command"
     @keyup.38.prevent="mutatePointerHandler"
     @keyup.40.prevent="mutatePointerHandler"
-    @keydown.tab.prevent="autocomplete"
+    @keyup.tab.prevent="autocomplete"
     @click="focus">
 
     <slot name="bar">
@@ -85,12 +86,14 @@ export default {
       emitInput: this.emitInput,
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
+      emitInput: this.emitInput,
       setCurrent: this.setCurrent
     }
   },
 
   props: {
     autocompletionResolver: {
+      default: undefined,
       type: Function
     },
 
@@ -110,6 +113,7 @@ export default {
     },
 
     cursor: {
+      default: 0,
       type: Number
     },
 
@@ -151,10 +155,12 @@ export default {
     },
 
     isFullscreen: {
+      default: false,
       type: Boolean
     },
 
     isInProgress: {
+      default: false,
       type: Boolean
     },
 
@@ -164,6 +170,7 @@ export default {
     },
 
     pointer: {
+      default: 0,
       type: Number
     },
 

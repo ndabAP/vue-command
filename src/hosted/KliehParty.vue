@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { C_LOWER_KEY, CONTROL_KEY } from '../constants/keys'
+
 const COLORS = [
   '#FF0000',
   '#FF9900',
@@ -41,7 +43,8 @@ export default {
 
     window.addEventListener('keydown', event => {
       // Ctrl and C simultaneously
-      if (event.key === 'c' && event.getModifierState('Control')) {
+      if (event.key === C_LOWER_KEY && event.getModifierState(CONTROL_KEY)) {
+        // Stop animation
         clearInterval(this.interval)
 
         this.terminate()
@@ -50,6 +53,7 @@ export default {
   },
 
   methods: {
+    // Returns color by given index
     color (index) {
       index += this.index
       const offset = Math.floor(index / COLORS.length) * COLORS.length

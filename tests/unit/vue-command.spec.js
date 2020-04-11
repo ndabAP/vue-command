@@ -166,7 +166,7 @@ describe('VueCommand.vue', () => {
     wrapper.find('input').setValue(command)
     await wrapper.vm.$nextTick()
 
-    wrapper.find('input').trigger('keydown.tab.prevent')
+    wrapper.find('input').trigger('keyup.tab.prevent')
     await wrapper.vm.$nextTick()
 
     expect(autocompletionResolver.mock.calls[0][0]).toBe(command)
