@@ -87,7 +87,9 @@
 
   ## Properties
 
-  There are two types of commands: Built-in and regular commands. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
+  There are two types of commands: Built-in and regular commands. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. 
+  
+  Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
 
 | Property                  | Type       | Default                  | Required | Sync | Description                                                                                               |
 |---------------------------|------------|--------------------------|----------|------|-----------------------------------------------------------------------------------------------------------|
@@ -116,7 +118,7 @@
 
   ### Commands
 
-  `commands` is an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
+  `commands` must be an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
 
   | Function                                                                                       | Description                                                                     |
   |------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
@@ -144,7 +146,13 @@
   | `setPointer(pointer: Number)`            | Set command history pointer                                 |
   | `terminate`                              | Executes common final tasks after command has been finished |
 
-  In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties (note that built-in commands have to take care about the terminals state):
+  Functions can be injected into your component by name:
+
+  ```js
+  inject: ['setIsFullscreen', 'setIsInProgress', 'terminate']
+  ```
+
+  In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties (note that built-in commands have to take care by theirselves about the terminals state):
 
   | Property                | Description                                        |
   |-------------------------|----------------------------------------------------|
@@ -161,7 +169,9 @@
 
   ### Built-in
 
-  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`.
+  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. 
+  
+  The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`.
 
   To fully simulate a full command circle a built-in command has to follow these steps:
 
