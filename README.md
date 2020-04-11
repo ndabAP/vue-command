@@ -21,7 +21,7 @@
 
   Let's assume we want to build the Nano editor available in many shells. 
   
-  We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>C</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
+  We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>X</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
   ```vue
   <template>
@@ -89,29 +89,30 @@
 
   There are two types of commands: Built-in and regular commands. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
 
-    | Property                  | Type       | Default                  | Required | Sync | Description                                                                                               |
-  |---------------------------|------------|--------------------------|----------|------|-----------------------------------------------------------------------------------------------------------|
-  | `autocompletion-resolver` | `Function` | `null`                   | No       | No   | Gets the current input as first and cursor position as the second argument. Must return the whole command |
-  | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
-  | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
-  | `current`                 | `String`   | `''`                     | No       | Yes  | Current `Stdin`                                                                                           |
-  | `executed`                | `Set`      |                          | Yes      | Yes  | Executed programs                                                                                         |
-  | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
-  | `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
-  | `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                             |
-  | `hide-prompt`             | `Boolean`  | `false`                  | No       | No   | Hides the prompt                                                                                          |
-  | `history`                 | `Array`    | `[]`                     | No       | No   | Executed commands                                                                                         |
-  | `intro`                   | `String`   | `Fasten your seatbelts!` | No       | No   | Sets the intro                                                                                            |
-  | `isFullscreen`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                                         |
-  | `isInProgress`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                                         |
-  | `not-found`               | `String`   | `not found`              | No       | No   | Sets the command not found text                                                                           |
-  | `pointer`                 | `Number`   | `0`                      | No       | Yes  | Sets the command pointer                                                                                  |
-  | `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                                           |
-  | `show-help`               | `Boolean`  | `false`                  | No       | No   | Shows the placeholder                                                                                     |
-  | `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                                           |
-  | `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                                            |
-  | `white-theme`             | `Boolean`  | `false`                  | No       | No   | Enables the white theme                                                                                   |
-  | `yargs-options`           | `Object`   | `{}`                     | No       | No   | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                    |
+| Property                  | Type       | Default                  | Required | Sync | Description                                                                                               |
+|---------------------------|------------|--------------------------|----------|------|-----------------------------------------------------------------------------------------------------------|
+| `autocompletion-resolver` | `Function` | `null`                   | No       | No   | Gets the current input as first and cursor position as the second argument. Must return the whole command |
+| `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
+| `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
+| `current`                 | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                                           |
+| `cursor`                  | `Number`   |                          | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
+| `executed`                | `Set`      |                          | Yes      | Yes  | Executed programs                                                                                         |
+| `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
+| `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
+| `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                             |
+| `hide-prompt`             | `Boolean`  | `false`                  | No       | No   | Hides the prompt                                                                                          |
+| `history`                 | `Array`    | `[]`                     | No       | Yes  | Executed commands                                                                                         |
+| `intro`                   | `String`   | `Fasten your seatbelts!` | No       | No   | Sets the intro                                                                                            |
+| `isFullscreen`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                                         |
+| `isInProgress`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                                         |
+| `not-found`               | `String`   | `not found`              | No       | No   | Sets the command not found text                                                                           |
+| `pointer`                 | `Number`   | `0`                      | No       | Yes  | Sets the command pointer                                                                                  |
+| `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                                           |
+| `show-help`               | `Boolean`  | `false`                  | No       | No   | Shows the placeholder                                                                                     |
+| `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                                           |
+| `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                                            |
+| `white-theme`             | `Boolean`  | `false`                  | No       | No   | Enables the white theme                                                                                   |
+| `yargs-options`           | `Object`   | `{}`                     | No       | No   | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                    |
 
   ### Commands
 
@@ -122,6 +123,12 @@
   | `createStdout(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stdout` component containing a span element with given inner content |
   | `createStderr(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stderr` component containing a span element with given inner content |
   | `createDummyStdout(...mixins: Array): Object`                             | Returns a dummy `Stdout` to show a `Stdin`                                      |
+
+  Helper methods can be imported by name:
+
+  ```js
+  import { createStdout, createStderr, createDummyStdout } from 'vue-command'
+  ```
 
   If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination it's possible to inject the following functions to manipulate the terminal or signal an event:
 
@@ -137,7 +144,7 @@
   | `setPointer(pointer: Number)`            | Set command history pointer                                 |
   | `terminate`                              | Executes common final tasks after command has been finished |
 
-  In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties:
+  In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties (note that built-in commands have to take care about the terminals state):
 
   | Property                | Description                                        |
   |-------------------------|----------------------------------------------------|
@@ -154,7 +161,7 @@
 
   ### Built-in
 
-  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called by built-in commands. Regular commands can be seen as a facade to built-in commands. The API is less stable.
+  Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`.
 
   To fully simulate a full command circle a built-in command has to follow these steps:
 
@@ -164,9 +171,7 @@
   4. Tell terminal there is a command in progress  
   5. Push the `Stdout` component into the `history` property
   6. Execute actual task
-  7. Terminate the command with the injected `terminate` function
-
-  The argument that is called within the built-in command is the unparsed `Stdin`.
+  7. Exit the command with the injected `terminate` function
 
   ## Slots
 

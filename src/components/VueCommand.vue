@@ -81,6 +81,7 @@ export default {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       setCurrent: this.setCurrent,
+      setCursor: this.setCursor,
       setIsFullscreen: this.setIsFullscreen,
       setIsInProgress: this.setIsInProgress
     }
@@ -104,6 +105,10 @@ export default {
     current: {
       default: '',
       type: String
+    },
+
+    cursor: {
+      type: Number
     },
 
     // Non-empty executed commands
