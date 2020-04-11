@@ -10,7 +10,6 @@
       :history.sync="history"
       :help-timeout="1250"
       :prompt="prompt"
-      :stdin.sync="stdin"
       show-help/>
     <pre>
       <code>
@@ -96,8 +95,7 @@ export default {
 
     executed: new Set(),
     history: [],
-    prompt: '~neil@moon:#',
-    stdin: 'Yes'
+    prompt: '~neil@moon:#'
   }),
 
   created () {

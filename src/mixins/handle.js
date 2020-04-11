@@ -102,6 +102,8 @@ export default {
 
     // Executes common final tasks after command has been finished
     terminate () {
+      // Set new Stdin to empty
+      this.setStdin('')
       // Exit fullscreen if necessary
       this.setIsFullscreen(false)
       // Indicate end of command

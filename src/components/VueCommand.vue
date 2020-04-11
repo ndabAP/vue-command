@@ -72,7 +72,6 @@ import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
 import UI from '../mixins/ui'
-import { createDummyStdout } from '../library'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -273,16 +272,20 @@ export default {
 
   created () {
     // Apply user given properties
-    this.setStdin(this.stdin)
     this.setCursor(this.cursor)
     this.setPointer(this.pointer)
-    this.setIsFullscreen(this.isFullscreen)
+    this.setStdin(this.stdin)
     this.setIsInProgress(this.isInProgress)
+    this.setIsFullscreen(this.isFullscreen)
 
     let history = [...this.history]
     // If there is no entry push dummy Stdout to show Stdin
     if (history.length === 0) {
-      history.push(createDummyStdout())
+      // Push dummy Stdout without termination
+      history.push({
+        name: 'VueCommandDummyStdout',
+        render: createElement => createElement('span', {}, '')
+      })
 
       this.setHistory([...history])
     } else {
