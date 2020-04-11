@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "7.3.5",
+  "version": "8.0.0",
   "description": "A fully working Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -10,10 +10,10 @@
     "url": "https://github.com/ndabAP/vue-command"
   },
   "keywords": [
-    "vue",
-    "terminal",
-    "emulator",
     "bash",
+    "emulator",
+    "terminal",
+    "vue",
     "vuejs"
   ],
   "files": [
@@ -54,6 +54,7 @@
     "serialize-javascript": "~2.1.1",
     "tar": ">=4.4.10",
     "vue": "^2.6.11",
+    "vue-command": "7.3.5",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.42.1"
   },

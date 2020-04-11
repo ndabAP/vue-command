@@ -42,7 +42,7 @@
   </script>
   ```
 
-  Now a more complex example. Let's assume we want to build the Nano editor available in many shells. 
+  Now a more complex one. Let's assume we want to build the Nano editor available in many shells. 
   
   We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>X</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
@@ -110,7 +110,7 @@
 
   ## Properties
 
-  There are two types of commands: Built-in and regular commands. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. 
+  There are two types of commands: Built-in and regular ones. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. 
   
   Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
 
