@@ -222,7 +222,7 @@
   |-----------|-------------|-----------------------------------|-----------------------------------------------------|
   | `input`   | `String`    | Emits the current input           |                                                     |
   | `execute` | `String`    | Emits when executing command      | Built-in commands have to manually emit this event  |
-  | `executed`| `String`    | Emits after command execution     | Built-in commands have to manually emit this event. All helper methods emit this event automatically  |
+  | `executed`| `String`    | Emits after command execution     | Built-in commands have to manually emit this event. All helper methods emit this event  |
 
   ## Browser support
 
@@ -234,6 +234,10 @@
   - [saber-theme-klieh](https://github.com/krmax44/saber-theme-klieh) - A Saber theme mimicking a terminal
   - [ts-git](https://github.com/nfriend/ts-git) - A naïve implementation of git, written in TypeScript
   - [curvy-idle-game](https://github.com/n4n0GH/curvy-idle-game) - Short idle game where you get to pat her
+
+  ## Chuck Norris API
+
+  The Chuck Norris jokes are comming from [this](https://api.chucknorris.io/) API. This library has no relation to Chuck Norris or the services provided by the API.
 
   ## Author
 
