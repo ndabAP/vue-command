@@ -69,16 +69,6 @@
     }
   }
   </script>
-
-  <style lang="scss" scoped>
-  textarea {
-    display: block;
-    width: 100%;
-    height: 100%;
-    resize: none;
-    overflow: hidden;
-  }
-  </style>
   ```
 
   Now the command has to return the component. Additionally, we have to pass a `Set` with the `sync` modifier which will contain all executed programs. This property can be changed at any time.

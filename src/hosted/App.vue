@@ -113,12 +113,14 @@ export default {
         return createDummyStdout()
       }
 
+      // Navigate from home to root
       if (_[1] === '../' && this.prompt === `${PROMPT}/home`) {
         this.prompt = PROMPT
 
         return createDummyStdout()
       }
 
+      // Navigate to self
       if (_[1] === '.') {
         return createDummyStdout()
       }
