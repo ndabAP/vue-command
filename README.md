@@ -111,7 +111,6 @@
 | `autocompletion-resolver` | `Function` | `null`                   | No       | No   | Gets the current input as first and cursor position as the second argument. Must return the whole command |
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
-| `current`                 | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                                           |
 | `cursor`                  | `Number`   |                          | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
 | `executed`                | `Set`      |                          | Yes      | Yes  | Executed programs                                                                                         |
 | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
@@ -127,6 +126,7 @@
 | `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                                           |
 | `show-help`               | `Boolean`  | `false`                  | No       | No   | Shows the placeholder                                                                                     |
 | `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                                           |
+| `stdin`                   | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                                           |
 | `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                                            |
 | `white-theme`             | `Boolean`  | `false`                  | No       | No   | Enables the white theme                                                                                   |
 | `yargs-options`           | `Object`   | `{}`                     | No       | No   | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                    |
@@ -151,14 +151,14 @@
 
   | Function                                 | Description                                                 |
   |------------------------------------------|-------------------------------------------------------------|
-  | `emitInput(input: String)`                              | Emit the current input                       |
   | `emitExecute`                            | Emit command execution event                                |
   | `emitExecuted`                           | Emit command executed event                                 |
-  | `setCurrent(current: String)`            | Set the current `Stdin`                                     |
+  | `emitInput(input: String)`               | Emit the current input                                      |
   | `setCursor(cursor: Number)`              | Set cursor position                                         |
   | `setIsFullscreen(isFullscreen: Boolean)` | Change if the terminal is in fullscreen mode                |
   | `setIsInProgress(isInProgress: Boolean)` | Change if the terminal is in progress                       |
   | `setPointer(pointer: Number)`            | Set command history pointer                                 |
+  | `setStdin(stdin: String)`                | Set the current `Stdin`                                     |
   | `terminate`                              | Executes common final tasks after command has been finished |
 
   Functions can be injected into your component by name:

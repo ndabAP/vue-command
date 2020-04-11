@@ -4,12 +4,12 @@
     <span
       v-if="!hidePrompt"
       class="term-ps">
-      {{ localPrompt }}
+      {{ local.prompt }}
     </span>
     <span class="term-stdin">
       <input
         ref="input"
-        v-model="stdin"
+        v-model="local.stdin"
         :autofocus="isLast"
         :disabled="!isLast || isInProgress"
         :placeholder="placeholder"
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  inject: ['setCurrent', 'setCursor'],
+  inject: ['setCursor', 'setStdin'],
 
   props: {
     bus: {
@@ -33,15 +33,13 @@ export default {
       type: Object
     },
 
-    current: {
-      type: String
-    },
-
     helpText: {
+      default: '',
       type: String
     },
 
     helpTimeout: {
+      default: 0,
       type: Number
     },
 
@@ -52,26 +50,36 @@ export default {
 
     isInProgress: {
       default: false,
+      required: true,
       type: Boolean
     },
 
     isLast: {
+      default: false,
       required: true,
       type: Boolean
     },
 
     isFullscreen: {
+      default: false,
       required: true,
       type: Boolean
     },
 
     prompt: {
+      default: '',
       type: String
     },
 
     showHelp: {
       default: false,
       type: Boolean
+    },
+
+    stdin: {
+      default: '',
+      required: true,
+      type: String
     },
 
     uid: {
@@ -81,23 +89,15 @@ export default {
   },
 
   data: () => ({
-    // For virtual path simulation
-    localPrompt: '',
     placeholder: '',
-    stdin: ''
+    local: {
+      // This makes it possible to change the prompt during runtime
+      prompt: '',
+      stdin: ''
+    }
   }),
 
   watch: {
-    async current () {
-      if (this.isLast) {
-        this.setStdin(this.current)
-      }
-
-      await this.$nextTick()
-      // Set current cursor position
-      this.setCursor(this.$refs.input.selectionStart)
-    },
-
     async isInProgress () {
       if (!this.isInProgress && this.isLast) {
         await this.$nextTick()
@@ -113,14 +113,25 @@ export default {
 
     isLast (isLast, wasLast) {
       if (wasLast && !isLast) {
-      // Allow components to get into focus
+        // Allow components to get into focus
         this.blur()
       }
     },
 
-    stdin () {
+    async stdin () {
+      // Only last Stdin is allowed to mutate
+      if (this.isLast) {
+        this.local.stdin = this.stdin
+      }
+
+      await this.$nextTick()
+      // Set current cursor position
+      this.setCursor(this.$refs.input.selectionStart)
+    },
+
+    'local.stdin' () {
       // Set current Stdin
-      this.setCurrent(this.stdin)
+      this.$emit('update:stdin', this.local.stdin)
       // Set current cursor position
       this.setCursor(this.$refs.input.selectionStart)
     }
@@ -133,12 +144,14 @@ export default {
       }
     }, this.helpTimeout)
 
-    this.localPrompt = this.prompt
+    this.local.prompt = this.prompt
+    this.local.stdin = this.stdin
   },
 
   mounted () {
-    // Scroll to current input and focus it
+    // Scroll to current input
     this.scrollIntoView()
+    // Focus new Stdin
     this.focus()
   },
 
@@ -146,9 +159,9 @@ export default {
     // Handle current command
     handle () {
       // Persist the current prompt
-      this.setLocalPrompt(this.prompt)
+      this.setPrompt(this.prompt)
       // Request to handle the current Stdin
-      this.$emit('handle', this.stdin)
+      this.$emit('handle', this.local.stdin)
       // Hide the current placeholder
       this.setPlaceholder('')
     },
@@ -157,12 +170,8 @@ export default {
       this.placeholder = placeholder
     },
 
-    setLocalPrompt (localPrompt) {
-      this.localPrompt = localPrompt
-    },
-
-    setStdin (stdin) {
-      this.stdin = stdin
+    setPrompt (promt) {
+      this.local.prompt = promt
     },
 
     blur () {

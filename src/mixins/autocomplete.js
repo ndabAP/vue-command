@@ -24,13 +24,13 @@ export default {
   },
 
   methods: {
-    // Calls the user given autocompletion resolver and sets the current input accordingly
+    // Calls the user given autocompletion resolver and sets the current Stdin accordingly
     autocomplete () {
-      if (this.local.current && typeof this.autocompletionResolver === 'function') {
+      if (this.local.stdin && typeof this.autocompletionResolver === 'function') {
         // Retrieve users generated autocompletion result
-        const autocomplete = this.autocompletionResolver(this.local.current, this.local.cursor)
+        const stdin = this.autocompletionResolver(this.local.stdin, this.local.cursor)
 
-        this.setCurrent(autocomplete)
+        this.setStdin(stdin)
       }
     },
 

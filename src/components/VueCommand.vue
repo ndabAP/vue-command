@@ -45,7 +45,6 @@
               v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
-              :current="local.current"
               :hide-prompt="hidePrompt"
               :is-fullscreen="local.isFullscreen"
               :is-in-progress="local.isInProgress"
@@ -54,6 +53,7 @@
               :help-text="helpText"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
+              :stdin.sync="local.stdin"
               :uid="_uid"
               @handle="handle"/>
           </div>
@@ -72,6 +72,7 @@ import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
 import UI from '../mixins/ui'
+import { createDummyStdout } from '../library'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -86,7 +87,7 @@ export default {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       emitInput: this.emitInput,
-      setCurrent: this.setCurrent
+      setStdin: this.setStdin
     }
   },
 
@@ -104,11 +105,6 @@ export default {
     commands: {
       required: true,
       type: Object
-    },
-
-    current: {
-      default: '',
-      type: String
     },
 
     cursor: {
@@ -188,6 +184,12 @@ export default {
       type: Boolean
     },
 
+    // Current Stdin
+    stdin: {
+      default: '',
+      type: String
+    },
+
     title: {
       default: 'neil@moon: ~',
       type: String
@@ -210,8 +212,8 @@ export default {
 
     // A local copy to allow the absence of properties
     local: {
-      // Current input
-      current: ''
+      // Current Stdin
+      stdin: ''
     },
 
     // Detect scroll and resize events
@@ -224,19 +226,19 @@ export default {
   }),
 
   watch: {
-    current () {
-      this.setCurrent(this.current)
+    stdin () {
+      this.setStdin(this.stdin)
     },
 
-    'local.current' () {
-      // Emit the current input as an event
-      this.$emit('input', this.local.current)
+    'local.stdin' () {
+      // Emit the current Stdin as an event
+      this.$emit('input', this.local.stdin)
 
       // Update given property
-      this.$emit('update:current', this.local.current)
+      this.$emit('update:stdin', this.local.stdin)
 
       // Make searching history work again
-      if (!this.local.current) {
+      if (this.local.stdin === '') {
         this.setPointer(this.executed.size)
       }
     }
@@ -270,10 +272,23 @@ export default {
   },
 
   created () {
-    this.setCurrent(this.current)
+    // Apply user given properties
+    this.setStdin(this.stdin)
+    this.setCursor(this.cursor)
+    this.setPointer(this.pointer)
     this.setIsFullscreen(this.isFullscreen)
     this.setIsInProgress(this.isInProgress)
-    this.setPointer(this.pointer)
+
+    let history = [...this.history]
+    // If there is no entry push dummy Stdout to show Stdin
+    if (history.length === 0) {
+      history.push(createDummyStdout())
+
+      this.setHistory([...history])
+    } else {
+      // Update the history property
+      this.$emit('update:history', [...history])
+    }
   },
 
   methods: {
@@ -289,10 +304,6 @@ export default {
       this.$emit('executed')
     },
 
-    setCurrent (current) {
-      this.local.current = current
-    },
-
     // Focus on last Stdin
     focus () {
       const stdins = this.$refs.stdin
@@ -301,6 +312,10 @@ export default {
 
       // Call component method
       stdin.focus()
+    },
+
+    setStdin (stdin) {
+      this.local.stdin = stdin
     }
   }
 }

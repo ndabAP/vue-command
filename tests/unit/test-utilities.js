@@ -9,7 +9,7 @@ export const getRandom = () => Math.random().toString(36).substring(7)
 export const getEmptyCommands = () => ({ [null]: () => createDummyStdout() })
 export const getCommands = command => ({ [command]: () => createStdout(command) })
 
-export const getDefaultProps = () => ({ executed: new Set(), history: [createDummyStdout()] })
+export const getDefaultProps = () => ({ executed: new Set(), history: [] })
 
 export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
   propsData: { commands, ...props },

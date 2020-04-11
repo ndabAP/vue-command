@@ -5,12 +5,12 @@
 
     <vue-command
       :built-in="builtIn"
-      :current.sync="current"
       :commands="commands"
       :executed.sync="executed"
       :history.sync="history"
       :help-timeout="1250"
       :prompt="prompt"
+      :stdin.sync="stdin"
       show-help/>
     <pre>
       <code>
@@ -42,7 +42,7 @@ export default {
     },
 
     commands: {
-    // Navigate to home, self and back
+      // Navigate to home, self and back
       cd: undefined,
 
       // Clear terminals history
@@ -90,13 +90,14 @@ export default {
         `)
       },
 
+      // Show current path
       pwd: () => createStdout('/home/neil')
     },
 
-    current: '',
     executed: new Set(),
     history: [],
-    prompt: '~neil@moon:#'
+    prompt: '~neil@moon:#',
+    stdin: 'Yes'
   }),
 
   created () {
@@ -134,7 +135,7 @@ export default {
       const argument = stdin.split(' ')[1]
 
       // Reverse argument
-      this.current = argument.split('').reverse().join('')
+      this.stdin = argument.split('').reverse().join('')
     }
   }
 }

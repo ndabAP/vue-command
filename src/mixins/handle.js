@@ -104,8 +104,6 @@ export default {
     terminate () {
       // Exit fullscreen if necessary
       this.setIsFullscreen(false)
-      // Set new Stdin to empty
-      this.setCurrent('')
       // Indicate end of command
       this.$emit('executed')
       // Allow new Stdin
