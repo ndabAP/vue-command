@@ -1,10 +1,11 @@
 <template>
   <div
     class="vue-command"
-    @keyup.38="mutatePointerHandler"
-    @keyup.40="mutatePointerHandler"
+    @keyup.38.prevent="mutatePointerHandler"
+    @keyup.40.prevent="mutatePointerHandler"
     @keydown.tab.prevent="autocomplete"
     @click="focus">
+
     <slot name="bar">
       <div
         v-if="!hideBar"
@@ -14,6 +15,7 @@
         </span>
       </div>
     </slot>
+
     <div
       :class="{ 'white-theme': whiteTheme }"
       class="term">
@@ -83,8 +85,7 @@ export default {
       emitInput: this.emitInput,
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
-      setCurrent: this.setCurrent,
-      setCursor: this.setCursor
+      setCurrent: this.setCurrent
     }
   },
 

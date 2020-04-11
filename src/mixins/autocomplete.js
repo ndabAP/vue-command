@@ -20,7 +20,7 @@ export default {
   },
 
   methods: {
-    // Calls the user given autocompletion resolver and sets the input accordingly
+    // Calls the user given autocompletion resolver and sets the current input accordingly
     autocomplete () {
       if (this.local.current && typeof this.autocompletionResolver === 'function') {
         // Retrieve users generated autocompletion result
