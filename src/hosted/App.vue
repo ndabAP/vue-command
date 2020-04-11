@@ -10,6 +10,7 @@
       :executed.sync="executed"
       :history.sync="history"
       :help-timeout="1250"
+      :keyboard-resolver="[historyKeyboardResolver]"
       :prompt="prompt"
       show-help/>
     <pre>
@@ -26,7 +27,7 @@ import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout, createStderr, createDummyStdout } from '../library'
+import { createStdout, createStderr, createDummyStdout, historyKeyboardResolver } from '../library'
 
 const PROMPT = '~neil@moon:#'
 
@@ -96,6 +97,7 @@ export default {
     current: '',
     executed: new Set(),
     history: [],
+    historyKeyboardResolver,
     prompt: '~neil@moon:#'
   }),
 

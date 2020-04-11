@@ -1,4 +1,5 @@
 import VueCommand from './components/VueCommand'
+import { ARROW_DOWN_KEY, ARROW_UP_KEY } from './constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
@@ -56,5 +57,25 @@ export const createDummyStdout = (...mixins) => ({
 
   render: createElement => createElement('span', {}, '')
 })
+
+export const historyKeyboardResolver = ({
+  methods: { setCurrent, setPointer },
+  context: { event: { key }, executed, pointer }
+}) => {
+  // Check if pointer is mutable and input key is up or key
+  if (key === ARROW_UP_KEY && pointer > 0) {
+    pointer--
+    setPointer(pointer)
+
+    // Set current Stdin to pointed command
+    setCurrent([...executed][pointer])
+  } else if (key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
+    pointer++
+    setPointer(pointer)
+
+    // Set current Stdin to pointed command
+    setCurrent([...executed][pointer])
+  }
+}
 
 export default VueCommand

@@ -2,11 +2,11 @@
   <div
     ref="vue-command"
     class="vue-command"
+    @keyup="resolveKeyboardEvent"
     @keyup.38.prevent="mutatePointerHandler"
     @keyup.40.prevent="mutatePointerHandler"
     @keyup.tab.prevent="autocomplete"
     @click="focus">
-
     <slot name="bar">
       <div
         v-if="!hideBar"
@@ -163,6 +163,11 @@ export default {
       type: Boolean
     },
 
+    keyboardResolver: {
+      default: () => [],
+      type: Array
+    },
+
     notFound: {
       default: 'command not found',
       type: String
@@ -311,6 +316,42 @@ export default {
 
       // Call component method
       stdin.focus()
+    },
+
+    // Resolve any keyboard input and call the user given function with given context
+    resolveKeyboardEvent (event) {
+      // Check if user provides any resolver
+      if (this.keyboardResolver === undefined) {
+        return
+      }
+
+      // Execute every resolver
+      for (const keyboardResolver of this.keyboardResolver) {
+        keyboardResolver({
+          context: {
+            event,
+            executed: new Set(this.executed), // Don't use same reference to avoid side effects
+            current: this.local.current,
+            cursor: this.local.cursor,
+            history: [...this.local.history], // Don't use same reference to avoid side effects
+            isInProgress: this.local.isInProgress,
+            isFullscreen: this.local.isFullscreen,
+            pointer: this.local.pointer
+          },
+
+          methods: {
+            emitExecute: this.emitExecute,
+            emitExecuted: this.emitExecuted,
+            emitInput: this.emitInput,
+            setCurrent: this.setCurrent,
+            setCursor: this.setCursor,
+            setIsFullscreen: this.setIsFullscreen,
+            setIsInProgress: this.setIsInProgress,
+            setPointer: this.setPointer,
+            terminate: this.terminate
+          }
+        })
+      }
     }
   }
 }
