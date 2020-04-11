@@ -19,7 +19,30 @@
 
   ## Usage
 
-  Let's assume we want to build the Nano editor available in many shells. 
+  Let's start with a very simple example. We want to send "Hello world" to `Stdout`.
+
+  ```vue
+  <template>
+    <vue-command 
+      :commands="commands" 
+      :executed.sync="new Set()" />
+  </template>
+
+  <script>
+  import VueCommand, { createStdout } from 'vue-command'
+  import 'vue-command/dist/vue-command.css'
+
+  export default {
+    data: () =>  ({
+      commands: { 
+        'hello-world': () => createStdout('Hello world') 
+      }
+    })
+  }
+  </script>
+  ```
+
+  Now a more complex example. Let's assume we want to build the Nano editor available in many shells. 
   
   We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>X</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
@@ -69,7 +92,7 @@
   import VueCommand from 'vue-command'
   import 'vue-command/dist/vue-command.css'
 
-  import NanoEditor from './NanoEditor.vue'
+  import NanoEditor from '@/components/NanoEditor.vue'
 
   export default {
     components: {

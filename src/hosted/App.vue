@@ -41,6 +41,7 @@ export default {
       clear: undefined,
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;clear<br>
+        &nbsp;hello-world<br>
         &nbsp;klieh<br>
         &nbsp;loading [--timeout n] [--amount n]<br>
         &nbsp;nano<br>
@@ -50,6 +51,7 @@ export default {
         &nbsp;reverse text<br>
       `),
 
+      'hello-world': () => createStdout('Hello world'),
       klieh: () => KliehParty,
       loading: () => LoadingAnimation,
       nano: () => NanoEditor,
