@@ -213,11 +213,14 @@ export default {
     flex: 1;
     background: none;
     margin: 0;
-    margin-left: 0.5rem;
     border: 0;
     color: inherit;
     font-family: inherit;
     font-size: 1rem;
+  }
+
+  .term-ps {
+    margin-right: 0.5rem;
   }
 }
 </style>

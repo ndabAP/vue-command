@@ -58,7 +58,7 @@ describe('VueCommand.vue', () => {
     const prompt = getRandom()
     const wrapper = getMountedWrapper({ prompt, hidePrompt: true, ...getDefaultProps() }, getEmptyCommands())
 
-    expect(wrapper.find('.stdin-container span').text()).not.toBe(prompt)
+    expect(wrapper.find('.term-stdin-container span').text()).not.toBe(prompt)
   })
 
   it('sets the placeholder', async () => {

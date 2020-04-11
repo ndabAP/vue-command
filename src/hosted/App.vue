@@ -199,7 +199,7 @@ body {
     .term-std {
       min-height: 291px;
       max-height: 291px;
-      overflow-y: auto;
+      overflow-y: scroll;
     }
   }
 }
