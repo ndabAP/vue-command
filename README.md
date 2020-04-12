@@ -111,7 +111,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `autocompletion-resolver` | `Function` | `null`                   | No       | No   | Gets the current input as first and cursor position as the second argument. Must return the whole command |
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
-| `cursor`                  | `Number`   |                          | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
+| `cursor`                  | `Number`   | 0                        | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
 | `executed`                | `Set`      |                          | Yes      | Yes  | Executed programs                                                                                         |
 | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
 | `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
