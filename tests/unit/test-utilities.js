@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
 
 import VueCommand from '../../src/components/VueCommand'
-import VueCommandWrapper from './VueCommandWrapper'
 import { createStdout, createDummyStdout } from '../../src/library'
 
 export const getRandom = () => Math.random().toString(36).substring(7)
@@ -14,13 +13,6 @@ export const getDefaultProps = () => ({ executed: new Set(), history: [] })
 export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
   propsData: { commands, ...props },
   slots
-})
-
-export const getChildMountedWrapper = (
-  commands,
-  props
-) => mount(VueCommandWrapper, {
-  propsData: { commands, ...props }
 })
 
 export const enterAndTrigger = (wrapper, value, event = 'keyup.enter') => {

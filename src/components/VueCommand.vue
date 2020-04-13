@@ -287,11 +287,11 @@ export default {
         render: createElement => createElement('span', {}, '')
       })
 
-      this.setHistory([...history])
-    } else {
       // Update the history property
       this.$emit('update:history', [...history])
     }
+
+    this.setHistory([...history])
   },
 
   methods: {

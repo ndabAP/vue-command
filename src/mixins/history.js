@@ -23,12 +23,12 @@ export default {
       this.setHistory([...this.history])
     },
 
-    pointer () {
-      this.setPointer(this.pointer)
-    },
-
     'local.pointer' () {
       this.$emit('update:pointer', this.local.pointer)
+    },
+
+    pointer () {
+      this.setPointer(this.pointer)
     }
   },
 
