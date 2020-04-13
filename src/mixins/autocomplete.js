@@ -24,13 +24,12 @@ export default {
   },
 
   methods: {
-    // Calls the user given autocompletion resolver and sets the current Stdin accordingly
+    // Calls the user given autocompletion resolver
     autocomplete () {
+      // Check if Stdin is not empty and autocompletion resolver is given
       if (this.local.stdin && typeof this.autocompletionResolver === 'function') {
-        // Retrieve users generated autocompletion result
-        const stdin = this.autocompletionResolver(this.local.stdin, this.local.cursor)
-
-        this.setStdin(stdin)
+        // Call user autocompletion function
+        this.autocompletionResolver(this.local.stdin, this.local.cursor)
       }
     },
 
