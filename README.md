@@ -119,8 +119,8 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `hide-prompt`             | `Boolean`  | `false`                  | No       | No   | Hides the prompt                                                                                          |
 | `history`                 | `Array`    | `[]`                     | No       | Yes  | Executed commands                                                                                         |
 | `intro`                   | `String`   | `Fasten your seatbelts!` | No       | No   | Sets the intro                                                                                            |
-| `isFullscreen`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                                         |
-| `isInProgress`            | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                                         |
+| `is-fullscreen`           | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                                         |
+| `is-in-progress`          | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                                         |
 | `not-found`               | `String`   | `not found`              | No       | No   | Sets the command not found text                                                                           |
 | `pointer`                 | `Number`   | `0`                      | No       | Yes  | Sets the command pointer                                                                                  |
 | `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                                           |
