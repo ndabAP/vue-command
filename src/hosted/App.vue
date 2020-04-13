@@ -11,6 +11,7 @@
       :help-timeout="1250"
       :keyboard-resolver="[historyKeyboardResolver]"
       :prompt="prompt"
+      :stdin.sync="stdin"
       show-help/>
     <pre>
       <code>
@@ -97,7 +98,8 @@ export default {
     executed: new Set(),
     history: [],
     historyKeyboardResolver,
-    prompt: '~neil@moon:#'
+    prompt: '~neil@moon:#',
+    stdin: ''
   }),
 
   created () {
