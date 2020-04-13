@@ -58,24 +58,52 @@ export const createDummyStdout = (...mixins) => ({
   render: createElement => createElement('span', {}, '')
 })
 
-export const historyKeyboardResolver = ({
-  methods: { setCurrent, setPointer },
-  context: { event: { key }, executed, pointer }
-}) => {
-  // Check if pointer is mutable and input key is up or key
-  if (key === ARROW_UP_KEY && pointer > 0) {
-    pointer--
-    setPointer(pointer)
+export const createPattern = ({
+  altKey,
+  codes,
+  ctrlKey,
+  isComposing,
+  keys,
+  locales,
+  locations,
+  metaKeys,
+  repeat,
+  shiftKey
+}) => ({
+  altKey,
+  codes,
+  ctrlKey,
+  isComposing,
+  keys,
+  locales,
+  locations,
+  metaKeys,
+  repeat,
+  shiftKey
+})
 
-    // Set current Stdin to pointed command
-    setCurrent([...executed][pointer])
-  } else if (key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
-    pointer++
-    setPointer(pointer)
+export const historyKeyboardResolver = {
+  fn: ({
+    methods: { setCurrent, setPointer },
+    context: { event: { key }, executed, pointer }
+  }) => {
+    // Check if pointer is mutable and input key is up or key
+    if (key === ARROW_UP_KEY && pointer > 0) {
+      pointer--
+      setPointer(pointer)
 
-    // Set current Stdin to pointed command
-    setCurrent([...executed][pointer])
-  }
+      // Set current Stdin to pointed command
+      setCurrent([...executed][pointer])
+    } else if (key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
+      pointer++
+      setPointer(pointer)
+
+      // Set current Stdin to pointed command
+      setCurrent([...executed][pointer])
+    }
+  },
+
+  pattern: createPattern({ keys: [ARROW_UP_KEY, ARROW_DOWN_KEY] })
 }
 
 export default VueCommand

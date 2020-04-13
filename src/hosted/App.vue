@@ -27,7 +27,7 @@ import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout, createStderr, createDummyStdout, historyKeyboardResolver } from '../library'
+import { createDummyStdout, createStderr, createStdout, historyKeyboardResolver } from '../library'
 
 const PROMPT = '~neil@moon:#'
 

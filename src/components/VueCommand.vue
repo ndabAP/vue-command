@@ -327,7 +327,8 @@ export default {
 
       // Execute every resolver
       for (const keyboardResolver of this.keyboardResolver) {
-        keyboardResolver({
+        event.preventDefault()
+        keyboardResolver.fn({
           context: {
             event,
             executed: new Set(this.executed), // Don't use same reference to avoid side effects
