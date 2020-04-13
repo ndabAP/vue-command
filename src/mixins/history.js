@@ -1,5 +1,4 @@
 import { ARROW_DOWN_KEY, ARROW_UP_KEY } from '../constants/keys'
-import { createDummyStdout } from '../library'
 
 // @vue/component
 export default {
@@ -20,29 +19,17 @@ export default {
 
   watch: {
     history () {
+      // Creates a new copy
       this.setHistory([...this.history])
-    },
-
-    pointer () {
-      this.setPointer(this.pointer)
     },
 
     'local.pointer' () {
       this.$emit('update:pointer', this.local.pointer)
+    },
+
+    pointer () {
+      this.setPointer(this.pointer)
     }
-  },
-
-  created () {
-    // Let user provide the starting history
-    let history = [...this.history]
-
-    // If there is no entry push dummy Stdout to show Stdin
-    if (history.length === 0) {
-      history.push(createDummyStdout())
-    }
-
-    // Update the history property
-    this.$emit('update:history', [...history])
   },
 
   methods: {
@@ -59,7 +46,7 @@ export default {
       }
 
       // Set current Stdin to pointed command
-      this.local.current = [...this.executed][this.local.pointer]
+      this.local.stdin = [...this.executed][this.local.pointer]
     },
 
     setHistory (history) {

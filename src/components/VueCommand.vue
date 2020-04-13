@@ -35,25 +35,25 @@
             v-for="(stdout, index) in local.history"
             :key="index"
             class="term-hist"
-            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === progress - 1) }">
+            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }">
             <stdout
-              v-show="(!local.isFullscreen || index === progress - 1)"
+              v-show="(!local.isFullscreen || index === local.history.length - 1)"
               :component="stdout"
               class="term-stdout"/>
 
             <stdin
-              v-show="(index === 0 && !local.isFullscreen) || !(index === progress - 1 && local.isInProgress) && !local.isFullscreen"
+              v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
-              :current="local.current"
               :hide-prompt="hidePrompt"
               :is-fullscreen="local.isFullscreen"
               :is-in-progress="local.isInProgress"
-              :is-last="index === progress - 1"
+              :is-last="index === local.history.length - 1"
               :prompt="prompt"
               :help-text="helpText"
               :help-timeout="helpTimeout"
               :show-help="showHelp"
+              :stdin.sync="local.stdin"
               :uid="_uid"
               @handle="handle"/>
           </div>
@@ -86,7 +86,7 @@ export default {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       emitInput: this.emitInput,
-      setCurrent: this.setCurrent
+      setStdin: this.setStdin
     }
   },
 
@@ -104,11 +104,6 @@ export default {
     commands: {
       required: true,
       type: Object
-    },
-
-    current: {
-      default: '',
-      type: String
     },
 
     cursor: {
@@ -193,6 +188,12 @@ export default {
       type: Boolean
     },
 
+    // Current Stdin
+    stdin: {
+      default: '',
+      type: String
+    },
+
     title: {
       default: 'neil@moon: ~',
       type: String
@@ -215,8 +216,8 @@ export default {
 
     // A local copy to allow the absence of properties
     local: {
-      // Current input
-      current: ''
+      // Current Stdin
+      stdin: ''
     },
 
     // Detect scroll and resize events
@@ -228,29 +229,20 @@ export default {
     }
   }),
 
-  computed: {
-    // Amount of executed commands
-    progress: {
-      get () {
-        return this.local.history.length
-      }
-    }
-  },
-
   watch: {
-    current () {
-      this.setCurrent(this.current)
+    stdin () {
+      this.setStdin(this.stdin)
     },
 
-    'local.current' () {
-      // Emit the current input as an event
-      this.$emit('input', this.local.current)
+    'local.stdin' () {
+      // Emit the current Stdin as an event
+      this.$emit('input', this.local.stdin)
 
       // Update given property
-      this.$emit('update:current', this.local.current)
+      this.$emit('update:stdin', this.local.stdin)
 
       // Make searching history work again
-      if (!this.local.current) {
+      if (this.local.stdin === '') {
         this.setPointer(this.executed.size)
       }
     }
@@ -284,11 +276,27 @@ export default {
   },
 
   created () {
-    this.setCurrent(this.current)
-    this.setHistory([...this.history])
-    this.setIsFullscreen(this.isFullscreen)
-    this.setIsInProgress(this.isInProgress)
+    // Apply user given properties
+    this.setCursor(this.cursor)
     this.setPointer(this.pointer)
+    this.setStdin(this.stdin)
+    this.setIsInProgress(this.isInProgress)
+    this.setIsFullscreen(this.isFullscreen)
+
+    let history = [...this.history]
+    // If there is no entry push dummy Stdout to show Stdin
+    if (history.length === 0) {
+      // Push dummy Stdout without termination
+      history.push({
+        name: 'VueCommandDummyStdout',
+        render: createElement => createElement('span', {}, '')
+      })
+
+      // Update the history property
+      this.$emit('update:history', [...history])
+    }
+
+    this.setHistory([...history])
   },
 
   methods: {
@@ -302,10 +310,6 @@ export default {
 
     emitExecuted () {
       this.$emit('executed')
-    },
-
-    setCurrent (current) {
-      this.local.current = current
     },
 
     // Focus on last Stdin
@@ -353,6 +357,10 @@ export default {
           }
         })
       }
+    },
+
+    setStdin (stdin) {
+      this.local.stdin = stdin
     }
   }
 }

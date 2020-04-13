@@ -5,7 +5,7 @@ import { ARROW_DOWN_KEY, ARROW_UP_KEY } from './constants/keys'
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
   name,
   mixins,
-  inject: ['terminate', 'emitExecute', 'setIsInProgress'],
+  inject: ['terminate'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
@@ -26,7 +26,7 @@ export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandSt
 export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr', ...mixins) => ({
   name,
   mixins,
-  inject: ['terminate', 'setIsInProgress', 'emitExecute'],
+  inject: ['terminate'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
@@ -47,7 +47,7 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 export const createDummyStdout = (...mixins) => ({
   name: 'VueCommandDummyStdout',
   mixins,
-  inject: ['terminate', 'setIsInProgress', 'emitExecute'],
+  inject: ['terminate'],
   async mounted () {
     // Wait for user mutations
     await this.$nextTick()
