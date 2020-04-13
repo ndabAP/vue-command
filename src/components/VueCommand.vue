@@ -336,22 +336,22 @@ export default {
           context: {
             event,
             executed: new Set(this.executed), // Don't use same reference to avoid side effects
-            current: this.local.current,
             cursor: this.local.cursor,
             history: [...this.local.history], // Don't use same reference to avoid side effects
             isInProgress: this.local.isInProgress,
             isFullscreen: this.local.isFullscreen,
-            pointer: this.local.pointer
+            pointer: this.local.pointer,
+            stdin: this.local.stdin
           },
 
           methods: {
             emitExecute: this.emitExecute,
             emitExecuted: this.emitExecuted,
             emitInput: this.emitInput,
-            setCurrent: this.setCurrent,
             setCursor: this.setCursor,
             setIsFullscreen: this.setIsFullscreen,
             setIsInProgress: this.setIsInProgress,
+            setStdin: this.setStdin,
             setPointer: this.setPointer,
             terminate: this.terminate
           }

@@ -84,7 +84,7 @@ export const createPattern = ({
 
 export const historyKeyboardResolver = {
   fn: ({
-    methods: { setCurrent, setPointer },
+    methods: { setStdin, setPointer },
     context: { event: { key }, executed, pointer }
   }) => {
     // Check if pointer is mutable and input key is up or key
@@ -93,13 +93,13 @@ export const historyKeyboardResolver = {
       setPointer(pointer)
 
       // Set current Stdin to pointed command
-      setCurrent([...executed][pointer])
+      setStdin([...executed][pointer])
     } else if (key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
       pointer++
       setPointer(pointer)
 
       // Set current Stdin to pointed command
-      setCurrent([...executed][pointer])
+      setStdin([...executed][pointer])
     }
   },
 
