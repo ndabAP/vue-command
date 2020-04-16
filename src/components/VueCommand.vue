@@ -2,9 +2,9 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keyup.38.prevent="mutatePointerHandler"
-    @keyup.40.prevent="mutatePointerHandler"
-    @keyup.tab.prevent="autocomplete"
+    @keydown.38.prevent="mutatePointerHandler"
+    @keydown.40.prevent="mutatePointerHandler"
+    @keydown.tab.prevent="autocomplete"
     @click="focus">
 
     <slot name="bar">

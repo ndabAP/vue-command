@@ -27,7 +27,7 @@ export default {
     // Calls the user given autocompletion resolver
     autocomplete () {
       // Check if Stdin is not empty and autocompletion resolver is given
-      if (this.local.stdin && typeof this.autocompletionResolver === 'function') {
+      if (typeof this.autocompletionResolver === 'function') {
         // Call user autocompletion function
         this.autocompletionResolver(this.local.stdin, this.local.cursor)
       }

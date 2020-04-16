@@ -4,6 +4,7 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
+      :autocompletion-resolver="autocompletionResolver"
       :built-in="builtIn"
       :commands="commands"
       :executed.sync="executed"
@@ -36,12 +37,18 @@ export default {
   },
 
   data: () => ({
+    autocompletionResolver: () => undefined,
     builtIn: {
       // Reverse current Stdin
       reverse: undefined
     },
 
     commands: {
+      a: undefined,
+      aa: undefined,
+      aaa: undefined,
+      aaaa: undefined,
+      aaaaa: undefined,
       // Navigate to home, self and back
       cd: undefined,
 
@@ -136,6 +143,55 @@ export default {
 
       // Reverse argument
       this.stdin = argument.split('').reverse().join('')
+    }
+
+    this.autocompletionResolver = async (stdin, cursor) => {
+      // Make sure only program is autocompleted since there is no support for arguments, yet
+      const command = stdin.split(' ')
+      if (command.length > 1) {
+        return
+      }
+
+      const autocompleteableProgram = command[0]
+      // Collect all autocompletion candidates
+      let candidates = []
+      const programs = [...Object.keys(this.commands).sort(), ...Object.keys(this.builtIn).sort()]
+      programs.forEach(program => {
+        if (program.startsWith(autocompleteableProgram)) {
+          candidates.push(program)
+        }
+      })
+
+      // Autocompletion resolved into multiple results
+      if (this.stdin !== '' && candidates.length > 1) {
+        this.history.push({
+          render: createElement => {
+            const columns = candidates.length < 5 ? candidates.length : 4
+            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+            let index = 0
+            let table = []
+            for (let i = 0; i < rows; i++) {
+              let row = []
+              for (let j = 0; j < columns; j++) {
+                row.push(createElement('td', candidates[index]))
+                index++
+              }
+
+              table.push(createElement('tr', [row]))
+            }
+
+            return createElement('table', { style: { width: '100%' } }, [table])
+          }
+        })
+
+        this.stdin = stdin
+      }
+
+      // Autocompletion resolved into one result
+      if (candidates.length === 1) {
+        this.stdin = candidates[0]
+      }
     }
   }
 }
