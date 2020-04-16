@@ -25,7 +25,7 @@ Let's start with a very simple example. We want to send "Hello world" to `Stdout
 <template>
   <vue-command 
     :commands="commands" 
-    :executed.sync="new Set()" />
+    :executed.sync="executed" />
 </template>
 
 <script>
@@ -34,6 +34,7 @@ import 'vue-command/dist/vue-command.css'
 
 export default {
   data: () =>  ({
+    executed: new Set(),
     commands: { 
       'hello-world': () => createStdout('Hello world') 
     }
@@ -51,7 +52,6 @@ We will use the provided `environment` variable to make sure the editor is only 
   <div v-if="environment.isExecuting">
     <textarea
       ref="nano"
-      rows="14"
       @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
@@ -77,7 +77,7 @@ Now the command has to return the component. Additionally, we have to pass a `Se
 <template>
   <vue-command 
     :commands="commands" 
-    :executed.sync="new Set()" />
+    :executed.sync="executed" />
 </template>
 
 <script>
@@ -92,6 +92,7 @@ export default {
   },
 
   data: () =>  ({
+    executed: new Set(),
     commands: { 
       nano: () => NanoEditor 
     }
@@ -208,7 +209,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 <template>
   <vue-command
     :commands="commands"
-    :executed="new Set()">
+    :executed="executed">
     <div slot="bar">
       Pokedex
     </div>
