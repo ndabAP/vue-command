@@ -4,6 +4,7 @@
     <p>A fully working Vue.js terminal emulator.</p>
 
     <vue-command
+      :autocompletion-resolver="autocompletionResolver"
       :built-in="builtIn"
       :commands="commands"
       :executed.sync="executed"
@@ -37,6 +38,7 @@ export default {
   },
 
   data: () => ({
+    autocompletionResolver: () => undefined,
     builtIn: {
       // Reverse current Stdin
       reverse: undefined
@@ -98,7 +100,7 @@ export default {
     executed: new Set(),
     history: [],
     historyKeyboardResolver,
-    prompt: '~neil@moon:#',
+    prompt: PROMPT,
     stdin: ''
   }),
 
@@ -110,21 +112,21 @@ export default {
     }
 
     this.commands.cd = ({ _ }) => {
-      if (_[1] === 'home' && this.prompt === PROMPT) {
+      if ((_[1] === 'home' || _[1] === 'home/') && this.prompt === PROMPT) {
         this.prompt = `${PROMPT}/home`
 
         return createDummyStdout()
       }
 
       // Navigate from home to root
-      if (_[1] === '../' && this.prompt === `${PROMPT}/home`) {
+      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}/home`) {
         this.prompt = PROMPT
 
         return createDummyStdout()
       }
 
       // Navigate to self
-      if (_[1] === '.') {
+      if (_[1] === '.' || typeof _[1] === 'undefined') {
         return createDummyStdout()
       }
 
@@ -138,6 +140,54 @@ export default {
 
       // Reverse argument
       this.stdin = argument.split('').reverse().join('')
+    }
+
+    this.autocompletionResolver = () => {
+      // Make sure only programs are autocompleted since there is no support for arguments, yet
+      const command = this.stdin.split(' ')
+      if (command.length > 1) {
+        return
+      }
+
+      const autocompleteableProgram = command[0]
+      // Collect all autocompletion candidates
+      let candidates = []
+      const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+      programs.forEach(program => {
+        if (program.startsWith(autocompleteableProgram)) {
+          candidates.push(program)
+        }
+      })
+
+      // Autocompletion resolved into multiple results
+      if (this.stdin !== '' && candidates.length > 1) {
+        this.history.push({
+          // Build table programmatically
+          render: createElement => {
+            const columns = candidates.length < 5 ? candidates.length : 4
+            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+            let index = 0
+            let table = []
+            for (let i = 0; i < rows; i++) {
+              let row = []
+              for (let j = 0; j < columns; j++) {
+                row.push(createElement('td', candidates[index]))
+                index++
+              }
+
+              table.push(createElement('tr', [row]))
+            }
+
+            return createElement('table', { style: { width: '100%' } }, [table])
+          }
+        })
+      }
+
+      // Autocompletion resolved into one result
+      if (candidates.length === 1) {
+        this.stdin = candidates[0]
+      }
     }
   }
 }

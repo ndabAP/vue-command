@@ -19,13 +19,13 @@ $ npm i vue-command --save
 
 ## Usage
 
-Let's start with a very simple example. We want to send "Hello world" to `Stdout`.
+Let's start with a very simple example. We want to send "Hello world" to `Stdout` when entering `hello-world`.
 
 ```vue
 <template>
   <vue-command 
     :commands="commands" 
-    :executed.sync="new Set()" />
+    :executed.sync="executed" />
 </template>
 
 <script>
@@ -36,7 +36,9 @@ export default {
   data: () =>  ({
     commands: { 
       'hello-world': () => createStdout('Hello world') 
-    }
+    },
+
+    executed: new Set()
   })
 }
 </script>
@@ -76,7 +78,7 @@ Now the command has to return the component. Additionally, we have to pass a `Se
 <template>
   <vue-command 
     :commands="commands" 
-    :executed.sync="new Set()" />
+    :executed.sync="executed" />
 </template>
 
 <script>
@@ -93,7 +95,9 @@ export default {
   data: () =>  ({
     commands: { 
       nano: () => NanoEditor 
-    }
+    },
+
+    executed: new Set()
   })
 }
 </script>
@@ -107,7 +111,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 
 | Property                  | Type       | Default                  | Required | Sync | Description                                                                                               |
 |---------------------------|------------|--------------------------|----------|------|-----------------------------------------------------------------------------------------------------------|
-| `autocompletion-resolver` | `Function` | `null`                   | No       | No   | Gets the current input as first and cursor position as the second argument. Must return the whole command |
+| `autocompletion-resolver` | `Function` | `null`                   | No       | No   | See [Autocompletion resolver](#autocompletion-resolver) |
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
 | `cursor`                  | `Number`   | 0                        | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
@@ -197,6 +201,60 @@ To fully simulate a full command circle a built-in command has to follow these s
 6. Execute actual task
 7. Exit the command with the injected `terminate` function
 
+### Autocompletion resolver
+
+It is possible to provide a function that is called when the user hits the <kbd>↹</kbd> key. This function needs to take care of the autocompletion experience and should make usage of properties like `history` and `stdin`. The following shows a possible, simple autocompletion function:
+
+```js
+this.autocompletionResolver = () => {
+  // Make sure only programs are autocompleted since there is no support for arguments, yet
+  const command = this.stdin.split(' ')
+  if (command.length > 1) {
+    return
+  }
+
+  const autocompleteableProgram = command[0]
+  // Collect all autocompletion candidates
+  let candidates = []
+  const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+  programs.forEach(program => {
+    if (program.startsWith(autocompleteableProgram)) {
+      candidates.push(program)
+    }
+  })
+
+  // Autocompletion resolved into multiple results
+  if (this.stdin !== '' && candidates.length > 1) {
+    this.history.push({
+      // Build table programmatically
+      render: createElement => {
+        const columns = candidates.length < 5 ? candidates.length : 4
+        const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+        let index = 0
+        let table = []
+        for (let i = 0; i < rows; i++) {
+          let row = []
+          for (let j = 0; j < columns; j++) {
+            row.push(createElement('td', candidates[index]))
+            index++
+          }
+
+          table.push(createElement('tr', [row]))
+        }
+
+        return createElement('table', { style: { width: '100%' } }, [table])
+      }
+    })
+  }
+
+  // Autocompletion resolved into one result
+  if (candidates.length === 1) {
+    this.stdin = candidates[0]
+  }
+}
+```
+
 ## Slots
 
 ### Bar
@@ -207,7 +265,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 <template>
   <vue-command
     :commands="commands"
-    :executed="new Set()">
+    :executed="executed">
     <div slot="bar">
       Pokedex
     </div>

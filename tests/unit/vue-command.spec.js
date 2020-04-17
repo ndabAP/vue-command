@@ -121,7 +121,7 @@ describe('VueCommand.vue', () => {
 
     enterAndTrigger(wrapper, command)
     await wrapper.vm.$nextTick()
-    wrapper.find('input').trigger('keyup.ArrowUp')
+    wrapper.find('input').trigger('keydown.ArrowUp')
 
     expect(wrapper.find('input').element.value).toBe(command)
   })
@@ -145,10 +145,9 @@ describe('VueCommand.vue', () => {
     wrapper.find('input').setValue(command)
     await wrapper.vm.$nextTick()
 
-    wrapper.find('input').trigger('keyup.tab.prevent')
+    wrapper.find('input').trigger('keydown.tab.prevent')
     await wrapper.vm.$nextTick()
 
-    expect(autocompletionResolver.mock.calls[0][0]).toBe(command)
-    expect(autocompletionResolver.mock.calls[0][1]).toBe(0)
+    expect(autocompletionResolver.mock.calls.length).toBe(1)
   })
 })
