@@ -29,7 +29,7 @@ export default {
       // Check if Stdin is not empty and autocompletion resolver is given
       if (typeof this.autocompletionResolver === 'function') {
         // Call user autocompletion function
-        this.autocompletionResolver(this.local.stdin, this.local.cursor)
+        this.autocompletionResolver()
       }
     },
 

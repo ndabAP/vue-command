@@ -44,11 +44,6 @@ export default {
     },
 
     commands: {
-      a: undefined,
-      aa: undefined,
-      aaa: undefined,
-      aaaa: undefined,
-      aaaaa: undefined,
       // Navigate to home, self and back
       cd: undefined,
 
@@ -103,7 +98,7 @@ export default {
 
     executed: new Set(),
     history: [],
-    prompt: '~neil@moon:#',
+    prompt: PROMPT,
     stdin: ''
   }),
 
@@ -115,21 +110,21 @@ export default {
     }
 
     this.commands.cd = ({ _ }) => {
-      if (_[1] === 'home' && this.prompt === PROMPT) {
+      if ((_[1] === 'home' || _[1] === 'home/') && this.prompt === PROMPT) {
         this.prompt = `${PROMPT}/home`
 
         return createDummyStdout()
       }
 
       // Navigate from home to root
-      if (_[1] === '../' && this.prompt === `${PROMPT}/home`) {
+      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}/home`) {
         this.prompt = PROMPT
 
         return createDummyStdout()
       }
 
       // Navigate to self
-      if (_[1] === '.') {
+      if (_[1] === '.' || typeof _[1] === 'undefined') {
         return createDummyStdout()
       }
 
@@ -145,9 +140,9 @@ export default {
       this.stdin = argument.split('').reverse().join('')
     }
 
-    this.autocompletionResolver = async (stdin, cursor) => {
-      // Make sure only program is autocompleted since there is no support for arguments, yet
-      const command = stdin.split(' ')
+    this.autocompletionResolver = () => {
+      // Make sure only programs are autocompleted since there is no support for arguments, yet
+      const command = this.stdin.split(' ')
       if (command.length > 1) {
         return
       }
@@ -165,13 +160,14 @@ export default {
       // Autocompletion resolved into multiple results
       if (this.stdin !== '' && candidates.length > 1) {
         this.history.push({
+          // Build table programmatically
           render: createElement => {
             const columns = candidates.length < 5 ? candidates.length : 4
             const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
 
             let index = 0
             let table = []
-            for (let i = 0; i < rows; i++) {
+            for (let i = 0; i < rows; experiencei++) {
               let row = []
               for (let j = 0; j < columns; j++) {
                 row.push(createElement('td', candidates[index]))
@@ -184,8 +180,6 @@ export default {
             return createElement('table', { style: { width: '100%' } }, [table])
           }
         })
-
-        this.stdin = stdin
       }
 
       // Autocompletion resolved into one result
