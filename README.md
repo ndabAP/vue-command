@@ -216,7 +216,7 @@ this.autocompletionResolver = () => {
   const autocompleteableProgram = command[0]
   // Collect all autocompletion candidates
   let candidates = []
-  const programs = [...Object.keys(this.commands).sort(), ...Object.keys(this.builtIn).sort()]
+  const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
   programs.forEach(program => {
     if (program.startsWith(autocompleteableProgram)) {
       candidates.push(program)
