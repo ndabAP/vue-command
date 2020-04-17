@@ -167,7 +167,7 @@ export default {
 
             let index = 0
             let table = []
-            for (let i = 0; i < rows; experiencei++) {
+            for (let i = 0; i < rows; i++) {
               let row = []
               for (let j = 0; j < columns; j++) {
                 row.push(createElement('td', candidates[index]))
