@@ -19,7 +19,7 @@ $ npm i vue-command --save
 
 ## Usage
 
-Let's start with a very simple example. We want to send "Hello world" to `Stdout`.
+Let's start with a very simple example. We want to send "Hello world" to `Stdout` when entering `hello-world`.
 
 ```vue
 <template>
@@ -34,10 +34,11 @@ import 'vue-command/dist/vue-command.css'
 
 export default {
   data: () =>  ({
-    executed: new Set(),
     commands: { 
       'hello-world': () => createStdout('Hello world') 
-    }
+    },
+
+    executed: new Set()
   })
 }
 </script>
@@ -92,10 +93,11 @@ export default {
   },
 
   data: () =>  ({
-    executed: new Set(),
     commands: { 
       nano: () => NanoEditor 
-    }
+    },
+
+    executed: new Set()
   })
 }
 </script>
