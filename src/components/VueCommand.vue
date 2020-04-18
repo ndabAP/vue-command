@@ -2,10 +2,7 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keyup="resolveKeyboardEvent"
-    @keydown.38.prevent="mutatePointerHandler"
-    @keydown.40.prevent="mutatePointerHandler"
-    @keydown.tab.prevent="autocomplete"
+    @keydown="resolveKeyboardEvent"
     @click="focus">
     <slot name="bar">
       <div
@@ -68,7 +65,6 @@ import Vue from 'vue'
 
 import Stdin from './Stdin'
 import Stdout from './Stdout'
-import Autocomplete from '../mixins/autocomplete'
 import Handle from '../mixins/handle'
 import History from '../mixins/history'
 import UI from '../mixins/ui'
@@ -79,23 +75,19 @@ const EventBus = new Vue()
 export default {
   components: { Stdin, Stdout },
 
-  mixins: [Autocomplete, Handle, History, UI],
+  mixins: [Handle, History, UI],
 
   provide () {
     return {
       emitExecute: this.emitExecute,
       emitExecuted: this.emitExecuted,
       emitInput: this.emitInput,
+      setCursor: this.setCursor,
       setStdin: this.setStdin
     }
   },
 
   props: {
-    autocompletionResolver: {
-      default: undefined,
-      type: Function
-    },
-
     builtIn: {
       default: () => ({}),
       type: Object
@@ -216,6 +208,8 @@ export default {
 
     // A local copy to allow the absence of properties
     local: {
+      // Current cursor position at Stdin
+      cursor: 0,
       // Current Stdin
       stdin: ''
     },
@@ -230,8 +224,16 @@ export default {
   }),
 
   watch: {
+    cursor () {
+      this.local.cursor = this.cursor
+    },
+
     stdin () {
       this.setStdin(this.stdin)
+    },
+
+    'local.cursor' () {
+      this.$emit('update:cursor', this.local.cursor)
     },
 
     'local.stdin' () {
@@ -331,13 +333,13 @@ export default {
 
       // Execute every resolver
       for (const keyboardResolver of this.keyboardResolver) {
-        event.preventDefault()
-        keyboardResolver.fn({
+        keyboardResolver(event, {
           context: {
-            event,
-            executed: new Set(this.executed), // Don't use same reference to avoid side effects
+            builtIn: this.builtIn,
+            commands: this.commands,
             cursor: this.local.cursor,
-            history: [...this.local.history], // Don't use same reference to avoid side effects
+            executed: this.executed,
+            history: this.local.history,
             isInProgress: this.local.isInProgress,
             isFullscreen: this.local.isFullscreen,
             pointer: this.local.pointer,
@@ -357,6 +359,10 @@ export default {
           }
         })
       }
+    },
+
+    setCursor (cursor) {
+      this.local.cursor = cursor
     },
 
     setStdin (stdin) {

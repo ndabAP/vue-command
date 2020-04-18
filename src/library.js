@@ -1,5 +1,5 @@
 import VueCommand from './components/VueCommand'
-import { ARROW_DOWN_KEY, ARROW_UP_KEY } from './constants/keys'
+import { ARROW_DOWN_KEY, ARROW_UP_KEY, TAB_KEY } from './constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
@@ -58,52 +58,92 @@ export const createDummyStdout = (...mixins) => ({
   render: createElement => createElement('span', {}, '')
 })
 
-export const createPattern = ({
-  altKey,
-  codes,
-  ctrlKey,
-  isComposing,
-  keys,
-  locales,
-  locations,
-  metaKeys,
-  repeat,
-  shiftKey
-}) => ({
-  altKey,
-  codes,
-  ctrlKey,
-  isComposing,
-  keys,
-  locales,
-  locations,
-  metaKeys,
-  repeat,
-  shiftKey
-})
-
-export const historyKeyboardResolver = {
-  fn: ({
+export const historyKeyboardResolver = (
+  event,
+  {
     methods: { setStdin, setPointer },
-    context: { event: { key }, executed, pointer }
-  }) => {
-    // Check if pointer is mutable and input key is up or key
-    if (key === ARROW_UP_KEY && pointer > 0) {
-      pointer--
-      setPointer(pointer)
+    context: { executed, pointer }
+  }
+) => {
+  // Check if pointer is mutable and input key is up or key
+  if (event.key === ARROW_UP_KEY && pointer > 0) {
+    pointer--
+    setPointer(pointer)
 
-      // Set current Stdin to pointed command
-      setStdin([...executed][pointer])
-    } else if (key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
-      pointer++
-      setPointer(pointer)
+    // Set current Stdin to pointed command
+    setStdin([...executed][pointer])
 
-      // Set current Stdin to pointed command
-      setStdin([...executed][pointer])
+    event.preventDefault()
+  } else if (event.key === ARROW_DOWN_KEY && pointer < (executed.size - 1)) {
+    pointer++
+    setPointer(pointer)
+
+    // Set current Stdin to pointed command
+    setStdin([...executed][pointer])
+
+    event.preventDefault()
+  }
+}
+
+export const autcompletionKeyboardResolver = (
+  event,
+  {
+    methods: { setStdin },
+    context: { builtIn, commands, history, stdin }
+  }
+) => {
+  if (event.key !== TAB_KEY) {
+    return
+  }
+
+  event.preventDefault()
+
+  // Make sure only programs are autocompleted since there is no support for arguments, yet
+  const command = stdin.split(' ')
+  if (command.length > 1) {
+    return
+  }
+
+  const autocompleteableProgram = command[0]
+  // Collect all autocompletion candidates
+  let candidates = []
+  const programs = [...Object.keys(commands), ...Object.keys(builtIn)].sort()
+  programs.forEach(program => {
+    if (program.startsWith(autocompleteableProgram)) {
+      candidates.push(program)
     }
-  },
+  })
 
-  pattern: createPattern({ keys: [ARROW_UP_KEY, ARROW_DOWN_KEY] })
+  // Autocompletion resolved into multiple results
+  if (stdin !== '' && candidates.length > 1) {
+    history.push({
+    // Build table programmatically
+      render: createElement => {
+        const columns = candidates.length < 5 ? candidates.length : 4
+        const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+        let index = 0
+        let table = []
+        for (let i = 0; i < rows; i++) {
+          let row = []
+          for (let j = 0; j < columns; j++) {
+            row.push(createElement('td', candidates[index]))
+
+            index++
+          }
+
+          table.push(createElement('tr', [row]))
+        }
+
+        return createElement('table', { style: { width: '100%' } }, [table])
+      }
+    })
+  }
+
+  // Autocompletion resolved into one result
+  if (candidates.length === 1) {
+    setStdin(candidates[0])
+  }
 }
 
 export default VueCommand
