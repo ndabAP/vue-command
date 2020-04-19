@@ -118,10 +118,6 @@ export default {
         this.scrollIntoView()
         this.focus()
       }
-
-      if (this.isInProgress && !this.isLast) {
-        this.blur()
-      }
     },
 
     isLast (isLast, wasLast) {
@@ -151,12 +147,6 @@ export default {
   },
 
   created () {
-    setTimeout(() => {
-      if (this.isLast && this.showHelp) {
-        this.setPlaceholder(this.helpText)
-      }
-    }, this.helpTimeout)
-
     this.local.prompt = this.prompt
     this.local.stdin = this.stdin
   },
@@ -166,6 +156,12 @@ export default {
     this.scrollIntoView()
     // Focus new Stdin
     this.focus()
+
+    setTimeout(() => {
+      if (this.isLast && this.showHelp) {
+        this.setPlaceholder(this.helpText)
+      }
+    }, this.helpTimeout)
   },
 
   methods: {
