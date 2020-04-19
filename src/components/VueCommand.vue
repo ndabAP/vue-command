@@ -2,8 +2,8 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keydown.38.prevent="mutatePointerHandler"
-    @keydown.40.prevent="mutatePointerHandler"
+    @keydown.38.exact.prevent="decreaseHistory"
+    @keydown.40.exact.prevent="increaseHistory"
     @keydown.tab.prevent="autocomplete"
     @click="focus">
 
