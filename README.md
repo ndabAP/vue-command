@@ -286,7 +286,7 @@ Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot,
     <span
       class="term-ps" 
       slot="prompt">
-      {{ prompt }} ready to take off:&nbsp;
+      {{ prompt }} ready to take off:
     </span>
   </vue-command>
 </template>
