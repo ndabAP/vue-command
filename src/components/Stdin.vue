@@ -1,11 +1,15 @@
 <template>
   <div
     class="term-stdin-container">
-    <span
-      v-if="!hidePrompt"
-      class="term-ps">
-      {{ local.prompt }}
-    </span>
+
+    <slot name="prompt">
+      <span
+        v-if="!hidePrompt"
+        class="term-ps">
+        {{ local.prompt }}
+      </span>
+    </slot>
+
     <span class="term-stdin">
       <input
         ref="input"

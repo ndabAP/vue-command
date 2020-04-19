@@ -56,7 +56,11 @@
               :show-help="showHelp"
               :stdin.sync="local.stdin"
               :uid="_uid"
-              @handle="handle"/>
+              @handle="handle">
+              <template #prompt>
+                <slot name="prompt" />
+              </template>
+            </stdin>
           </div>
         </div>
       </div>

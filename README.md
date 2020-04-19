@@ -265,9 +265,26 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 <template>
   <vue-command
     :commands="commands"
-    :executed="executed">
+    :executed.sync="executed">
     <div slot="bar">
       Pokedex
+    </div>
+  </vue-command>
+</template>
+```
+
+### Prompt
+
+Customize the prompt with the `prompt` slot.
+
+```vue
+<template>
+  <vue-command
+    :commands="commands"
+    :executed.sync="executed"
+    prompt="neil">
+    <template #prompt>
+      {{ prompt }} ready to take off:&nbsp;
     </div>
   </vue-command>
 </template>

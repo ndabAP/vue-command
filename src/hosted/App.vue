@@ -12,7 +12,11 @@
       :help-timeout="1250"
       :prompt="prompt"
       :stdin.sync="stdin"
-      show-help/>
+      show-help>
+      <span slot="prompt">
+        {{ prompt }} ready to take off:&nbsp;
+      </span>
+    </vue-command>
     <pre>
       <code>
 $ npm i --save vue-command
@@ -29,7 +33,7 @@ import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
 import { createStdout, createStderr, createDummyStdout } from '../library'
 
-const PROMPT = '~neil@moon:#'
+const PROMPT = 'neil'
 
 export default {
   components: {
