@@ -33,6 +33,12 @@ export default {
       type: Object
     },
 
+    cursor: {
+      default: 0,
+      required: true,
+      type: Number
+    },
+
     helpText: {
       default: '',
       type: String
@@ -98,6 +104,13 @@ export default {
   }),
 
   watch: {
+    cursor () {
+      if (this.isLast) {
+        // Mirror the cursor position to the real cursor position
+        this.$refs.input.setSelectionRange(this.cursor, this.cursor)
+      }
+    },
+
     async isInProgress () {
       if (!this.isInProgress && this.isLast) {
         await this.$nextTick()

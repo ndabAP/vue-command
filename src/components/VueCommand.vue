@@ -45,6 +45,7 @@
               v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
               ref="stdin"
               :bus="bus"
+              :cursor="local.cursor"
               :hide-prompt="hidePrompt"
               :is-fullscreen="local.isFullscreen"
               :is-in-progress="local.isInProgress"
