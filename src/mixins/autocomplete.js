@@ -26,7 +26,7 @@ export default {
   methods: {
     // Calls the user given autocompletion resolver
     autocomplete () {
-      // Check if Stdin is not empty and autocompletion resolver is given
+      // Check if autocompletion resolver is given
       if (typeof this.autocompletionResolver === 'function') {
         // Call user autocompletion function
         this.autocompletionResolver()
