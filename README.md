@@ -275,7 +275,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 
 ### Prompt
 
-Customize the prompt with the `prompt` slot.
+Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot, the property `prompt` will be ignored and the CSS class `term-ps` has to be manually applied.
 
 ```vue
 <template>
@@ -283,9 +283,11 @@ Customize the prompt with the `prompt` slot.
     :commands="commands"
     :executed.sync="executed"
     prompt="neil">
-    <template #prompt>
+    <span
+      class="term-ps" 
+      slot="prompt">
       {{ prompt }} ready to take off:&nbsp;
-    </div>
+    </span>
   </vue-command>
 </template>
 ```

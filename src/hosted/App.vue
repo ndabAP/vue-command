@@ -13,9 +13,6 @@
       :prompt="prompt"
       :stdin.sync="stdin"
       show-help>
-      <span slot="prompt">
-        {{ prompt }} ready to take off:&nbsp;
-      </span>
     </vue-command>
     <pre>
       <code>
@@ -33,7 +30,7 @@ import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
 import { createStdout, createStderr, createDummyStdout } from '../library'
 
-const PROMPT = 'neil'
+const PROMPT = '~neil@moon:#'
 
 export default {
   components: {
