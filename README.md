@@ -6,7 +6,6 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 
 - Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
 - Search history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
-- White/Dark theme support
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Supports asynchronous commands
 - Customize terminal with slots
@@ -131,7 +130,6 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                                           |
 | `stdin`                   | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                                           |
 | `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                                            |
-| `white-theme`             | `Boolean`  | `false`                  | No       | No   | Enables the white theme                                                                                   |
 | `yargs-options`           | `Object`   | `{}`                     | No       | No   | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                    |
 
 ### Commands

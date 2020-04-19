@@ -18,7 +18,6 @@
     </slot>
 
     <div
-      :class="{ 'white-theme': whiteTheme }"
       class="term">
       <div
         ref="term-std"
@@ -197,11 +196,6 @@ export default {
     title: {
       default: 'neil@moon: ~',
       type: String
-    },
-
-    whiteTheme: {
-      default: false,
-      type: Boolean
     },
 
     yargsOptions: {
