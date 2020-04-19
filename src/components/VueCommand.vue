@@ -4,7 +4,7 @@
     class="vue-command"
     @keydown.38.exact.prevent="decreaseHistory"
     @keydown.40.exact.prevent="increaseHistory"
-    @keydown.tab.prevent="autocomplete"
+    @keydown.tab.exact.prevent="autocomplete"
     @click="focus">
 
     <slot name="bar">

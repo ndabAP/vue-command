@@ -22,7 +22,7 @@
         autocapitalize="none"
         @click="setCursor($refs.input.selectionStart)"
         @keyup="setCursor($refs.input.selectionStart)"
-        @keyup.enter="handle"/>
+        @keyup.enter.exact="handle"/>
     </span>
   </div>
 </template>
