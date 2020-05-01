@@ -44,7 +44,7 @@ export default {
         component = this.setupComponent(component, this.local.history.length, parsed)
 
         // Remove duplicate commands to push to latest entry
-        let executed = new Set(this.executed)
+        const executed = new Set(this.executed)
         executed.delete(stdin)
         executed.add(stdin)
         // Mutate property
@@ -61,7 +61,7 @@ export default {
       // Point history to new command
       this.setPointer(this.executed.size)
 
-      let history = [...this.local.history]
+      const history = [...this.local.history]
       history.push(component)
 
       // Emit command executing started

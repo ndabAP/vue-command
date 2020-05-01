@@ -150,7 +150,7 @@ export default {
 
       const autocompleteableProgram = command[0]
       // Collect all autocompletion candidates
-      let candidates = []
+      const candidates = []
       const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
       programs.forEach(program => {
         if (program.startsWith(autocompleteableProgram)) {
@@ -167,9 +167,9 @@ export default {
             const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
 
             let index = 0
-            let table = []
+            const table = []
             for (let i = 0; i < rows; i++) {
-              let row = []
+              const row = []
               for (let j = 0; j < columns; j++) {
                 row.push(createElement('td', candidates[index]))
                 index++

@@ -277,7 +277,7 @@ export default {
     this.setIsInProgress(this.isInProgress)
     this.setIsFullscreen(this.isFullscreen)
 
-    let history = [...this.history]
+    const history = [...this.history]
     // If there is no entry push dummy Stdout to show Stdin
     if (history.length === 0) {
       // Push dummy Stdout without termination
