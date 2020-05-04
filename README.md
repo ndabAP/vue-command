@@ -183,12 +183,13 @@ The API is more likely to change. The argument that is called within the built-i
 
 To fully simulate a full command circle a built-in command has to follow these steps:
 
-1. Increase the history pointer
-2. Emit command executing started
-3. Tell terminal there is a command in progress  
-4. Push the `Stdout` component into the `history` property
-5. Execute actual task
-6. Exit the command with the injected `terminate` function
+1. Add the programm to the `executed` `Set` property
+2. Increase the history pointer
+3. Emit command executing started
+4. Tell terminal there is a command in progress  
+5. Push the `Stdout` component into the `history` property
+6. Execute actual task
+7. Exit the command with the injected `terminate` function
 
 ### Autocompletion resolver
 
