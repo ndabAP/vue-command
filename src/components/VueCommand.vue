@@ -270,7 +270,7 @@ export default {
   },
 
   created () {
-    // Obverse executed changes since Vue.js can't watch a "Set". See: https://github.com/ndabAP/vue-command/issues/151
+    // Observe "executed" changes since Vue.js can't watch a "Set". See: https://github.com/ndabAP/vue-command/issues/151
     this.executed.add = function (...x) {
       this.local.executed.add(...x)
 
