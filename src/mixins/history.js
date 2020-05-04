@@ -8,6 +8,7 @@ export default {
 
   data: () => ({
     local: {
+      executed: new Set(),
       // All executed commands
       history: [],
       // History command pointer
@@ -33,11 +34,11 @@ export default {
   methods: {
     increaseHistory () {
       // Check if pointer is mutable
-      if (this.local.pointer < (this.executed.size - 1)) {
+      if (this.local.pointer < (this.local.executed.size - 1)) {
         this.local.pointer++
 
         // Set new pointed Stdin
-        this.local.stdin = [...this.executed][this.local.pointer]
+        this.local.stdin = [...this.local.executed][this.local.pointer]
       }
     },
 
@@ -47,8 +48,12 @@ export default {
         this.local.pointer--
 
         // Set new pointed Stdin
-        this.local.stdin = [...this.executed][this.local.pointer]
+        this.local.stdin = [...this.local.executed][this.local.pointer]
       }
+    },
+
+    setExecuted (executed) {
+      this.local.executed = executed
     },
 
     setHistory (history) {

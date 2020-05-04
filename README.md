@@ -22,9 +22,7 @@ Let's start with a very simple example. We want to send "Hello world" to `Stdout
 
 ```vue
 <template>
-  <vue-command 
-    :commands="commands" 
-    :executed.sync="executed" />
+  <vue-command :commands="commands" />
 </template>
 
 <script>
@@ -35,9 +33,7 @@ export default {
   data: () =>  ({
     commands: { 
       'hello-world': () => createStdout('Hello world') 
-    },
-
-    executed: new Set()
+    }
   })
 }
 </script>
@@ -71,13 +67,11 @@ export default {
 </script>
 ```
 
-Now the command has to return the component. Additionally, we have to pass a `Set` with the `sync` modifier which will contain all executed programs. This property can be changed at any time.
+Now the command has to return the component.
 
 ```vue
 <template>
-  <vue-command 
-    :commands="commands" 
-    :executed.sync="executed" />
+  <vue-command :commands="commands" />
 </template>
 
 <script>
@@ -94,9 +88,7 @@ export default {
   data: () =>  ({
     commands: { 
       nano: () => NanoEditor 
-    },
-
-    executed: new Set()
+    }
   })
 }
 </script>
@@ -114,7 +106,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
 | `cursor`                  | `Number`   | 0                        | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
-| `executed`                | `Set`      |                          | Yes      | Yes  | Executed programs                                                                                         |
+| `executed`                | `Set`      |                          | No       | Yes  | Executed programs                                                                                         |
 | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
 | `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
 | `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                             |
@@ -191,13 +183,12 @@ The API is more likely to change. The argument that is called within the built-i
 
 To fully simulate a full command circle a built-in command has to follow these steps:
 
-1. Add the programm to the `executed` `Set` property
-2. Increase the history pointer
-3. Emit command executing started
-4. Tell terminal there is a command in progress  
-5. Push the `Stdout` component into the `history` property
-6. Execute actual task
-7. Exit the command with the injected `terminate` function
+1. Increase the history pointer
+2. Emit command executing started
+3. Tell terminal there is a command in progress  
+4. Push the `Stdout` component into the `history` property
+5. Execute actual task
+6. Exit the command with the injected `terminate` function
 
 ### Autocompletion resolver
 
@@ -261,9 +252,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 
 ```vue
 <template>
-  <vue-command
-    :commands="commands"
-    :executed.sync="executed">
+  <vue-command :commands="commands">
     <div slot="bar">
       Pokedex
     </div>
@@ -279,7 +268,6 @@ Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot,
 <template>
   <vue-command
     :commands="commands"
-    :executed.sync="executed"
     prompt="neil">
     <span
       class="term-ps" 
@@ -301,6 +289,10 @@ Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot,
 ## Browser support
 
 This library uses the `ResizeObserver` to track if the terminals inner height changes. You may need a pollyfill to support your target browser.
+
+## Overwriting `executed` functions
+
+To track when the `executed` property has been mutated, this library overwrites the functions `add`, `clear` and `delete` of it. That means if you plan to overwrite the `Set` by yourself, the library won't work. 
 
 ## Projects using vue-command
 

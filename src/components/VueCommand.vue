@@ -117,7 +117,7 @@ export default {
 
     // Non-empty executed commands
     executed: {
-      required: true,
+      default: () => new Set(),
       type: Set
     },
 
@@ -237,7 +237,7 @@ export default {
 
       // Make searching history work again
       if (this.local.stdin === '') {
-        this.setPointer(this.executed.size)
+        this.setPointer(this.local.executed.size)
       }
     }
   },
@@ -270,6 +270,23 @@ export default {
   },
 
   created () {
+    // Obverse executed changes since Vue.js can't watch a "Set". See: https://github.com/ndabAP/vue-command/issues/151
+    this.executed.add = function (...x) {
+      this.local.executed.add(...x)
+
+      Object.getPrototypeOf(this).add.call(this, ...x)
+    }
+    this.executed.clear = function () {
+      this.local.executed.clear()
+
+      Object.getPrototypeOf(this).add.call(this)
+    }
+    this.executed.delete = function (...x) {
+      this.local.executed.delete(...x)
+
+      Object.getPrototypeOf(this).delete.call(this, ...x)
+    }
+
     // Apply user given properties
     this.setCursor(this.cursor)
     this.setPointer(this.pointer)

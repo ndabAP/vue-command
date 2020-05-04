@@ -7,7 +7,6 @@
       :autocompletion-resolver="autocompletionResolver"
       :built-in="builtIn"
       :commands="commands"
-      :executed.sync="executed"
       :history.sync="history"
       :help-timeout="1250"
       :prompt="prompt"
@@ -97,7 +96,6 @@ export default {
       pwd: () => createStdout('/home/neil')
     },
 
-    executed: new Set(),
     history: [],
     prompt: PROMPT,
     stdin: ''

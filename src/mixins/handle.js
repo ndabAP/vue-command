@@ -42,13 +42,6 @@ export default {
 
         component = await Promise.resolve(this.commands[program](parsed))
         component = this.setupComponent(component, this.local.history.length, parsed)
-
-        // Remove duplicate commands to push to latest entry
-        const executed = new Set(this.executed)
-        executed.delete(stdin)
-        executed.add(stdin)
-        // Mutate property
-        this.$emit('update:executed', executed)
       } else {
         // No command found
         if (stdin !== '') {
@@ -58,8 +51,20 @@ export default {
         component = this.setupComponent(component, this.local.history.length)
       }
 
+      // Disallow empty Stdin in history
+      if (stdin !== '') {
+        // Remove duplicate commands to push to latest entry
+        const executed = new Set(this.local.executed)
+        executed.delete(stdin)
+        executed.add(stdin)
+
+        // Mutate property
+        this.$emit('update:executed', executed)
+        this.setExecuted(executed)
+      }
+
       // Point history to new command
-      this.setPointer(this.executed.size)
+      this.setPointer(this.local.executed.size)
 
       const history = [...this.local.history]
       history.push(component)
