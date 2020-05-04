@@ -106,7 +106,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
 | `cursor`                  | `Number`   | `0`                      | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
-| `executed`                | `Set`      | `new Set()`              | No       | Yes  | Executed programs                                                                                         |
+| `executed`                | `Set`      | `new Set()`              | No       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions)                                                                                         |
 | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
 | `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
 | `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                             |
@@ -293,7 +293,7 @@ This library uses the `ResizeObserver` to track if the terminals inner height ch
 
 ## Overwriting `executed` functions
 
-To track when the `executed` property has been mutated, this library overwrites the functions `add`, `clear` and `delete` of it. That means if you plan to overwrite the `Set` by yourself, the library won't work. 
+To track when the `executed` property has been mutated, this library overwrites the functions `add`, `clear` and `delete` of it. That means if you plan to overwrite the named `Set` functions by yourself, this library won't work. 
 
 ## Projects using vue-command
 
