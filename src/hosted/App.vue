@@ -239,6 +239,22 @@ body {
   }
 
   .vue-command {
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #252525;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #333;
+    }
+
     .term {
       -webkit-border-bottom-left-radius: $border-radius;
       -webkit-border-bottom-left-radius: $border-radius;
