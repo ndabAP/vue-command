@@ -2,8 +2,7 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keydown.ctrl.82.exact.prevent="setIsSearchHandler"
-    @click="focus">
+    @keydown.ctrl.82.exact.prevent="setIsSearchHandler">
 
     <slot name="bar">
       <div
@@ -26,13 +25,15 @@
           :executed="local.executed"
           :is-search.sync="isSearch"
           :stdin="stdin"
+          @click="focus"
           @handle="handle"/>
 
         <div
           v-show="!isSearch"
           ref="term-cont"
           :class="{ 'term-cont-fullscreen': local.isFullscreen }"
-          class="term-cont">
+          class="term-cont"
+          @click="focus">
           <div v-if="showIntro">
             {{ intro }}
           </div>
