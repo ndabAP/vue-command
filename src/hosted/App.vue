@@ -29,7 +29,7 @@ import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
 import { createStdout, createStderr, createDummyStdout } from '../library'
 
-const PROMPT = '~neil@moon:#'
+const PROMPT = '~neil@moon:#/'
 
 export default {
   components: {
@@ -52,7 +52,7 @@ export default {
 
       // Show help
       help: () => createStdout(`Available programms:<br><br>
-        &nbsp;cd<br>
+        &nbsp;cd [dir]<br>
         &nbsp;clear<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
@@ -110,20 +110,20 @@ export default {
 
     this.commands.cd = ({ _ }) => {
       if ((_[1] === 'home' || _[1] === 'home/') && this.prompt === PROMPT) {
-        this.prompt = `${PROMPT}/home`
+        this.prompt = `${PROMPT}home`
 
         return createDummyStdout()
       }
 
       // Navigate from home to root
-      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}/home`) {
+      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}home`) {
         this.prompt = PROMPT
 
         return createDummyStdout()
       }
 
       // Navigate to self
-      if (_[1] === '.' || typeof _[1] === 'undefined') {
+      if (_[1] === '.' || _[1] === './' || typeof _[1] === 'undefined') {
         return createDummyStdout()
       }
 
@@ -132,7 +132,7 @@ export default {
 
     this.commands.pwd = () => {
       // Take current prompt into account
-      if (this.prompt === '~neil@moon:#') {
+      if (this.prompt === '~neil@moon:#/') {
         return createStdout('/')
       } else {
         return createStdout('/home')
@@ -143,6 +143,11 @@ export default {
       stdin = stdin.trim()
       // Get second argument
       const argument = stdin.split(' ')[1]
+
+      // Do nothing if no argument given
+      if (!argument) {
+        return
+      }
 
       // Reverse argument
       this.stdin = argument.split('').reverse().join('')
@@ -239,34 +244,32 @@ body {
   }
 
   .vue-command {
+    -webkit-border-bottom-left-radius: $border-radius;
+    -webkit-border-bottom-right-radius: $border-radius;
+    -moz-border-bottom-left-radius: $border-radius;
+    -moz-border-bottom-right-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
     ::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
     }
 
     ::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: #252525;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #252525;
+      background: #f1f1f1;
     }
 
     ::-webkit-scrollbar-thumb:hover {
       background: #333;
     }
 
-    .term {
-      -webkit-border-bottom-left-radius: $border-radius;
-      -webkit-border-bottom-left-radius: $border-radius;
-      -moz-border-bottom-right-radius: $border-radius;
-      -moz-border-bottom-left-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-
     .term-bar {
       -webkit-border-top-left-radius: $border-radius;
-      -webkit-border-top-left-radius: $border-radius;
+      -webkit-border-top-right-radius: $border-radius;
       -moz-border-top-right-radius: $border-radius;
       -moz-border-top-left-radius: $border-radius;
       border-top-left-radius: $border-radius;
@@ -274,8 +277,8 @@ body {
     }
 
     .term-std {
-      min-height: 291px;
-      max-height: 291px;
+      min-height: 312px;
+      max-height: 312px;
       overflow-y: scroll;
     }
   }

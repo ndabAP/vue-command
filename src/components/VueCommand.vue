@@ -2,8 +2,7 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keydown.ctrl.82.exact.prevent="setIsSearchHandler"
-    @click="focus">
+    @keydown.ctrl.82.exact.prevent="setIsSearchHandler">
 
     <slot name="bar">
       <div
@@ -28,59 +27,48 @@
         @handle="handle"/>
 
       <div
-        ref="term-std"
-        class="term-std">
-        <search
-          v-if="isSearch"
-          ref="search"
-          :executed="local.executed"
-          :is-search.sync="isSearch"
-          :stdin="stdin"
-          @handle="handle"/>
+        v-show="!isSearch"
+        ref="term-cont"
+        :class="{ 'term-cont-fullscreen': local.isFullscreen }"
+        class="term-cont"
+        @click="focus">
+        <div v-if="showIntro">
+          {{ intro }}
+        </div>
 
         <div
-          v-show="!isSearch"
-          ref="term-cont"
-          :class="{ 'term-cont-fullscreen': local.isFullscreen }"
-          class="term-cont">
-          <div v-if="showIntro">
-            {{ intro }}
-          </div>
+          v-for="(stdout, index) in local.history"
+          :key="index"
+          class="term-hist"
+          :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
+          @keydown.38.exact.prevent="decreaseHistory"
+          @keydown.40.exact.prevent="increaseHistory"
+          @keydown.tab.exact.prevent="autocomplete">
+          <stdout
+            v-show="(!local.isFullscreen || index === local.history.length - 1)"
+            :component="stdout"
+            class="term-stdout"/>
 
-          <div
-            v-for="(stdout, index) in local.history"
-            :key="index"
-            class="term-hist"
-            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
-            @keydown.38.exact.prevent="decreaseHistory"
-            @keydown.40.exact.prevent="increaseHistory"
-            @keydown.tab.exact.prevent="autocomplete">
-            <stdout
-              v-show="(!local.isFullscreen || index === local.history.length - 1)"
-              :component="stdout"
-              class="term-stdout"/>
-
-            <stdin
-              v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
-              ref="stdin"
-              :bus="bus"
-              :cursor="local.cursor"
-              :hide-prompt="hidePrompt"
-              :is-fullscreen="local.isFullscreen"
-              :is-in-progress="local.isInProgress"
-              :is-last="index === local.history.length - 1"
-              :prompt="prompt"
-              :help-text="helpText"
-              :help-timeout="helpTimeout"
-              :show-help="showHelp"
-              :stdin.sync="local.stdin"
-              :uid="_uid"
-              @handle="handle">
-              <template #prompt>
-                <slot name="prompt" />
-              </template>
-            </stdin>
-          </div>
+          <stdin
+            v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
+            ref="stdin"
+            :bus="bus"
+            :cursor="local.cursor"
+            :hide-prompt="hidePrompt"
+            :is-fullscreen="local.isFullscreen"
+            :is-in-progress="local.isInProgress"
+            :is-last="index === local.history.length - 1"
+            :prompt="prompt"
+            :help-text="helpText"
+            :help-timeout="helpTimeout"
+            :show-help="showHelp"
+            :stdin.sync="local.stdin"
+            :uid="_uid"
+            @handle="handle">
+            <template #prompt>
+              <slot name="prompt" />
+            </template>
+          </stdin>
         </div>
       </div>
     </div>
@@ -201,7 +189,7 @@ export default {
     },
 
     prompt: {
-      default: '~neil@moon:#',
+      default: '~neil@moon:#/',
       type: String
     },
 
