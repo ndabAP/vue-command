@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "12.2.0",
+  "version": "13.0.0",
   "description": "A fully working, most feature-rich Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
@@ -33,7 +33,7 @@
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "yargs-parser": "^13.1.2"
+    "getopts": "^2.2.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.3.1",

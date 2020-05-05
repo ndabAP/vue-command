@@ -4,7 +4,7 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 
 ## Features
 
-- Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
+- Parses arguments with [`getopts`](https://www.npmjs.com/package/getopts)
 - Supports asynchronous commands
 - Search history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Autocompletion resolver (with <kbd>↹</kbd>)
@@ -101,33 +101,33 @@ There are two types of commands: Built-in and regular ones. In most cases regula
 
 Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
 
-| Property                  | Type       | Default                  | Required | Sync | Description                                                                                               |
-|---------------------------|------------|--------------------------|----------|------|-----------------------------------------------------------------------------------------------------------|
-| `autocompletion-resolver` | `Function` | `null`                   | No       | No   | See [Autocompletion resolver](#autocompletion-resolver) |
-| `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                                         |
-| `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                                         |
-| `cursor`                  | `Number`   | `0`                      | No       | Yes  | Sets the `Stdin` cursor position                                                                          |
-| `executed`                | `Set`      | `new Set()`              | No       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions)                                                                                         |
-| `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                                      |
-| `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                              |
-| `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                             |
-| `hide-prompt`             | `Boolean`  | `false`                  | No       | No   | Hides the prompt                                                                                          |
-| `history`                 | `Array`    | `[]`                     | No       | Yes  | Executed commands                                                                                         |
-| `intro`                   | `String`   | `Fasten your seatbelts!` | No       | No   | Sets the intro                                                                                            |
-| `is-fullscreen`           | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                                         |
-| `is-in-progress`          | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                                         |
-| `not-found`               | `String`   | `not found`              | No       | No   | Sets the command not found text                                                                           |
-| `pointer`                 | `Number`   | `0`                      | No       | Yes  | Sets the command pointer                                                                                  |
-| `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                                           |
-| `show-help`               | `Boolean`  | `false`                  | No       | No   | Shows the placeholder                                                                                     |
-| `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                                           |
-| `stdin`                   | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                                           |
-| `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                                            |
-| `yargs-options`           | `Object`   | `{}`                     | No       | No   | Sets the [yargs options](https://github.com/yargs/yargs-parser#readme)                                    |
+| Property                  | Type       | Default                  | Required | Sync | Description                                                                                  |
+|---------------------------|------------|--------------------------|----------|------|----------------------------------------------------------------------------------------------|
+| `autocompletion-resolver` | `Function` | `null`                   | No       | No   | See [Autocompletion resolver](#autocompletion-resolver)                                      |
+| `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                            |
+| `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                            |
+| `cursor`                  | `Number`   | `0`                      | No       | Yes  | Sets the `Stdin` cursor position                                                             |
+| `executed`                | `Set`      | `new Set()`              | No       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions) |
+| `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                         |
+| `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                 |
+| `hide-bar`                | `Boolean`  | `false`                  | No       | No   | Hides the bar                                                                                |
+| `hide-prompt`             | `Boolean`  | `false`                  | No       | No   | Hides the prompt                                                                             |
+| `history`                 | `Array`    | `[]`                     | No       | Yes  | Executed commands                                                                            |
+| `intro`                   | `String`   | `Fasten your seatbelts!` | No       | No   | Sets the intro                                                                               |
+| `is-fullscreen`           | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal fullscreen mode                                                            |
+| `is-in-progress`          | `Boolean`  | `false`                  | No       | Yes  | Sets the terminal progress status                                                            |
+| `not-found`               | `String`   | `not found`              | No       | No   | Sets the command not found text                                                              |
+| `parser-options`          | `Object`   | `{}`                     | No       | No   | Sets the [parser options](https://github.com/jorgebucaran/getopts#api)                       |
+| `pointer`                 | `Number`   | `0`                      | No       | Yes  | Sets the command pointer                                                                     |
+| `prompt`                  | `String`   | `~neil@moon:#`           | No       | No   | Sets the prompt                                                                              |
+| `show-help`               | `Boolean`  | `false`                  | No       | No   | Shows the placeholder                                                                        |
+| `show-intro`              | `Boolean`  | `false`                  | No       | No   | Shows the intro                                                                              |
+| `stdin`                   | `String`   | `''`                     | No       | Yes  | Sets the current `Stdin`                                                                     |
+| `title`                   | `String`   | `neil@moon: ~`           | No       | No   | Sets the title                                                                               |
 
 ### Commands
 
-`commands` must be an object containing key-value pairs where key is the command and the value is a function that will be called with the [yargs arguments](https://github.com/yargs/yargs-parser#readme). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
+`commands` must be an object containing key-value pairs where key is the command and the value is a function that will be called with the [`getops` arguments](https://www.npmjs.com/package/getopts). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
 
 | Function                                                                                       | Description                                                                     |
 |------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
@@ -174,7 +174,7 @@ The `context` variable contains the following properties:
 | Property         | Description                        |
 |------------------|------------------------------------|
 | `cursor: Number` | Current cursor position at `Stdin` |
-| `parsed: Object` | Parsed yargs arguments             |
+| `parsed: Object` | Parsed `getops` arguments          |
 
 ### Built-in
 

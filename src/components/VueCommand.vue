@@ -179,6 +179,12 @@ export default {
       type: String
     },
 
+    // Options when parsing Stdin
+    parserOptions: {
+      default: () => ({}),
+      type: Object
+    },
+
     pointer: {
       default: 0,
       type: Number
@@ -208,11 +214,6 @@ export default {
     title: {
       default: 'neil@moon: ~',
       type: String
-    },
-
-    yargsOptions: {
-      default: () => ({}),
-      type: Object
     }
   },
 

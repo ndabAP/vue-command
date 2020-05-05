@@ -1,4 +1,4 @@
-import yargsParser from 'yargs-parser'
+import getOpts from 'getopts'
 
 import { createStderr, createDummyStdout } from '../library'
 
@@ -16,7 +16,7 @@ export default {
       // Remove leading and trailing whitespace
       stdin = stdin.trim()
 
-      const program = yargsParser(stdin, this.yargsOptions)._[0]
+      const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
 
       // Check if function is built in
       if (this.builtIn[program] !== undefined) {
@@ -32,13 +32,13 @@ export default {
 
     // Executes a regular command
     async execute (stdin) {
-      const program = yargsParser(stdin, this.yargsOptions)._[0]
+      const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
       // Create empty component in case no program has been found
       let component = createDummyStdout()
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
-        const parsed = yargsParser(stdin, this.yargsOptions)
+        const parsed = getOpts(stdin.split(' '), this.parserOptions)
 
         component = await Promise.resolve(this.commands[program](parsed))
         component = this.setupComponent(component, this.local.history.length, parsed)
