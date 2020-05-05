@@ -52,7 +52,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "js-yaml": "^3.13.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "querystringify": "^2.1.1",
     "sass-loader": "^8.0.0",
     "serialize-javascript": "~2.1.1",
