@@ -93,7 +93,7 @@ export default {
       },
 
       // Show current path
-      pwd: () => createStdout('/home/neil')
+      pwd: () => undefined
     },
 
     history: [],
@@ -128,6 +128,15 @@ export default {
       }
 
       return createStderr(`cd: ${_[1]}: No such file or directory`)
+    }
+
+    this.commands.pwd = () => {
+      // Take current prompt into account
+      if (this.prompt === '~neil@moon:#') {
+        return createStdout('/')
+      } else {
+        return createStdout('/home')
+      }
     }
 
     this.builtIn.reverse = stdin => {
