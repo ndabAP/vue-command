@@ -2,9 +2,7 @@
   <div
     ref="vue-command"
     class="vue-command"
-    @keydown.38.exact.prevent="decreaseHistory"
-    @keydown.40.exact.prevent="increaseHistory"
-    @keydown.tab.exact.prevent="autocomplete"
+    @keydown.ctrl.82.exact.prevent="setIsSearchHandler"
     @click="focus">
 
     <slot name="bar">
@@ -22,7 +20,16 @@
       <div
         ref="term-std"
         class="term-std">
+        <search
+          v-if="isSearch"
+          ref="search"
+          :executed="local.executed"
+          :is-search.sync="isSearch"
+          :stdin="stdin"
+          @handle="handle"/>
+
         <div
+          v-show="!isSearch"
           ref="term-cont"
           :class="{ 'term-cont-fullscreen': local.isFullscreen }"
           class="term-cont">
@@ -34,7 +41,10 @@
             v-for="(stdout, index) in local.history"
             :key="index"
             class="term-hist"
-            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }">
+            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
+            @keydown.38.exact.prevent="decreaseHistory"
+            @keydown.40.exact.prevent="increaseHistory"
+            @keydown.tab.exact.prevent="autocomplete">
             <stdout
               v-show="(!local.isFullscreen || index === local.history.length - 1)"
               :component="stdout"
@@ -70,20 +80,22 @@
 <script>
 import Vue from 'vue'
 
+import Search from './Search'
 import Stdin from './Stdin'
 import Stdout from './Stdout'
-import Autocomplete from '../mixins/autocomplete'
-import Handle from '../mixins/handle'
-import History from '../mixins/history'
-import UI from '../mixins/ui'
+import AutocompleteMixin from '../mixins/autocomplete'
+import HandleMixin from '../mixins/handle'
+import HistoryMixin from '../mixins/history'
+import SearchMixin from '../mixins/search'
+import UIMixin from '../mixins/ui'
 
 // Event bus for communication
 const EventBus = new Vue()
 
 export default {
-  components: { Stdin, Stdout },
+  components: { Search, Stdin, Stdout },
 
-  mixins: [Autocomplete, Handle, History, UI],
+  mixins: [AutocompleteMixin, HandleMixin, HistoryMixin, SearchMixin, UIMixin],
 
   provide () {
     return {
@@ -323,8 +335,15 @@ export default {
       this.$emit('executed')
     },
 
-    // Focus on last Stdin
+    // Focus on last Stdin or search
     focus () {
+      // Check if search mode
+      if (this.isSearch) {
+        this.$refs.search.focus()
+
+        return
+      }
+
       const stdins = this.$refs.stdin
       // Latest Stdin is latest history entry
       const stdin = stdins[this.local.history.length - 1]

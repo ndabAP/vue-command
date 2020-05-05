@@ -5,10 +5,11 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 ## Features
 
 - Parse arguments with [yargs-parser](https://www.npmjs.com/package/yargs-parser)
+- Supports asynchronous commands
 - Search history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Autocompletion resolver (with <kbd>↹</kbd>)
-- Supports asynchronous commands
 - Customize terminal with slots
+- Search history with <kbd>Ctrl</kbd> + <kbd>r</kbd>
 
 ## Installation
 
@@ -41,7 +42,7 @@ export default {
 
 Now a more complex one. Let's assume we want to build the Nano editor available in many shells. 
 
-We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>X</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
+We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
 
 ```vue
 <template>
