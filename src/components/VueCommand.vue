@@ -15,63 +15,60 @@
     </slot>
 
     <div
-      class="term">
+      ref="term-std"
+      class="term-std">
+      <search
+        v-if="isSearch"
+        ref="search"
+        :executed="local.executed"
+        :is-search.sync="isSearch"
+        :stdin="stdin"
+        @click="focus"
+        @handle="handle"/>
+
       <div
-        ref="term-std"
-        class="term-std">
-        <search
-          v-if="isSearch"
-          ref="search"
-          :executed="local.executed"
-          :is-search.sync="isSearch"
-          :stdin="stdin"
-          @click="focus"
-          @handle="handle"/>
+        v-show="!isSearch"
+        ref="term-cont"
+        :class="{ 'term-cont-fullscreen': local.isFullscreen }"
+        class="term-cont"
+        @click="focus">
+        <div v-if="showIntro">
+          {{ intro }}
+        </div>
 
         <div
-          v-show="!isSearch"
-          ref="term-cont"
-          :class="{ 'term-cont-fullscreen': local.isFullscreen }"
-          class="term-cont"
-          @click="focus">
-          <div v-if="showIntro">
-            {{ intro }}
-          </div>
+          v-for="(stdout, index) in local.history"
+          :key="index"
+          class="term-hist"
+          :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
+          @keydown.38.exact.prevent="decreaseHistory"
+          @keydown.40.exact.prevent="increaseHistory"
+          @keydown.tab.exact.prevent="autocomplete">
+          <stdout
+            v-show="(!local.isFullscreen || index === local.history.length - 1)"
+            :component="stdout"
+            class="term-stdout"/>
 
-          <div
-            v-for="(stdout, index) in local.history"
-            :key="index"
-            class="term-hist"
-            :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
-            @keydown.38.exact.prevent="decreaseHistory"
-            @keydown.40.exact.prevent="increaseHistory"
-            @keydown.tab.exact.prevent="autocomplete">
-            <stdout
-              v-show="(!local.isFullscreen || index === local.history.length - 1)"
-              :component="stdout"
-              class="term-stdout"/>
-
-            <stdin
-              v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
-              ref="stdin"
-              :bus="bus"
-              :cursor="local.cursor"
-              :hide-prompt="hidePrompt"
-              :is-fullscreen="local.isFullscreen"
-              :is-in-progress="local.isInProgress"
-              :is-last="index === local.history.length - 1"
-              :prompt="prompt"
-              :help-text="helpText"
-              :help-timeout="helpTimeout"
-              :show-help="showHelp"
-              :stdin.sync="local.stdin"
-              :uid="_uid"
-              @handle="handle">
-              <template #prompt>
-                <slot name="prompt" />
-              </template>
-            </stdin>
-          </div>
+          <stdin
+            v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
+            ref="stdin"
+            :bus="bus"
+            :cursor="local.cursor"
+            :hide-prompt="hidePrompt"
+            :is-fullscreen="local.isFullscreen"
+            :is-in-progress="local.isInProgress"
+            :is-last="index === local.history.length - 1"
+            :prompt="prompt"
+            :help-text="helpText"
+            :help-timeout="helpTimeout"
+            :show-help="showHelp"
+            :stdin.sync="local.stdin"
+            :uid="_uid"
+            @handle="handle">
+            <template #prompt>
+              <slot name="prompt" />
+            </template>
+          </stdin>
         </div>
       </div>
     </div>
@@ -192,7 +189,7 @@ export default {
     },
 
     prompt: {
-      default: '~neil@moon:#',
+      default: '~neil@moon:#/',
       type: String
     },
 
@@ -368,14 +365,6 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 
-  .term {
-    background: $background;
-    display: block;
-    flex-direction: column;
-    width: 100%;
-    border: 0px solid $background;
-  }
-
   .term-bar {
     background: $background;
     border-bottom: 1px solid #252525;
@@ -394,6 +383,12 @@ export default {
   }
 
   .term-std {
+    background: $background;
+    display: block;
+    flex-direction: column;
+    width: 100%;
+    border: 0px solid $background;
+
     @extend .term-hist-container-fullscreen;
   }
 
