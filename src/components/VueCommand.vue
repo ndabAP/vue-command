@@ -16,7 +16,17 @@
     </slot>
 
     <div
-      class="term">
+      ref="term-std"
+      class="term-std">
+      <search
+        v-if="isSearch"
+        ref="search"
+        :executed="local.executed"
+        :is-search.sync="isSearch"
+        :stdin="stdin"
+        @click="focus"
+        @handle="handle"/>
+
       <div
         ref="term-std"
         class="term-std">
@@ -367,14 +377,6 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 
-  .term {
-    background: $background;
-    display: block;
-    flex-direction: column;
-    width: 100%;
-    border: 1px solid $background;
-  }
-
   .term-bar {
     background: $background;
     border-bottom: 1px solid #252525;
@@ -393,6 +395,12 @@ export default {
   }
 
   .term-std {
+    background: $background;
+    display: block;
+    flex-direction: column;
+    width: 100%;
+    border: 0px solid $background;
+
     @extend .term-hist-container-fullscreen;
   }
 
