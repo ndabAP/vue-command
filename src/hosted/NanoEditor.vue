@@ -2,7 +2,7 @@
   <div v-if="environment.isExecuting">
     <textarea
       ref="nano"
-      rows="14"
+      rows="15"
       @keydown.ctrl.88="terminate">This is a Nano text editor emulator! Press Ctrl + X to leave.</textarea>
   </div>
 </template>
