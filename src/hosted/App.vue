@@ -6,7 +6,6 @@
     <vue-moveable
       class="moveable"
       v-bind="moveable"
-      @on-click="test"
       @drag="drag"
       @drag-start="setIsDragging(true)"
       @drag-end="setIsDragging(false)">
@@ -111,7 +110,6 @@ export default {
     history: [],
     isDragging: false,
     moveable: {
-      dragArea: false,
       draggable: true
     },
 
@@ -141,7 +139,7 @@ export default {
       }
 
       // Navigate to self
-      if (_[1] === '.' || typeof _[1] === 'undefined') {
+      if (_[1] === '.' || _[1] === './' || typeof _[1] === 'undefined') {
         return createDummyStdout()
       }
 
@@ -225,19 +223,8 @@ export default {
       target.style.transform = transform
     },
 
-    resize ({
-      target, width, height, delta
-    }) {
-      delta[0] && (target.style.width = `${width}px`)
-      delta[1] && (target.style.height = `${height}px`)
-    },
-
     setIsDragging (isDragging) {
       this.isDragging = isDragging
-    },
-
-    test (event) {
-      console.log(event)
     }
   }
 }
