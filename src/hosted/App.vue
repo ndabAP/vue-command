@@ -3,24 +3,16 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working Vue.js terminal emulator.</p>
 
-    <vue-moveable
-      class="moveable"
-      v-bind="moveable"
-      @drag="drag"
-      @drag-start="setIsDragging(true)"
-      @drag-end="setIsDragging(false)">
-      <vue-command
-        :class="{ dragging: isDragging }"
-        :autocompletion-resolver="autocompletionResolver"
-        :built-in="builtIn"
-        :commands="commands"
-        :history.sync="history"
-        :help-timeout="1250"
-        :prompt="prompt"
-        :stdin.sync="stdin"
-        show-help>
-      </vue-command>
-    </vue-moveable>
+    <vue-command
+      :autocompletion-resolver="autocompletionResolver"
+      :built-in="builtIn"
+      :commands="commands"
+      :history.sync="history"
+      :help-timeout="1250"
+      :prompt="prompt"
+      :stdin.sync="stdin"
+      show-help>
+    </vue-command>
     <pre>
       <code>
 $ npm i --save vue-command
@@ -30,8 +22,6 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import VueMoveable from 'vue-moveable'
-
 import ChuckNorris from './ChuckNorris'
 import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
@@ -39,12 +29,11 @@ import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
 import { createStdout, createStderr, createDummyStdout } from '../library'
 
-const PROMPT = '~neil@moon:#'
+const PROMPT = '~neil@moon:#/'
 
 export default {
   components: {
-    VueCommand,
-    VueMoveable
+    VueCommand
   },
 
   data: () => ({
@@ -108,11 +97,6 @@ export default {
     },
 
     history: [],
-    isDragging: false,
-    moveable: {
-      draggable: true
-    },
-
     prompt: PROMPT,
     stdin: ''
   }),
@@ -126,13 +110,13 @@ export default {
 
     this.commands.cd = ({ _ }) => {
       if ((_[1] === 'home' || _[1] === 'home/') && this.prompt === PROMPT) {
-        this.prompt = `${PROMPT}/home`
+        this.prompt = `${PROMPT}home`
 
         return createDummyStdout()
       }
 
       // Navigate from home to root
-      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}/home`) {
+      if ((_[1] === '../' || _[1] === '..') && this.prompt === `${PROMPT}home`) {
         this.prompt = PROMPT
 
         return createDummyStdout()
@@ -148,7 +132,7 @@ export default {
 
     this.commands.pwd = () => {
       // Take current prompt into account
-      if (this.prompt === '~neil@moon:#') {
+      if (this.prompt === '~neil@moon:#/') {
         return createStdout('/')
       } else {
         return createStdout('/home')
@@ -215,16 +199,6 @@ export default {
       if (candidates.length === 1) {
         this.stdin = candidates[0]
       }
-    }
-  },
-
-  methods: {
-    drag ({ target, transform }) {
-      target.style.transform = transform
-    },
-
-    setIsDragging (isDragging) {
-      this.isDragging = isDragging
     }
   }
 }
@@ -307,16 +281,6 @@ body {
       max-height: 312px;
       overflow-y: scroll;
     }
-  }
-
-  // Add the desktop grabbing effect
-  .dragging {
-    cursor: grabbing;
-  }
-
-  // Added by the moveable library
-  .moveable-line {
-    background: none !important;
   }
 }
 </style>
