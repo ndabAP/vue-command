@@ -373,7 +373,7 @@ export default {
     display: block;
     flex-direction: column;
     width: 100%;
-    border: 1px solid $background;
+    border: 0px solid $background;
   }
 
   .term-bar {

@@ -58,6 +58,7 @@
     "serialize-javascript": "~2.1.1",
     "tar": ">=4.4.10",
     "vue": "^2.6.11",
+    "vue-moveable": "^1.8.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.42.1"
   },

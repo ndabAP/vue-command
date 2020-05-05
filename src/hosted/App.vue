@@ -3,16 +3,25 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working Vue.js terminal emulator.</p>
 
-    <vue-command
-      :autocompletion-resolver="autocompletionResolver"
-      :built-in="builtIn"
-      :commands="commands"
-      :history.sync="history"
-      :help-timeout="1250"
-      :prompt="prompt"
-      :stdin.sync="stdin"
-      show-help>
-    </vue-command>
+    <vue-moveable
+      class="moveable"
+      v-bind="moveable"
+      @on-click="test"
+      @drag="drag"
+      @drag-start="setIsDragging(true)"
+      @drag-end="setIsDragging(false)">
+      <vue-command
+        :class="{ dragging: isDragging }"
+        :autocompletion-resolver="autocompletionResolver"
+        :built-in="builtIn"
+        :commands="commands"
+        :history.sync="history"
+        :help-timeout="1250"
+        :prompt="prompt"
+        :stdin.sync="stdin"
+        show-help>
+      </vue-command>
+    </vue-moveable>
     <pre>
       <code>
 $ npm i --save vue-command
@@ -22,6 +31,8 @@ $ npm i --save vue-command
 </template>
 
 <script>
+import VueMoveable from 'vue-moveable'
+
 import ChuckNorris from './ChuckNorris'
 import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
@@ -33,7 +44,8 @@ const PROMPT = '~neil@moon:#'
 
 export default {
   components: {
-    VueCommand
+    VueCommand,
+    VueMoveable
   },
 
   data: () => ({
@@ -52,7 +64,7 @@ export default {
 
       // Show help
       help: () => createStdout(`Available programms:<br><br>
-        &nbsp;cd<br>
+        &nbsp;cd [dir]<br>
         &nbsp;clear<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
@@ -97,6 +109,12 @@ export default {
     },
 
     history: [],
+    isDragging: false,
+    moveable: {
+      dragArea: false,
+      draggable: true
+    },
+
     prompt: PROMPT,
     stdin: ''
   }),
@@ -143,6 +161,11 @@ export default {
       stdin = stdin.trim()
       // Get second argument
       const argument = stdin.split(' ')[1]
+
+      // Do nothing if no argument given
+      if (!argument) {
+        return
+      }
 
       // Reverse argument
       this.stdin = argument.split('').reverse().join('')
@@ -195,6 +218,27 @@ export default {
         this.stdin = candidates[0]
       }
     }
+  },
+
+  methods: {
+    drag ({ target, transform }) {
+      target.style.transform = transform
+    },
+
+    resize ({
+      target, width, height, delta
+    }) {
+      delta[0] && (target.style.width = `${width}px`)
+      delta[1] && (target.style.height = `${height}px`)
+    },
+
+    setIsDragging (isDragging) {
+      this.isDragging = isDragging
+    },
+
+    test (event) {
+      console.log(event)
+    }
   }
 }
 </script>
@@ -239,34 +283,32 @@ body {
   }
 
   .vue-command {
+    -webkit-border-bottom-left-radius: $border-radius;
+    -webkit-border-bottom-right-radius: $border-radius;
+    -moz-border-bottom-left-radius: $border-radius;
+    -moz-border-bottom-right-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
     ::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
     }
 
     ::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: #252525;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #252525;
+      background: #f1f1f1;
     }
 
     ::-webkit-scrollbar-thumb:hover {
       background: #333;
     }
 
-    .term {
-      -webkit-border-bottom-left-radius: $border-radius;
-      -webkit-border-bottom-left-radius: $border-radius;
-      -moz-border-bottom-right-radius: $border-radius;
-      -moz-border-bottom-left-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-
     .term-bar {
       -webkit-border-top-left-radius: $border-radius;
-      -webkit-border-top-left-radius: $border-radius;
+      -webkit-border-top-right-radius: $border-radius;
       -moz-border-top-right-radius: $border-radius;
       -moz-border-top-left-radius: $border-radius;
       border-top-left-radius: $border-radius;
@@ -274,10 +316,20 @@ body {
     }
 
     .term-std {
-      min-height: 291px;
-      max-height: 291px;
+      min-height: 312px;
+      max-height: 312px;
       overflow-y: scroll;
     }
+  }
+
+  // Add the desktop grabbing effect
+  .dragging {
+    cursor: grabbing;
+  }
+
+  // Added by the moveable library
+  .moveable-line {
+    background: none !important;
   }
 }
 </style>
