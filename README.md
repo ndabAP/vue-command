@@ -6,7 +6,7 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 
 - Parses arguments with [`getopts`](https://www.npmjs.com/package/getopts)
 - Supports asynchronous commands
-- Search history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
+- Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Customize terminal with slots
 - Search history with <kbd>Ctrl</kbd> + <kbd>r</kbd>
