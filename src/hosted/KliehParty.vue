@@ -6,7 +6,7 @@
       :style="{ color: color(index) }">
       {{ character }}
     </span><br><br>
-    Press Ctrl + C to leave.
+    Press Ctrl + c to leave.
   </div>
 </template>
 
