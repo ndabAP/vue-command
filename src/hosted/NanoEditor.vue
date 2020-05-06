@@ -3,7 +3,7 @@
     <textarea
       ref="nano"
       rows="15"
-      @keydown.ctrl.88="terminate">This is a Nano text editor emulator! Press Ctrl + X to leave.</textarea>
+      @keydown.ctrl.88="terminate">This is a Nano text editor emulator! Press Ctrl + c to leave.</textarea>
   </div>
 </template>
 

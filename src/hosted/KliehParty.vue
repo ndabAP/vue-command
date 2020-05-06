@@ -42,7 +42,7 @@ export default {
     }, INTERVAL_TIMEOUT)
 
     window.addEventListener('keydown', event => {
-      // Ctrl and C simultaneously
+      // Ctrl and c simultaneously
       if (event.key === C_LOWER_KEY && event.getModifierState(CONTROL_KEY)) {
         // Stop animation
         clearInterval(this.interval)
