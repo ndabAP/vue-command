@@ -49,7 +49,7 @@ We will use the provided `environment` variable to make sure the editor is only 
   <div v-if="environment.isExecuting">
     <textarea
       ref="nano"
-      @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + X to leave.</textarea>
+      @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + x to leave.</textarea>
   </div>
 </template>
 
