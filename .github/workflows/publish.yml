@@ -27,16 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-    - name: Checkout
-    uses: actions/checkout@v2
-    - name: Setup Node.js
-    uses: actions/setup-node@v1
-    with:
-    node-version: 12.x
-    - name: Install
-    run: npm ci
-    - name: Release
-    run: npx semantic-release
-    env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+      node-version: 12.x
+      - name: Install
+      run: npm ci
+      - name: Release
+      run: npx semantic-release
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
