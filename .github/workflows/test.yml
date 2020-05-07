@@ -6,16 +6,12 @@ jobs:
     test:
         name: Test
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-            node-version: [8.x, 10.x, 12.x]
+        uses: actions/checkout@v2
         steps:
         - name: Checkout
-        uses: actions/checkout@v2
-        - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-            node-version: ${{ matrix.node-version }}
+            node-version: '12'
         - name: Install
         run: npm ci
         - name: Lint, test
