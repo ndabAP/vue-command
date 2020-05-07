@@ -28,13 +28,13 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v1
-      - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-      node-version: 12.x
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
       - name: Install
-      run: npm ci
-      - name: Release
+      run: npm i
+      - name: Publish
       run: npx semantic-release
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
