@@ -32,10 +32,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - name: Install
-      run: npm i
       - name: Publish
-      run: npx semantic-release
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm i && npx semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
