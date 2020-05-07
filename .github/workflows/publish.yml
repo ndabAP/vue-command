@@ -1,22 +1,56 @@
-name: Publish
+name: Test, publish
 
-on:
-  release:
-    types: [published]
+on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+    test:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+            # Run the steps below with the following versions of Node.js
+            node-version: [8.x, 10.x, 12.x]
+
+        steps:
+        # Fetch the latest commit
+        - name: Checkout
+        uses: actions/checkout@v2
+
+        # Setup Node.js using the appropriate version
+        - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build:lib
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTHENTICATION_TOKEN}}
+            node-version: ${{ matrix.node-version }}
+
+        # Install package dependencies
+        - name: Install
+        run: npm ci
+
+        - name: Lint, test
+        run: |
+          npm i
+          npm run lint && npm run test
+
+ release:
+    # Only release on push to master
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    # Waits for test jobs for each Node.js version to complete
+    needs: [test]
+
+    steps:
+    - name: Checkout
+    uses: actions/checkout@v2
+
+    - name: Setup Node.js
+    uses: actions/setup-node@v1
+    with:
+    node-version: 12.x
+
+    - name: Install
+    run: npm ci
+
+    - name: Release
+    run: npx semantic-release
+    env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
