@@ -9,42 +9,34 @@ jobs:
         strategy:
             matrix:
             node-version: [8.x, 10.x, 12.x]
-
         steps:
         - name: Checkout
         uses: actions/checkout@v2
-
         - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
             node-version: ${{ matrix.node-version }}
-
         - name: Install
         run: npm ci
-
         - name: Lint, test
         run: |
-          npm i
-          npm run lint && npm run test
+            npm i
+            npm run lint && npm run test
 
     publish:
         name: Publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         runs-on: ubuntu-latest
         needs: [test]
-
         steps:
         - name: Checkout
         uses: actions/checkout@v2
-
         - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
         node-version: 12.x
-
         - name: Install
         run: npm ci
-
         - name: Release
         run: npx semantic-release
         env:
