@@ -6,18 +6,21 @@ jobs:
     test:
         name: Test
         runs-on: ubuntu-latest
-        uses: actions/checkout@v2
         steps:
-        - name: Checkout
-        uses: actions/setup-node@v1
-        with:
-            node-version: '12'
-        - name: Install
-        run: npm ci
-        - name: Lint, test
-        run: |
-            npm i
-            npm run lint && npm run test
+            - uses: actions/checkout@v1
+            - name: Use Node.js
+            uses: actions/setup-node@v1
+            with:
+            node-version: 12
+
+            - name: Install
+            run: npm ci
+
+            - name: Test
+            run: |
+                npm i
+                npm run lint && npm run test
+  
 
 
     publish:
