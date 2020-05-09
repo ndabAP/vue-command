@@ -343,10 +343,8 @@ export default {
         return
       }
 
-      const stdins = this.$refs.stdin
       // Latest Stdin is latest history entry
-      const stdin = stdins[this.local.history.length - 1]
-
+      const stdin = this.$refs.stdin[this.local.history.length - 1]
       // Call component method
       stdin.focus()
     },
