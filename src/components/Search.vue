@@ -31,11 +31,13 @@ export default {
       type: Set
     },
 
+    // Indicates if search is visible
     isSearch: {
       required: true,
       type: Boolean
     },
 
+    // Current Stdin
     stdin: {
       required: true,
       type: String
@@ -43,7 +45,9 @@ export default {
   },
 
   data: () => ({
+    // Suggested command
     command: '',
+    // Users input
     search: ''
   }),
 
