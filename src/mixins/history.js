@@ -18,7 +18,7 @@ export default {
 
   watch: {
     history () {
-      // Creates a new copy
+      // Creates a new copy to prevent mutation
       this.setHistory([...this.history])
     },
 
