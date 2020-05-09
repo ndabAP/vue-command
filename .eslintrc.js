@@ -5,7 +5,7 @@ module.exports = {
     jest: true
   },
 
-  'extends': [
+  extends: [
     'plugin:vue/essential',
     '@vue/standard'
   ],
@@ -14,19 +14,19 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/html-closing-bracket-newline': ['error', {
-      'singleline': 'never',
-      'multiline': 'never'
+      singleline: 'never',
+      multiline: 'never'
     }],
 
     'vue/max-attributes-per-line': ['error', {
-      'singleline': 1,
-      'multiline': 1
+      singleline: 1,
+      multiline: 1
     }],
 
     'vue/attributes-order': 'error',
     'vue/order-in-components': 'error',
     'vue/html-indent': 'error',
-    'quotes': ['error', 'single']
+    quotes: ['error', 'single']
   },
 
   parserOptions: {
