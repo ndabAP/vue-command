@@ -1,6 +1,6 @@
 # Contributing
 
-I'm happy you want to contribute. To guarantee a healthy state, please make sure you read and fulfil the following sections.
+I'm happy you want to contribute. To guarantee a healthy state of this library, please make sure you read and fulfil the following sections.
 
 ## General
 
