@@ -22,6 +22,10 @@ export default {
   methods: {
     // Let the user search inside the "executed" "Set"
     setIsSearchHandler () {
+      if (this.disableHistory) {
+        return
+      }
+
       if (!this.isInProgress) {
         this.setIsSearch(true)
       }

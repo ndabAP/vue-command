@@ -125,6 +125,12 @@ export default {
       type: Number
     },
 
+    // Disables searching in commands history
+    disableHistory: {
+      default: false,
+      type: Boolean
+    },
+
     // Non-empty executed commands
     executed: {
       default: () => new Set(),

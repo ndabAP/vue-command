@@ -33,6 +33,10 @@ export default {
 
   methods: {
     increaseHistory () {
+      if (this.disableHistory) {
+        return
+      }
+
       // Check if pointer is mutable
       if (this.local.pointer < (this.local.executed.size - 1)) {
         this.local.pointer++
@@ -43,6 +47,10 @@ export default {
     },
 
     decreaseHistory () {
+      if (this.disableHistory) {
+        return
+      }
+
       // Check if pointer is mutable
       if (this.local.pointer > 0) {
         this.local.pointer--

@@ -107,6 +107,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `built-in`                | `Object`   | `{}`                     | No       | No   | See [Built-in](#built-in) section                                                            |
 | `commands`                | `Object`   |                          | Yes      | No   | See [Commands](#commands) section                                                            |
 | `cursor`                  | `Number`   | `0`                      | No       | Yes  | Sets the `Stdin` cursor position                                                             |
+| `disable-history`         | `Boolean`  | `false`                  | No       | No   | Disables searching history                                                                |
 | `executed`                | `Set`      | `new Set()`              | No       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions) |
 | `help-text`               | `String`   | `Type help`              | No       | No   | Sets the placeholder                                                                         |
 | `help-timeout`            | `Number`   | `4000`                   | No       | No   | Sets the placeholder timeout                                                                 |
