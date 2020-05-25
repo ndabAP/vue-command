@@ -1,3 +1,10 @@
+## [13.3.1](https://github.com/ndabAP/vue-command/compare/v13.3.0...v13.3.1) (2020-05-25)
+
+
+### Bug Fixes
+
+* documentation ([2c49571](https://github.com/ndabAP/vue-command/commit/2c495713351350d6093070227207860953b172ee))
+
 # [13.3.0](https://github.com/ndabAP/vue-command/compare/v13.2.0...v13.3.0) (2020-05-22)
 
 
