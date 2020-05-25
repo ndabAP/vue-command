@@ -7,6 +7,7 @@
       :autocompletion-resolver="autocompletionResolver"
       :built-in="builtIn"
       :commands="commands"
+      :cursor.sync="cursor"
       :history.sync="history"
       :help-timeout="1250"
       :prompt="prompt"
@@ -56,7 +57,7 @@ export default {
         &nbsp;clear<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
-        &nbsp;loading [--timeout n] [--amount n]<br>
+        &nbsp;loading [--amount n] [--timeout n]<br>
         &nbsp;nano<br>
         &nbsp;norris<br>
         &nbsp;pokedex pokemon --color<br>
@@ -86,7 +87,7 @@ export default {
         }
 
         // Return help since no match
-        return createStderr(`Usage: pokedex pokemon [option]<br><br>
+        return createStderr(`Usage: pokedex pokemon [option | -h]<br><br>
 
           Example: pokedex pikachu --color
         `)
@@ -96,7 +97,20 @@ export default {
       pwd: () => undefined
     },
 
+    // Terminal cursor position
+    cursor: 0,
     history: [],
+    options: {
+      long: {
+        pokedex: ['color'],
+        loading: ['amount', 'timeout']
+      },
+
+      short: {
+        pokedex: ['ho', 'hi']
+      }
+    },
+
     prompt: PROMPT,
     stdin: ''
   }),
@@ -153,51 +167,191 @@ export default {
       this.stdin = argument.split('').reverse().join('')
     }
 
-    this.autocompletionResolver = () => {
-      // Make sure only programs are autocompleted since there is no support for arguments, yet
+    this.autocompletionResolver = async () => {
+      // Preserve cursor position
+      const cursor = this.cursor
+
+      // Reverse concatenate autocompletable according to cursor
+      let pointer = this.cursor
+      let autocompleteableStdin = ''
+      while (this.stdin[pointer - 1] !== ' ' && pointer - 1 > 0) {
+        pointer--
+        autocompleteableStdin = `${this.stdin[pointer]}${autocompleteableStdin}`
+      }
+
+      // Divide by arguments
       const command = this.stdin.split(' ')
-      if (command.length > 1) {
+
+      // Autocompleteable is program
+      if (command.length === 1) {
+        const autocompleteableProgram = command[0]
+        // Collect all autocompletion candidates
+        const candidates = []
+        const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+        programs.forEach(program => {
+          if (program.startsWith(autocompleteableProgram)) {
+            candidates.push(program)
+          }
+        })
+
+        // Autocompletion resolved into multiple results
+        if (this.stdin !== '' && candidates.length > 1) {
+          this.history.push({
+            // Build table programmatically
+            render: createElement => {
+              const columns = candidates.length < 5 ? candidates.length : 4
+              const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+              let index = 0
+              const table = []
+              for (let i = 0; i < rows; i++) {
+                const row = []
+                for (let j = 0; j < columns; j++) {
+                  row.push(createElement('td', candidates[index]))
+                  index++
+                }
+
+                table.push(createElement('tr', [row]))
+              }
+
+              return createElement('table', { style: { width: '100%' } }, [table])
+            }
+          })
+        }
+
+        // Autocompletion resolved into one result
+        if (candidates.length === 1) {
+          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          const unwatch = this.$watch(() => this.cursor, () => {
+            this.cursor = cursor
+
+            unwatch()
+          })
+
+          this.stdin = candidates[0]
+        }
+
         return
       }
 
-      const autocompleteableProgram = command[0]
-      // Collect all autocompletion candidates
-      const candidates = []
-      const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
-      programs.forEach(program => {
-        if (program.startsWith(autocompleteableProgram)) {
-          candidates.push(program)
-        }
-      })
-
-      // Autocompletion resolved into multiple results
-      if (this.stdin !== '' && candidates.length > 1) {
-        this.history.push({
-          // Build table programmatically
-          render: createElement => {
-            const columns = candidates.length < 5 ? candidates.length : 4
-            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
-
-            let index = 0
-            const table = []
-            for (let i = 0; i < rows; i++) {
-              const row = []
-              for (let j = 0; j < columns; j++) {
-                row.push(createElement('td', candidates[index]))
-                index++
-              }
-
-              table.push(createElement('tr', [row]))
-            }
-
-            return createElement('table', { style: { width: '100%' } }, [table])
-          }
-        })
+      // Check if option might be completed already or option is last tokens
+      if ((this.stdin[cursor] !== '' && this.stdin[cursor] !== ' ') && typeof this.stdin[cursor] !== 'undefined') {
+        return
       }
 
-      // Autocompletion resolved into one result
-      if (candidates.length === 1) {
-        this.stdin = candidates[0]
+      const program = command[0]
+
+      // Check if any autocompleteable exists
+      if (typeof this.options.long[program] === 'undefined' && typeof this.options.short[program] === 'undefined') {
+        return
+      }
+
+      // Autocompleteable is long option
+      if (autocompleteableStdin.substring(0, 2) === '--') {
+        const candidates = []
+        this.options.long[program].forEach(option => {
+          // If only dashes are presents, user requests all options
+          if (`--${option}`.startsWith(autocompleteableStdin) || autocompleteableStdin === '--') {
+            candidates.push(option)
+          }
+        })
+
+        // Autocompletion resolved into one result
+        if (candidates.length === 1) {
+          const autocompleted = `${this.stdin.substring(0, pointer - 1)} --${candidates[0]}`
+          const rest = `${this.stdin.substring(this.cursor)}`
+
+          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          const unwatch = this.$watch(() => this.cursor, () => {
+            this.cursor = cursor
+
+            unwatch()
+          })
+
+          this.stdin = `${autocompleted}${rest}`
+
+          return
+        }
+
+        // Autocompletion resolved into multiple result
+        if (autocompleteableStdin === '--' || candidates.length > 1) {
+          this.history.push({
+            // Build table programmatically
+            render: createElement => {
+              const columns = candidates.length < 5 ? candidates.length : 4
+              const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+              let index = 0
+              const table = []
+              for (let i = 0; i < rows; i++) {
+                const row = []
+                for (let j = 0; j < columns; j++) {
+                  row.push(createElement('td', `--${candidates[index]}`))
+                  index++
+                }
+
+                table.push(createElement('tr', [row]))
+              }
+
+              return createElement('table', { style: { width: '100%' } }, [table])
+            }
+          })
+        }
+
+        return
+      }
+
+      // Autocompleteable is option
+      if (autocompleteableStdin.substring(0, 1) === '-') {
+        const candidates = []
+        this.options.short[program].forEach(option => {
+          // If only one dash is present, user requests all options
+          if (`-${option}`.startsWith(autocompleteableStdin) || autocompleteableStdin === '-') {
+            candidates.push(option)
+          }
+        })
+
+        // Autocompletion resolved into one result
+        if (candidates.length === 1) {
+          const autocompleted = `${this.stdin.substring(0, pointer - 1)} -${candidates[0]}`
+          const rest = `${this.stdin.substring(this.cursor)}`
+
+          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          const unwatch = this.$watch(() => this.cursor, () => {
+            this.cursor = cursor
+
+            unwatch()
+          })
+
+          this.stdin = `${autocompleted}${rest}`
+
+          return
+        }
+
+        // Autocompletion resolved into multiple result
+        if (autocompleteableStdin === '-' || candidates.length > 1) {
+          this.history.push({
+            // Build table programmatically
+            render: createElement => {
+              const columns = candidates.length < 5 ? candidates.length : 4
+              const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
+
+              let index = 0
+              const table = []
+              for (let i = 0; i < rows; i++) {
+                const row = []
+                for (let j = 0; j < columns; j++) {
+                  row.push(createElement('td', `-${candidates[index]}`))
+                  index++
+                }
+
+                table.push(createElement('tr', [row]))
+              }
+
+              return createElement('table', { style: { width: '100%' } }, [table])
+            }
+          })
+        }
       }
     }
   }
