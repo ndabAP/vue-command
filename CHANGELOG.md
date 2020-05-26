@@ -1,3 +1,10 @@
+## [13.5.1](https://github.com/ndabAP/vue-command/compare/v13.5.0...v13.5.1) (2020-05-26)
+
+
+### Bug Fixes
+
+* helper method documentation ([2a42129](https://github.com/ndabAP/vue-command/commit/2a4212949515e116db7ba2f854fff320c08b5dd0))
+
 # [13.5.0](https://github.com/ndabAP/vue-command/compare/v13.4.0...v13.5.0) (2020-05-26)
 
 
