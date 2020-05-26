@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   test:
     name: Test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
