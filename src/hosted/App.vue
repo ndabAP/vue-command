@@ -221,7 +221,7 @@ export default {
 
         // Autocompletion resolved into one result
         if (candidates.length === 1) {
-          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
           const unwatch = this.$watch(() => this.cursor, () => {
             this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 0)
 
@@ -262,7 +262,7 @@ export default {
           const autocompleted = `${this.stdin.substring(0, pointer - 1)} --${candidates[0]}`
           const rest = `${this.stdin.substring(this.cursor)}`
 
-          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
           const unwatch = this.$watch(() => this.cursor, () => {
             this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
@@ -317,7 +317,7 @@ export default {
           const autocompleted = `${this.stdin.substring(0, pointer - 1)} -${candidates[0]}`
           const rest = `${this.stdin.substring(this.cursor)}`
 
-          // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+          // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
           const unwatch = this.$watch(() => this.cursor, () => {
             this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 1)
 

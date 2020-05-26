@@ -203,7 +203,7 @@ It is possible to provide a function that is called when the user hits the <kbd>
 
 ```js
 this.autocompletionResolver = () => {
-  // Make sure only programs are autocompleted since there is no support for arguments, yet
+  // Make sure only programs are autocompleted. See below for version with options
   const command = this.stdin.split(' ')
   if (command.length > 1) {
     return
@@ -309,7 +309,7 @@ this.autocompletionResolver = () => {
 
       // Autocompletion resolved into one result
       if (candidates.length === 1) {
-        // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
         const unwatch = this.$watch(() => this.cursor, () => {
           this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
@@ -327,6 +327,7 @@ this.autocompletionResolver = () => {
       return
     }
 
+    // Get the executable
     const program = command[0]
 
     // Check if any autocompleteable exists
@@ -349,7 +350,7 @@ this.autocompletionResolver = () => {
         const autocompleted = `${this.stdin.substring(0, pointer - 1)} --${candidates[0]}`
         const rest = `${this.stdin.substring(this.cursor)}`
 
-        // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
         const unwatch = this.$watch(() => this.cursor, () => {
           this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
@@ -404,7 +405,7 @@ this.autocompletionResolver = () => {
         const autocompleted = `${this.stdin.substring(0, pointer - 1)} -${candidates[0]}`
         const rest = `${this.stdin.substring(this.cursor)}`
 
-        // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
+        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
         const unwatch = this.$watch(() => this.cursor, () => {
           this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 1)
 
