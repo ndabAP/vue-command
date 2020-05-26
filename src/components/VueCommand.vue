@@ -189,6 +189,7 @@ export default {
       type: Object
     },
 
+    // History command pointer
     pointer: {
       default: 0,
       type: Number

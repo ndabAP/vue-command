@@ -80,23 +80,33 @@ export default {
     },
 
     // Add environment and instantly terminate
-    setupComponent (component, history = 0, parsed = {}) {
+    setupComponent (component, entries = 0, parsed = {}) {
       // Prevent to work with same reference
       component = { ...component }
 
       if (!hasOwnProperty.call(component, 'computed')) {
         component.computed = {}
       }
+      // Create copies
+      const cursor = this.local.cursor
+      const executed = new Set(this.local.executed)
+      const history = [...this.local.history]
+      const pointer = this.local.pointer
+      const stdin = this.local.stdin
       component.computed = {
         environment: () => ({
-          isExecuting: this.local.isInProgress && (this.local.history.length - 1 === history),
+          isExecuting: this.local.isInProgress && (this.local.history.length - 1 === entries),
           isFullscreen: this.local.isFullscreen,
           isInProgress: this.local.isInProgress
         }),
 
         context: () => ({
-          cursor: this.local.cursor,
-          parsed
+          cursor,
+          executed,
+          history,
+          parsed,
+          pointer,
+          stdin
         }),
 
         ...component.computed
