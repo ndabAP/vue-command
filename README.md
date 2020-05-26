@@ -255,7 +255,7 @@ this.autocompletionResolver = () => {
   <summary>Advanced version with option autocompletion</summary>
   
   ```js
-  this.autocompletionResolver = async () => {
+  this.autocompletionResolver = () => {
     // Preserve cursor position
     const cursor = this.cursor
 

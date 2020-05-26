@@ -167,7 +167,7 @@ export default {
       this.stdin = argument.split('').reverse().join('')
     }
 
-    this.autocompletionResolver = async () => {
+    this.autocompletionResolver = () => {
       // Preserve cursor position
       const cursor = this.cursor
 
