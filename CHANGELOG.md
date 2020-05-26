@@ -1,3 +1,10 @@
+# [13.5.0](https://github.com/ndabAP/vue-command/compare/v13.4.0...v13.5.0) (2020-05-26)
+
+
+### Features
+
+* add context variables ([cde4004](https://github.com/ndabAP/vue-command/commit/cde4004dc48afdd6449c6316fa4cdb4a3738c596))
+
 # [13.4.0](https://github.com/ndabAP/vue-command/compare/v13.3.1...v13.4.0) (2020-05-26)
 
 
