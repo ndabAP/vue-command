@@ -138,7 +138,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 |------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | `createStdout(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stdout` component containing a span element with given inner content |
 | `createStderr(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stderr` component containing a span element with given inner content |
-| `createDummyStdout(...mixins: Array): Object`                             | Returns a dummy `Stdout` to show a `Stdin`                                      |
+| `createDummyStdout(name: String, ...mixins: Array): Object`                             | Returns a dummy `Stdout` to show a `Stdin`                                      |
 
 Helper methods can be imported by name:
 
