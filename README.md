@@ -307,7 +307,7 @@ this.autocompletionResolver = () => {
       if (candidates.length === 1) {
         // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
         const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor
+          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
           unwatch()
         })
@@ -347,7 +347,7 @@ this.autocompletionResolver = () => {
 
         // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
         const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor
+          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
           unwatch()
         })
@@ -402,7 +402,7 @@ this.autocompletionResolver = () => {
 
         // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
         const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor
+          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 1)
 
           unwatch()
         })

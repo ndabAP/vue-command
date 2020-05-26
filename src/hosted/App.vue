@@ -107,7 +107,7 @@ export default {
       },
 
       short: {
-        pokedex: ['ho', 'hi']
+        pokedex: ['h']
       }
     },
 
@@ -223,7 +223,7 @@ export default {
         if (candidates.length === 1) {
           // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
           const unwatch = this.$watch(() => this.cursor, () => {
-            this.cursor = cursor
+            this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 0)
 
             unwatch()
           })
@@ -239,6 +239,7 @@ export default {
         return
       }
 
+      // Get the executable
       const program = command[0]
 
       // Check if any autocompleteable exists
@@ -263,7 +264,7 @@ export default {
 
           // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
           const unwatch = this.$watch(() => this.cursor, () => {
-            this.cursor = cursor
+            this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
 
             unwatch()
           })
@@ -318,7 +319,7 @@ export default {
 
           // Mutating Stdin mutates the cursor, so we've to reset the cursor afterwards
           const unwatch = this.$watch(() => this.cursor, () => {
-            this.cursor = cursor
+            this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 1)
 
             unwatch()
           })
