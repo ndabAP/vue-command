@@ -1,3 +1,17 @@
+## [13.3.1](https://github.com/ndabAP/vue-command/compare/v13.3.0...v13.3.1) (2020-05-25)
+
+
+### Bug Fixes
+
+* documentation ([2c49571](https://github.com/ndabAP/vue-command/commit/2c495713351350d6093070227207860953b172ee))
+
+# [13.3.0](https://github.com/ndabAP/vue-command/compare/v13.2.0...v13.3.0) (2020-05-22)
+
+
+### Features
+
+* disable history ([d1a157e](https://github.com/ndabAP/vue-command/commit/d1a157e5931bf77f1c119eea2403cf615363ee6d))
+
 # [13.2.0](https://github.com/ndabAP/vue-command/compare/v13.1.0...v13.2.0) (2020-05-09)
 
 
