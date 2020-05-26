@@ -1,3 +1,17 @@
+# [13.4.0](https://github.com/ndabAP/vue-command/compare/v13.3.1...v13.4.0) (2020-05-26)
+
+
+### Bug Fixes
+
+* align documentation ([2768232](https://github.com/ndabAP/vue-command/commit/2768232d5b7e8cd7b8cbb870cd5cd8dd1a8d8933))
+* documentate how to move cursor to end after autocompletion ([d969995](https://github.com/ndabAP/vue-command/commit/d96999593cde94ba90c0f6b0fa5d3ed66ccd83db))
+* documentation async function ([34ec941](https://github.com/ndabAP/vue-command/commit/34ec941e4ad4a250c7592c011d0ceacfa4b022dd))
+
+
+### Features
+
+* add option autocompletion documentation ([ed8dda0](https://github.com/ndabAP/vue-command/commit/ed8dda01e85065fedc8c686feac0752e45d09988))
+
 ## [13.3.1](https://github.com/ndabAP/vue-command/compare/v13.3.0...v13.3.1) (2020-05-25)
 
 
