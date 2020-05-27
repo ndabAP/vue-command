@@ -1,3 +1,10 @@
+## [13.5.2](https://github.com/ndabAP/vue-command/compare/v13.5.1...v13.5.2) (2020-05-27)
+
+
+### Bug Fixes
+
+* context variable documentation ([05cff20](https://github.com/ndabAP/vue-command/commit/05cff20825faf45ea59f5b91ff84e61e3f4d8c5c))
+
 ## [13.5.1](https://github.com/ndabAP/vue-command/compare/v13.5.0...v13.5.1) (2020-05-26)
 
 
