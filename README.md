@@ -178,12 +178,12 @@ The `context` variable contains the following properties:
 
 | Property         | Description                        |
 |------------------|------------------------------------|
-| `cursor: Number` | Current cursor position at `Stdin` |
+| `cursor: Number` | Copy of cursor position at `Stdin` |
 | `executed: Set`  | Copy of executed programs          |
 | `history: Array` | Copy of executed commands          |
 | `parsed: Object` | Parsed `getops` arguments          |
 | `pointer: Number`| Copy of history command pointer    |
-| `stdin: String`  | Copy of current Stdin              |
+| `stdin: String`  | Copy of `Stdin`                    | 
 
 ### Built-in
 
