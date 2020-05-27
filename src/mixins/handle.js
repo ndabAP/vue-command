@@ -35,6 +35,7 @@ export default {
       const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
       // Create empty component in case no program has been found
       let component = createDummyStdout()
+
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
@@ -79,7 +80,7 @@ export default {
       this.$emit('update:history', [...history])
     },
 
-    // Add environment and instantly terminate
+    // Add environment and context and instantly terminate
     setupComponent (component, entries = 0, parsed = {}) {
       // Prevent to work with same reference
       component = { ...component }
