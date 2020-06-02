@@ -1,3 +1,10 @@
+## [13.5.3](https://github.com/ndabAP/vue-command/compare/v13.5.2...v13.5.3) (2020-06-02)
+
+
+### Bug Fixes
+
+* autcompletion wording ([6c47e7e](https://github.com/ndabAP/vue-command/commit/6c47e7e30213d7b2c042339563c5ffdd26f06ca5))
+
 ## [13.5.2](https://github.com/ndabAP/vue-command/compare/v13.5.1...v13.5.2) (2020-05-27)
 
 
