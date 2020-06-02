@@ -343,7 +343,7 @@ this.autocompletionResolver = () => {
     if (autocompleteableStdin.substring(0, 2) === '--') {
       const candidates = []
       this.options.long[program].forEach(option => {
-        // If only dashes are presents, user requests all options
+        // If only dashes are present, user requests all options
         if (`--${option}`.startsWith(autocompleteableStdin) || autocompleteableStdin === '--') {
           candidates.push(option)
         }
