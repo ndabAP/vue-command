@@ -156,7 +156,7 @@ export default {
     this.builtIn.reverse = stdin => {
       stdin = stdin.trim()
       // Get second argument
-      const argument = stdin.split(' ')[1]
+      const argument = stdin.split(' ').slice(1).join(' ').replace(/"/g, '')
 
       // Do nothing if no argument given
       if (!argument) {
