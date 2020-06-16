@@ -131,6 +131,11 @@ export default {
       type: Boolean
     },
 
+    eventListeners: {
+      default: () => [1, 3],
+      type: Array
+    },
+
     // Non-empty executed commands
     executed: {
       default: () => new Set(),
@@ -240,6 +245,18 @@ export default {
       resizeObserver: undefined
     }
   }),
+
+  computed: {
+    eventListenerBinary: {
+      get () {
+        return this.eventListeners.reduce((bits, eventListener) => {
+          bits = bits | eventListener
+
+          return bits
+        }, 0)
+      }
+    }
+  },
 
   watch: {
     stdin () {

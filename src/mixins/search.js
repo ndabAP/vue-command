@@ -19,6 +19,10 @@ export default {
     }
   },
 
+  mounted () {
+    if (this.)
+  },
+
   methods: {
     // Let the user search inside the "executed" "Set"
     setIsSearchHandler () {
