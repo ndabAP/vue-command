@@ -1,3 +1,5 @@
+import { EVENT_LISTENERS } from '../library'
+
 // @vue/component
 export default {
   provide () {
@@ -28,6 +30,25 @@ export default {
 
     pointer () {
       this.setPointer(this.pointer)
+    }
+  },
+
+  mounted () {
+    // History
+    if (this.eventListeners.includes(EVENT_LISTENERS.__HISTORY)) {
+      this.$refs['term-cont'].addEventListener('keydown', event => {
+        if (event.keyCode === 38) {
+          event.preventDefault()
+
+          this.decreaseHistory()
+        }
+
+        if (event.keyCode === 40) {
+          event.preventDefault()
+
+          this.increaseHistory()
+        }
+      })
     }
   },
 

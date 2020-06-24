@@ -1,3 +1,5 @@
+import { EVENT_LISTENERS } from '../library'
+
 // @vue/component
 export default {
   provide () {
@@ -20,6 +22,18 @@ export default {
 
     'local.cursor' () {
       this.$emit('update:cursor', this.local.cursor)
+    }
+  },
+
+  mounted () {
+    if (this.eventListeners.includes(EVENT_LISTENERS.__AUTOCOMPLETE)) {
+      this.$refs['term-cont'].addEventListener('keydown', event => {
+        if (event.keyCode === 9) {
+          event.preventDefault()
+
+          this.autocomplete()
+        }
+      })
     }
   },
 

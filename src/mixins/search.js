@@ -20,7 +20,15 @@ export default {
   },
 
   mounted () {
-    if (this.)
+    if (this.eventListeners.includes(EVENT_LISTENERS.__SEARCH)) {
+      this.$refs['term-cont'].addEventListener('keydown', event => {
+        if (event.keyCode === 9) {
+          event.preventDefault()
+
+          this.autocomplete()
+        }
+      })
+    }
   },
 
   methods: {

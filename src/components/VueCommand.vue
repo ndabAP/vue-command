@@ -40,10 +40,7 @@
           v-for="(stdout, index) in local.history"
           :key="index"
           class="term-hist"
-          :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }"
-          @keydown.38.exact.prevent="decreaseHistory"
-          @keydown.40.exact.prevent="increaseHistory"
-          @keydown.tab.exact.prevent="autocomplete">
+          :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }">
           <stdout
             v-show="(!local.isFullscreen || index === local.history.length - 1)"
             :component="stdout"
@@ -86,6 +83,7 @@ import HandleMixin from '../mixins/handle'
 import HistoryMixin from '../mixins/history'
 import SearchMixin from '../mixins/search'
 import UIMixin from '../mixins/ui'
+import { EVENT_LISTENERS } from './../library'
 
 // Event bus for communication
 const EventBus = new Vue()
@@ -132,7 +130,7 @@ export default {
     },
 
     eventListeners: {
-      default: () => [1, 3],
+      default: () => [EVENT_LISTENERS.__AUTOCOMPLETE, EVENT_LISTENERS.__HISTORY],
       type: Array
     },
 
@@ -245,18 +243,6 @@ export default {
       resizeObserver: undefined
     }
   }),
-
-  computed: {
-    eventListenerBinary: {
-      get () {
-        return this.eventListeners.reduce((bits, eventListener) => {
-          bits = bits | eventListener
-
-          return bits
-        }, 0)
-      }
-    }
-  },
 
   watch: {
     stdin () {

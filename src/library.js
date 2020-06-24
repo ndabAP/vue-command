@@ -57,7 +57,10 @@ export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => 
   render: createElement => createElement('span', {}, '')
 })
 
-export const searchKeyboardListener = () => 1
-export const toggleKeyboardListener = () => 2
+export const EVENT_LISTENERS = {
+  __AUTOCOMPLETE: '__AUTOCOMPLETE',
+  __HISTORY: '__HISTORY',
+  __SEARCH: '__SEARCH'
+}
 
 export default VueCommand
