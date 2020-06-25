@@ -3,7 +3,7 @@
     <span
       v-for="(character, index) in characters"
       :key="index"
-      :style="{ color: color(index) }">
+      :style="{ color: calculateColor(index) }">
       {{ character }}
     </span><br><br>
     Press Ctrl + c to leave.
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { C_LOWER_KEY, CONTROL_KEY } from '../constants/keys'
+import { C_KEY } from '../constants/keys'
 
 const COLORS = [
   '#FF0000',
@@ -42,8 +42,8 @@ export default {
     }, INTERVAL_TIMEOUT)
 
     window.addEventListener('keydown', event => {
-      // Ctrl and c simultaneously
-      if (event.key === C_LOWER_KEY && event.getModifierState(CONTROL_KEY)) {
+      // Check for "Ctrl" and "c" simultaneously
+      if (event.ctrlKey && event.keyCode === C_KEY) {
         // Stop animation
         clearInterval(this.interval)
 
@@ -54,7 +54,7 @@ export default {
 
   methods: {
     // Returns color by given index
-    color (index) {
+    calculateColor (index) {
       index += this.index
       const offset = Math.floor(index / COLORS.length) * COLORS.length
 
