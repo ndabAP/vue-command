@@ -1,7 +1,7 @@
 <template>
   <main>
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
-    <p>A fully working Vue.js terminal emulator.</p>
+    <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
 
     <vue-command
       :autocompletion-resolver="autocompletionResolver"
