@@ -1,4 +1,5 @@
 import { EVENT_LISTENERS } from '../library'
+import { TAB_KEY } from '../constants/keys'
 
 // @vue/component
 export default {
@@ -26,9 +27,10 @@ export default {
   },
 
   mounted () {
-    if (this.eventListeners.includes(EVENT_LISTENERS.__AUTOCOMPLETE)) {
+    // Check if user wants autocompletion
+    if (this.eventListeners.includes(EVENT_LISTENERS.autocomplete)) {
       this.$refs['term-cont'].addEventListener('keydown', event => {
-        if (event.keyCode === 9) {
+        if (event.keyCode === TAB_KEY) {
           event.preventDefault()
 
           this.autocomplete()

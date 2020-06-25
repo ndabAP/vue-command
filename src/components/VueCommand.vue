@@ -1,8 +1,7 @@
 <template>
   <div
     ref="vue-command"
-    class="vue-command"
-    @keydown.ctrl.82.exact.prevent="setIsSearchHandler">
+    class="vue-command">
 
     <slot name="bar">
       <div
@@ -130,7 +129,7 @@ export default {
     },
 
     eventListeners: {
-      default: () => [EVENT_LISTENERS.__AUTOCOMPLETE, EVENT_LISTENERS.__HISTORY],
+      default: () => [EVENT_LISTENERS.autocomplete, EVENT_LISTENERS.history, EVENT_LISTENERS.search],
       type: Array
     },
 

@@ -57,10 +57,16 @@ export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => 
   render: createElement => createElement('span', {}, '')
 })
 
+// Default event listeners to opt-in
 export const EVENT_LISTENERS = {
-  __AUTOCOMPLETE: '__AUTOCOMPLETE',
-  __HISTORY: '__HISTORY',
-  __SEARCH: '__SEARCH'
+  // Autocompletion when pressing "Tab" key
+  autocomplete: 0,
+
+  // History search when pressing up or down key
+  history: 1,
+
+  // Search mode when pressing "Ctlr" plus "R"
+  search: 2
 }
 
 export default VueCommand

@@ -1,3 +1,6 @@
+import { EVENT_LISTENERS } from '../library'
+import { R_KEY } from '../constants/keys'
+
 // @vue/component
 export default {
   data: () => ({
@@ -20,12 +23,18 @@ export default {
   },
 
   mounted () {
-    if (this.eventListeners.includes(EVENT_LISTENERS.__SEARCH)) {
+    // Check if user wants search
+    if (this.eventListeners.includes(EVENT_LISTENERS.search)) {
+      if (this.disableHistory) {
+        return
+      }
+
       this.$refs['term-cont'].addEventListener('keydown', event => {
-        if (event.keyCode === 9) {
+        // Check if user clicks "Ctrl" and "R" simultaneously
+        if (event.ctrlKey && event.keyCode === R_KEY) {
           event.preventDefault()
 
-          this.autocomplete()
+          this.setIsSearchHandler()
         }
       })
     }
@@ -34,10 +43,6 @@ export default {
   methods: {
     // Let the user search inside the "executed" "Set"
     setIsSearchHandler () {
-      if (this.disableHistory) {
-        return
-      }
-
       if (!this.isInProgress) {
         this.setIsSearch(true)
       }

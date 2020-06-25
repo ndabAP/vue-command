@@ -1,4 +1,5 @@
 import { EVENT_LISTENERS } from '../library'
+import { ARROW_UP_KEY, ARROW_DOWN_KEY } from '../constants/keys'
 
 // @vue/component
 export default {
@@ -34,16 +35,20 @@ export default {
   },
 
   mounted () {
-    // History
-    if (this.eventListeners.includes(EVENT_LISTENERS.__HISTORY)) {
+    // Check if user wants history
+    if (this.eventListeners.includes(EVENT_LISTENERS.history)) {
+      if (this.disableHistory) {
+        return
+      }
+
       this.$refs['term-cont'].addEventListener('keydown', event => {
-        if (event.keyCode === 38) {
+        if (event.keyCode === ARROW_UP_KEY) {
           event.preventDefault()
 
           this.decreaseHistory()
         }
 
-        if (event.keyCode === 40) {
+        if (event.keyCode === ARROW_DOWN_KEY) {
           event.preventDefault()
 
           this.increaseHistory()
@@ -54,10 +59,6 @@ export default {
 
   methods: {
     increaseHistory () {
-      if (this.disableHistory) {
-        return
-      }
-
       // Check if pointer is mutable
       if (this.local.pointer < (this.local.executed.size - 1)) {
         this.local.pointer++
@@ -68,10 +69,6 @@ export default {
     },
 
     decreaseHistory () {
-      if (this.disableHistory) {
-        return
-      }
-
       // Check if pointer is mutable
       if (this.local.pointer > 0) {
         this.local.pointer--
