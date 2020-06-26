@@ -122,14 +122,14 @@ export default {
       type: Number
     },
 
-    // Disables searching in commands history
-    disableHistory: {
-      default: false,
-      type: Boolean
-    },
-
+    // Default event listeners
     eventListeners: {
-      default: () => [EVENT_LISTENERS.autocomplete, EVENT_LISTENERS.history, EVENT_LISTENERS.search],
+      default: () => ([
+        EVENT_LISTENERS.autocomplete,
+        EVENT_LISTENERS.history,
+        EVENT_LISTENERS.search
+      ]),
+
       type: Array
     },
 
@@ -282,6 +282,8 @@ export default {
     }
 
     this.$refs['term-std'].addEventListener('scroll', this.scroll.eventListener)
+
+    this.eventListeners.forEach(eventListener => eventListener(this))
   },
 
   beforeDestroy () {

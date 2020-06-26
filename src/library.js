@@ -1,4 +1,5 @@
 import VueCommand from './components/VueCommand'
+import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../src/constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
 export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
@@ -60,13 +61,43 @@ export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => 
 // Default event listeners to opt-in
 export const EVENT_LISTENERS = {
   // Autocompletion when pressing "Tab" key
-  autocomplete: 0,
+  autocomplete: terminal => {
+    terminal.$refs['term-cont'].addEventListener('keydown', event => {
+      if (event.keyCode === TAB_KEY) {
+        event.preventDefault()
 
-  // History search when pressing up or down key
-  history: 1,
+        terminal.autocomplete()
+      }
+    })
+  },
 
-  // Search mode when pressing "Ctlr" plus "R"
-  search: 2
+  // Cycle through history with "Arrow up key" and "Arrow down key"
+  history: terminal => {
+    this.$refs['term-cont'].addEventListener('keydown', event => {
+      if (event.keyCode === ARROW_UP_KEY) {
+        event.preventDefault()
+
+        terminal.decreaseHistory()
+      }
+
+      if (event.keyCode === ARROW_DOWN_KEY) {
+        event.preventDefault()
+
+        terminal.increaseHistory()
+      }
+    })
+  },
+
+  // Search history with "Ctrl" and "r"
+  search: terminal => {
+    terminal.$refs['term-cont'].addEventListener('keydown', event => {
+      if (event.ctrlKey && event.keyCode === R_KEY) {
+        event.preventDefault()
+
+        terminal.setIsSearchHandler()
+      }
+    })
+  }
 }
 
 export default VueCommand

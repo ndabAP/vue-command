@@ -11,7 +11,7 @@ I'm happy you want to contribute. To guarantee a healthy state of this library, 
 
 ## Commits
 
-You must follow the [Angular commit schema](https://gist.github.com/stephenparish/9941e89d80e2bc58a153). Commits will fail if not doing so.
+You must follow the [Angular commit schema](https://gist.github.com/stephenparish/9941e89d80e2bc58a153). Commits are linted and will fail if not following the schema so. This helps to be consistent across developers and makes [semantic release](https://github.com/semantic-release/semantic-release) available.
 
 ## Build and release
 
