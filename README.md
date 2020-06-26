@@ -458,6 +458,8 @@ Event listeners trigger terminal behaviour under certain conditions like pressin
 - **History**: Cycle through history with "Arrow up key" and "Arrow down key"
 - **Search**: Search history with "Ctrl" and "r"
 
+An event listener is called with the Vue.js component instance as argument. 
+
 ## Slots
 
 ### Bar
