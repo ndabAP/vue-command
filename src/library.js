@@ -73,7 +73,7 @@ export const EVENT_LISTENERS = {
 
   // Cycle through history with "Arrow up key" and "Arrow down key"
   history: terminal => {
-    this.$refs['term-cont'].addEventListener('keydown', event => {
+    terminal.$refs['term-cont'].addEventListener('keydown', event => {
       if (event.keyCode === ARROW_UP_KEY) {
         event.preventDefault()
 
