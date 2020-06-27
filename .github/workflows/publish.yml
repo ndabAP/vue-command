@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: '12'
       - name: Publish
-        run: npm i && npm run build:lib
+        run: npm i && npm run build:lib && npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
