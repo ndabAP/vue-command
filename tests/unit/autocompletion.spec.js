@@ -9,6 +9,7 @@ import {
 // See https://github.com/vuejs/vue-test-utils/issues/1219
 Element.prototype.scrollIntoView = () => {}
 
+// eslint-disable-next-line
 /* global jest */
 global.ResizeObserver = ResizeObserver
 
