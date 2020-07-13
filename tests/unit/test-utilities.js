@@ -7,6 +7,9 @@ export const getRandom = () => Math.random().toString(36).substring(7)
 
 export const getEmptyCommands = () => ({ [null]: () => createDummyStdout() })
 export const getCommands = command => ({ [command]: () => createStdout(command) })
+export const getAsyncCommands = (command, timeout = 2000) => ({
+  [command]: () => new Promise(resolve => setTimeout(resolve(createStdout(command)), timeout))
+})
 
 export const getDefaultProps = () => ({ executed: new Set(), history: [] })
 
@@ -14,8 +17,3 @@ export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
   propsData: { commands, ...props },
   slots
 })
-
-export const enterAndTrigger = (wrapper, value, event = 'keyup.enter') => {
-  wrapper.find('input').setValue(value)
-  wrapper.find('input').trigger(event)
-}
