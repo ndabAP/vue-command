@@ -191,7 +191,7 @@ Built-in commands provide more control over the terminals behaviour. On the othe
 
 The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place.
 
-To fully simulate a full command circle a built-in command has to follow these steps:
+To fully simulate a regular command circle a built-in command has to follow these steps:
 
 1. Add the programm to the `executed` `Set` property
 2. Increase the history pointer
