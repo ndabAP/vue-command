@@ -315,7 +315,7 @@ this.autocompletionResolver = () => {
       if (candidates.length === 1) {
         // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
         const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
+          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 0)
 
           unwatch()
         })
