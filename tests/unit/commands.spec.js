@@ -48,13 +48,15 @@ describe('Commands', () => {
     expect(wrapper.findAllComponents(Stdout).at(1).text()).toBe(command)
   })
 
-  // it('executes built-in commands', async () => {
-  //   const command = getRandom()
-  //   const builtIn = { builtIn: { [command]: () => command } }
-  //   const wrapper = getMountedWrapper(builtIn, getEmptyCommands())
+  it('executes built-in commands', async () => {
+    const command = getRandom()
+    const fn = jest.fn()
+    const builtIn = { builtIn: { [command]: fn } }
+    const wrapper = getMountedWrapper(builtIn, getEmptyCommands())
 
-  //   enterAndTrigger(wrapper, command)
-  //   await flushPromises()
-  //   expect(wrapper.findComponent(Stdout).text()).toBe(command)
-  // })
+    wrapper.find('input').setValue(command)
+    await wrapper.find('input').trigger(KEY_ENTER_EVENT)
+
+    expect(fn).toHaveBeenCalled()
+  })
 })
