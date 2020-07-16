@@ -39,7 +39,32 @@ export default {
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
-        const parsed = getOpts(stdin.split(' '), this.parserOptions)
+        // https://stackoverflow.com/a/18647776 -> split words
+        const splitRegExp = /[^\s"]+|"([^"]*)"/gi
+        const parseArr = []
+        let match
+        do {
+          match = splitRegExp.exec(stdin)
+          if (match != null) {
+            parseArr.push(match[1] ? match[1] : match[0])
+          }
+        } while (match != null)
+        const parseOpts = []
+        let skip = false
+        parseArr.forEach((x, i) => {
+          if (skip) {
+            skip = false
+            return
+          }
+          if (x.endsWith('=')) {
+            parseOpts.push(x + parseArr[i + 1])
+            skip = true
+          } else {
+            parseOpts.push(x)
+          }
+        })
+
+        const parsed = getOpts(parseOpts, this.parserOptions)
 
         component = await Promise.resolve(this.commands[program](parsed))
         component = this.setupComponent(component, this.local.history.length, parsed)
