@@ -39,32 +39,37 @@ export default {
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
-        // https://stackoverflow.com/a/18647776 -> split words
-        const splitRegExp = /[^\s"]+|"([^"]*)"/gi
-        const parseArr = []
+        // Split words of Stdin. See: https://stackoverflow.com/a/18647776
+        const splitExpression = /[^\s"]+|"([^"]*)"/gi
+        const options = []
         let match
         do {
-          match = splitRegExp.exec(stdin)
+          match = splitExpression.exec(stdin)
+
           if (match != null) {
-            parseArr.push(match[1] ? match[1] : match[0])
+            options.push(match[1] ? match[1] : match[0])
           }
         } while (match != null)
-        const parseOpts = []
+
+        const parsedArguments = []
         let skip = false
-        parseArr.forEach((x, i) => {
+        options.forEach((option, index) => {
           if (skip) {
             skip = false
+
             return
           }
-          if (x.endsWith('=')) {
-            parseOpts.push(x + parseArr[i + 1])
+
+          if (option.endsWith('=')) {
+            parsedArguments.push(option + options[index + 1])
+
             skip = true
           } else {
-            parseOpts.push(x)
+            parsedArguments.push(option)
           }
         })
 
-        const parsed = getOpts(parseOpts, this.parserOptions)
+        const parsed = getOpts(parsedArguments, this.parserOptions)
 
         component = await Promise.resolve(this.commands[program](parsed))
         component = this.setupComponent(component, this.local.history.length, parsed)
