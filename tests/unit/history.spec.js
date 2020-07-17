@@ -21,8 +21,7 @@ describe('Commands', () => {
 
     wrapper.find('input').setValue(command)
     await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-    wrapper.find('input').trigger('keyup.ArrowUp')
+    await wrapper.find('input').trigger('keyup.ArrowUp')
 
     expect(wrapper.get('input').element.value).toBe(command)
   })

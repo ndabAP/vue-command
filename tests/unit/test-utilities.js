@@ -11,8 +11,6 @@ export const getAsyncCommands = (command, timeout = 2000) => ({
   [command]: () => new Promise(resolve => setTimeout(resolve(createStdout(command)), timeout))
 })
 
-export const getDefaultProps = () => ({ executed: new Set(), history: [] })
-
 export const getMountedWrapper = (props, commands, slots) => mount(VueCommand, {
   propsData: { commands, ...props },
   slots

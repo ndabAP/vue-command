@@ -18,7 +18,7 @@ describe('Autocompletion', () => {
   it('calls the autocompletion resolver with arguments', async () => {
     const command = getRandom()
     const autocompletionResolver = jest.fn(() => command)
-    const wrapper = getMountedWrapper({ autocompletionResolver, ...getDefaultProps() }, getCommands(command))
+    const wrapper = getMountedWrapper({ autocompletionResolver }, getCommands(command))
 
     wrapper.find('input').setValue(command)
     await wrapper.vm.$nextTick()

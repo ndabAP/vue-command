@@ -14,4 +14,10 @@ describe('Slots', () => {
 
     expect(wrapper.find('.foo-bar').exists()).toBe(true)
   })
+
+  it('has custom prompt', () => {
+    const wrapper = getMountedWrapper({}, getEmptyCommands(), { prompt: '<div class="foo-bar"></div>' })
+
+    expect(wrapper.find('.foo-bar').exists()).toBe(true)
+  })
 })
