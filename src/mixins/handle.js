@@ -47,8 +47,6 @@ export default {
         do {
           matches = expression.exec(stdin)
 
-          console.log(matches)
-
           if (matches != null) {
             tokens.push(matches[1] ? matches[1] : matches[0])
           }
