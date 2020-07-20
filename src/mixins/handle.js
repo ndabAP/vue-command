@@ -39,37 +39,42 @@ export default {
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
         // Parse the command and try to get the program
-        // Split words of Stdin. See: https://stackoverflow.com/a/18647776
-        const splitExpression = /[^\s"]+|"([^"]*)"/gi
-        const options = []
-        let match
+        // Split Stdin into chunks to parse it correctly.
+        // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
+        const tokens = []
+        let matches
+        const expression = /[^\s"]+|"([^"]*)"/gi
         do {
-          match = splitExpression.exec(stdin)
+          matches = expression.exec(stdin)
 
-          if (match != null) {
-            options.push(match[1] ? match[1] : match[0])
+          console.log(matches)
+
+          if (matches != null) {
+            tokens.push(matches[1] ? matches[1] : matches[0])
           }
-        } while (match != null)
+        } while (matches != null)
 
-        const parsedArguments = []
-        let skip = false
-        options.forEach((option, index) => {
-          if (skip) {
-            skip = false
+        // Prepare arguments for getOpts
+        const accommodatedTokens = []
+        let isOptionValue = false
+        tokens.forEach((token, index) => {
+          if (isOptionValue) {
+            isOptionValue = false
 
             return
           }
 
-          if (option.endsWith('=')) {
-            parsedArguments.push(option + options[index + 1])
+          // Option has value assigned
+          if (token.endsWith('=')) {
+            accommodatedTokens.push(token + tokens[index + 1])
 
-            skip = true
+            isOptionValue = true
           } else {
-            parsedArguments.push(option)
+            accommodatedTokens.push(token)
           }
         })
 
-        const parsed = getOpts(parsedArguments, this.parserOptions)
+        const parsed = getOpts(accommodatedTokens, this.parserOptions)
 
         component = await Promise.resolve(this.commands[program](parsed))
         component = this.setupComponent(component, this.local.history.length, parsed)
