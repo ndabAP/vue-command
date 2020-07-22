@@ -51,9 +51,9 @@ export default {
       // Clear terminals history
       clear: undefined,
 
-      // Print echo to test parsing.
+      // Returns the parsed object to test parsing
       // E. g.: echo --x="one two three" --y="one two" --z="one" --test="okay" --x1 --y2 --t=ok -dash
-      echo: _ => createStdout(`${JSON.stringify(_, null, 2)}`),
+      echo: _ => createStdout(JSON.stringify(_, null, 2)),
 
       // Show help
       help: () => createStdout(`Available programms:<br><br>
