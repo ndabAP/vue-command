@@ -38,36 +38,42 @@ export default {
 
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
-        // Parse the command and try to get the program
+        // Parse the command and try to get the program.
         // Split Stdin into chunks to parse it correctly.
         // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
+        // Contains the tokens to merge option-value pairs
         const tokens = []
-        let matches
-        const expression = /[^\s"]+|"([^"]*)"/gi
+        // Contains the current token pair for each iteration
+        let tokenPairs
+        const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
+        // Iterate through all tokens
         do {
-          matches = expression.exec(stdin)
+          tokenPairs = tokenPairsExpression.exec(stdin)
 
-          if (matches != null) {
-            tokens.push(matches[1] ? matches[1] : matches[0])
+          if (tokenPairs != null) {
+            tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
           }
-        } while (matches != null)
+        } while (tokenPairs != null)
 
-        // Prepare arguments for getOpts
+        // Contains accommodated tokens to parse
         const accommodatedTokens = []
-        let isOptionValue = false
+        let isOptionValueNext = false
         tokens.forEach((token, index) => {
-          if (isOptionValue) {
-            isOptionValue = false
+          // Check if next token is option value
+          if (isOptionValueNext) {
+            isOptionValueNext = false
 
             return
           }
 
-          // Option has value assigned
+          // Check if option has value assigned
           if (token.endsWith('=')) {
+            // Merge option with value
             accommodatedTokens.push(token + tokens[index + 1])
 
-            isOptionValue = true
+            isOptionValueNext = true
           } else {
+            // Tokens are no option-value pair
             accommodatedTokens.push(token)
           }
         })
