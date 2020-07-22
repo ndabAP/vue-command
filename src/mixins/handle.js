@@ -57,11 +57,11 @@ export default {
 
         // Contains accommodated tokens to parse
         const accommodatedTokens = []
-        let isOptionValueNext = false
+        let isNextOptionValue = false
         tokens.forEach((token, index) => {
           // Check if next token is option value
-          if (isOptionValueNext) {
-            isOptionValueNext = false
+          if (isNextOptionValue) {
+            isNextOptionValue = false
 
             return
           }
@@ -71,9 +71,9 @@ export default {
             // Merge option with value
             accommodatedTokens.push(token + tokens[index + 1])
 
-            isOptionValueNext = true
+            isNextOptionValue = true
           } else {
-            // Tokens are no option-value pair
+            // Token is not part of option-value pair
             accommodatedTokens.push(token)
           }
         })
