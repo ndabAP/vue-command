@@ -51,10 +51,15 @@ export default {
       // Clear terminals history
       clear: undefined,
 
+      // Returns the parsed object to test parsing
+      // E. g.: echo --x="one two three" --y="one two" --z="one" --test="okay" --x1 --y2 --t=ok -dash
+      echo: _ => createStdout(JSON.stringify(_, null, 2)),
+
       // Show help
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;cd [dir]<br>
         &nbsp;clear<br>
+        &nbsp;echo<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
         &nbsp;loading [--amount n] [--timeout n]<br>
