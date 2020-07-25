@@ -59,6 +59,7 @@ export default {
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;cd [dir]<br>
         &nbsp;clear<br>
+        &nbsp;echo<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
         &nbsp;loading [--amount n] [--timeout n]<br>
