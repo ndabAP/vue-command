@@ -65,7 +65,7 @@
     "js-yaml": "^3.13.1",
     "node-sass": "^4.14.1",
     "querystringify": "^2.1.1",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "^9.0.2",
     "semantic-release": "^17.0.7",
     "serialize-javascript": "~2.1.1",
     "tar": ">=4.4.10",
