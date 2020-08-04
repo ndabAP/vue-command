@@ -43,7 +43,7 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
   }
 })
 
-// Returns a dummy Stdout component to not show a Stdout
+// Returns a dummy Stdout component to not show a Stdin
 export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => ({
   name,
   mixins,
