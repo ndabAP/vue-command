@@ -133,7 +133,7 @@ export default {
 
     async stdin () {
       // Only last Stdin is allowed to mutate
-      if (this.isLast) {
+      if (this.isLast && !this.isInProgress) {
         this.local.stdin = this.stdin
       }
 
