@@ -1,3 +1,10 @@
+### [15.0.2](https://github.com/ndabAP/vue-command/compare/v15.0.1...v15.0.2) (2020-08-04)
+
+
+### Bug Fixes
+
+* allow to mutate stdin if not in progress ([f44ca73](https://github.com/ndabAP/vue-command/commit/f44ca73fe7d9c53eef173d66361a0bb519ff72bb))
+
 ### [15.0.1](https://github.com/ndabAP/vue-command/compare/v15.0.0...v15.0.1) (2020-07-25)
 
 
