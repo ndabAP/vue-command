@@ -7,14 +7,15 @@
 </template>
 
 <script>
-const API = 'https://api.chucknorris.io/jokes/random'
+const API_URL = 'https://api.chucknorris.io/jokes/random'
 const API_TIMEOUT = 5000 // 5 seconds
+
+const abortController = new AbortController()
 
 export default {
   inject: ['terminate'],
 
   data: () => ({
-    abortController: new AbortController(),
     isError: false,
     isLoading: true,
     joke: ''
@@ -24,12 +25,12 @@ export default {
     // Abort getting joke when API request takes longer than defined in "API_TIMEOUT"
     setTimeout(() => {
       if (this.isLoading) {
-        this.abortController.abort()
+        abortController.abort()
       }
     }, API_TIMEOUT)
 
     try {
-      const response = await fetch(API, { signal: this.abortController.signal })
+      const response = await fetch(API_URL, { signal: abortController.signal })
       if (!response.ok) {
         this.setIsError(true)
         this.terminate()
