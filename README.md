@@ -1,6 +1,6 @@
 # vue-command
 
-A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/).
+A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/) and check the [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
 
 ## Features
 
@@ -187,16 +187,14 @@ The `context` variable contains the following properties:
 
 ### Built-in
 
-Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. 
+Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands.
 
-The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place.
-
-To fully simulate a regular command circle a built-in command has to follow these steps:
+The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. To fully simulate a regular command circle a built-in command has to follow these steps:
 
 1. Add the programm to the `executed` `Set` property
-2. Increase the history pointer
-3. Emit command executing started
-4. Tell terminal there is a command in progress  
+2. Increase the history pointer with `setPointer`
+3. Use `emitExecute` to emit command executing
+4. Call `setIsInProgress` to tell there is a command in progress
 5. Push the `Stdout` component into the `history` property
 6. Execute actual task
 7. Exit the command with the injected `terminate` function
