@@ -1,3 +1,14 @@
+## [17.0.0](https://github.com/ndabAP/vue-command/compare/v16.2.0...v17.0.0) (2020-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix built-in commands
+
+### Documentation
+
+* fix built-in commands ([b87a4aa](https://github.com/ndabAP/vue-command/commit/b87a4aa88a8ad85cf6b8e71f2575ff3f7a2e5c74))
+
 ## [16.2.0](https://github.com/ndabAP/vue-command/compare/v16.1.0...v16.2.0) (2020-08-11)
 
 
