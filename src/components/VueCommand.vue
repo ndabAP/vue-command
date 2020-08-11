@@ -108,8 +108,8 @@ export default {
     },
 
     builtIn: {
-      default: () => ({}),
-      type: Object
+      default: undefined,
+      type: Function
     },
 
     commands: {

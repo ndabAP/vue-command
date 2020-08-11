@@ -13,14 +13,9 @@ export default {
   methods: {
     // Handles the command
     async handle (stdin) {
-      // Remove leading and trailing whitespace
-      stdin = stdin.trim()
-
-      const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
-
-      // Check if function is built in
-      if (this.builtIn[program] !== undefined) {
-        await Promise.resolve(this.builtIn[program](stdin))
+      // Check if command is built-in
+      if (this.builtIn !== undefined) {
+        await Promise.resolve(this.builtIn(stdin))
 
         // The built in function must take care of all other steps
         return
@@ -32,6 +27,9 @@ export default {
 
     // Executes a regular command
     async execute (stdin) {
+      // Remove leading and trailing whitespace
+      stdin = stdin.trim()
+
       const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
       // Create empty component in case no program has been found
       let component = createDummyStdout()
@@ -44,7 +42,7 @@ export default {
         // Contains the tokens to merge option-value pairs
         const tokens = []
         // Contains the current token pair for each iteration
-        let tokenPairs
+        let tokenPairs = []
         const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
         // Iterate through all tokens
         do {
