@@ -1,3 +1,10 @@
+## [16.1.0](https://github.com/ndabAP/vue-command/compare/v16.0.0...v16.1.0) (2020-08-11)
+
+
+### Features
+
+* make commands optional ([ac9e2b5](https://github.com/ndabAP/vue-command/commit/ac9e2b54b9a540b1919520461c3bdec7bd2171d2))
+
 ## [16.0.0](https://github.com/ndabAP/vue-command/compare/v15.0.2...v16.0.0) (2020-08-11)
 
 
