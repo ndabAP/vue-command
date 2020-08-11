@@ -7,7 +7,9 @@
       <div
         v-if="!hideBar"
         class="term-bar">
-        <span class="term-title">
+        <span
+          v-if="!hideTitle"
+          class="term-title">
           {{ title }}
         </span>
       </div>
@@ -150,6 +152,11 @@ export default {
     },
 
     hidePrompt: {
+      default: false,
+      type: Boolean
+    },
+
+    hideTitle: {
       default: false,
       type: Boolean
     },
