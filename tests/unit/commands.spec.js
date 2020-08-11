@@ -51,7 +51,7 @@ describe('Commands', () => {
   it('executes built-in commands', async () => {
     const command = getRandom()
     const fn = jest.fn()
-    const builtIn = { builtIn: { [command]: fn } }
+    const builtIn = { builtIn: fn }
     const wrapper = getMountedWrapper(builtIn, getEmptyCommands())
 
     wrapper.find('input').setValue(command)
