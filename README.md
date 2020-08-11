@@ -192,13 +192,12 @@ Built-in commands provide more control over the terminals behaviour. On the othe
 
 The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. To fully simulate a regular command circle a built-in command has to follow these steps:
 
-1. Add the programm to the `executed` `Set` property
-2. Increase the history pointer with `setPointer`
-3. Use `emitExecute` to emit command executing
-4. Call `setIsInProgress` to tell there is a command in progress
+1. Call `setIsInProgress` with `true` to tell there is a command in progress
+2. Add the programm to the `executed` `Set` property
+3. Increase the history pointer with `setPointer`
+4. Execute actual task
 5. Push the `Stdout` component into the `history` property
-6. Execute actual task
-7. Exit the command with the injected `terminate` function
+6. Call `setIsInProgress` with `false` to tell there is no command in progress anymore
 
 ### Autocompletion resolver
 
