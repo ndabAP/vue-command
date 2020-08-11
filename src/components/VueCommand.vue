@@ -113,7 +113,7 @@ export default {
     },
 
     commands: {
-      required: true,
+      default: undefined,
       type: Object
     },
 

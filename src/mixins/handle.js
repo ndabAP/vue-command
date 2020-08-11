@@ -36,7 +36,6 @@ export default {
 
       // Check if command has been found
       if (typeof this.commands[program] === 'function') {
-        // Parse the command and try to get the program.
         // Split Stdin into chunks to parse it correctly.
         // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
         // Contains the tokens to merge option-value pairs
