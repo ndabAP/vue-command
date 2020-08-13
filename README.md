@@ -1,6 +1,6 @@
 # vue-command
 
-A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/) and check the [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
+A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/) and check the demo [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
 
 ## Features
 
@@ -522,6 +522,8 @@ The Chuck Norris jokes are comming from [this](https://api.chucknorris.io/) API.
 ## Author
 
 [Julian Claus](https://www.julian-claus.de) and contributors. Special thanks to [krmax44](https://github.com/krmax44) for the amazing work!
+
+I apologize to some contributors that are not in the Git history anymore since I had to delete the repository because of problems with [semantic-release](https://github.com/semantic-release/semantic-release). 
 
 ## License
 
