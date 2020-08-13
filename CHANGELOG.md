@@ -1,3 +1,14 @@
+## [18.0.0](https://github.com/ndabAP/vue-command/compare/v17.0.0...v18.0.0) (2020-08-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* add missing contributor hint
+
+### Documentation
+
+* add missing contributor hint ([a4c5c43](https://github.com/ndabAP/vue-command/commit/a4c5c43ee25245a64fcd2c4ba0c226613492b32a))
+
 ## [17.0.0](https://github.com/ndabAP/vue-command/compare/v16.2.0...v17.0.0) (2020-08-11)
 
 
