@@ -1,3 +1,14 @@
+## [20.0.0](https://github.com/ndabAP/vue-command/compare/v19.0.0...v20.0.0) (2020-08-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove unnecessary built-in property
+
+### Features
+
+* remove unnecessary built-in property ([294c5f7](https://github.com/ndabAP/vue-command/commit/294c5f757930876f1e6bb9a0f4b318302ea8fa46))
+
 ## [19.0.0](https://github.com/ndabAP/vue-command/compare/v18.0.0...v19.0.0) (2020-08-14)
 
 
