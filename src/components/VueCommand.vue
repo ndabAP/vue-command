@@ -110,12 +110,12 @@ export default {
     },
 
     builtIn: {
-      default: undefined,
-      type: Function
+      default: () => ({}),
+      type: Object
     },
 
     commands: {
-      default: undefined,
+      default: () => ({}),
       type: Object
     },
 

@@ -39,7 +39,7 @@ export default {
 
   data: () => ({
     autocompletionResolver: () => undefined,
-    builtIn: undefined,
+    builtIn: {},
     commands: {
       // Navigate to home, self and back
       cd: undefined,
@@ -154,7 +154,7 @@ export default {
       }
     }
 
-    this.builtIn = stdin => {
+    this.builtIn.reverse = stdin => {
       stdin = stdin.trim()
       // Get second argument
       const argument = stdin.split(' ').slice(1).join(' ').replace(/"/g, '')
