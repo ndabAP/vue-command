@@ -110,8 +110,8 @@ export default {
     },
 
     builtIn: {
-      default: () => ({}),
-      type: Object
+      default: undefined,
+      type: Function
     },
 
     commands: {
@@ -175,6 +175,11 @@ export default {
     intro: {
       default: 'Fasten your seatbelts!',
       type: String
+    },
+
+    isBuiltIn: {
+      default: false,
+      type: Boolean
     },
 
     isFullscreen: {

@@ -16,19 +16,19 @@ export default {
       // First token is program
       const program = stdin.trim().split(' ')[0]
 
-      // Check if command is built-in
-      if (typeof this.builtIn[program] === 'function') {
-        await Promise.resolve(this.builtIn[program](stdin))
-
-        // The built in function must take care of all other steps
-        return
-      }
-
       // Check if command is regular command
       if (typeof this.commands[program] === 'function') {
         // Check if command is regular command
         await Promise.resolve(this.execute(stdin))
 
+        return
+      }
+
+      // Check if command might be built-in
+      if (this.isBuiltIn) {
+        await Promise.resolve(this.builtIn(stdin, this))
+
+        // The built in function must take care of all other steps
         return
       }
 

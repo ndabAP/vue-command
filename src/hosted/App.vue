@@ -12,6 +12,7 @@
       :help-timeout="1250"
       :prompt="prompt"
       :stdin.sync="stdin"
+      is-built-in
       show-help>
     </vue-command>
     <pre>
@@ -39,7 +40,7 @@ export default {
 
   data: () => ({
     autocompletionResolver: () => undefined,
-    builtIn: {},
+    builtIn: undefined,
     commands: {
       // Navigate to home, self and back
       cd: undefined,
@@ -154,7 +155,14 @@ export default {
       }
     }
 
-    this.builtIn.reverse = stdin => {
+    this.builtIn = (stdin, terminal) => {
+      // Check for application
+      if (stdin.trim().split(' ')[0] !== 'reverse') {
+        terminal.commandNotFound(stdin)
+
+        return
+      }
+
       stdin = stdin.trim()
       // Get second argument
       const argument = stdin.split(' ').slice(1).join(' ').replace(/"/g, '')
@@ -188,7 +196,7 @@ export default {
         const autocompleteableProgram = command[0]
         // Collect all autocompletion candidates
         const candidates = []
-        const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+        const programs = [...Object.keys(this.commands), 'reverse'].sort()
         programs.forEach(program => {
           if (program.startsWith(autocompleteableProgram)) {
             candidates.push(program)

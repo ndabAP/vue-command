@@ -120,6 +120,7 @@ Some properties can be changed by the terminal, therefore, the `sync` modifier h
 | `hide-title`              | `Boolean`  | `false`                                                                           | No   | Hides the title                                                                              |
 | `history`                 | `Array`    | `[]`                                                                              | Yes  | Executed commands                                                                            |
 | `intro`                   | `String`   | `Fasten your seatbelts!`                                                          | No   | Sets the intro                                                                               |
+| `is-built-in`             | `Boolean`  | `false`                                                                           | No   | See [Built-in](#built-in) section                                                            |
 | `is-fullscreen`           | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal fullscreen mode                                                            |
 | `is-in-progress`          | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal progress status                                                            |
 | `not-found`               | `String`   | `not found`                                                                       | No   | Sets the command not found text                                                              |
@@ -190,7 +191,11 @@ The `context` variable contains the following properties:
 
 Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands.
 
-The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. To fully simulate a regular command circle a built-in command has to follow these steps:
+If you want to use built-in commands, you have to set property `is-built-in`. Since built-in commands can capture any command, it's necessary to take care of autocompletion and if commands not found.
+
+The first argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. The second argument is the terminal instance. You can use the `commandNotFound` method if no built-in or regular command has been found.
+
+To fully simulate a regular command circle a built-in command has to follow these steps:
 
 1. Call `setIsInProgress` with `true` to tell there is a command in progress
 2. Add the programm to the `executed` `Set` property
