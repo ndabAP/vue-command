@@ -1,3 +1,16 @@
+## [19.0.0](https://github.com/ndabAP/vue-command/compare/v18.0.0...v19.0.0) (2020-08-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* introduce built-in property
+* use built-in programs
+
+### Bug Fixes
+
+* introduce built-in property ([fd2d7ad](https://github.com/ndabAP/vue-command/commit/fd2d7ad9b08b6ead41c7542cd68ea4cdea07a9cf))
+* use built-in programs ([e9b8fc7](https://github.com/ndabAP/vue-command/commit/e9b8fc78e372ea2549bdd29e4512096e1f1f57d5))
+
 ## [18.0.0](https://github.com/ndabAP/vue-command/compare/v17.0.0...v18.0.0) (2020-08-13)
 
 
