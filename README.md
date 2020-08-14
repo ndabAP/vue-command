@@ -470,7 +470,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 
 ```vue
 <template>
-  <vue-command :commands="commands">
+  <vue-command>
     <div slot="bar">
       Pokedex
     </div>
@@ -484,9 +484,7 @@ Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot,
 
 ```vue
 <template>
-  <vue-command
-    :commands="commands"
-    prompt="neil">
+  <vue-command prompt="neil">
     <span
       class="term-ps" 
       slot="prompt">
