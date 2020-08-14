@@ -1,3 +1,14 @@
+## [21.0.0](https://github.com/ndabAP/vue-command/compare/v20.0.0...v21.0.0) (2020-08-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix autocompletion example
+
+### Documentation
+
+* fix autocompletion example ([fb20155](https://github.com/ndabAP/vue-command/commit/fb2015539ccb78e5301be218954253794c24f186))
+
 ## [20.0.0](https://github.com/ndabAP/vue-command/compare/v19.0.0...v20.0.0) (2020-08-14)
 
 
