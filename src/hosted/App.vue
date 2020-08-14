@@ -12,7 +12,6 @@
       :help-timeout="1250"
       :prompt="prompt"
       :stdin.sync="stdin"
-      is-built-in
       show-help>
     </vue-command>
     <pre>
