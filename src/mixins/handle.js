@@ -25,7 +25,7 @@ export default {
       }
 
       // Check if command might be built-in
-      if (this.isBuiltIn) {
+      if (typeof this.builtIn === 'function') {
         await Promise.resolve(this.builtIn(stdin, this))
 
         // The built in function must take care of all other steps
