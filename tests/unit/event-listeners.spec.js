@@ -1,4 +1,4 @@
-import { getRandom, getMountedWrapper, getCommands, getCommand } from './test-utilities'
+import { getRandom, getMountedWrapper, getCommand } from './test-utilities'
 import Stdout from '../../src/components/Stdout'
 import { ResizeObserver } from './polyfills'
 
