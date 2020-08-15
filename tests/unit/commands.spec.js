@@ -2,8 +2,8 @@ import {
   getRandom,
   getMountedWrapper,
   getEmptyCommands,
-  getAsyncCommands,
-  getCommands
+  getAsyncCommand,
+  getCommand
 } from './test-utilities'
 import { ResizeObserver } from './polyfills'
 import Stdout from '../../src/components/Stdout'
@@ -30,7 +30,7 @@ describe('Commands', () => {
 
   it('finds the command', async () => {
     const command = getRandom()
-    const wrapper = getMountedWrapper({}, getCommands(command))
+    const wrapper = getMountedWrapper({}, getCommand(command))
 
     wrapper.find('input').setValue(command)
     await wrapper.find('input').trigger(KEY_ENTER_EVENT)
@@ -40,7 +40,7 @@ describe('Commands', () => {
 
   it('finds the asynchronous command', async () => {
     const command = getRandom()
-    const wrapper = getMountedWrapper({}, getAsyncCommands(command))
+    const wrapper = getMountedWrapper({}, getAsyncCommand(command))
 
     wrapper.find('input').setValue(command)
     await wrapper.find('input').trigger(KEY_ENTER_EVENT)
