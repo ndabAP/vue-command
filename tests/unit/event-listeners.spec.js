@@ -27,19 +27,6 @@ describe('Event listeners', () => {
 
       expect(wrapper.find('input').element.value).toBe(command)
     })
-
-    // it('autcompletes two results', async () => {
-    //   const command = getRandom()
-    //   const wrapper = getMountedWrapper({}, getCommand(command))
-
-    //   wrapper.find('input').setValue(command)
-    //   await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-    //   wrapper.vm.local.stdin = command.slice(0, -1)
-    //   await wrapper.find('.term-cont').trigger(KEY_TAB_EVENT)
-
-    //   expect(wrapper.find('input').element.value).toBe(command)
-    // })
   })
 
   describe('History', () => {
@@ -52,25 +39,6 @@ describe('Event listeners', () => {
 
       await wrapper.find('.term-cont').trigger(KEY_UP_EVENT)
       await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-      expect(wrapper.findAllComponents(Stdout).at(1).text()).toBe(command)
-    })
-
-    it('finds next entry', async () => {
-      const command = getRandom()
-      const wrapper = getMountedWrapper({}, getCommands([command, command.concat(command)]))
-
-      wrapper.find('input').setValue(command)
-      await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-      wrapper.find('input').setValue(command.concat(command))
-      await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-      await wrapper.find('.term-cont').trigger(KEY_UP_EVENT)
-      await wrapper.find('.term-cont').trigger(KEY_UP_EVENT)
-      await wrapper.find('input').trigger(KEY_ENTER_EVENT)
-
-      console.log(wrapper.html())
 
       expect(wrapper.findAllComponents(Stdout).at(1).text()).toBe(command)
     })
