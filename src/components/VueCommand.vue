@@ -7,7 +7,9 @@
       <div
         v-if="!hideBar"
         class="term-bar">
-        <span class="term-title">
+        <span
+          v-if="!hideTitle"
+          class="term-title">
           {{ title }}
         </span>
       </div>
@@ -108,12 +110,12 @@ export default {
     },
 
     builtIn: {
-      default: () => ({}),
-      type: Object
+      default: undefined,
+      type: Function
     },
 
     commands: {
-      required: true,
+      default: () => ({}),
       type: Object
     },
 
@@ -154,6 +156,11 @@ export default {
       type: Boolean
     },
 
+    hideTitle: {
+      default: false,
+      type: Boolean
+    },
+
     helpText: {
       default: 'Type help',
       type: String
@@ -168,6 +175,11 @@ export default {
     intro: {
       default: 'Fasten your seatbelts!',
       type: String
+    },
+
+    isBuiltIn: {
+      default: false,
+      type: Boolean
     },
 
     isFullscreen: {

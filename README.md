@@ -1,6 +1,6 @@
 # vue-command
 
-A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/).
+A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/) and check the demo [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
 
 ## Features
 
@@ -105,30 +105,31 @@ There are two types of commands: Built-in and regular ones. In most cases regula
 
 Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
 
-| Property                  | Type       | Default                                                                           | Required | Sync | Description                                                                                  |
-|---------------------------|------------|-----------------------------------------------------------------------------------|----------|------|----------------------------------------------------------------------------------------------|
-| `autocompletion-resolver` | `Function` | `null`                                                                            | No       | No   | See [Autocompletion resolver](#autocompletion-resolver)                                      |
-| `built-in`                | `Object`   | `{}`                                                                              | No       | No   | See [Built-in](#built-in) section                                                            |
-| `commands`                | `Object`   |                                                                                   | Yes      | No   | See [Commands](#commands) section                                                            |
-| `cursor`                  | `Number`   | `0`                                                                               | No       | Yes  | Sets the `Stdin` cursor position                                                             |
-| `event-listeners`         | `Array`    | `[EVENT_LISTENERS.autocomplete, EVENT_LISTENERS.history, EVENT_LISTENERS.search]` | No       | No   | See [Event listeners](#event-listeners) section                                              |
-| `executed`                | `Set`      | `new Set()`                                                                       | No       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions) |
-| `help-text`               | `String`   | `Type help`                                                                       | No       | No   | Sets the placeholder                                                                         |
-| `help-timeout`            | `Number`   | `4000`                                                                            | No       | No   | Sets the placeholder timeout                                                                 |
-| `hide-bar`                | `Boolean`  | `false`                                                                           | No       | No   | Hides the bar                                                                                |
-| `hide-prompt`             | `Boolean`  | `false`                                                                           | No       | No   | Hides the prompt                                                                             |
-| `history`                 | `Array`    | `[]`                                                                              | No       | Yes  | Executed commands                                                                            |
-| `intro`                   | `String`   | `Fasten your seatbelts!`                                                          | No       | No   | Sets the intro                                                                               |
-| `is-fullscreen`           | `Boolean`  | `false`                                                                           | No       | Yes  | Sets the terminal fullscreen mode                                                            |
-| `is-in-progress`          | `Boolean`  | `false`                                                                           | No       | Yes  | Sets the terminal progress status                                                            |
-| `not-found`               | `String`   | `not found`                                                                       | No       | No   | Sets the command not found text                                                              |
-| `parser-options`          | `Object`   | `{}`                                                                              | No       | No   | Sets the [parser options](https://github.com/jorgebucaran/getopts#api)                       |
-| `pointer`                 | `Number`   | `0`                                                                               | No       | Yes  | Sets the command pointer                                                                     |
-| `prompt`                  | `String`   | `~neil@moon:#`                                                                    | No       | No   | Sets the prompt                                                                              |
-| `show-help`               | `Boolean`  | `false`                                                                           | No       | No   | Shows the placeholder                                                                        |
-| `show-intro`              | `Boolean`  | `false`                                                                           | No       | No   | Shows the intro                                                                              |
-| `stdin`                   | `String`   | `''`                                                                              | No       | Yes  | Sets the current `Stdin`                                                                     |
-| `title`                   | `String`   | `neil@moon: ~`                                                                    | No       | No   | Sets the title                                                                               |
+| Property                  | Type       | Default                                                                           | Sync | Description                                                                                  |
+|---------------------------|------------|-----------------------------------------------------------------------------------|------|----------------------------------------------------------------------------------------------|
+| `autocompletion-resolver` | `Function` | `null`                                                                            | No   | See [Autocompletion resolver](#autocompletion-resolver)                                      |
+| `built-in`                | `Object`   | `{}`                                                                              | No   | See [Built-in](#built-in) section                                                            |
+| `commands`                | `Object`   | `{}`                                                                              | No   | See [Commands](#commands) section                                                            |
+| `cursor`                  | `Number`   | `0`                                                                               | Yes  | Sets the `Stdin` cursor position                                                             |
+| `event-listeners`         | `Array`    | `[EVENT_LISTENERS.autocomplete, EVENT_LISTENERS.history, EVENT_LISTENERS.search]` | No   | See [Event listeners](#event-listeners) section                                              |
+| `executed`                | `Set`      | `new Set()`                                                                       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions) |
+| `help-text`               | `String`   | `Type help`                                                                       | No   | Sets the placeholder                                                                         |
+| `help-timeout`            | `Number`   | `4000`                                                                            | No   | Sets the placeholder timeout                                                                 |
+| `hide-bar`                | `Boolean`  | `false`                                                                           | No   | Hides the bar                                                                                |
+| `hide-prompt`             | `Boolean`  | `false`                                                                           | No   | Hides the prompt                                                                             |
+| `hide-title`              | `Boolean`  | `false`                                                                           | No   | Hides the title                                                                              |
+| `history`                 | `Array`    | `[]`                                                                              | Yes  | Executed commands                                                                            |
+| `intro`                   | `String`   | `Fasten your seatbelts!`                                                          | No   | Sets the intro                                                                               |
+| `is-fullscreen`           | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal fullscreen mode                                                            |
+| `is-in-progress`          | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal progress status                                                            |
+| `not-found`               | `String`   | `not found`                                                                       | No   | Sets the command not found text                                                              |
+| `parser-options`          | `Object`   | `{}`                                                                              | No   | Sets the [parser options](https://github.com/jorgebucaran/getopts#api)                       |
+| `pointer`                 | `Number`   | `0`                                                                               | Yes  | Sets the command pointer                                                                     |
+| `prompt`                  | `String`   | `~neil@moon:#`                                                                    | No   | Sets the prompt                                                                              |
+| `show-help`               | `Boolean`  | `false`                                                                           | No   | Shows the placeholder                                                                        |
+| `show-intro`              | `Boolean`  | `false`                                                                           | No   | Shows the intro                                                                              |
+| `stdin`                   | `String`   | `''`                                                                              | Yes  | Sets the current `Stdin`                                                                     |
+| `title`                   | `String`   | `neil@moon: ~`                                                                    | No   | Sets the title                                                                               |
 
 ### Commands
 
@@ -187,19 +188,20 @@ The `context` variable contains the following properties:
 
 ### Built-in
 
-Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands. 
+Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands.
 
-The API is more likely to change. The argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place.
+Since built-in commands can capture any command, it's necessary to take care of autocompletion and the command not found experience.
+
+The first argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. The second argument is the terminal instance. You can use the `commandNotFound` method if no built-in or regular command has been found.
 
 To fully simulate a regular command circle a built-in command has to follow these steps:
 
-1. Add the programm to the `executed` `Set` property
-2. Increase the history pointer
-3. Emit command executing started
-4. Tell terminal there is a command in progress  
+1. Call `setIsInProgress` with `true` to tell there is a command in progress
+2. Add the programm to the `executed` `Set` property
+3. Increase the history pointer with `setPointer`
+4. Execute actual task
 5. Push the `Stdout` component into the `history` property
-6. Execute actual task
-7. Exit the command with the injected `terminate` function
+6. Call `setIsInProgress` with `false` to tell there is no command in progress anymore
 
 ### Autocompletion resolver
 
@@ -216,7 +218,7 @@ this.autocompletionResolver = () => {
   const autocompleteableProgram = command[0]
   // Collect all autocompletion candidates
   let candidates = []
-  const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+  const programs = [...Object.keys(this.commands)].sort()
   programs.forEach(program => {
     if (program.startsWith(autocompleteableProgram)) {
       candidates.push(program)
@@ -279,7 +281,7 @@ this.autocompletionResolver = () => {
       const autocompleteableProgram = command[0]
       // Collect all autocompletion candidates
       const candidates = []
-      const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+      const programs = [...Object.keys(this.commands)].sort()
       programs.forEach(program => {
         if (program.startsWith(autocompleteableProgram)) {
           candidates.push(program)
@@ -468,7 +470,7 @@ It's possible to fully customize the terminal bar using slots as shown in the fo
 
 ```vue
 <template>
-  <vue-command :commands="commands">
+  <vue-command>
     <div slot="bar">
       Pokedex
     </div>
@@ -482,9 +484,7 @@ Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot,
 
 ```vue
 <template>
-  <vue-command
-    :commands="commands"
-    prompt="neil">
+  <vue-command prompt="neil">
     <span
       class="term-ps" 
       slot="prompt">
@@ -524,6 +524,8 @@ The Chuck Norris jokes are comming from [this](https://api.chucknorris.io/) API.
 ## Author
 
 [Julian Claus](https://www.julian-claus.de) and contributors. Special thanks to [krmax44](https://github.com/krmax44) for the amazing work!
+
+I apologize to some contributors that are not in the Git history anymore since I had to delete the repository because of problems with [semantic-release](https://github.com/semantic-release/semantic-release). 
 
 ## License
 

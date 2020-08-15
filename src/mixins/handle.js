@@ -13,44 +13,81 @@ export default {
   methods: {
     // Handles the command
     async handle (stdin) {
-      // Remove leading and trailing whitespace
-      stdin = stdin.trim()
+      // First token is program
+      const program = stdin.trim().split(' ')[0]
 
-      const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
+      // Check if command is regular command
+      if (typeof this.commands[program] === 'function') {
+        // Check if command is regular command
+        await Promise.resolve(this.execute(stdin))
 
-      // Check if function is built in
-      if (this.builtIn[program] !== undefined) {
-        await Promise.resolve(this.builtIn[program](stdin))
+        return
+      }
+
+      // Check if command might be built-in
+      if (typeof this.builtIn === 'function') {
+        await Promise.resolve(this.builtIn(stdin, this))
 
         // The built in function must take care of all other steps
         return
       }
 
-      // Execute the regular command
-      this.execute(stdin)
+      // Command must be empty or can't be found
+      this.commandNotFound(stdin)
     },
 
     // Executes a regular command
     async execute (stdin) {
+      // Remove leading and trailing whitespace
+      stdin = stdin.trim()
+
       const program = getOpts(stdin.split(' '), this.parserOptions)._[0]
       // Create empty component in case no program has been found
       let component = createDummyStdout()
 
-      // Check if command has been found
-      if (typeof this.commands[program] === 'function') {
-        // Parse the command and try to get the program
-        const parsed = getOpts(stdin.split(' '), this.parserOptions)
+      // Split Stdin into chunks to parse it correctly.
+      // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
+      // Contains the tokens to merge option-value pairs
+      const tokens = []
+      // Contains the current token pair for each iteration
+      let tokenPairs = []
+      const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
+      // Iterate through all tokens
+      do {
+        tokenPairs = tokenPairsExpression.exec(stdin)
 
-        component = await Promise.resolve(this.commands[program](parsed))
-        component = this.setupComponent(component, this.local.history.length, parsed)
-      } else {
-        // No command found
-        if (stdin !== '') {
-          component = createStderr(`${stdin}: ${this.notFound}`, true)
+        if (tokenPairs != null) {
+          tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
+        }
+      } while (tokenPairs != null)
+
+      // Contains accommodated tokens to parse
+      const accommodatedTokens = []
+      let isNextTokenOptionValue = false
+      tokens.forEach((token, index) => {
+        // Check if next token is option value
+        if (isNextTokenOptionValue) {
+          isNextTokenOptionValue = false
+
+          return
         }
 
-        component = this.setupComponent(component, this.local.history.length)
-      }
+        // Check if option has value assigned
+        if (token.endsWith('=')) {
+          // Merge option with value
+          accommodatedTokens.push(token + tokens[index + 1])
+
+          isNextTokenOptionValue = true
+        } else {
+          // Token is not part of option-value pair
+          accommodatedTokens.push(token)
+        }
+      })
+
+      const parsed = getOpts(accommodatedTokens, this.parserOptions)
+
+      component = await Promise.resolve(this.commands[program](parsed))
+      component = this.setupComponent(component, this.local.history.length, parsed)
 
       // Disallow empty Stdin in history
       if (stdin !== '') {
@@ -66,6 +103,41 @@ export default {
 
       // Point history to new command
       this.setPointer(this.local.executed.size)
+
+      const history = [...this.local.history]
+      history.push(component)
+
+      // Emit command executing started
+      this.emitExecute()
+      // Tell terminal there is a command in progress
+      this.setIsInProgress(true)
+
+      this.setHistory(history)
+      // Update the history property
+      this.$emit('update:history', [...history])
+    },
+
+    // Command is empty or not found
+    commandNotFound (stdin) {
+      let component = createDummyStdout()
+      // Only non empty commands should be
+      if (stdin !== '') {
+        // No command found
+        component = createStderr(`${stdin}: ${this.notFound}`, true)
+        component = this.setupComponent(component, this.local.history.length)
+
+        // Remove duplicate commands to push to latest entry
+        const executed = new Set(this.local.executed)
+        executed.delete(stdin)
+        executed.add(stdin)
+
+        // Mutate property
+        this.$emit('update:executed', executed)
+        this.setExecuted(executed)
+
+        // Point history to new command
+        this.setPointer(this.local.executed.size)
+      }
 
       const history = [...this.local.history]
       history.push(component)

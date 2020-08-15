@@ -39,11 +39,7 @@ export default {
 
   data: () => ({
     autocompletionResolver: () => undefined,
-    builtIn: {
-      // Reverse current Stdin
-      reverse: undefined
-    },
-
+    builtIn: undefined,
     commands: {
       // Navigate to home, self and back
       cd: undefined,
@@ -51,10 +47,15 @@ export default {
       // Clear terminals history
       clear: undefined,
 
+      // Returns the parsed object to test parsing
+      // E. g.: echo --x="one two three" --y="one two" --z="one" --test="okay" --x1 --y2 --t=ok -dash
+      echo: _ => createStdout(JSON.stringify(_, null, 2)),
+
       // Show help
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;cd [dir]<br>
         &nbsp;clear<br>
+        &nbsp;echo<br>
         &nbsp;hello-world<br>
         &nbsp;klieh<br>
         &nbsp;loading [--amount n] [--timeout n]<br>
@@ -153,7 +154,14 @@ export default {
       }
     }
 
-    this.builtIn.reverse = stdin => {
+    this.builtIn = (stdin, terminal) => {
+      // Check for application
+      if (stdin.trim().split(' ')[0] !== 'reverse') {
+        terminal.commandNotFound(stdin)
+
+        return
+      }
+
       stdin = stdin.trim()
       // Get second argument
       const argument = stdin.split(' ').slice(1).join(' ').replace(/"/g, '')
@@ -187,7 +195,7 @@ export default {
         const autocompleteableProgram = command[0]
         // Collect all autocompletion candidates
         const candidates = []
-        const programs = [...Object.keys(this.commands), ...Object.keys(this.builtIn)].sort()
+        const programs = [...Object.keys(this.commands), 'reverse'].sort()
         programs.forEach(program => {
           if (program.startsWith(autocompleteableProgram)) {
             candidates.push(program)
