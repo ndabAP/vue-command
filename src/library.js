@@ -63,7 +63,7 @@ export const EVENT_LISTENERS = {
   // Autocompletion when pressing "Tab" key
   autocomplete: terminal => {
     terminal.$refs['term-cont'].addEventListener('keydown', event => {
-      if (event.keyCode === TAB_KEY) {
+      if (event.keyCode === TAB_KEY && !terminal.local.isInProgress) {
         event.preventDefault()
 
         terminal.autocomplete()
@@ -74,6 +74,10 @@ export const EVENT_LISTENERS = {
   // Cycle through history with "Arrow up key" and "Arrow down key"
   history: terminal => {
     terminal.$refs['term-cont'].addEventListener('keydown', event => {
+      if (terminal.local.isInProgress) {
+        return
+      }
+
       if (event.keyCode === ARROW_UP_KEY) {
         event.preventDefault()
 
@@ -91,7 +95,11 @@ export const EVENT_LISTENERS = {
   // Search history with "Ctrl" and "r"
   search: terminal => {
     terminal.$refs['term-cont'].addEventListener('keydown', event => {
-      if (event.ctrlKey && event.keyCode === R_KEY) {
+      if (
+        event.ctrlKey &&
+        event.keyCode === R_KEY &&
+        !terminal.local.isInProgress
+      ) {
         event.preventDefault()
 
         terminal.setIsSearchHandler()
