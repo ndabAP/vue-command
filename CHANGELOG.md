@@ -1,3 +1,10 @@
+### [21.0.1](https://github.com/ndabAP/vue-command/compare/v21.0.0...v21.0.1) (2020-08-17)
+
+
+### Bug Fixes
+
+* do not execute keydown events when the last command is still in progress ([25fca3e](https://github.com/ndabAP/vue-command/commit/25fca3e42788098eab90380093e403a18caf8d5b))
+
 ## [21.0.0](https://github.com/ndabAP/vue-command/compare/v20.0.0...v21.0.0) (2020-08-14)
 
 
