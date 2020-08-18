@@ -2,7 +2,7 @@ import VueCommand from './components/VueCommand'
 import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../src/constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
-export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
+export const createStdout = (content, useInnerText = false, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
   name,
   mixins,
   inject: ['terminate'],
@@ -18,12 +18,16 @@ export const createStdout = (content, isEscapeHtml = false, name = 'VueCommandSt
       return createElement('span', {}, content)
     }
 
+    if (useInnerText) {
+      return createElement('span', { domProps: { innerText: content } })
+    }
+
     return createElement('span', { domProps: { innerHTML: content } })
   }
 })
 
 // Returns a Stderr component containing a span element with given inner content
-export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandStderr', ...mixins) => ({
+export const createStderr = (content, useInnerText = false, isEscapeHtml = false, name = 'VueCommandStderr', ...mixins) => ({
   name,
   mixins,
   inject: ['terminate'],
@@ -37,6 +41,10 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
   render: createElement => {
     if (isEscapeHtml) {
       return createElement('span', {}, content)
+    }
+
+    if (useInnerText) {
+      return createElement('span', { domProps: { innerText: content } })
     }
 
     return createElement('span', { domProps: { innerHTML: content } })
