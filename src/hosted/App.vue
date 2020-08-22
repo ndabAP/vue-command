@@ -70,9 +70,6 @@ export default {
       // Return simple text
       'hello-world': () => createStdout('Hello world'),
 
-      // Text format with "innerText" instead of "innerHtml" so newline and other ASCII control characters can be used
-      'text-format': () => createStdout('Example using "isInnerText": "\n" allows for formatting of message with newline instead of HTML "<br>"', true),
-
       // Show a animation
       klieh: () => KliehParty,
 
@@ -99,7 +96,10 @@ export default {
       },
 
       // Show current path
-      pwd: () => undefined
+      pwd: () => undefined,
+
+      // Text format with "innerText" instead of "innerHtml" so newline and other ASCII control characters can be used
+      'text-format': () => createStdout('Example using "isInnerText": "\n" allows for formatting of message with newline instead of HTML "<br>"', true),
     },
 
     // Terminal cursor position
