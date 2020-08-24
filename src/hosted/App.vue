@@ -64,14 +64,10 @@ export default {
         &nbsp;pokedex pokemon --color<br>
         &nbsp;pwd<br>
         &nbsp;reverse text<br>
-        &nbsp;text-format<br>
       `),
 
       // Return simple text
       'hello-world': () => createStdout('Hello world'),
-
-      // Text format with innerText instead of innerHtml so newline and other ascii control characters can be used
-      'text-format': () => createStdout('Example using createStdout with useInnerText=true: \n allows for formatting of message with newline instead of Html <br> (including other ascii control characters)', true),
 
       // Show a animation
       klieh: () => KliehParty,
