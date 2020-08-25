@@ -2,7 +2,7 @@ import VueCommand from './components/VueCommand'
 import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../src/constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
-export const createStdout = (content, isInnerText = false, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
+export const createStdout = (content, isInnerText = false, includePromptAfter = true, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
   name,
   mixins,
   inject: ['terminate'],
@@ -12,12 +12,11 @@ export const createStdout = (content, isInnerText = false, isEscapeHtml = false,
 
     this.terminate()
   },
-
+  includePromptAfter: includePromptAfter,
   render: createElement => {
     if (isEscapeHtml) {
       return createElement('span', {}, content)
     }
-
     if (isInnerText) {
       return createElement('span', { domProps: { innerText: content } })
     }
@@ -37,7 +36,7 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 
     this.terminate()
   },
-
+  includePromptAfter: true,
   render: createElement => {
     if (isEscapeHtml) {
       return createElement('span', {}, content)
@@ -49,6 +48,7 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 
 // Returns a dummy Stdout component to not show a Stdin
 export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => ({
+  includePromptAfter: true,
   name,
   mixins,
   inject: ['terminate'],
@@ -58,7 +58,6 @@ export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => 
 
     this.terminate()
   },
-
   render: createElement => createElement('span', {}, '')
 })
 

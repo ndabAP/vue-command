@@ -36,7 +36,6 @@
         <div v-if="showIntro">
           {{ intro }}
         </div>
-
         <div
           v-for="(stdout, index) in local.history"
           :key="index"
@@ -48,7 +47,7 @@
             class="term-stdout"/>
 
           <stdin
-            v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
+            v-show="stdout.includePromptAfter && ((index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen)"
             ref="stdin"
             :bus="bus"
             :cursor="local.cursor"
@@ -325,6 +324,7 @@ export default {
       // Push dummy Stdout without termination
       history.push({
         name: 'VueCommandDummyStdout',
+        includePromptAfter: true,
         render: createElement => createElement('span', {}, '')
       })
 
