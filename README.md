@@ -456,9 +456,9 @@ this.autocompletionResolver = () => {
 
 Event listeners trigger terminal behaviour under certain conditions like pressing a button. Pass an array of event listeners you want to bind via the `event-listeners` property. This library provides three event listeners per default which can be imported:
 
-- **Autocompletion**: Autocompletion when pressing "Tab" key
-- **History**: Cycle through history with "Arrow up key" and "Arrow down key"
-- **Search**: Search history with "Ctrl" and "r"
+- **Autocompletion**: Autocompletion when pressing <kbd>↹</kbd>
+- **History**: Cycle through history with <kbd>↑</kbd>/<kbd>↓</kbd>
+- **Search**: Search history with <kbd>Ctrl</kbd> and <kbd>r</kbd>
 
 An event listener is called with the Vue.js component instance as argument. 
 
