@@ -1,0 +1,86 @@
+{
+  "name": "vue-command",
+  "version": "22.0.0",
+  "description": "A fully working, most feature-rich Vue.js terminal emulator.",
+  "private": false,
+  "main": "./dist/vue-command.common.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndabAP/vue-command"
+  },
+  "keywords": [
+    "bash",
+    "emulator",
+    "sh",
+    "shell",
+    "terminal",
+    "vue",
+    "vuejs"
+  ],
+  "files": [
+    "dist/*.css",
+    "dist/*.css.map",
+    "dist/*.js",
+    "dist/*.js.map"
+  ],
+  "scripts": {
+    "build": "npm run build:lib && npm run build:docs",
+    "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
+    "build:docs": "vue-cli-service build --dest docs",
+    "lint": "vue-cli-service lint",
+    "lint:fix": "vue-cli-service lint:fix",
+    "serve": "vue-cli-service serve",
+    "test": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "getopts": "^2.2.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.0.1",
+    "@commitlint/config-conventional": "^9.0.1",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.5",
+    "@semantic-release/npm": "^7.0.5",
+    "@semantic-release/release-notes-generator": "^9.0.1",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
+    "@vue/cli-plugin-unit-jest": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/test-utils": "1.0.3",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.0.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "flush-promises": "^1.0.2",
+    "husky": "^4.2.5",
+    "js-yaml": "^3.13.1",
+    "node-sass": "^4.14.1",
+    "querystringify": "^2.1.1",
+    "sass-loader": "^8.0.0",
+    "semantic-release": "^17.0.7",
+    "serialize-javascript": "~3.1.0",
+    "tar": ">=4.4.10",
+    "vue": "^2.6.11",
+    "vue-moveable": "^1.8.0",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.42.1"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS && npm run lint --fix",
+      "pre-push": "npm run test"
+    }
+  }
+}
