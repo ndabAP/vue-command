@@ -2,6 +2,49 @@ import getOpts from 'getopts'
 
 import { createStderr, createDummyStdout } from '../library'
 
+// Split Stdin into chunks to parse it correctly.
+// See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
+const accommodateTokens = stdin => {
+  // Contains the tokens to merge option-value pairs
+  const tokens = []
+  // Contains the current token pair for each iteration
+  let tokenPairs = []
+  const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
+  // Iterate through all tokens
+  do {
+    tokenPairs = tokenPairsExpression.exec(stdin)
+
+    if (tokenPairs != null) {
+      tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
+    }
+  } while (tokenPairs != null)
+
+  // Contains accommodated tokens to parse
+  const accommodatedTokens = []
+  let isNextTokenOptionValue = false
+  tokens.forEach((token, index) => {
+    // Check if next token is option value
+    if (isNextTokenOptionValue) {
+      isNextTokenOptionValue = false
+
+      return
+    }
+
+    // Check if option has value assigned
+    if (token.endsWith('=')) {
+      // Merge option with value
+      accommodatedTokens.push(token + tokens[index + 1])
+
+      isNextTokenOptionValue = true
+    } else {
+      // Token is not part of option-value pair
+      accommodatedTokens.push(token)
+    }
+  })
+
+  return accommodatedTokens
+}
+
 // @vue/component
 export default {
   provide () {
@@ -45,45 +88,7 @@ export default {
       // Create empty component in case no program has been found
       let component = createDummyStdout()
 
-      // Split Stdin into chunks to parse it correctly.
-      // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176
-      // Contains the tokens to merge option-value pairs
-      const tokens = []
-      // Contains the current token pair for each iteration
-      let tokenPairs = []
-      const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
-      // Iterate through all tokens
-      do {
-        tokenPairs = tokenPairsExpression.exec(stdin)
-
-        if (tokenPairs != null) {
-          tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
-        }
-      } while (tokenPairs != null)
-
-      // Contains accommodated tokens to parse
-      const accommodatedTokens = []
-      let isNextTokenOptionValue = false
-      tokens.forEach((token, index) => {
-        // Check if next token is option value
-        if (isNextTokenOptionValue) {
-          isNextTokenOptionValue = false
-
-          return
-        }
-
-        // Check if option has value assigned
-        if (token.endsWith('=')) {
-          // Merge option with value
-          accommodatedTokens.push(token + tokens[index + 1])
-
-          isNextTokenOptionValue = true
-        } else {
-          // Token is not part of option-value pair
-          accommodatedTokens.push(token)
-        }
-      })
-
+      const accommodatedTokens = accommodateTokens(stdin)
       const parsed = getOpts(accommodatedTokens, this.parserOptions)
 
       component = await Promise.resolve(this.commands[program](parsed))
