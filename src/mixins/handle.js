@@ -89,7 +89,7 @@ export default {
       let component = createDummyStdout()
 
       const accommodatedTokens = accommodateTokens(stdin)
-      const parsed = getOpts(accommodatedTokens, this.parserOptions)
+      const parsed = getOpts(accommodatedTokens.slice(1), this.parserOptions[program])
 
       component = await Promise.resolve(this.commands[program](parsed))
       component = this.setupComponent(component, this.local.history.length, parsed)
