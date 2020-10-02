@@ -59,7 +59,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.0.0",
     "flush-promises": "^1.0.2",
     "husky": "^4.3.0",
     "js-yaml": "^3.13.1",
