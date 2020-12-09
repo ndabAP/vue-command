@@ -11,7 +11,7 @@ I'm happy you want to contribute. Please make sure you read and fulfil the follo
 
 ## Commits
 
-You must follow the [conventional commits schema](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional). Commits are linted and will fail if not following the schema so. This helps to be consistent across developers and makes [semantic release](https://github.com/semantic-release/semantic-release) possible.
+You must follow the [conventional commits schema](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional). Commits are linted and will fail if not following the schema so. This helps to be consistent across developers and makes [semantic-release](https://github.com/semantic-release/semantic-release) possible.
 
 If you change the `README.md`, use `docs!` to trigger a breaking change (increases major version) to make the change visible at npmjs.com.
 
