@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "23.0.0",
+  "version": "23.0.1",
   "description": "A fully working, most feature-rich Vue.js terminal emulator.",
   "private": false,
   "main": "./dist/vue-command.common.js",
