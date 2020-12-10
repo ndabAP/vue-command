@@ -350,6 +350,9 @@ export default {
 
     // Focus on last Stdin or search
     focus () {
+      // If user selected any text skip setting focus as otherwise the selection gets removed
+      if (window.getSelection().toString() !== '') return
+
       // Check if search mode
       if (this.isSearch) {
         this.$refs.search.focus()
