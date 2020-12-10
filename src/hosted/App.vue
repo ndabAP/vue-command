@@ -69,7 +69,7 @@ export default {
       // Return simple text
       'hello-world': () => createStdout('Hello world'),
 
-      // Show a animation
+      // Show an animation
       klieh: () => KliehParty,
 
       // Simulate a loading animation
