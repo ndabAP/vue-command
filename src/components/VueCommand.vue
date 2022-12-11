@@ -1,68 +1,35 @@
 <template>
-  <div
-    ref="vue-command"
-    class="vue-command">
+  <div ref="vue-command" class="vue-command">
 
     <slot name="bar">
-      <div
-        v-if="!hideBar"
-        class="term-bar">
-        <span
-          v-if="!hideTitle"
-          class="term-title">
+      <div v-if="!hideBar" class="term-bar">
+        <span v-if="!hideTitle" class="term-title">
           {{ title }}
         </span>
       </div>
     </slot>
 
-    <div
-      ref="term-std"
-      class="term-std">
-      <search
-        v-if="isSearch"
-        ref="search"
-        :executed="local.executed"
-        :is-search.sync="isSearch"
-        :stdin="stdin"
-        @click="focus"
-        @handle="handle"/>
+    <div ref="term-std" class="term-std">
+      <search v-if="isSearch" ref="search" :executed="local.executed" v-model:is-search="isSearch" :stdin="stdin"
+        @click="focus" @handle="handle" />
 
-      <div
-        v-show="!isSearch"
-        ref="term-cont"
-        :class="{ 'term-cont-fullscreen': local.isFullscreen }"
-        class="term-cont"
+      <div v-show="!isSearch" ref="term-cont" :class="{ 'term-cont-fullscreen': local.isFullscreen }" class="term-cont"
         @click="focus">
         <div v-if="showIntro">
           {{ intro }}
         </div>
 
-        <div
-          v-for="(stdout, index) in local.history"
-          :key="index"
-          class="term-hist"
-          :class="{ 'term-hist-fullscreen' : (local.isFullscreen && index === local.history.length - 1) }">
-          <stdout
-            v-show="(!local.isFullscreen || index === local.history.length - 1)"
-            :component="stdout"
-            class="term-stdout"/>
+        <div v-for="(stdout, index) in local.history" :key="index" class="term-hist"
+          :class="{ 'term-hist-fullscreen': (local.isFullscreen && index === local.history.length - 1) }">
+          <stdout v-show="(!local.isFullscreen || index === local.history.length - 1)" :component="stdout"
+            class="term-stdout" />
 
           <stdin
             v-show="(index === 0 && !local.isFullscreen) || !(index === local.history.length - 1 && local.isInProgress) && !local.isFullscreen"
-            ref="stdin"
-            :bus="bus"
-            :cursor="local.cursor"
-            :hide-prompt="hidePrompt"
-            :is-fullscreen="local.isFullscreen"
-            :is-in-progress="local.isInProgress"
-            :is-last="index === local.history.length - 1"
-            :prompt="prompt"
-            :help-text="helpText"
-            :help-timeout="helpTimeout"
-            :show-help="showHelp"
-            :stdin.sync="local.stdin"
-            :uid="_uid"
-            @handle="handle">
+            ref="stdin" :bus="bus" :cursor="local.cursor" :hide-prompt="hidePrompt" :is-fullscreen="local.isFullscreen"
+            :is-in-progress="local.isInProgress" :is-last="index === local.history.length - 1" :prompt="prompt"
+            :help-text="helpText" :help-timeout="helpTimeout" :show-help="showHelp" v-model:stdin="local.stdin"
+            :uid="_uid" @handle="handle">
             <template #prompt>
               <slot name="prompt" />
             </template>
@@ -74,7 +41,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 
 import Search from './Search'
 import Stdin from './Stdin'
@@ -84,10 +51,13 @@ import HandleMixin from '../mixins/handle'
 import HistoryMixin from '../mixins/history'
 import SearchMixin from '../mixins/search'
 import UIMixin from '../mixins/ui'
-import { EVENT_LISTENERS } from './../library'
+import { EVENT_LISTENERS } from '../library/library'
+import DummyStdout from '../library/DummyStdout.vue'
 
 // Event bus for communication
-const EventBus = new Vue()
+const EventBus = {
+
+}
 
 export default {
   components: { Search, Stdin, Stdout },
@@ -323,10 +293,7 @@ export default {
     // If there is no entry push dummy Stdout to show Stdin
     if (history.length === 0) {
       // Push dummy Stdout without termination
-      history.push({
-        name: 'VueCommandDummyStdout',
-        render: createElement => createElement('span', {}, '')
-      })
+      history.push(DummyStdout)
 
       // Update the history property
       this.$emit('update:history', [...history])

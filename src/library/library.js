@@ -1,5 +1,6 @@
-import VueCommand from './components/VueCommand'
-import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../src/constants/keys'
+import { h } from 'vue'
+import VueCommand from '../components/VueCommand'
+import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../constants/keys'
 
 // Returns a Stdout component containing a span element with given inner content
 export const createStdout = (content, isInnerText = false, isEscapeHtml = false, name = 'VueCommandStdout', ...mixins) => ({
@@ -48,9 +49,8 @@ export const createStderr = (content, isEscapeHtml = false, name = 'VueCommandSt
 })
 
 // Returns a dummy Stdout component to not show a Stdin
-export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => ({
+export const createDummyStdout = (name = 'VueCommandDummyStdout') => ({
   name,
-  mixins,
   inject: ['terminate'],
   async mounted () {
     // Wait for user mutations
@@ -58,8 +58,9 @@ export const createDummyStdout = (name = 'VueCommandDummyStdout', ...mixins) => 
 
     this.terminate()
   },
-
-  render: createElement => createElement('span', {}, '')
+  setup () {
+    return () => h('span')
+  }
 })
 
 // Default event listeners to opt-in

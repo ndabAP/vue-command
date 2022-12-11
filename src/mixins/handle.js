@@ -1,6 +1,6 @@
 import getOpts from 'getopts'
 
-import { createStderr, createDummyStdout } from '../library'
+import { createStderr, createDummyStdout } from '../library/library'
 
 // Split Stdin into chunks to parse it correctly.
 // See: https://stackoverflow.com/a/18647776 and see: https://github.com/ndabAP/vue-command/issues/176

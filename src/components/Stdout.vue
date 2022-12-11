@@ -2,7 +2,7 @@
   <component :is="component" />
 </template>
 
-<script>
+<script lang="js">
 export default {
   props: {
     component: {
@@ -14,5 +14,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../scss/mixins";
+@import "../scss/mixins";
 </style>

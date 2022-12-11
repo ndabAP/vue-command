@@ -1,8 +1,7 @@
 .DS_Store
 node_modules
+/dist
 
-# build files
-dist
 
 # local env files
 .env.local
@@ -10,6 +9,9 @@ dist
 
 # Log files
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Editor directories and files
 .idea
@@ -18,7 +20,4 @@ npm-debug.log*
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
-
-# Jest files
-coverage
+*.sw?

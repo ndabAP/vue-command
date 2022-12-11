@@ -4,7 +4,7 @@
     class="term-cont term-cont-fullscreen"
     @keydown.tab.exact.prevent="setIsSearch(false)"
     @keydown.esc.exact.prevent="setIsSearch(false)"
-    @keydown.ctrl.67.exact.prevent="sigint">
+    @keydown.ctrl.c.exact.prevent="sigint">
     <div
       class="term-search-container">
       <span class="term-search">

@@ -1,35 +1,30 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
-    jest: true
+    node: true
   },
-
-  extends: [
-    'plugin:vue/essential',
+  'extends': [
+    'plugin:vue/vue3-essential',
     '@vue/standard'
   ],
-
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'vue/html-closing-bracket-newline': ['error', {
-      singleline: 'never',
-      multiline: 'never'
-    }],
-
-    'vue/max-attributes-per-line': ['error', {
-      singleline: 1,
-      multiline: 1
-    }],
-
-    'vue/attributes-order': 'error',
-    'vue/order-in-components': 'error',
-    'vue/html-indent': 'error',
-    quotes: ['error', 'single']
-  },
-
   parserOptions: {
     parser: 'babel-eslint'
-  }
+  },
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+    'vue/no-mutating-props': 'off'
+  },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 }

@@ -12,7 +12,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: "16"
       - name: Lint
         run: |
           npm i
@@ -21,7 +21,7 @@ jobs:
         run: |
           npm i
           npm run test
-  
+
   publish:
     name: Publish
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -30,11 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '12'
+          node-version: "18"
       - name: Publish
-        run: npm i && npm run build:lib && npx semantic-release
+        run: npm i; npm run build:lib; npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

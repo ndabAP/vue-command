@@ -3,15 +3,8 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
 
-    <vue-command
-      :autocompletion-resolver="autocompletionResolver"
-      :built-in="builtIn"
-      :commands="commands"
-      :cursor.sync="cursor"
-      :history.sync="history"
-      :help-timeout="1250"
-      :prompt="prompt"
-      :stdin.sync="stdin"
+    <vue-command :autocompletion-resolver="autocompletionResolver" :built-in="builtIn" :commands="commands"
+      v-model:cursor="cursor" v-model:history="history" :help-timeout="1250" :prompt="prompt" v-model:stdin="stdin"
       show-help>
     </vue-command>
     <pre>
@@ -28,7 +21,7 @@ import KliehParty from './KliehParty'
 import LoadingAnimation from './LoadingAnimation'
 import NanoEditor from './NanoEditor'
 import VueCommand from '../components/VueCommand'
-import { createStdout, createStderr, createDummyStdout } from '../library'
+import { createStdout, createStderr, createDummyStdout } from '../library/library'
 
 const PROMPT = '~neil@moon:#/'
 
