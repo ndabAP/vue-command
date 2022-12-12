@@ -14,7 +14,23 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
 
-    'vue/no-mutating-props': 'off'
+    'vue/no-mutating-props': 'off',
+    'no-unused-vars': 'off',
+
+    'vue/html-closing-bracket-newline': ['error', {
+      singleline: 'never',
+      multiline: 'never'
+    }],
+
+    'vue/max-attributes-per-line': ['error', {
+      singleline: 1,
+      multiline: 1
+    }],
+
+    'vue/attributes-order': 'error',
+    'vue/order-in-components': 'error',
+    'vue/html-indent': 'error',
+    quotes: ['error', 'single']
   },
   overrides: [
     {

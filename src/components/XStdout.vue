@@ -1,5 +1,5 @@
 <template>
-  <component :is="component" />
+  <component class="vue-command__stdout" :is="component" />
 </template>
 
 <script lang="js">
