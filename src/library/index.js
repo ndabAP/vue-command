@@ -10,6 +10,9 @@ export const createHistory = (root = [markRaw(createEmptyStdout())]) => {
 // inner HTML
 export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => markRaw(defineComponent({
   name,
+  setup () {
+
+  },
   render: () => {
     if (innerHTML) {
       return h('div', { innerHTML: text })
