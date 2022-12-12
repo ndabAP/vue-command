@@ -1,15 +1,17 @@
 <template>
-  <span>Hello {{ context.stdin }}</span>
+  <span>Hello {{ context.isRunning }}</span>
 </template>
 
-<script>
+<script setup>
 import { inject, onMounted } from 'vue'
 
-export default {
-  setup () {
-    const terminate = inject('terminate')
+// TODO: Add name
 
-    onMounted(terminate)
-  }
-}
+const terminate = inject('terminate')
+const context = inject('context')
+
+console.debug(terminate)
+console.debug(context)
+
+onMounted(() => setTimeout(() => terminate(), 1500))
 </script>

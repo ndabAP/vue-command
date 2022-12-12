@@ -10,13 +10,14 @@
 
     <input
       ref="queryRef"
-      :value="modalValue"
+      v-model="query"
+      :disabled="isRunning || !isActive"
       class="vue-command__query-input"
       type="text"
       autocorrect="off"
       autocapitalize="none"
-      @input="updateQuery"
-      @keyup.enter.exact="enter" />
+      @input="onInput($event.target.value)"
+      @keyup.enter.exact="submit" />
   </div>
 </template>
 
@@ -24,6 +25,16 @@
 import { defineProps, defineEmits, ref, onMounted } from 'vue'
 
 const props = defineProps({
+  isActive: {
+    type: Boolean,
+    required: true
+  },
+
+  isRunning: {
+    type: Boolean,
+    required: true
+  },
+
   modalValue: {
     default: '',
     type: String,
@@ -43,23 +54,28 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:modelValue', 'enter'])
+const query = ref('')
 
-const updateQuery = event => {
-  emits('update:modelValue', event.target.value)
+const emits = defineEmits(['update:modelValue', 'submit'])
+
+const onInput = modalValue => {
+  query.value = modalValue
+  emits('update:modelValue', modalValue)
 }
 
 const queryRef = ref(null)
 
 // Focuses current input
-const focus = () => queryRef.value.focus()
+const focus = () => {
+  queryRef.value.focus()
+}
 
 onMounted(() => {
   focus()
 })
 
-const enter = () => {
-  emits('enter')
+const submit = () => {
+  emits('submit')
 }
 </script>
 

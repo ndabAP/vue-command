@@ -3,11 +3,7 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
 
-    <vue-command
-      v-model:history="history"
-      v-model:query="query"
-      :commands="commands"
-      :prompt="prompt">
+    <vue-command :commands="commands">
     </vue-command>
     <pre>
       <code>
@@ -31,26 +27,12 @@ export default {
 
   data: () => ({
     commands: {
-      context: () => HelloContext,
-      // Show help
-      help: () => createStdout(`Available programms:<br><br>
-        &nbsp;cd [dir]<br>
-        &nbsp;clear<br>
-        &nbsp;echo<br>
-        &nbsp;hello-world<br>
-        &nbsp;klieh<br>
-        &nbsp;loading [--amount n] [--timeout n]<br>
-        &nbsp;nano<br>
-        &nbsp;norris<br>
-        &nbsp;pokedex pokemon --color<br>
-        &nbsp;pwd<br>
-        &nbsp;reverse text<br>
-      `)
-    },
+      context: () => HelloContext
+    }
 
-    history: createHistory(),
-    prompt: PROMPT,
-    query: ''
+    // history: [],
+    // prompt: PROMPT,
+    // query: ''
   })
 }
 </script>

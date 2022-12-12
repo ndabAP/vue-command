@@ -11,17 +11,20 @@
 
       <div class="window__content">
         <div
-          v-for="(stdout, index) in history"
+          v-for="(stdout, index) in local.history"
           :key="index"
           class="vue-command__history-entry">
           <component
             :is="stdout"
-            class="vue-command__stdout" />
-
+            class="vue-command__history-stdout" />
           <x-query
-            :modalValue="query"
+            v-if="index === 0 || !(index === local.history.length - 1 && local.isRunning)"
+            class="vue-command__history_query"
+            :is-active="index === 0 || index === (local.history.length - 1)"
+            :is-running="local.isRunning"
+            :modalValue="local.query"
             @update:modelValue="updateQuery"
-            @enter="processQuery">
+            @submit="onSubmitQuery">
             <template #prompt>
               <slot name="prompt" />
             </template>
@@ -34,9 +37,8 @@
 
 <script setup>
 import { parse } from 'shell-quote'
-import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, reactive, provide, watch } from 'vue'
+import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h } from 'vue'
 import XQuery from '@/components/XQuery.vue'
-import XStdout from '@/components/XStdout.vue'
 import { createEmptyStdout, createCommandNotFound } from '@/library'
 
 const props = defineProps({
@@ -57,7 +59,8 @@ const props = defineProps({
   },
 
   history: {
-    required: true,
+    default: () => [markRaw(createEmptyStdout())],
+    required: false,
     type: Array
   },
 
@@ -70,24 +73,31 @@ const props = defineProps({
 
 const emits = defineEmits(['update:history', 'update:query', 'update:isRunning'])
 
-onBeforeMount(() => {
+const local = reactive({
+  history: props.history,
+  isRunning: props.isRunning,
+  query: props.query
 })
 
 const updateIsRunning = isRunning => {
+  local.isRunning = isRunning
   emits('update:isRunning', isRunning)
 }
 const updateQuery = query => {
+  local.query = query
   emits('update:query', query)
 }
 const updateHistory = history => {
+  local.history = history
   emits('update:history', history)
 }
 
-const processQuery = async () => {
+const onSubmitQuery = async () => {
+  updateIsRunning(true)
+
   const commands = props.commands
-  const history = props.history
-  const query = props.query
-  const isRunning = props.isRunning
+  const history = local.history
+  const query = local.query
 
   const stdin = parse(query)
   if (stdin.length === 0) {
@@ -99,36 +109,23 @@ const processQuery = async () => {
   // Check if command exists
   const command = commands[program]
   if (typeof command === 'function') {
-    let stdout = await Promise.resolve(command())
+    const stdout = await Promise.resolve(command())
     // Extend component
-    stdout = defineComponent({
-      extends: stdout,
+    const component = defineComponent({
       setup () {
+        provide('context', reactive({
+          isRunning: props.isRunning
+        }))
+
         provide('terminate', () => updateIsRunning(false))
       },
 
-      computed: {
-        context: {
-          get () {
-            return {
-              stdin
-            }
-          }
-        },
-
-        environment: {
-          get () {
-            return reactive({
-
-            })
-          }
-        }
+      render () {
+        return h(stdout)
       }
     })
 
-    // updateIsRunning(true)
-    updateHistory([...history, markRaw(stdout)])
-    // updateIsRunning(false)
+    updateHistory([...history, markRaw(component)])
 
     return
   }
