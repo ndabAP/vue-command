@@ -1,14 +1,14 @@
 import { defineComponent, h, markRaw, nextTick } from 'vue'
 import VueCommand from '../components/VueCommand'
-import XQuery from '../components/XQuery'
 // import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../constants/keys'
 
 export const createHistory = (root = [markRaw(createEmptyStdout())]) => {
   return [...root]
 }
 
-// Returns a Stdout component containing a span element with given inner content
-export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => defineComponent({
+// Returns a Stdout component containing a span element with given text or as
+// inner HTML
+export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => markRaw(defineComponent({
   name,
   render: () => {
     if (innerHTML) {
@@ -17,9 +17,9 @@ export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false)
 
     return h('span', text)
   }
-})
+}))
 
 // Returns an empty stdout component to not show a Stdin
-export const createEmptyStdout = (name = 'VueCommandEmptyStdout') => createStdout('<!-- Empty Stdout -->', name, true)
+export const createEmptyStdout = (name = 'VueCommandEmptyStdout') => createStdout('<!-- VueCommandEmptyStdout -->', name, true)
 
 export default VueCommand

@@ -59,7 +59,7 @@ onMounted(() => {
 })
 
 const enter = () => {
-  emits('enter', props.modalValue)
+  emits('enter')
 }
 </script>
 

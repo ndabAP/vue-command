@@ -31,10 +31,11 @@
 </template>
 
 <script setup>
+import getOpts from 'getopts'
 import { defineProps, onBeforeMount, defineEmits } from 'vue'
 import XQuery from '@/components/XQuery.vue'
 import XStdout from '@/components/XStdout.vue'
-import { processQuery } from '@/composables/process'
+import { createEmptyStdout } from '../library'
 
 const props = defineProps({
   commands: {
@@ -52,7 +53,14 @@ const props = defineProps({
     type: Array
   },
 
+  parserOptions: {
+    default: () => ({}),
+    required: false,
+    type: Object
+  },
+
   query: {
+    default: '',
     required: false,
     type: String
   }
@@ -65,6 +73,77 @@ onBeforeMount(() => {
 
 const updateQuery = query => {
   emits('update:query', query)
+}
+
+const updateHistory = history => {
+  emits('update:history', history)
+}
+
+const accommodateTokens = query => {
+  // Contains the tokens to merge option-value pairs
+  const tokens = []
+  // Contains the current token pair for each iteration
+  let tokenPairs = []
+  const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
+  // Iterate through all tokens
+  do {
+    tokenPairs = tokenPairsExpression.exec(query)
+
+    if (tokenPairs != null) {
+      tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
+    }
+  } while (tokenPairs != null)
+
+  // Contains accommodated tokens to parse
+  const accommodatedTokens = []
+  let isNextTokenOptionValue = false
+  tokens.forEach((token, index) => {
+    // Check if next token is option value
+    if (isNextTokenOptionValue) {
+      isNextTokenOptionValue = false
+
+      return
+    }
+
+    // Check if option has value assigned
+    if (token.endsWith('=')) {
+      // Merge option with value
+      accommodatedTokens.push(token + tokens[index + 1])
+
+      isNextTokenOptionValue = true
+    } else {
+      // Token is not part of option-value pair
+      accommodatedTokens.push(token)
+    }
+  })
+
+  return accommodatedTokens
+}
+
+const processQuery = async () => {
+  const commands = props.commands
+  const history = props.history
+  const parserOptions = props.parserOptions
+  const query = props.query
+
+  if (query === '') {
+    updateHistory([...history, createEmptyStdout()])
+    return
+  }
+
+  // First token is program
+  const program = getOpts(query.trim().split(' '), parserOptions)._[0]
+
+  // Check if command exists
+  if (typeof commands[program] === 'function') {
+    const stdin = query.trim()
+
+    const accommodatedTokens = accommodateTokens(stdin)
+    const parsed = getOpts(accommodatedTokens, parserOptions)
+
+    const component = await Promise.resolve(commands[program](parsed))
+    updateHistory([...history, component])
+  }
 }
 </script>
 
