@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "getopts": "^2.3.0",
     "register-service-worker": "^1.7.1",
+    "shell-quote": "^1.7.4",
     "vue": "^3.0.0"
   },
   "devDependencies": {

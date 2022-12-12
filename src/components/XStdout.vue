@@ -1,5 +1,7 @@
 <template>
-  <component class="vue-command__stdout" :is="component" />
+  <component
+    :is="component"
+    class="vue-command__stdout" />
 </template>
 
 <script lang="js">

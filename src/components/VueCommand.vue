@@ -14,7 +14,9 @@
           v-for="(stdout, index) in history"
           :key="index"
           class="vue-command__history-entry">
-          <x-stdout :component="stdout" />
+          <component
+            :is="stdout"
+            class="vue-command__stdout" />
 
           <x-query
             :modalValue="query"
@@ -31,16 +33,22 @@
 </template>
 
 <script setup>
-import getOpts from 'getopts'
-import { defineProps, onBeforeMount, defineEmits } from 'vue'
+import { parse } from 'shell-quote'
+import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, reactive, provide, watch } from 'vue'
 import XQuery from '@/components/XQuery.vue'
 import XStdout from '@/components/XStdout.vue'
-import { createEmptyStdout } from '../library'
+import { createEmptyStdout, createCommandNotFound } from '@/library'
 
 const props = defineProps({
   commands: {
     required: false,
     type: Object
+  },
+
+  isRunning: {
+    default: false,
+    required: false,
+    type: Boolean
   },
 
   prompt: {
@@ -53,12 +61,6 @@ const props = defineProps({
     type: Array
   },
 
-  parserOptions: {
-    default: () => ({}),
-    required: false,
-    type: Object
-  },
-
   query: {
     default: '',
     required: false,
@@ -66,84 +68,72 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:history', 'update:query'])
+const emits = defineEmits(['update:history', 'update:query', 'update:isRunning'])
 
 onBeforeMount(() => {
 })
 
+const updateIsRunning = isRunning => {
+  emits('update:isRunning', isRunning)
+}
 const updateQuery = query => {
   emits('update:query', query)
 }
-
 const updateHistory = history => {
   emits('update:history', history)
-}
-
-const accommodateTokens = query => {
-  // Contains the tokens to merge option-value pairs
-  const tokens = []
-  // Contains the current token pair for each iteration
-  let tokenPairs = []
-  const tokenPairsExpression = /[^\s"]+|"([^"]*)"/gi
-  // Iterate through all tokens
-  do {
-    tokenPairs = tokenPairsExpression.exec(query)
-
-    if (tokenPairs != null) {
-      tokens.push(tokenPairs[1] ? tokenPairs[1] : tokenPairs[0])
-    }
-  } while (tokenPairs != null)
-
-  // Contains accommodated tokens to parse
-  const accommodatedTokens = []
-  let isNextTokenOptionValue = false
-  tokens.forEach((token, index) => {
-    // Check if next token is option value
-    if (isNextTokenOptionValue) {
-      isNextTokenOptionValue = false
-
-      return
-    }
-
-    // Check if option has value assigned
-    if (token.endsWith('=')) {
-      // Merge option with value
-      accommodatedTokens.push(token + tokens[index + 1])
-
-      isNextTokenOptionValue = true
-    } else {
-      // Token is not part of option-value pair
-      accommodatedTokens.push(token)
-    }
-  })
-
-  return accommodatedTokens
 }
 
 const processQuery = async () => {
   const commands = props.commands
   const history = props.history
-  const parserOptions = props.parserOptions
   const query = props.query
+  const isRunning = props.isRunning
 
-  if (query === '') {
+  const stdin = parse(query)
+  if (stdin.length === 0) {
     updateHistory([...history, createEmptyStdout()])
     return
   }
 
-  // First token is program
-  const program = getOpts(query.trim().split(' '), parserOptions)._[0]
-
+  const program = stdin[0]
   // Check if command exists
-  if (typeof commands[program] === 'function') {
-    const stdin = query.trim()
+  const command = commands[program]
+  if (typeof command === 'function') {
+    let stdout = await Promise.resolve(command())
+    // Extend component
+    stdout = defineComponent({
+      extends: stdout,
+      setup () {
+        provide('terminate', () => updateIsRunning(false))
+      },
 
-    const accommodatedTokens = accommodateTokens(stdin)
-    const parsed = getOpts(accommodatedTokens, parserOptions)
+      computed: {
+        context: {
+          get () {
+            return {
+              stdin
+            }
+          }
+        },
 
-    const component = await Promise.resolve(commands[program](parsed))
-    updateHistory([...history, component])
+        environment: {
+          get () {
+            return reactive({
+
+            })
+          }
+        }
+      }
+    })
+
+    // updateIsRunning(true)
+    updateHistory([...history, markRaw(stdout)])
+    // updateIsRunning(false)
+
+    return
   }
+
+  updateHistory([...history, createCommandNotFound(program)])
 }
 </script>
 

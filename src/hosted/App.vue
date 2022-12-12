@@ -20,6 +20,7 @@ $ npm i --save vue-command
 <script>
 import VueCommand from '../components/VueCommand'
 import { createStdout, createHistory } from '../library'
+import HelloContext from './HelloContext.vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -30,6 +31,7 @@ export default {
 
   data: () => ({
     commands: {
+      context: () => HelloContext,
       // Show help
       help: () => createStdout(`Available programms:<br><br>
         &nbsp;cd [dir]<br>

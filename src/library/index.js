@@ -12,10 +12,17 @@ export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false)
   name,
   render: () => {
     if (innerHTML) {
-      return h('span', { innerHTML: text })
+      return h('div', { innerHTML: text })
     }
+    return h('div', text)
+  }
+}))
 
-    return h('span', text)
+// Returns a command not found component
+export const createCommandNotFound = (command, name = 'VueCommandCommandNotFound') => markRaw(defineComponent({
+  name,
+  render: () => {
+    return h('div', `${command}: command not found`)
   }
 }))
 

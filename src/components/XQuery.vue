@@ -86,7 +86,7 @@ const enter = () => {
   }
 
   .vue-command__query-prompt {
-    margin-right: 0.5rem;
+    margin-right: 0.25rem;
   }
 }
 </style>
