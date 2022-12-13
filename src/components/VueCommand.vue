@@ -1,7 +1,5 @@
 <template>
-  <div
-    ref="vue-command"
-    class="vue-command">
+  <div ref="vue-command" class="vue-command">
     <div class="window">
       <div class="window__actions">
         <span class="window__actionButton window__actionButton--close"></span>
@@ -10,19 +8,13 @@
       </div>
 
       <div class="window__content">
-        <div
-          v-for="(component, index) in local.history"
-          :key="index"
-          class="vue-command__history-entry">
+        <div v-for="(component, index) in local.history" :key="index" class="vue-command__history-entry">
           <component :is="component" />
 
           <!--
           <x-query
             v-show="index === 0 || !(index === local.history.length - 1 && local.isRunning)"
             :v-if="component.name === 'XQuery'"
-            class="vue-command__history_query"
-            :modalValue="local.query"
-            @update:modelValue="updateQuery"
             @submit="process">
             <template #prompt>
               <slot name="prompt" />
@@ -40,6 +32,7 @@ import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref,
 import { createEmptyStdout, createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
 import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
+import isFunction from 'lodash.isfunction'
 
 const props = defineProps({
   commands: {
@@ -90,16 +83,16 @@ const dispatch = async query => {
   }
 
   const program = head(parsedCommand)
-  // // Check if command exists
-  // const command = commands[program]
-  // if (typeof command === 'function') {
-  //   const component = await Promise.resolve(command())
-  //   updateHistory([...history, markRaw(component)])
+  // Check if command exists
+  const command = props.commands[program]
+  if (isFunction(command)) {
+    const component = await Promise.resolve(command())
+    updateHistory([...history, markRaw(component)])
 
-  //   return
-  // }
+    return
+  }
 
-  updateHistory([...local.history, createCommandNotFound()])
+  updateHistory([...local.history, createCommandNotFound(program)])
 }
 
 provide('context', computed(() => ({

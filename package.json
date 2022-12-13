@@ -13,6 +13,7 @@
     "getopts": "^2.3.0",
     "lodash.head": "^4.0.1",
     "lodash.isempty": "^4.4.0",
+    "lodash.isfunction": "^3.0.9",
     "register-service-worker": "^1.7.1",
     "shell-quote": "^1.7.4",
     "vue": "^3.0.0"

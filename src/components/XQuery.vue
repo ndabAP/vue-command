@@ -59,9 +59,7 @@ const isDisabled = ref(false)
 const query = ref('')
 const queryRef = ref(null)
 
-onMounted(() => {
-  focus()
-})
+onMounted(focus)
 </script>
 
 <style lang="scss">
