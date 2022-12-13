@@ -14,9 +14,9 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import VueCommand from '../components/VueCommand'
-import { createStdout, createHistory } from '../library'
-import HelloContext from './HelloContext.vue'
+import VueCommand from '@/components/VueCommand'
+import { createStdout, createHistory } from '@/library'
+import NanoEditor from '@/hosted/NanoEditor.vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -27,7 +27,7 @@ export default {
 
   data: () => ({
     commands: {
-      context: () => HelloContext
+      nano: () => NanoEditor
     }
 
     // history: [],

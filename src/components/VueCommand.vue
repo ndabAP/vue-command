@@ -10,6 +10,7 @@
       <div class="vue-command__window__content">
         <div
           v-for="(component, index) in local.history"
+          v-show="!isFullscreen || (isFullscreen && index === local.history.length - 1)"
           :key="index"
           class="vue-command__history-entry">
           <component :is="component" />
@@ -20,13 +21,14 @@
 </template>
 
 <script setup>
-import { parse as parseCommand } from 'shell-quote'
+import { parse as parseQuery } from 'shell-quote'
 import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed } from 'vue'
-import { createEmptyStdout, createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
+import { createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
 import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
+import last from 'lodash.last'
 
 const props = defineProps({
   commands: {
@@ -35,22 +37,24 @@ const props = defineProps({
     type: Object
   },
 
-  prompt: {
-    default: '~$',
-    required: false,
-    type: String
-  },
-
   history: {
     default: newDefaultHistory,
     required: false,
     type: Array
+  },
+
+  prompt: {
+    default: '~$',
+    required: false,
+    type: String
   }
 })
 
-const emits = defineEmits(['update:history', 'update:query'])
+const emits = defineEmits(['update:history'])
 
-// Contains a local copy if one of the properties is not given
+const isFullscreen = ref(false)
+
+// A local copy of properties if one of them properties is not given
 const local = reactive({
   history: props.history
 })
@@ -60,33 +64,47 @@ const updateHistory = history => {
   emits('update:history', history)
 }
 
+const appendToHistory = (...components) => {
+  local.history.push(...components)
+  emits('update:history', [...local.history, ...components])
+}
+
+const setFullscreen = isFullscreenValue => {
+  isFullscreen.value = isFullscreenValue
+}
+
 const dispatch = async query => {
-  const parsedCommand = parseCommand(query)
-  if (isEmpty(parsedCommand)) {
-    updateHistory([...local.history, createQuery()])
+  const parsedQuery = parseQuery(query)
+  if (isEmpty(parsedQuery)) {
+    appendToHistory(createQuery())
     return
   }
 
-  const program = head(parsedCommand)
-  const command = get(props.commands, program)
-  if (isFunction(command)) {
-    const component = await Promise.resolve(command())
-    updateHistory([...local.history, markRaw(component)])
+  const program = head(parsedQuery)
+  const getCommand = get(props.commands, program)
+  if (isFunction(getCommand)) {
+    const component = await Promise.resolve(getCommand())
+    appendToHistory(markRaw(component))
     return
   }
 
-  updateHistory([...local.history, createCommandNotFound(program)])
+  appendToHistory(createCommandNotFound(program))
 }
 
 provide('context', computed(() => ({
 })))
 provide('environment', computed(() => ({
+  isFullscreen,
   prompt: props.prompt
 })))
 provide('exit', () => {
-  updateHistory([...local.history, createQuery()])
+  // Tear down
+  appendToHistory(createQuery())
+
+  setFullscreen(false)
 })
 provide('dispatch', dispatch)
+provide('setFullscreen', setFullscreen)
 </script>
 
 <style lang="scss">
@@ -109,6 +127,8 @@ provide('dispatch', dispatch)
   .vue-command__window {
     background-color: #111316;
     border-radius: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .vue-command__window__actions {
@@ -147,13 +167,21 @@ provide('dispatch', dispatch)
 
   .vue-command__window__content {
     display: block;
-    padding: 10px 10px 10px;
+    padding: 4px 12px 10px;
     margin: 0;
     white-space: pre-line;
     line-height: 1.33;
     color: $seashell;
     font-size: 1rem;
     font-family: monospace;
+    color: #ffffff;
+
+    a,
+    span,
+    input,
+    textarea {
+      color: #ffffff;
+    }
   }
 }
 </style>

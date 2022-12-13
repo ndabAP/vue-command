@@ -21,6 +21,8 @@
 <script setup>
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent } from 'vue'
 
+const environment = inject('environment')
+
 // Focuses query input
 const focus = () => {
   queryRef.value.focus()
@@ -32,18 +34,6 @@ const dispatch = (query) => {
 }
 
 const props = defineProps({
-  hidePrompt: {
-    default: false,
-    type: Boolean,
-    required: false
-  },
-
-  modalValue: {
-    default: '',
-    type: String,
-    required: false
-  },
-
   prompt: {
     type: String,
     required: false
@@ -60,8 +50,6 @@ onMounted(focus)
 </script>
 
 <style lang="scss">
-@import "../scss/mixins";
-
 .vue-command {
   .vue-command__query {
     display: flex;

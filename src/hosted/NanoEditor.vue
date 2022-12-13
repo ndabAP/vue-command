@@ -1,18 +1,18 @@
 <template>
-  <div v-if="environment.isExecuting">
+  <div v-if="environment.isFullscreen.value">
     <textarea
       ref="nano"
       rows="15"
-      @keydown.ctrl.x="terminate">This is a Nano text editor emulator! Press Ctrl + x to leave.</textarea>
+      @keyup.ctrl.x.exact="exit">This is a Nano text editor emulator! Press Ctrl + x to leave.</textarea>
   </div>
 </template>
 
 <script>
 export default {
-  inject: ['setIsFullscreen', 'terminate'],
+  inject: ['environment', 'setFullscreen', 'exit'],
 
   created () {
-    this.setIsFullscreen(true)
+    this.setFullscreen(true)
   },
 
   mounted () {
@@ -23,10 +23,16 @@ export default {
 
 <style lang="scss" scoped>
 textarea {
-  display: block;
+  background: none;
+  border: none;
+  outline: none;
+  flex: 1;
   width: 100%;
-  height: 100%;
-  resize: none;
-  overflow: hidden;
+  font-family: monospace;
+  font-size: 1rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
 }
 </style>
