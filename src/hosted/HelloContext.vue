@@ -1,5 +1,5 @@
 <template>
-  <span>Hello {{ context.isRunning }}</span>
+  <span>Hello</span>
 </template>
 
 <script setup>
@@ -7,11 +7,8 @@ import { inject, onMounted } from 'vue'
 
 // TODO: Add name
 
-const terminate = inject('terminate')
-const context = inject('context')
+const exit = inject('exit')
+// const context = inject('context')
 
-console.debug(terminate)
-console.debug(context)
-
-onMounted(() => setTimeout(() => terminate(), 1500))
+onMounted(exit)
 </script>

@@ -11,24 +11,23 @@
 
       <div class="window__content">
         <div
-          v-for="(stdout, index) in local.history"
+          v-for="(component, index) in local.history"
           :key="index"
           class="vue-command__history-entry">
-          <component
-            :is="stdout"
-            class="vue-command__history-stdout" />
+          <component :is="component" />
+
+          <!--
           <x-query
-            v-if="index === 0 || !(index === local.history.length - 1 && local.isRunning)"
+            v-show="index === 0 || !(index === local.history.length - 1 && local.isRunning)"
+            :v-if="component.name === 'XQuery'"
             class="vue-command__history_query"
-            :is-active="index === 0 || index === (local.history.length - 1)"
-            :is-running="local.isRunning"
             :modalValue="local.query"
             @update:modelValue="updateQuery"
-            @submit="onSubmitQuery">
+            @submit="process">
             <template #prompt>
               <slot name="prompt" />
             </template>
-          </x-query>
+          </x-query> -->
         </div>
       </div>
     </div>
@@ -36,10 +35,11 @@
 </template>
 
 <script setup>
-import { parse } from 'shell-quote'
-import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h } from 'vue'
-import XQuery from '@/components/XQuery.vue'
-import { createEmptyStdout, createCommandNotFound } from '@/library'
+import { parse as parseCommand } from 'shell-quote'
+import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed } from 'vue'
+import { createEmptyStdout, createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
+import isEmpty from 'lodash.isempty'
+import head from 'lodash.head'
 
 const props = defineProps({
   commands: {
@@ -59,79 +59,60 @@ const props = defineProps({
   },
 
   history: {
-    default: () => [markRaw(createEmptyStdout())],
+    default: newDefaultHistory,
     required: false,
     type: Array
-  },
-
-  query: {
-    default: '',
-    required: false,
-    type: String
   }
 })
 
 const emits = defineEmits(['update:history', 'update:query', 'update:isRunning'])
 
+// Contains a local copy if one of the properties is not given
 const local = reactive({
   history: props.history,
-  isRunning: props.isRunning,
-  query: props.query
+  isRunning: props.isRunning
 })
 
 const updateIsRunning = isRunning => {
   local.isRunning = isRunning
   emits('update:isRunning', isRunning)
 }
-const updateQuery = query => {
-  local.query = query
-  emits('update:query', query)
-}
 const updateHistory = history => {
   local.history = history
   emits('update:history', history)
 }
-
-const onSubmitQuery = async () => {
-  updateIsRunning(true)
-
-  const commands = props.commands
-  const history = local.history
-  const query = local.query
-
-  const stdin = parse(query)
-  if (stdin.length === 0) {
-    updateHistory([...history, createEmptyStdout()])
-    return
-  }
-
-  const program = stdin[0]
-  // Check if command exists
-  const command = commands[program]
-  if (typeof command === 'function') {
-    const stdout = await Promise.resolve(command())
-    // Extend component
-    const component = defineComponent({
-      setup () {
-        provide('context', reactive({
-          isRunning: props.isRunning
-        }))
-
-        provide('terminate', () => updateIsRunning(false))
-      },
-
-      render () {
-        return h(stdout)
-      }
-    })
-
-    updateHistory([...history, markRaw(component)])
-
-    return
-  }
-
-  updateHistory([...history, createCommandNotFound(program)])
+const appendHistoryEntry = (...entries) => {
+  console.log(entries)
+  local.history.push(entries)
+  emits('update:history', [...local.history])
 }
+
+const dispatch = async query => {
+  const parsedCommand = parseCommand(query)
+  if (isEmpty(parsedCommand)) {
+    appendHistoryEntry(createQuery())
+    return
+  }
+
+  const program = head(parsedCommand)
+  // // Check if command exists
+  // const command = commands[program]
+  // if (typeof command === 'function') {
+  //   const component = await Promise.resolve(command())
+  //   updateHistory([...history, markRaw(component)])
+
+  //   return
+  // }
+
+  appendHistoryEntry(createQuery())
+}
+
+provide('context', computed(() => ({
+  isRunning: local.isRunning
+})))
+provide('exit', () => updateIsRunning(false))
+provide('dispatch', dispatch)
+
 </script>
 
 <style lang="scss">
@@ -198,6 +179,8 @@ const onSubmitQuery = async () => {
     white-space: pre-line;
     line-height: 1.33;
     color: $seashell;
+    font-size: 1rem;
+    font-family: monospace;
   }
 }
 </style>
