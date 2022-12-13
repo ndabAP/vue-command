@@ -3,7 +3,10 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
 
-    <vue-command :commands="commands">
+    <vue-command
+      :commands="commands"
+      help-text="Type in help"
+      :show-help="true">
     </vue-command>
     <pre>
       <code>

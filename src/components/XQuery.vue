@@ -1,7 +1,9 @@
 <template>
   <div class="vue-command__query">
     <slot name="prompt">
-      <span class="vue-command__query-prompt">
+      <span
+        v-if="!hidePrompt"
+        class="vue-command__query-prompt">
         {{ prompt }}
       </span>
     </slot>
@@ -9,11 +11,12 @@
     <input
       ref="queryRef"
       v-model="query"
+      class="vue-command__query-input"
       :disabled="isDisabled"
       autocapitalize="none"
       autocorrect="off"
-      class="vue-command__query-input"
       type="text"
+      :placeholder="placeholder"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup.enter.exact="dispatch($event.target.value)" />
@@ -58,6 +61,23 @@ watch(() => context.cursorPosition, cursorPosition => {
   }
 
   queryRef.value.input.setSelectionRange(cursorPosition, cursorPosition)
+})
+
+const environment = inject('environment')
+
+const helpText = environment.value.helpText
+const helpTimeout = environment.value.helpTimeout
+const hidePrompt = environment.value.hidePrompt
+const showHelp = environment.value.showHelp
+
+const placeholder = ref('')
+
+onMounted(() => {
+  if (showHelp) {
+    setTimeout(() => {
+      placeholder.value = helpText
+    }, helpTimeout)
+  }
 })
 </script>
 

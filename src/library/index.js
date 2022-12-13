@@ -43,6 +43,6 @@ export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false)
 }))
 
 // Returns a command not found component
-export const createCommandNotFound = (command, name = 'VueCommandCommandNotFound') => createStdout(`${command}: command not found`, name)
+export const createCommandNotFound = (command, text = 'command not found', name = 'VueCommandCommandNotFound') => createStdout(`${command}: ${text}`, name)
 
 export default VueCommand

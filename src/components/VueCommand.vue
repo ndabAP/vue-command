@@ -43,6 +43,23 @@ const props = defineProps({
     type: Number
   },
 
+  helpText: {
+    required: false,
+    type: String
+  },
+
+  helpTimeout: {
+    default: 3500,
+    required: false,
+    type: Number
+  },
+
+  hidePrompt: {
+    default: false,
+    required: false,
+    type: Boolean
+  },
+
   history: {
     default: newDefaultHistory,
     required: false,
@@ -53,6 +70,12 @@ const props = defineProps({
     default: '~$',
     required: false,
     type: String
+  },
+
+  showHelp: {
+    default: false,
+    required: false,
+    type: Boolean
   }
 })
 
@@ -103,7 +126,11 @@ provide('context', computed(() => ({
   cursorPosition: local.cursorPosition
 })))
 provide('environment', computed(() => ({
-  prompt: props.prompt
+  helpText: props.helpText,
+  helpTimeout: props.helpTimeout,
+  hidePrompt: props.hidePrompt,
+  prompt: props.prompt,
+  showHelp: props.showHelp
 })))
 
 provide('dispatch', dispatch)
