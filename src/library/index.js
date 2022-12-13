@@ -7,14 +7,21 @@ export const newDefaultHistory = () => [createQuery()]
 
 export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
   name,
-  inject: ['dispatch'],
-  render() {
-    return h(XQuery, {
-      onDispatch: query => {
-        this.dispatch(query)
-      }
-      // Add slots
-    })
+  setup () {
+    const dispatch = inject('dispatch')
+    const environment = inject('environment')
+
+    const prompt = environment.value.prompt
+
+    return () => [
+      h(
+        XQuery,
+        {
+          prompt,
+          onDispatch: dispatch
+        }
+      )
+    ]
   }
 }))
 
@@ -22,7 +29,7 @@ export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponen
 // inner HTML
 export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => markRaw(defineComponent({
   name,
-  setup() {
+  setup () {
     const exit = inject('exit')
     onMounted(exit)
   },

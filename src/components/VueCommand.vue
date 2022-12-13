@@ -1,25 +1,18 @@
 <template>
-  <div ref="vue-command" class="vue-command">
-    <div class="window">
-      <div class="window__actions">
-        <span class="window__actionButton window__actionButton--close"></span>
-        <span class="window__actionButton window__actionButton--minimize"></span>
-        <span class="window__actionButton window__actionButton--fullscreen"></span>
+  <div class="vue-command">
+    <div class="vue-command__window">
+      <div class="vue-command__window__actions">
+        <span class="vue-command__window__action-button vue-command__window__action-button--close"></span>
+        <span class="vue-command__window__action-button vue-command__window__action-button--minimize"></span>
+        <span class="vue-command__window__action-button vue-command__window__action-button--fullscreen"></span>
       </div>
 
-      <div class="window__content">
-        <div v-for="(component, index) in local.history" :key="index" class="vue-command__history-entry">
+      <div class="vue-command__window__content">
+        <div
+          v-for="(component, index) in local.history"
+          :key="index"
+          class="vue-command__history-entry">
           <component :is="component" />
-
-          <!--
-          <x-query
-            v-show="index === 0 || !(index === local.history.length - 1 && local.isRunning)"
-            :v-if="component.name === 'XQuery'"
-            @submit="process">
-            <template #prompt>
-              <slot name="prompt" />
-            </template>
-          </x-query> -->
         </div>
       </div>
     </div>
@@ -33,20 +26,17 @@ import { createEmptyStdout, createCommandNotFound, createQuery, newDefaultHistor
 import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
+import get from 'lodash.get'
 
 const props = defineProps({
   commands: {
+    default: () => ({}),
     required: false,
     type: Object
   },
 
-  isRunning: {
-    default: false,
-    required: false,
-    type: Boolean
-  },
-
   prompt: {
+    default: '~$',
     required: false,
     type: String
   },
@@ -58,18 +48,13 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:history', 'update:query', 'update:isRunning'])
+const emits = defineEmits(['update:history', 'update:query'])
 
 // Contains a local copy if one of the properties is not given
 const local = reactive({
-  history: props.history,
-  isRunning: props.isRunning
+  history: props.history
 })
 
-const updateIsRunning = isRunning => {
-  local.isRunning = isRunning
-  emits('update:isRunning', isRunning)
-}
 const updateHistory = history => {
   local.history = history
   emits('update:history', history)
@@ -83,12 +68,10 @@ const dispatch = async query => {
   }
 
   const program = head(parsedCommand)
-  // Check if command exists
-  const command = props.commands[program]
+  const command = get(props.commands, program)
   if (isFunction(command)) {
     const component = await Promise.resolve(command())
-    updateHistory([...history, markRaw(component)])
-
+    updateHistory([...local.history, markRaw(component)])
     return
   }
 
@@ -96,17 +79,19 @@ const dispatch = async query => {
 }
 
 provide('context', computed(() => ({
-  isRunning: local.isRunning
+})))
+provide('environment', computed(() => ({
+  prompt: props.prompt
 })))
 provide('exit', () => {
   updateHistory([...local.history, createQuery()])
 })
 provide('dispatch', dispatch)
-
 </script>
 
 <style lang="scss">
 .vue-command {
+  $seashell: #f1f1f1;
 
   @mixin clearfix() {
 
@@ -121,20 +106,18 @@ provide('dispatch', dispatch)
     }
   }
 
-  $seashell: #f1f1f1;
-
-  .window {
+  .vue-command__window {
     background-color: #111316;
     border-radius: 10px;
   }
 
-  .window__actions {
+  .vue-command__window__actions {
     @include clearfix();
     position: relative;
     padding: 10px;
   }
 
-  .window__actionButton {
+  .vue-command__window__action-button {
     display: inline-block;
     border-radius: 100%;
 
@@ -150,19 +133,19 @@ provide('dispatch', dispatch)
     }
   }
 
-  .window__actionButton--close {
+  .vue-command__window__action-button--close {
     background-color: #ff5f58;
   }
 
-  .window__actionButton--minimize {
+  .vue-command__window__action-button--minimize {
     background-color: #ffbd2e;
   }
 
-  .window__actionButton--fullscreen {
+  .vue-command__window__action-button--fullscreen {
     background-color: #29ca41;
   }
 
-  .window__content {
+  .vue-command__window__content {
     display: block;
     padding: 10px 10px 10px;
     margin: 0;

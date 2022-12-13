@@ -1,9 +1,7 @@
 <template>
   <div class="vue-command__query">
     <slot name="prompt">
-      <span
-        v-if="!hidePrompt"
-        class="vue-command__query-prompt">
+      <span class="vue-command__query-prompt">
         {{ prompt }}
       </span>
     </slot>
@@ -12,10 +10,10 @@
       ref="queryRef"
       v-model="query"
       :disabled="isDisabled"
+      autocapitalize="none"
+      autocorrect="off"
       class="vue-command__query-input"
       type="text"
-      autocorrect="off"
-      autocapitalize="none"
       @keyup.enter.exact="dispatch($event.target.value)" />
   </div>
 </template>
@@ -23,7 +21,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent } from 'vue'
 
-// Focuses current input
+// Focuses query input
 const focus = () => {
   queryRef.value.focus()
 }
@@ -34,20 +32,19 @@ const dispatch = (query) => {
 }
 
 const props = defineProps({
-  modalValue: {
-    default: '',
-    type: String,
-    required: false
-  },
-
   hidePrompt: {
     default: false,
     type: Boolean,
     required: false
   },
 
+  modalValue: {
+    default: '',
+    type: String,
+    required: false
+  },
+
   prompt: {
-    default: '~$',
     type: String,
     required: false
   }
@@ -76,6 +73,7 @@ onMounted(focus)
     outline: none;
     flex: 1;
     width: 100%;
+    font-family: monospace;
     font-size: 1rem;
 
     &::placeholder {

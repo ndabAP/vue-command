@@ -38,37 +38,17 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
-
-$border-radius: 8px;
-
 body {
+  font-family: sans-serif;
 
-  h1,
-  h2,
-  h3 {
-    font-family: "Inconsolata", monospace;
-  }
-
-  p {
-    font-family: "Montserrat", sans-serif;
-  }
-
-  font-family: 'Ubuntu';
   display: grid;
   place-items: center;
-  height: 95vh;
   margin: 0;
 
-  main {
-    margin: 1rem;
-    max-width: 400px;
-    width: calc(100% - 2rem);
-  }
-
   .vue-command {
-    .window {
+    .vue-command__window {
       height: 300px;
+      width: 420px;
     }
   }
 }
