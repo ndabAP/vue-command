@@ -13,7 +13,7 @@ const API_TIMEOUT = 5000 // 5 seconds
 const abortController = new AbortController()
 
 export default {
-  inject: ['terminate'],
+  inject: ['exit'],
 
   data: () => ({
     isError: false,
@@ -33,7 +33,7 @@ export default {
       const response = await fetch(API_URL, { signal: abortController.signal })
       if (!response.ok) {
         this.setIsError(true)
-        this.terminate()
+        this.exit()
 
         return
       }
@@ -44,7 +44,7 @@ export default {
       this.setIsError(true)
     } finally {
       this.isLoading = false
-      this.terminate()
+      this.exit()
     }
   },
 

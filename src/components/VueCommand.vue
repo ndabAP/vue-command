@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+// TODO: Programm "help" could be generated
 import { parse as parseQuery } from 'shell-quote'
 import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed } from 'vue'
 import { createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
@@ -28,13 +29,18 @@ import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
-import last from 'lodash.last'
 
 const props = defineProps({
   commands: {
     default: () => ({}),
     required: false,
     type: Object
+  },
+
+  cursorPosition: {
+    default: 0,
+    required: false,
+    type: Number
   },
 
   history: {
@@ -50,23 +56,24 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:history'])
+const emits = defineEmits(['update:history', 'update:cursorPosition'])
 
 const isFullscreen = ref(false)
 
 // A local copy of properties if one of them properties is not given
 const local = reactive({
+  cursorPosition: props.cursorPosition,
   history: props.history
 })
-
-const updateHistory = history => {
-  local.history = history
-  emits('update:history', history)
-}
 
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', [...local.history, ...components])
+}
+
+const setCursorPosition = cursorPosition => {
+  local.cursorPosition = cursorPosition
+  emits('update:cursorPosition', cursorPosition)
 }
 
 const setFullscreen = isFullscreenValue => {
@@ -92,19 +99,23 @@ const dispatch = async query => {
 }
 
 provide('context', computed(() => ({
+  isFullscreen,
+  cursorPosition: local.cursorPosition
 })))
 provide('environment', computed(() => ({
-  isFullscreen,
   prompt: props.prompt
 })))
+
+provide('dispatch', dispatch)
 provide('exit', () => {
   // Tear down
   appendToHistory(createQuery())
 
   setFullscreen(false)
 })
-provide('dispatch', dispatch)
+
 provide('setFullscreen', setFullscreen)
+provide('setCursorPosition', setCursorPosition)
 </script>
 
 <style lang="scss">

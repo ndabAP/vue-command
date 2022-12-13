@@ -17,6 +17,7 @@ $ npm i --save vue-command
 import VueCommand from '@/components/VueCommand'
 import { createStdout, createHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
+import ChuckNorris from '@/hosted/ChuckNorris.vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -27,7 +28,8 @@ export default {
 
   data: () => ({
     commands: {
-      nano: () => NanoEditor
+      nano: () => NanoEditor,
+      norris: () => ChuckNorris
     }
 
     // history: [],

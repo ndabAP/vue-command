@@ -14,6 +14,8 @@
       autocorrect="off"
       class="vue-command__query-input"
       type="text"
+      @click="setCursorPosition($refs.queryRef.selectionStart)"
+      @keyup="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup.enter.exact="dispatch($event.target.value)" />
   </div>
 </template>
@@ -21,7 +23,14 @@
 <script setup>
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent } from 'vue'
 
-const environment = inject('environment')
+const props = defineProps({
+  prompt: {
+    type: String,
+    required: false
+  }
+})
+
+const context = inject('context')
 
 // Focuses query input
 const focus = () => {
@@ -33,13 +42,6 @@ const dispatch = (query) => {
   emits('dispatch', query)
 }
 
-const props = defineProps({
-  prompt: {
-    type: String,
-    required: false
-  }
-})
-
 const emits = defineEmits(['dispatch'])
 
 const isDisabled = ref(false)
@@ -47,6 +49,16 @@ const query = ref('')
 const queryRef = ref(null)
 
 onMounted(focus)
+
+const setCursorPosition = inject('setCursorPosition')
+
+watch(() => context.cursorPosition, cursorPosition => {
+  if (isDisabled.value) {
+    return
+  }
+
+  queryRef.value.input.setSelectionRange(cursorPosition, cursorPosition)
+})
 </script>
 
 <style lang="scss">
