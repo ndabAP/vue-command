@@ -5,19 +5,21 @@ import XQuery from '@/components/XQuery'
 
 export const newDefaultHistory = () => [createQuery()]
 
-export const createQuery = () => markRaw(defineComponent({
-  name: 'XQuery', // VueCommandXQuery
+export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
+  name,
   inject: ['dispatch'],
   render () {
     return h(XQuery, {
-      onDispatch: this.dispatch
+      onDispatch: query => {
+        this.dispatch(query)
+      }
     })
   }
 }))
 
 // Returns a Stdout component containing a span element with given text or as
 // inner HTML
-export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => defineComponent({
+export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => markRaw(defineComponent({
   name,
   setup () {
     const exit = inject('exit')
@@ -30,12 +32,12 @@ export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false)
     }
     return h('div', text)
   }
-})
+}))
 
 // Returns a command not found component
-export const createCommandNotFound = (command, name = 'VueCommandCommandNotFound') => markRaw(createStdout(`${command}: command not found`, name))
+export const createCommandNotFound = (command, name = 'VueCommandCommandNotFound') => createStdout(`${command}: command not found`, name)
 
 // Returns an empty stdout component to not show a Stdin
-export const createEmptyStdout = (name = 'VueCommandEmptyStdout') => markRaw(createStdout('<!-- VueCommandEmptyStdout -->', name, true))
+export const createEmptyStdout = (name = 'VueCommandEmptyStdout') => createStdout('<!-- VueCommandEmptyStdout -->', name, true)
 
 export default VueCommand

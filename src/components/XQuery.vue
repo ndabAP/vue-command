@@ -62,9 +62,6 @@ const queryRef = ref(null)
 onMounted(() => {
   focus()
 })
-
-// const context = inject('context')
-
 </script>
 
 <style lang="scss">

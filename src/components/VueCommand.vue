@@ -81,16 +81,11 @@ const updateHistory = history => {
   local.history = history
   emits('update:history', history)
 }
-const appendHistoryEntry = (...entries) => {
-  console.log(entries)
-  local.history.push(entries)
-  emits('update:history', [...local.history])
-}
 
 const dispatch = async query => {
   const parsedCommand = parseCommand(query)
   if (isEmpty(parsedCommand)) {
-    appendHistoryEntry(createQuery())
+    updateHistory([...local.history, createQuery()])
     return
   }
 
@@ -104,13 +99,15 @@ const dispatch = async query => {
   //   return
   // }
 
-  appendHistoryEntry(createQuery())
+  updateHistory([...local.history, createCommandNotFound()])
 }
 
 provide('context', computed(() => ({
   isRunning: local.isRunning
 })))
-provide('exit', () => updateIsRunning(false))
+provide('exit', () => {
+  updateHistory([...local.history, createQuery()])
+})
 provide('dispatch', dispatch)
 
 </script>
