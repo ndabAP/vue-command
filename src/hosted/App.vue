@@ -38,7 +38,8 @@ export default {
     return {
       commands: {
         clear: () => {
-          history.value = newDefaultHistory()
+          history.value = []
+          return createQuery()
         },
 
         nano: () => NanoEditor,

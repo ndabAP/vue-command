@@ -89,6 +89,13 @@ const local = reactive({
   history: props.history
 })
 
+watch(() => props.history, history => {
+  local.history = history
+})
+watch(() => props.cursorPosition, cursorPosition => {
+  local.cursorPosition = cursorPosition
+})
+
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
@@ -115,7 +122,7 @@ const dispatch = async query => {
   const program = head(parsedQuery)
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
-    const component = await Promise.resolve(getCommand())
+    const component = await Promise.resolve(getCommand(parsedQuery))
     appendToHistory(markRaw(component))
     executedPrograms.value.add(program)
     return

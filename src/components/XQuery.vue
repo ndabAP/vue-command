@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent } from 'vue'
+import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
 
 const props = defineProps({
   prompt: {
@@ -40,7 +40,7 @@ const focus = () => {
   queryRef.value.focus()
 }
 
-const dispatch = (query) => {
+const dispatch = query => {
   isDisabled.value = true
   emits('dispatch', query)
 }
