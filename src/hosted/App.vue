@@ -5,6 +5,7 @@
 
     <vue-command
       v-model:history="history"
+      v-model:query="query"
       :commands="commands"
       :prompt="prompt"
       help-text="Type in help"
@@ -34,6 +35,7 @@ export default {
 
   setup () {
     const history = ref(newDefaultHistory())
+    const query = ref('')
 
     return {
       commands: {
@@ -47,8 +49,8 @@ export default {
       },
 
       history,
-      prompt: PROMPT
-      // query: ''
+      prompt: PROMPT,
+      query
     }
   }
 }

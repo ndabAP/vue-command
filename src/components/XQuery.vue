@@ -17,6 +17,7 @@
       autocorrect="off"
       type="text"
       :placeholder="placeholder"
+      @input="setQuery($event.target.value)"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup.enter.exact="dispatch($event.target.value)" />
@@ -33,6 +34,8 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['dispatch'])
+
 const context = inject('context')
 
 // Focuses query input
@@ -45,10 +48,10 @@ const dispatch = query => {
   emits('dispatch', query)
 }
 
-const emits = defineEmits(['dispatch'])
+const setQuery = inject('setQuery')
 
 const isDisabled = ref(false)
-const query = ref('')
+const query = ref(context.value.query)
 const queryRef = ref(null)
 
 onMounted(focus)

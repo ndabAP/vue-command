@@ -23,7 +23,7 @@
 <script setup>
 // TODO: Programm "help" could be generated
 import { parse as parseQuery } from 'shell-quote'
-import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed } from 'vue'
+import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed, onMounted } from 'vue'
 import { createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
 import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
@@ -66,6 +66,12 @@ const props = defineProps({
     type: Array
   },
 
+  historyPosition: {
+    default: 0,
+    required: false,
+    type: Number
+  },
+
   prompt: {
     default: '~$',
     required: false,
@@ -76,24 +82,38 @@ const props = defineProps({
     default: false,
     required: false,
     type: Boolean
+  },
+
+  query: {
+    default: '',
+    required: false,
+    type: String
   }
 })
 
-const emits = defineEmits(['update:history', 'update:cursorPosition'])
+const emits = defineEmits(['update:history', 'update:cursorPosition', 'update:historyPosition', 'update:query'])
 
 const isFullscreen = ref(false)
 
 // A local copy of properties if one of them properties is not given
 const local = reactive({
   cursorPosition: props.cursorPosition,
-  history: props.history
+  history: props.history,
+  historyPosition: props.historyPosition,
+  query: props.query
 })
 
 watch(() => props.history, history => {
   local.history = history
 })
+watch(() => props.historyPosition, historyPosition => {
+  local.historyPosition = historyPosition
+})
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
+})
+watch(() => props.query, query => {
+  local.query = query
 })
 
 const appendToHistory = (...components) => {
@@ -106,6 +126,16 @@ const setCursorPosition = cursorPosition => {
   emits('update:cursorPosition', cursorPosition)
 }
 
+const setHistoryPosition = historyPosition => {
+  local.historyPosition = historyPosition
+  emits('update:historyPosition', historyPosition)
+}
+
+const setQuery = query => {
+  local.query = query
+  emits('update:query', query)
+}
+
 const setFullscreen = isFullscreenValue => {
   isFullscreen.value = isFullscreenValue
 }
@@ -116,6 +146,7 @@ const dispatch = async query => {
   const parsedQuery = parseQuery(query)
   if (isEmpty(parsedQuery)) {
     appendToHistory(createQuery())
+    setHistoryPosition(local.historyPosition + 1)
     return
   }
 
@@ -124,16 +155,23 @@ const dispatch = async query => {
   if (isFunction(getCommand)) {
     const component = await Promise.resolve(getCommand(parsedQuery))
     appendToHistory(markRaw(component))
+    setHistoryPosition(local.historyPosition + 1)
     executedPrograms.value.add(program)
     return
   }
 
   appendToHistory(createCommandNotFound(program))
+  setHistoryPosition(local.historyPosition + 1)
 }
+
+onMounted(() => {
+  setHistoryPosition(props.history.length)
+})
 
 provide('context', computed(() => ({
   isFullscreen,
-  cursorPosition: local.cursorPosition
+  cursorPosition: local.cursorPosition,
+  query: local.query
 })))
 provide('environment', computed(() => ({
   helpText: props.helpText,
@@ -152,6 +190,8 @@ provide('exit', () => {
 
 provide('setFullscreen', setFullscreen)
 provide('setCursorPosition', setCursorPosition)
+provide('setHistoryPosition', setHistoryPosition)
+provide('setQuery', setQuery)
 </script>
 
 <style lang="scss">
