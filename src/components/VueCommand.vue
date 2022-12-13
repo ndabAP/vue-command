@@ -91,7 +91,7 @@ const local = reactive({
 
 const appendToHistory = (...components) => {
   local.history.push(...components)
-  emits('update:history', [...local.history, ...components])
+  emits('update:history', local.history)
 }
 
 const setCursorPosition = cursorPosition => {
@@ -102,6 +102,8 @@ const setCursorPosition = cursorPosition => {
 const setFullscreen = isFullscreenValue => {
   isFullscreen.value = isFullscreenValue
 }
+
+const executedPrograms = ref(new Set())
 
 const dispatch = async query => {
   const parsedQuery = parseQuery(query)
@@ -115,6 +117,7 @@ const dispatch = async query => {
   if (isFunction(getCommand)) {
     const component = await Promise.resolve(getCommand())
     appendToHistory(markRaw(component))
+    executedPrograms.value.add(program)
     return
   }
 
@@ -137,7 +140,6 @@ provide('dispatch', dispatch)
 provide('exit', () => {
   // Tear down
   appendToHistory(createQuery())
-
   setFullscreen(false)
 })
 

@@ -73,11 +73,19 @@ const showHelp = environment.value.showHelp
 const placeholder = ref('')
 
 onMounted(() => {
-  if (showHelp) {
-    setTimeout(() => {
+  if (showHelp && !isDisabled.value) {
+    const timeout = setTimeout(() => {
       placeholder.value = helpText
     }, helpTimeout)
+
+    watch(isDisabled, () => {
+      clearTimeout(timeout)
+    })
   }
+})
+
+watch(isDisabled, () => {
+  placeholder.value = ''
 })
 </script>
 

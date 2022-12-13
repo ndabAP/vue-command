@@ -4,9 +4,11 @@
     <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
 
     <vue-command
+      v-model:history="history"
       :commands="commands"
+      :prompt="prompt"
       help-text="Type in help"
-      :show-help="true">
+      show-help>
     </vue-command>
     <pre>
       <code>
@@ -18,9 +20,10 @@ $ npm i --save vue-command
 
 <script>
 import VueCommand from '@/components/VueCommand'
-import { createStdout, createHistory } from '@/library'
+import { createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
+import { ref } from 'vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -29,16 +32,24 @@ export default {
     VueCommand
   },
 
-  data: () => ({
-    commands: {
-      nano: () => NanoEditor,
-      norris: () => ChuckNorris
-    }
+  setup () {
+    const history = ref(newDefaultHistory())
 
-    // history: [],
-    // prompt: PROMPT,
-    // query: ''
-  })
+    return {
+      commands: {
+        clear: () => {
+          history.value = newDefaultHistory()
+        },
+
+        nano: () => NanoEditor,
+        norris: () => ChuckNorris
+      },
+
+      history,
+      prompt: PROMPT
+      // query: ''
+    }
+  }
 }
 </script>
 
