@@ -2,7 +2,7 @@
   <div v-show="context.isFullscreen">
     <textarea
       ref="nano"
-      rows="10"
+      rows="13"
       @keyup.ctrl.x.exact="exit">This is a Nano text editor emulator! Press Ctrl + x to leave.</textarea>
   </div>
 </template>
@@ -32,6 +32,7 @@ textarea {
   font-size: 1rem;
   resize: none;
   overflow: hidden;
+  height: 100%;
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
