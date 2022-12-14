@@ -21,7 +21,8 @@
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
       @keydown.arrow-down.exact="forwardHistory"
-      @keydown.arrow-up.exact="backwardHistory" />
+      @keydown.arrow-up.exact="backwardHistory"
+      @keydown.tab.exact="autocomplete" />
   </div>
 </template>
 
@@ -51,7 +52,11 @@ watch(() => terminal.value.query, newQuery => {
   }
 })
 
-const forwardHistory = async () => {
+const autocomplete = () => {
+
+}
+
+const forwardHistory = () => {
   const executedCommands = terminal.value.executedCommands
   const historyPosition = terminal.value.historyPosition
 

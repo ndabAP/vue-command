@@ -9,14 +9,16 @@
     </div>
 
     <div
-      ref="vueCommandContent"
-      class="vue-command__content">
+      ref="vueCommandHistory"
+      class="vue-command__history">
       <div
         v-for="(component, index) in local.history"
         v-show="showHistoryEntry(index)"
         :key="index"
         class="vue-command__history-entry">
-        <component :is="component" />
+        <component
+          :is="component"
+          :ref="`vueCommandHistoryEntry-${index}`" />
       </div>
     </div>
   </div>
@@ -209,7 +211,7 @@ watch(() => props.cursorPosition, cursorPosition => {
 })
 watch(() => props.executedCommands, executedCommands => {
   local.executedCommands = executedCommands
-  autoSetHistoryPosition()
+  // TODO User has to take care of new history position?
 })
 watch(() => props.history, history => {
   local.history = history
@@ -312,7 +314,7 @@ provide('showHelp', props.showHelp)
     background-color: #29ca41;
   }
 
-  .vue-command__content {
+  .vue-command__history {
     overflow: auto;
     background-color: #111316;
     display: block;

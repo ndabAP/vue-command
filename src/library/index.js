@@ -5,15 +5,23 @@ import XQuery from '@/components/XQuery'
 
 export const newDefaultHistory = () => [createQuery()]
 
-// TODO Context is missing
-export const createQuery = (name = 'VueCommandXQuery', context = {}) => markRaw(defineComponent({
+export const createAutocompleteStdout = (name = 'VueCommandAutocompleteStdout', candidates = []) => markRaw(defineComponent({
   name,
-  provide () {
-    return {
-      context
-    }
+  setup () {
+    const exit = inject('exit')
+    onMounted(exit)
   },
 
+  render: () => {
+    if (innerHTML) {
+      return h('div', { innerHTML: text })
+    }
+    return h('div', text)
+  }
+}))
+
+export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
+  name,
   setup () {
     const dispatch = inject('dispatch')
     const terminal = inject('terminal')

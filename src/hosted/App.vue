@@ -91,7 +91,7 @@ body {
       border-top-left-radius: 5px;
     }
 
-    .vue-command__content {
+    .vue-command__history {
       height: 260px;
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px;
