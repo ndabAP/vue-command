@@ -131,6 +131,7 @@ watch(() => props.cursorPosition, cursorPosition => {
 })
 watch(() => props.executedCommands, executedCommands => {
   local.executedCommands = executedCommands
+  // TODO Auto set history position?
 })
 watch(() => props.history, history => {
   local.history = history
@@ -176,7 +177,7 @@ const setQuery = query => {
 }
 
 const autoSetHistoryPosition = () => {
-  setHistoryPosition(local.executedCommands.size - 1)
+  setHistoryPosition(local.executedCommands.size)
 }
 
 const dispatch = async query => {
@@ -203,7 +204,7 @@ const dispatch = async query => {
 }
 
 onMounted(() => {
-  setHistoryPosition(props.history.length)
+  autoSetHistoryPosition()
 })
 
 const showHistoryEntry = computed(() => {

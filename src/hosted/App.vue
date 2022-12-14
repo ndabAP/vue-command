@@ -24,7 +24,7 @@ import VueCommand from '@/components/VueCommand'
 import { createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const PROMPT = '~neil@moon:#/'
 

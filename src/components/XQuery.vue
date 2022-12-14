@@ -20,16 +20,19 @@
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown="handleEvent" />
+      @keydown.arrow-down.exact="forwardHistory"
+      @keydown.arrow-up.exact="backwardHistory" />
   </div>
 </template>
 
 <script setup>
 // TODO: Stop watchers
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
+import eq from 'lodash.eq'
 import gt from 'lodash.gt'
 import lt from 'lodash.lt'
-import get from 'lodash.get'
+import lte from 'lodash.lte'
+import nth from 'lodash.nth'
 
 // Suffix "KEY" is added to avoid JavaScript collisions
 const ARROW_UP_KEY = 38
@@ -47,7 +50,55 @@ const props = defineProps({
 
 const emits = defineEmits(['dispatch'])
 
+const environment = inject('environment')
 const context = inject('context')
+const setCursorPosition = inject('setCursorPosition')
+const setHistoryPosition = inject('setHistoryPosition')
+const setQuery = inject('setQuery')
+
+const isDisabled = ref(false)
+const placeholder = ref('')
+const query = ref(context.value.query) // Possibly defined by user
+const queryRef = ref(null)
+
+watch(() => context.value.query, newQuery => {
+  if (!isDisabled.value) {
+    query.value = newQuery
+  }
+})
+
+const forwardHistory = async () => {
+  const executedCommands = context.value.executedCommands
+  const historyPosition = context.value.historyPosition
+
+  if (historyPosition < executedCommands.size) {
+    setHistoryPosition(historyPosition + 1)
+    query.value = [...executedCommands][historyPosition + 1]
+  }
+}
+const backwardHistory = () => {
+  const executedCommands = context.value.executedCommands
+  const historyPosition = context.value.historyPosition
+
+  if (historyPosition > executedCommands.size) {
+    return
+  }
+
+  if (historyPosition === executedCommands.size) {
+    setHistoryPosition(executedCommands.size - 1)
+    query.value = [...executedCommands][executedCommands.size - 1]
+    return
+  }
+
+  if (historyPosition === 0) {
+    query.value = [...executedCommands][0]
+  }
+
+  if (historyPosition > 0) {
+    setHistoryPosition(historyPosition - 1)
+    query.value = [...executedCommands][historyPosition - 1]
+  }
+}
 
 const focus = () => {
   queryRef.value.focus()
@@ -58,19 +109,9 @@ const dispatch = query => {
   emits('dispatch', query)
 }
 
-const setQuery = inject('setQuery')
-
-const isDisabled = ref(false)
-const placeholder = ref('')
-// Set inital query. Possibly define by user
-const query = ref(context.value.query)
-const queryRef = ref(null)
-
 watch(query, () => {
   setCursorPosition(queryRef.value.selectionStart)
 })
-
-const setCursorPosition = inject('setCursorPosition')
 
 // Apply given cursor position to actual cursor position
 watch(() => context.cursorPosition, cursorPosition => {
@@ -81,8 +122,6 @@ watch(() => context.cursorPosition, cursorPosition => {
 
   queryRef.value.input.setSelectionRange(cursorPosition, cursorPosition)
 })
-
-const environment = inject('environment')
 
 const hidePrompt = environment.value.hidePrompt
 
@@ -107,45 +146,6 @@ onMounted(() => {
 watch(isDisabled, () => {
   placeholder.value = ''
 })
-
-const setHistoryPosition = inject('setHistoryPosition')
-
-const handleEvent = event => {
-  const executedCommands = context.executedCommands
-  const historyPosition = context.historyPosition
-
-  console.debug(event)
-
-  switch (event.keyCode) {
-    // Back in history
-    case ARROW_UP_KEY:
-      console.debug(historyPosition, executedCommands.size)
-
-      if (lt(historyPosition, executedCommands.size - 1)) {
-        setHistoryPosition(historyPosition + 1)
-        const command = get(executedCommands, historyPosition + 1)
-        setQuery(command)
-      }
-
-      break
-
-    // Forward
-    case ARROW_DOWN_KEY:
-      console.debug(historyPosition, executedCommands.size)
-
-      if (gt(historyPosition, 0)) {
-        setHistoryPosition(historyPosition - 1)
-        const command = get(executedCommands, historyPosition - 1)
-        setQuery(command)
-      }
-
-      break
-
-    case TAB_KEY:
-      // Autcomplete
-      break
-  }
-}
 </script>
 
 <style lang="scss">
