@@ -1,5 +1,7 @@
 <template>
-  <div class="vue-command">
+  <div
+    ref="vueCommand"
+    class="vue-command">
     <div class="vue-command__window">
       <div class="vue-command__window__actions">
         <span class="vue-command__window__action-button vue-command__window__action-button--close"></span>
@@ -7,7 +9,9 @@
         <span class="vue-command__window__action-button vue-command__window__action-button--fullscreen"></span>
       </div>
 
-      <div class="vue-command__window__content">
+      <div
+        ref="vueCommandWindowContent"
+        class="vue-command__window__content">
         <div
           v-for="(component, index) in local.history"
           v-show="!isFullscreen || (isFullscreen && index === local.history.length - 1)"
@@ -41,6 +45,12 @@ const props = defineProps({
     default: 0,
     required: false,
     type: Number
+  },
+
+  eventHandlers: {
+    default: new Set(),
+    required: false,
+    type: Set
   },
 
   helpText: {
@@ -91,7 +101,12 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:history', 'update:cursorPosition', 'update:historyPosition', 'update:query'])
+const emits = defineEmits([
+  'update:cursorPosition',
+  'update:history',
+  'update:historyPosition',
+  'update:query'
+])
 
 const isFullscreen = ref(false)
 
@@ -119,6 +134,7 @@ watch(() => props.query, query => {
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
+  console.log()
 }
 
 const setCursorPosition = cursorPosition => {
@@ -131,9 +147,17 @@ const setHistoryPosition = historyPosition => {
   emits('update:historyPosition', historyPosition)
 }
 
+const autoSetHistoryPosition = () => {
+  setHistoryPosition(local.history.length - 1)
+}
+
 const setQuery = query => {
   local.query = query
   emits('update:query', query)
+}
+
+const incrementHistoryPosition = () => {
+  setHistoryPosition(local.historyPosition + 1)
 }
 
 const setFullscreen = isFullscreenValue => {
@@ -143,25 +167,30 @@ const setFullscreen = isFullscreenValue => {
 const executedPrograms = ref(new Set())
 
 const dispatch = async query => {
+  // [bash, --debug]
   const parsedQuery = parseQuery(query)
   if (isEmpty(parsedQuery)) {
     appendToHistory(createQuery())
-    setHistoryPosition(local.historyPosition + 1)
+    incrementHistoryPosition()
+
     return
   }
 
+  // bash
   const program = head(parsedQuery)
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
     const component = await Promise.resolve(getCommand(parsedQuery))
+
     appendToHistory(markRaw(component))
-    setHistoryPosition(local.historyPosition + 1)
     executedPrograms.value.add(program)
+    autoSetHistoryPosition()
+
     return
   }
 
   appendToHistory(createCommandNotFound(program))
-  setHistoryPosition(local.historyPosition + 1)
+  autoSetHistoryPosition()
 }
 
 onMounted(() => {
@@ -187,7 +216,6 @@ provide('exit', () => {
   appendToHistory(createQuery())
   setFullscreen(false)
 })
-
 provide('setFullscreen', setFullscreen)
 provide('setCursorPosition', setCursorPosition)
 provide('setHistoryPosition', setHistoryPosition)

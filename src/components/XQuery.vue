@@ -13,19 +13,27 @@
       v-model="query"
       class="vue-command__query-input"
       :disabled="isDisabled"
+      :placeholder="placeholder"
       autocapitalize="none"
       autocorrect="off"
       type="text"
-      :placeholder="placeholder"
-      @input="setQuery($event.target.value)"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
-      @keyup="setCursorPosition($refs.queryRef.selectionStart)"
-      @keyup.enter.exact="dispatch($event.target.value)" />
+      @input="setQuery($event.target.value)"
+      @keyup.enter.exact="dispatch($event.target.value)"
+      @keydown="eventHandler" />
   </div>
 </template>
 
 <script setup>
+// TODO: Stop watchers
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
+
+// Suffix "KEY" is added to avoid JavaScript collisions
+const ARROW_UP_KEY = 38
+const ARROW_DOWN_KEY = 40
+const C_KEY = 67
+const R_KEY = 82
+const TAB_KEY = 9
 
 const props = defineProps({
   prompt: {
@@ -51,14 +59,19 @@ const dispatch = query => {
 const setQuery = inject('setQuery')
 
 const isDisabled = ref(false)
+const placeholder = ref('')
 const query = ref(context.value.query)
 const queryRef = ref(null)
 
-onMounted(focus)
+watch(query, () => {
+  setCursorPosition(queryRef.value.selectionStart)
+})
 
 const setCursorPosition = inject('setCursorPosition')
 
+// Apply given cursor position to actual cursor position
 watch(() => context.cursorPosition, cursorPosition => {
+  // TODO: Unwatch to avoid check
   if (isDisabled.value) {
     return
   }
@@ -68,14 +81,15 @@ watch(() => context.cursorPosition, cursorPosition => {
 
 const environment = inject('environment')
 
-const helpText = environment.value.helpText
-const helpTimeout = environment.value.helpTimeout
 const hidePrompt = environment.value.hidePrompt
-const showHelp = environment.value.showHelp
-
-const placeholder = ref('')
 
 onMounted(() => {
+  focus()
+
+  const helpText = environment.value.helpText
+  const helpTimeout = environment.value.helpTimeout
+  const showHelp = environment.value.showHelp
+
   if (showHelp && !isDisabled.value) {
     const timeout = setTimeout(() => {
       placeholder.value = helpText
@@ -90,6 +104,15 @@ onMounted(() => {
 watch(isDisabled, () => {
   placeholder.value = ''
 })
+
+const eventHandler = event => {
+  switch (event.keyCode) {
+    case ARROW_UP_KEY:
+      break
+    case ARROW_DOWN_KEY:
+      break
+  }
+}
 </script>
 
 <style lang="scss">
