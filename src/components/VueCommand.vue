@@ -47,7 +47,7 @@ const props = defineProps({
     type: Number
   },
 
-  eventHandlers: {
+  executedCommands: {
     default: new Set(),
     required: false,
     type: Set
@@ -82,6 +82,12 @@ const props = defineProps({
     type: Number
   },
 
+  isFullscreen: {
+    default: false,
+    required: false,
+    type: Boolean
+  },
+
   prompt: {
     default: '~$',
     required: false,
@@ -103,30 +109,37 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:cursorPosition',
+  'update:executedCommands',
   'update:history',
   'update:historyPosition',
+  'update:isFullscreen',
   'update:query'
 ])
-
-const executed = ref(new Set())
-const isFullscreen = ref(false)
 
 // A local copy of properties if one of them properties is not given
 const local = reactive({
   cursorPosition: props.cursorPosition,
+  executedCommands: props.executedCommands,
   history: props.history,
   historyPosition: props.historyPosition,
+  isFullscreen: props.isFullscreen,
   query: props.query
 })
 
+watch(() => props.cursorPosition, cursorPosition => {
+  local.cursorPosition = cursorPosition
+})
+watch(() => props.executedCommands, executedCommands => {
+  local.executedCommands = executedCommands
+})
 watch(() => props.history, history => {
   local.history = history
 })
 watch(() => props.historyPosition, historyPosition => {
   local.historyPosition = historyPosition
 })
-watch(() => props.cursorPosition, cursorPosition => {
-  local.cursorPosition = cursorPosition
+watch(() => props.isFullscreen, isFullscreen => {
+  local.isFullscreen = isFullscreen
 })
 watch(() => props.query, query => {
   local.query = query
@@ -135,7 +148,6 @@ watch(() => props.query, query => {
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
-  console.log()
 }
 
 const setCursorPosition = cursorPosition => {
@@ -143,13 +155,19 @@ const setCursorPosition = cursorPosition => {
   emits('update:cursorPosition', cursorPosition)
 }
 
+const addExecutedCommands = executedCommands => {
+  local.executedCommands.add(executedCommands)
+  emits('update:executedCommands', local.executedCommands)
+}
+
+const setFullscreen = isFullscreen => {
+  local.isFullscreen = isFullscreen
+  emits('update:isFullscreen', isFullscreen)
+}
+
 const setHistoryPosition = historyPosition => {
   local.historyPosition = historyPosition
   emits('update:historyPosition', historyPosition)
-}
-
-const autoSetHistoryPosition = () => {
-  setHistoryPosition(executed.value.size)
 }
 
 const setQuery = query => {
@@ -157,8 +175,8 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-const setFullscreen = isFullscreenValue => {
-  isFullscreen.value = isFullscreenValue
+const autoSetHistoryPosition = () => {
+  setHistoryPosition(local.executedCommands.size - 1)
 }
 
 const dispatch = async query => {
@@ -169,7 +187,7 @@ const dispatch = async query => {
     return
   }
 
-  executed.value.add(query)
+  addExecutedCommands(query)
 
   // bash
   const program = head(parsedQuery)
@@ -182,13 +200,6 @@ const dispatch = async query => {
     // Command not found
     appendToHistory(createCommandNotFound(program))
   }
-
-  setQuery('')
-  autoSetHistoryPosition()
-}
-
-const handleEvent = event => {
-  console.debug(event)
 }
 
 onMounted(() => {
@@ -196,12 +207,15 @@ onMounted(() => {
 })
 
 const showHistoryEntry = computed(() => {
-  return index => !isFullscreen.value || (isFullscreen.value && (index === local.history.length - 1))
+  return index => !local.isFullscreen || (local.isFullscreen && (index === local.history.length - 1))
 })
 
 provide('context', computed(() => ({
-  isFullscreen,
   cursorPosition: local.cursorPosition,
+  executedCommands: local.executedCommands,
+  history: local.history,
+  historyPosition: local.historyPosition,
+  isFullscreen: local.isFullscreen,
   query: local.query
 })))
 provide('environment', computed(() => ({
@@ -216,10 +230,14 @@ provide('dispatch', dispatch)
 provide('exit', () => {
   // Tear down
   appendToHistory(createQuery())
+  autoSetHistoryPosition()
   setFullscreen(false)
+  setCursorPosition(0)
+  setQuery('')
 })
-provide('setFullscreen', setFullscreen)
+provide('addExecutedCommands', addExecutedCommands)
 provide('setCursorPosition', setCursorPosition)
+provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('setQuery', setQuery)
 </script>

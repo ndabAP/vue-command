@@ -20,13 +20,16 @@
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown="propagate" />
+      @keydown="handleEvent" />
   </div>
 </template>
 
 <script setup>
 // TODO: Stop watchers
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
+import gt from 'lodash.gt'
+import lt from 'lodash.lt'
+import get from 'lodash.get'
 
 // Suffix "KEY" is added to avoid JavaScript collisions
 const ARROW_UP_KEY = 38
@@ -42,7 +45,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['dispatch', 'propagate'])
+const emits = defineEmits(['dispatch'])
 
 const context = inject('context')
 
@@ -59,6 +62,7 @@ const setQuery = inject('setQuery')
 
 const isDisabled = ref(false)
 const placeholder = ref('')
+// Set inital query. Possibly define by user
 const query = ref(context.value.query)
 const queryRef = ref(null)
 
@@ -104,8 +108,43 @@ watch(isDisabled, () => {
   placeholder.value = ''
 })
 
-const propagate = event => {
-  emits('propagate', event)
+const setHistoryPosition = inject('setHistoryPosition')
+
+const handleEvent = event => {
+  const executedCommands = context.executedCommands
+  const historyPosition = context.historyPosition
+
+  console.debug(event)
+
+  switch (event.keyCode) {
+    // Back in history
+    case ARROW_UP_KEY:
+      console.debug(historyPosition, executedCommands.size)
+
+      if (lt(historyPosition, executedCommands.size - 1)) {
+        setHistoryPosition(historyPosition + 1)
+        const command = get(executedCommands, historyPosition + 1)
+        setQuery(command)
+      }
+
+      break
+
+    // Forward
+    case ARROW_DOWN_KEY:
+      console.debug(historyPosition, executedCommands.size)
+
+      if (gt(historyPosition, 0)) {
+        setHistoryPosition(historyPosition - 1)
+        const command = get(executedCommands, historyPosition - 1)
+        setQuery(command)
+      }
+
+      break
+
+    case TAB_KEY:
+      // Autcomplete
+      break
+  }
 }
 </script>
 
