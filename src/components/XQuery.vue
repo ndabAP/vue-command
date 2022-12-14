@@ -20,7 +20,7 @@
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown="eventHandler" />
+      @keydown="propagate" />
   </div>
 </template>
 
@@ -42,11 +42,10 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['dispatch'])
+const emits = defineEmits(['dispatch', 'propagate'])
 
 const context = inject('context')
 
-// Focuses query input
 const focus = () => {
   queryRef.value.focus()
 }
@@ -105,13 +104,8 @@ watch(isDisabled, () => {
   placeholder.value = ''
 })
 
-const eventHandler = event => {
-  switch (event.keyCode) {
-    case ARROW_UP_KEY:
-      break
-    case ARROW_DOWN_KEY:
-      break
-  }
+const propagate = event => {
+  emits('propagate', event)
 }
 </script>
 

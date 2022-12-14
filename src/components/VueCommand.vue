@@ -14,7 +14,7 @@
         class="vue-command__window__content">
         <div
           v-for="(component, index) in local.history"
-          v-show="!isFullscreen || (isFullscreen && index === local.history.length - 1)"
+          v-show="showHistoryEntry(index)"
           :key="index"
           class="vue-command__history-entry">
           <component :is="component" />
@@ -108,6 +108,7 @@ const emits = defineEmits([
   'update:query'
 ])
 
+const executed = ref(new Set())
 const isFullscreen = ref(false)
 
 // A local copy of properties if one of them properties is not given
@@ -148,7 +149,7 @@ const setHistoryPosition = historyPosition => {
 }
 
 const autoSetHistoryPosition = () => {
-  setHistoryPosition(local.history.length - 1)
+  setHistoryPosition(executed.value.size)
 }
 
 const setQuery = query => {
@@ -156,45 +157,46 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-const incrementHistoryPosition = () => {
-  setHistoryPosition(local.historyPosition + 1)
-}
-
 const setFullscreen = isFullscreenValue => {
   isFullscreen.value = isFullscreenValue
 }
-
-const executedPrograms = ref(new Set())
 
 const dispatch = async query => {
   // [bash, --debug]
   const parsedQuery = parseQuery(query)
   if (isEmpty(parsedQuery)) {
     appendToHistory(createQuery())
-    incrementHistoryPosition()
-
     return
   }
+
+  executed.value.add(query)
 
   // bash
   const program = head(parsedQuery)
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
+    // Command found
     const component = await Promise.resolve(getCommand(parsedQuery))
-
     appendToHistory(markRaw(component))
-    executedPrograms.value.add(program)
-    autoSetHistoryPosition()
-
-    return
+  } else {
+    // Command not found
+    appendToHistory(createCommandNotFound(program))
   }
 
-  appendToHistory(createCommandNotFound(program))
+  setQuery('')
   autoSetHistoryPosition()
+}
+
+const handleEvent = event => {
+  console.debug(event)
 }
 
 onMounted(() => {
   setHistoryPosition(props.history.length)
+})
+
+const showHistoryEntry = computed(() => {
+  return index => !isFullscreen.value || (isFullscreen.value && (index === local.history.length - 1))
 })
 
 provide('context', computed(() => ({
