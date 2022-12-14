@@ -23,21 +23,14 @@
 </template>
 
 <script setup>
-import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed, onMounted } from 'vue'
-import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultAutocompletionResolver, defaultSearchResolver } from '@/library'
+import { defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted } from 'vue'
+import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultEventResolver } from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
-import eq from 'lodash.eq'
-import isEmpty from 'lodash.isEmpty'
+import isEmpty from 'lodash.isempty'
 
 const props = defineProps({
-  autocompletionResolver: {
-    default: defaultAutocompletionResolver,
-    required: false,
-    type: Function
-  },
-
   commands: {
     default: () => ({}),
     required: false,
@@ -48,6 +41,12 @@ const props = defineProps({
     default: 0,
     required: false,
     type: Number
+  },
+
+  eventResolver: {
+    default: defaultEventResolver,
+    required: false,
+    type: Array
   },
 
   executedCommands: {
@@ -106,12 +105,6 @@ const props = defineProps({
     default: '~$',
     required: false,
     type: String
-  },
-
-  searchResolver: {
-    default: defaultSearchResolver,
-    required: false,
-    type: Function
   },
 
   showHelp: {
@@ -267,12 +260,11 @@ provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('setQuery', setQuery)
-provide('autocompletionResolver', props.autocompletionResolver)
+provide('eventResolver', props.eventResolver)
 provide('helpText', props.helpText)
 provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('prompt', props.prompt)
-provide('searchResolver', props.searchResolver)
 provide('showHelp', props.showHelp)
 </script>
 

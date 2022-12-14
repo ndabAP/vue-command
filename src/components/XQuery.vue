@@ -20,28 +20,21 @@
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown.arrow-down.exact="forwardHistory"
-      @keydown.arrow-up.exact="backwardHistory"
-      @keydown.tab.exact.prevent="autocompletionResolver"
-      @keydown.ctrl.r.prevent="searchResolver" />
+      @keydown.exact="resolveEvents($event, terminal)" />
   </div>
 </template>
 
 <script setup>
-// TODO: Stop watchers
-import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
-import isEmpty from 'lodash.isempty'
+import { defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
 
 const emits = defineEmits(['dispatch'])
 
 const terminal = inject('terminal')
-const autocompletionResolver = inject('autocompletionResolver')
-const searchResolver = inject('searchResolver')
 const setCursorPosition = inject('setCursorPosition')
-const setHistoryPosition = inject('setHistoryPosition')
 const setQuery = inject('setQuery')
 const hidePrompt = inject('hidePrompt')
 const prompt = inject('prompt')
+const eventResolver = inject('eventResolver')
 
 const isDisabled = ref(false)
 const placeholder = ref('')
@@ -49,50 +42,17 @@ const query = ref('')
 const queryRef = ref(null)
 
 // To allow user to mutate query from outside not only from a history component
-watch(() => terminal.value.query, newQuery => {
+const unwatchTerminalQuery = watch(() => terminal.value.query, newQuery => {
   if (!isDisabled.value) {
     query.value = newQuery
   }
 })
 
-const forwardHistory = () => {
-  const executedCommands = terminal.value.executedCommands
-  const historyPosition = terminal.value.historyPosition
-
-  if (isEmpty(executedCommands)) {
-    return
-  }
-
-  if (historyPosition < executedCommands.size) {
-    setHistoryPosition(historyPosition + 1)
-    query.value = [...executedCommands][historyPosition + 1]
+const resolveEvents = (event, terminal) => {
+  for (const invoker of eventResolver) {
+    invoker(event, terminal)
   }
 }
-const backwardHistory = () => {
-  const executedCommands = terminal.value.executedCommands
-  const historyPosition = terminal.value.historyPosition
-
-  if (isEmpty(executedCommands)) {
-    return
-  }
-
-  if (historyPosition > executedCommands.size) {
-    return
-  }
-  if (historyPosition === executedCommands.size) {
-    setHistoryPosition(executedCommands.size - 1)
-    query.value = [...executedCommands][executedCommands.size - 1]
-    return
-  }
-  if (historyPosition === 0) {
-    query.value = [...executedCommands][0]
-  }
-  if (historyPosition > 0) {
-    setHistoryPosition(historyPosition - 1)
-    query.value = [...executedCommands][historyPosition - 1]
-  }
-}
-
 const focus = () => {
   queryRef.value.focus()
 }
@@ -102,14 +62,14 @@ const dispatch = query => {
   emits('dispatch', query)
 }
 
-watch(query, () => {
+const unwatchQuery = watch(query, () => {
   setCursorPosition(queryRef.value.selectionStart)
 })
 
 // Apply given cursor position to actual cursor position
 // TODO This gets called for every input since cursor position is mutated at the
 // mother component. It's eventually necessary
-watch(() => terminal.value.cursorPosition, cursorPosition => {
+const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
   // TODO: Unwatch to avoid check
   if (isDisabled.value) {
     return
@@ -129,14 +89,19 @@ onMounted(() => {
       placeholder.value = helpText
     }, helpTimeout)
 
-    watch(isDisabled, () => {
+    const unwatchIsDisabled = watch(isDisabled, () => {
       clearTimeout(timeout)
+      unwatchIsDisabled()
     })
   }
 })
 
-watch(isDisabled, () => {
+const unwatchIsDisabled = watch(isDisabled, () => {
+  unwatchTerminalQuery()
+  unwatchQuery()
+  unwatchTerminalCursorPosition()
   placeholder.value = ''
+  unwatchIsDisabled()
 })
 </script>
 

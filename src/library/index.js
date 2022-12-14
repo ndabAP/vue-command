@@ -1,17 +1,14 @@
-import { defineComponent, h, inject, markRaw, nextTick, onMounted } from 'vue'
+import { defineComponent, h, inject, markRaw, onMounted } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import XQuery from '@/components/XQuery'
 import split from 'lodash.split'
 import { trim } from 'lodash'
-// import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../constants/keys'
 
 export const newDefaultHistory = () => [createQuery()]
 
 export const defaultParser = command => split(trim(command), ' ')
 
-export const defaultAutocompletionResolver = () => undefined
-
-export const defaultSearchResolver = () => undefined
+export const defaultEventResolver = () => []
 
 export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
   name,

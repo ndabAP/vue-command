@@ -21,7 +21,7 @@ $ npm i --save vue-command
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import { createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
