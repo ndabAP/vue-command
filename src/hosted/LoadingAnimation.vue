@@ -9,13 +9,13 @@
 
 <script>
 export default {
-  inject: ['terminate'],
+  inject: ['exit', 'context'],
 
   data: () => ({
     index: 0
   }),
 
-  mounted () {
+  mounted() {
     if (this.context.parsed.help) {
       this.terminate()
 

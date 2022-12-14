@@ -39,6 +39,10 @@ export default {
 
     return {
       commands: {
+        animate: () => {
+
+        },
+
         clear: () => {
           history.value = []
           return createQuery()
@@ -64,15 +68,33 @@ body {
   margin: 0;
 
   .vue-command {
+    width: 400px;
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #252525;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #333;
+    }
+
     .vue-command__actions {
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
     }
 
     .vue-command__content {
-      height: 250px;
-      border-bottom-right-radius: 4px;
-      border-bottom-left-radius: 4px;
+      height: 275px;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
     }
   }
 }

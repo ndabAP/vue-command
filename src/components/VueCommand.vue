@@ -9,13 +9,13 @@
     </div>
 
     <div
-      ref="vueCommandWindowContent"
+      ref="vueCommandContent"
       class="vue-command__content">
       <div
         v-for="(component, index) in local.history"
         v-show="showHistoryEntry(index)"
         :key="index"
-        :class="{ 'vue-command__history-entry': true, 'vue-command__content--fullscreen': local.isFullscreen }">
+        class="vue-command__history-entry">
         <component :is="component" />
       </div>
     </div>
@@ -114,7 +114,9 @@ const emits = defineEmits([
   'update:query'
 ])
 
-// A local copy of properties if one of them properties is not given
+// This will be overwritten for every dispatched query
+let parsedQuery = []
+
 const local = reactive({
   cursorPosition: props.cursorPosition,
   executedCommands: props.executedCommands,
@@ -124,24 +126,11 @@ const local = reactive({
   query: props.query
 })
 
-watch(() => props.cursorPosition, cursorPosition => {
-  local.cursorPosition = cursorPosition
+const showHistoryEntry = computed(() => {
+  return index => !local.isFullscreen || (local.isFullscreen && (index === local.history.length - 1))
 })
-watch(() => props.executedCommands, executedCommands => {
-  local.executedCommands = executedCommands
-  // TODO Auto set history position?
-})
-watch(() => props.history, history => {
-  local.history = history
-})
-watch(() => props.historyPosition, historyPosition => {
-  local.historyPosition = historyPosition
-})
-watch(() => props.isFullscreen, isFullscreen => {
-  local.isFullscreen = isFullscreen
-})
-watch(() => props.query, query => {
-  local.query = query
+const isLastHistoryEntry = computed(() => {
+  return index => (index === local.history.length - 1)
 })
 
 const appendToHistory = (...components) => {
@@ -180,7 +169,8 @@ const autoSetHistoryPosition = () => {
 
 const dispatch = async query => {
   // [bash, --debug]
-  const parsedQuery = parseQuery(query)
+  parsedQuery = parseQuery(query)
+
   if (isEmpty(parsedQuery)) {
     appendToHistory(createQuery())
     return
@@ -190,23 +180,40 @@ const dispatch = async query => {
 
   // bash
   const program = head(parsedQuery)
+  // Returned command/component
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
     // Command found
-    const component = await Promise.resolve(getCommand(parsedQuery))
-    appendToHistory(markRaw(component))
+    const command = await Promise.resolve(getCommand(parsedQuery))
+    appendToHistory(markRaw(command))
   } else {
     // Command not found
     appendToHistory(createCommandNotFound(program))
   }
 }
 
-onMounted(() => {
+watch(() => props.cursorPosition, cursorPosition => {
+  local.cursorPosition = cursorPosition
+})
+watch(() => props.executedCommands, executedCommands => {
+  local.executedCommands = executedCommands
   autoSetHistoryPosition()
 })
+watch(() => props.history, history => {
+  local.history = history
+})
+watch(() => props.historyPosition, historyPosition => {
+  local.historyPosition = historyPosition
+})
+watch(() => props.isFullscreen, isFullscreen => {
+  local.isFullscreen = isFullscreen
+})
+watch(() => props.query, query => {
+  local.query = query
+})
 
-const showHistoryEntry = computed(() => {
-  return index => !local.isFullscreen || (local.isFullscreen && (index === local.history.length - 1))
+onMounted(() => {
+  autoSetHistoryPosition()
 })
 
 provide('context', computed(() => ({
@@ -215,6 +222,7 @@ provide('context', computed(() => ({
   history: local.history,
   historyPosition: local.historyPosition,
   isFullscreen: local.isFullscreen,
+  parsedQuery,
   query: local.query
 })))
 provide('environment', computed(() => ({
@@ -224,7 +232,6 @@ provide('environment', computed(() => ({
   prompt: props.prompt,
   showHelp: props.showHelp
 })))
-
 provide('dispatch', dispatch)
 provide('exit', () => {
   // Tear down
@@ -314,13 +321,6 @@ provide('setQuery', setQuery)
     textarea {
       color: #ffffff;
     }
-  }
-
-  .vue-command__content--fullscreen {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
   }
 }
 </style>
