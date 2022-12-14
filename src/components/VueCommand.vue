@@ -15,7 +15,10 @@
         v-for="(component, index) in local.history"
         v-show="showHistoryEntry(index)"
         :key="index"
-        class="vue-command__history-entry">
+        :class="{
+          'vue-command__history-entry': true,
+          'vue-command__history-entry--fullscreen': local.isFullscreen
+        }">
         <component :is="component" />
       </div>
     </div>
@@ -341,6 +344,10 @@ provide('showHelp', props.showHelp)
     textarea {
       color: #ffffff;
     }
+  }
+
+  .vue-command__history-entry--fullscreen {
+    height: 100%;
   }
 }
 </style>
