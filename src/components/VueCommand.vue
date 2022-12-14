@@ -184,10 +184,10 @@ const dispatch = async query => {
     appendToHistory(createQuery())
     return
   }
-
-  const parsedQuery = props.parser(query)
   addExecutedCommands(query)
 
+  // ['bash', '--help']
+  const parsedQuery = props.parser(query)
   // bash, make, sh
   const program = head(defaultParser(query))
   // Returned command/component
@@ -198,10 +198,10 @@ const dispatch = async query => {
     const component = defineComponent({
       provide () {
         return {
-          // This will unique for the component
+          // This will be unique for the component
           context: {
-            parsedQuery,
-            query
+            rawQuery: query,
+            parsedQuery
           }
         }
       },
@@ -222,10 +222,11 @@ watch(() => props.cursorPosition, cursorPosition => {
 })
 watch(() => props.executedCommands, executedCommands => {
   local.executedCommands = executedCommands
-  // TODO User has to take care of new history position?
+  // User has to take care of new history position
 })
 watch(() => props.history, history => {
   local.history = history
+  // User has to take care of new executed programs and history position
 })
 watch(() => props.historyPosition, historyPosition => {
   local.historyPosition = historyPosition
@@ -235,6 +236,7 @@ watch(() => props.isFullscreen, isFullscreen => {
 })
 watch(() => props.query, query => {
   local.query = query
+  // User has to take care of new cursor position
 })
 
 onMounted(() => {

@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
+import { defineEmits, ref, onMounted, watch, inject } from 'vue'
 
 const emits = defineEmits(['dispatch'])
 
@@ -70,10 +70,6 @@ const unwatchQuery = watch(query, () => {
 // TODO This gets called for every input since cursor position is mutated at the
 // mother component. It's eventually necessary
 const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
-  // TODO: Unwatch to avoid check
-  if (isDisabled.value) {
-    return
-  }
   queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
 })
 
