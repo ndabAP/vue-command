@@ -30,35 +30,30 @@
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
 import isEmpty from 'lodash.isempty'
 
-const props = defineProps({
-  prompt: {
-    type: String,
-    required: false
-  }
-})
-
 const emits = defineEmits(['dispatch'])
 
-const environment = inject('environment')
-const context = inject('context')
+const terminal = inject('terminal')
 const setCursorPosition = inject('setCursorPosition')
 const setHistoryPosition = inject('setHistoryPosition')
 const setQuery = inject('setQuery')
+const hidePrompt = inject('hidePrompt')
+const prompt = inject('prompt')
 
 const isDisabled = ref(false)
 const placeholder = ref('')
-const query = ref(context.value.query) // Possibly defined by user
+const query = ref('')
 const queryRef = ref(null)
 
-watch(() => context.value.query, newQuery => {
+// To allow user to mutate query from outside not only from a history component
+watch(() => terminal.value.query, newQuery => {
   if (!isDisabled.value) {
     query.value = newQuery
   }
 })
 
 const forwardHistory = async () => {
-  const executedCommands = context.value.executedCommands
-  const historyPosition = context.value.historyPosition
+  const executedCommands = terminal.value.executedCommands
+  const historyPosition = terminal.value.historyPosition
 
   if (isEmpty(executedCommands)) {
     return
@@ -70,8 +65,8 @@ const forwardHistory = async () => {
   }
 }
 const backwardHistory = () => {
-  const executedCommands = context.value.executedCommands
-  const historyPosition = context.value.historyPosition
+  const executedCommands = terminal.value.executedCommands
+  const historyPosition = terminal.value.historyPosition
 
   if (isEmpty(executedCommands)) {
     return
@@ -108,23 +103,22 @@ watch(query, () => {
 })
 
 // Apply given cursor position to actual cursor position
-watch(() => context.cursorPosition, cursorPosition => {
+// TODO This gets called for every input since cursor position is mutated at the
+// mother component. It's eventually necessary
+watch(() => terminal.value.cursorPosition, cursorPosition => {
   // TODO: Unwatch to avoid check
   if (isDisabled.value) {
     return
   }
-
-  queryRef.value.input.setSelectionRange(cursorPosition, cursorPosition)
+  queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
 })
-
-const hidePrompt = environment.value.hidePrompt
 
 onMounted(() => {
   focus()
 
-  const helpText = environment.value.helpText
-  const helpTimeout = environment.value.helpTimeout
-  const showHelp = environment.value.showHelp
+  const helpText = inject('helpText')
+  const helpTimeout = inject('helpTimeout')
+  const showHelp = inject('showHelp')
 
   if (showHelp && !isDisabled.value) {
     const timeout = setTimeout(() => {

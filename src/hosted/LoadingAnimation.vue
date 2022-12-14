@@ -1,5 +1,5 @@
 <template>
-  <span v-if="context.parsed.help">
+  <span v-if="false">
     Options: <br>
     &nbsp;--timeout (default: 50)<br>
     &nbsp;--amount (default: 10)
@@ -8,34 +8,50 @@
 </template>
 
 <script>
+import { parse } from 'path'
+import { inject, onMounted } from 'vue'
+
 export default {
-  inject: ['exit', 'context'],
+  inject: ['exit'],
+
+  setup () {
+    const context = inject('context')
+    console.log(context)
+
+    onMounted(() => {
+
+    })
+  },
 
   data: () => ({
     index: 0
   }),
 
-  mounted() {
-    if (this.context.parsed.help) {
-      this.terminate()
+  mounted () {
+    this.exit()
+    // const parsedQuery = this.context.parsedQuery
+    // // if (parsedQuery.help) {
+    // //   this.exit()
 
-      return
-    }
+    // //   return
+    // // }
 
-    const timeout = this.context.parsed.timeout || 50
-    const amount = this.context.parsed.amount || 10
+    // const timeout = parsedQuery.timeout || 50
+    // const amount = parsedQuery.amount || 10
 
-    const load = () =>
-      setTimeout(() => {
-        this.index++
-        if (this.index < amount) {
-          load()
-        } else {
-          this.terminate()
-        }
-      }, timeout)
+    // console.log(this.context)
 
-    load()
+    // const load = () =>
+    //   setTimeout(() => {
+    //     this.index++
+    //     if (this.index < amount) {
+    //       load()
+    //     } else {
+    //       this.exit()
+    //     }
+    //   }, timeout)
+
+    // load()
   }
 }
 </script>

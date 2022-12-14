@@ -8,6 +8,7 @@
       v-model:query="query"
       :commands="commands"
       :prompt="prompt"
+      :parser="(query) => query.split(' ')"
       help-text="Type in help"
       show-help>
     </vue-command>
@@ -20,11 +21,12 @@ $ npm i --save vue-command
 </template>
 
 <script>
+import { onMounted, ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import { createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
-import { onMounted, ref } from 'vue'
+import LoadingAnimation from './LoadingAnimation.vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -39,9 +41,7 @@ export default {
 
     return {
       commands: {
-        animate: () => {
-
-        },
+        animate: () => LoadingAnimation,
 
         clear: () => {
           history.value = []
@@ -92,7 +92,7 @@ body {
     }
 
     .vue-command__content {
-      height: 275px;
+      height: 260px;
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px;
     }

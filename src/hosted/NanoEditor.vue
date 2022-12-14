@@ -1,5 +1,5 @@
 <template>
-  <div v-show="context.isFullscreen">
+  <div v-show="terminal.isFullscreen">
     <textarea
       ref="nano"
       rows="13"
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  inject: ['context', 'setFullscreen', 'exit'],
+  inject: ['terminal', 'setFullscreen', 'exit'],
 
   created () {
     this.setFullscreen(true)

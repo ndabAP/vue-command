@@ -5,13 +5,20 @@ import XQuery from '@/components/XQuery'
 
 export const newDefaultHistory = () => [createQuery()]
 
-export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
+// TODO Context is missing
+export const createQuery = (name = 'VueCommandXQuery', context = {}) => markRaw(defineComponent({
   name,
+  provide () {
+    return {
+      context
+    }
+  },
+
   setup () {
     const dispatch = inject('dispatch')
-    const environment = inject('environment')
+    const terminal = inject('terminal')
 
-    const prompt = environment.value.prompt
+    const prompt = terminal.value.prompt
 
     return () => [
       h(

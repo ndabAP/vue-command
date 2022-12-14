@@ -23,14 +23,14 @@
 </template>
 
 <script setup>
-// TODO: Programm "help" could be generated
-import { parse as parseQuery } from 'shell-quote'
 import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed, onMounted } from 'vue'
 import { createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
 import isEmpty from 'lodash.isempty'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
+import eq from 'lodash.eq'
+import split from 'lodash.split'
 
 const props = defineProps({
   commands: {
@@ -86,6 +86,12 @@ const props = defineProps({
     type: Boolean
   },
 
+  parser: {
+    default: command => split(command, ' '),
+    required: false,
+    type: Function
+  },
+
   prompt: {
     default: '~$',
     required: false,
@@ -114,9 +120,6 @@ const emits = defineEmits([
   'update:query'
 ])
 
-// This will be overwritten for every dispatched query
-let parsedQuery = []
-
 const local = reactive({
   cursorPosition: props.cursorPosition,
   executedCommands: props.executedCommands,
@@ -128,9 +131,6 @@ const local = reactive({
 
 const showHistoryEntry = computed(() => {
   return index => !local.isFullscreen || (local.isFullscreen && (index === local.history.length - 1))
-})
-const isLastHistoryEntry = computed(() => {
-  return index => (index === local.history.length - 1)
 })
 
 const appendToHistory = (...components) => {
@@ -168,24 +168,36 @@ const autoSetHistoryPosition = () => {
 }
 
 const dispatch = async query => {
-  // [bash, --debug]
-  parsedQuery = parseQuery(query)
-
-  if (isEmpty(parsedQuery)) {
+  if (eq(query, '')) {
     appendToHistory(createQuery())
     return
   }
 
+  const parsedQuery = props.parser(query)
   addExecutedCommands(query)
 
   // bash
-  const program = head(parsedQuery)
+  const program = head(split(query, ' '))
   // Returned command/component
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
     // Command found
     const command = await Promise.resolve(getCommand(parsedQuery))
-    appendToHistory(markRaw(command))
+    const component = defineComponent({
+      provide () {
+        return {
+          // This is constant
+          context: {
+            parsedQuery,
+            query
+          }
+        }
+      },
+
+      render: () => h(command)
+    })
+
+    appendToHistory(markRaw(component))
   } else {
     // Command not found
     appendToHistory(createCommandNotFound(program))
@@ -216,21 +228,13 @@ onMounted(() => {
   autoSetHistoryPosition()
 })
 
-provide('context', computed(() => ({
+provide('terminal', computed(() => ({
   cursorPosition: local.cursorPosition,
   executedCommands: local.executedCommands,
   history: local.history,
   historyPosition: local.historyPosition,
   isFullscreen: local.isFullscreen,
-  parsedQuery,
   query: local.query
-})))
-provide('environment', computed(() => ({
-  helpText: props.helpText,
-  helpTimeout: props.helpTimeout,
-  hidePrompt: props.hidePrompt,
-  prompt: props.prompt,
-  showHelp: props.showHelp
 })))
 provide('dispatch', dispatch)
 provide('exit', () => {
@@ -246,6 +250,11 @@ provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('setQuery', setQuery)
+provide('helpText', props.helpText)
+provide('helpTimeout', props.helpTimeout)
+provide('hidePrompt', props.hidePrompt)
+provide('prompt', props.prompt)
+provide('showHelp', props.showHelp)
 </script>
 
 <style lang="scss">
