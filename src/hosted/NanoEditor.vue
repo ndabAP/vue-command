@@ -2,7 +2,6 @@
   <div v-show="terminal.isFullscreen">
     <textarea
       ref="nano"
-      rows="13"
       @keyup.ctrl.x.exact="exit">This is a Nano text editor emulator! Press Ctrl + x to leave.</textarea>
   </div>
 </template>

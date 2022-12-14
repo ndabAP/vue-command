@@ -22,7 +22,8 @@
       @keyup.enter.exact="dispatch($event.target.value)"
       @keydown.arrow-down.exact="forwardHistory"
       @keydown.arrow-up.exact="backwardHistory"
-      @keydown.tab.exact="autocomplete" />
+      @keydown.tab.exact.prevent="autocompletionResolver"
+      @keydown.ctrl.r.prevent="searchResolver" />
   </div>
 </template>
 
@@ -34,6 +35,8 @@ import isEmpty from 'lodash.isempty'
 const emits = defineEmits(['dispatch'])
 
 const terminal = inject('terminal')
+const autocompletionResolver = inject('autocompletionResolver')
+const searchResolver = inject('searchResolver')
 const setCursorPosition = inject('setCursorPosition')
 const setHistoryPosition = inject('setHistoryPosition')
 const setQuery = inject('setQuery')
@@ -51,10 +54,6 @@ watch(() => terminal.value.query, newQuery => {
     query.value = newQuery
   }
 })
-
-const autocomplete = () => {
-
-}
 
 const forwardHistory = () => {
   const executedCommands = terminal.value.executedCommands

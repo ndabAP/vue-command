@@ -16,9 +16,7 @@
         v-show="showHistoryEntry(index)"
         :key="index"
         class="vue-command__history-entry">
-        <component
-          :is="component"
-          :ref="`vueCommandHistoryEntry-${index}`" />
+        <component :is="component" />
       </div>
     </div>
   </div>
@@ -26,15 +24,20 @@
 
 <script setup>
 import { defineProps, onBeforeMount, defineEmits, markRaw, defineComponent, ref, provide, watch, reactive, h, computed, onMounted } from 'vue'
-import { createCommandNotFound, createQuery, newDefaultHistory } from '@/library'
-import isEmpty from 'lodash.isempty'
+import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultAutocompletionResolver, defaultSearchResolver } from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
 import eq from 'lodash.eq'
-import split from 'lodash.split'
+import isEmpty from 'lodash.isEmpty'
 
 const props = defineProps({
+  autocompletionResolver: {
+    default: defaultAutocompletionResolver,
+    required: false,
+    type: Function
+  },
+
   commands: {
     default: () => ({}),
     required: false,
@@ -88,8 +91,13 @@ const props = defineProps({
     type: Boolean
   },
 
+  options: {
+    required: false,
+    type: Object
+  },
+
   parser: {
-    default: command => split(command, ' '),
+    default: defaultParser,
     required: false,
     type: Function
   },
@@ -98,6 +106,12 @@ const props = defineProps({
     default: '~$',
     required: false,
     type: String
+  },
+
+  searchResolver: {
+    default: defaultSearchResolver,
+    required: false,
+    type: Function
   },
 
   showHelp: {
@@ -170,7 +184,7 @@ const autoSetHistoryPosition = () => {
 }
 
 const dispatch = async query => {
-  if (eq(query, '')) {
+  if (isEmpty(query)) {
     appendToHistory(createQuery())
     return
   }
@@ -178,8 +192,8 @@ const dispatch = async query => {
   const parsedQuery = props.parser(query)
   addExecutedCommands(query)
 
-  // bash
-  const program = head(split(query, ' '))
+  // bash, make, sh
+  const program = head(defaultParser(query))
   // Returned command/component
   const getCommand = get(props.commands, program)
   if (isFunction(getCommand)) {
@@ -188,7 +202,7 @@ const dispatch = async query => {
     const component = defineComponent({
       provide () {
         return {
-          // This is constant
+          // This will unique for the component
           context: {
             parsedQuery,
             query
@@ -200,10 +214,11 @@ const dispatch = async query => {
     })
 
     appendToHistory(markRaw(component))
-  } else {
-    // Command not found
-    appendToHistory(createCommandNotFound(program))
+    return
   }
+
+  // Command not found
+  appendToHistory(createCommandNotFound(program))
 }
 
 watch(() => props.cursorPosition, cursorPosition => {
@@ -252,10 +267,12 @@ provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('setQuery', setQuery)
+provide('autocompletionResolver', props.autocompletionResolver)
 provide('helpText', props.helpText)
 provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('prompt', props.prompt)
+provide('searchResolver', props.searchResolver)
 provide('showHelp', props.showHelp)
 </script>
 

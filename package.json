@@ -23,6 +23,7 @@
     "lodash.lte": "^3.9.2",
     "lodash.nth": "^4.11.2",
     "lodash.split": "^4.4.2",
+    "lodash.trim": "^4.5.1",
     "module": "^1.2.5",
     "readline": "^1.3.0",
     "register-service-worker": "^1.7.1",

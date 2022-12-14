@@ -1,24 +1,17 @@
 import { defineComponent, h, inject, markRaw, nextTick, onMounted } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import XQuery from '@/components/XQuery'
+import split from 'lodash.split'
+import { trim } from 'lodash'
 // import { ARROW_UP_KEY, ARROW_DOWN_KEY, R_KEY, TAB_KEY } from '../constants/keys'
 
 export const newDefaultHistory = () => [createQuery()]
 
-export const createAutocompleteStdout = (name = 'VueCommandAutocompleteStdout', candidates = []) => markRaw(defineComponent({
-  name,
-  setup () {
-    const exit = inject('exit')
-    onMounted(exit)
-  },
+export const defaultParser = command => split(trim(command), ' ')
 
-  render: () => {
-    if (innerHTML) {
-      return h('div', { innerHTML: text })
-    }
-    return h('div', text)
-  }
-}))
+export const defaultAutocompletionResolver = () => undefined
+
+export const defaultSearchResolver = () => undefined
 
 export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
   name,

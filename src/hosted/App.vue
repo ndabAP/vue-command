@@ -26,7 +26,6 @@ import VueCommand from '@/components/VueCommand'
 import { createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
-import LoadingAnimation from './LoadingAnimation.vue'
 
 const PROMPT = '~neil@moon:#/'
 
@@ -41,8 +40,6 @@ export default {
 
     return {
       commands: {
-        animate: () => LoadingAnimation,
-
         clear: () => {
           history.value = []
           return createQuery()
