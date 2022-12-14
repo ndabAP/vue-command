@@ -64,8 +64,15 @@ body {
   margin: 0;
 
   .vue-command {
-    .vue-command__window {
+    .vue-command__actions {
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
+    }
+
+    .vue-command__content {
       height: 250px;
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 4px;
     }
   }
 }

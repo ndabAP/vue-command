@@ -2,23 +2,21 @@
   <div
     ref="vueCommand"
     class="vue-command">
-    <div class="vue-command__window">
-      <div class="vue-command__window__actions">
-        <span class="vue-command__window__action-button vue-command__window__action-button--close"></span>
-        <span class="vue-command__window__action-button vue-command__window__action-button--minimize"></span>
-        <span class="vue-command__window__action-button vue-command__window__action-button--fullscreen"></span>
-      </div>
+    <div class="vue-command__actions">
+      <span class="vue-command__action-button vue-command__action-button--close"></span>
+      <span class="vue-command__action-button vue-command__action-button--minimize"></span>
+      <span class="vue-command__action-button vue-command__action-button--fullscreen"></span>
+    </div>
 
+    <div
+      ref="vueCommandWindowContent"
+      class="vue-command__content">
       <div
-        ref="vueCommandWindowContent"
-        class="vue-command__window__content">
-        <div
-          v-for="(component, index) in local.history"
-          v-show="showHistoryEntry(index)"
-          :key="index"
-          :class="{ 'vue-command__history-entry': true, 'vue-command__window__content--fullscreen': local.isFullscreen }">
-          <component :is="component" />
-        </div>
+        v-for="(component, index) in local.history"
+        v-show="showHistoryEntry(index)"
+        :key="index"
+        :class="{ 'vue-command__history-entry': true, 'vue-command__content--fullscreen': local.isFullscreen }">
+        <component :is="component" />
       </div>
     </div>
   </div>
@@ -260,18 +258,17 @@ provide('setQuery', setQuery)
     }
   }
 
-  .vue-command__window {
-    background-color: #111316;
-    border-radius: 10px;
-  }
+  overflow-y: hidden;
+  overflow-x: hidden;
 
-  .vue-command__window__actions {
+  .vue-command__actions {
     @include clearfix();
-    position: relative;
+    position: inherit;
     padding: 10px;
+    background-color: #111316;
   }
 
-  .vue-command__window__action-button {
+  .vue-command__action-button {
     display: inline-block;
     border-radius: 100%;
 
@@ -287,20 +284,21 @@ provide('setQuery', setQuery)
     }
   }
 
-  .vue-command__window__action-button--close {
+  .vue-command__action-button--close {
     background-color: #ff5f58;
   }
 
-  .vue-command__window__action-button--minimize {
+  .vue-command__action-button--minimize {
     background-color: #ffbd2e;
   }
 
-  .vue-command__window__action-button--fullscreen {
+  .vue-command__action-button--fullscreen {
     background-color: #29ca41;
   }
 
-  .vue-command__window__content {
-    overflow-y: auto;
+  .vue-command__content {
+    overflow: auto;
+    background-color: #111316;
     display: block;
     padding: 0 12px 10px;
     margin: 0;
@@ -318,7 +316,7 @@ provide('setQuery', setQuery)
     }
   }
 
-  .vue-command__window__content--fullscreen {
+  .vue-command__content--fullscreen {
     display: flex;
     flex-direction: column;
     flex: 1;
