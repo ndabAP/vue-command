@@ -28,18 +28,7 @@
 <script setup>
 // TODO: Stop watchers
 import { defineProps, defineEmits, ref, onMounted, watch, inject, computed, defineComponent, nextTick } from 'vue'
-import eq from 'lodash.eq'
-import gt from 'lodash.gt'
-import lt from 'lodash.lt'
-import lte from 'lodash.lte'
-import nth from 'lodash.nth'
-
-// Suffix "KEY" is added to avoid JavaScript collisions
-const ARROW_UP_KEY = 38
-const ARROW_DOWN_KEY = 40
-const C_KEY = 67
-const R_KEY = 82
-const TAB_KEY = 9
+import isEmpty from 'lodash.isempty'
 
 const props = defineProps({
   prompt: {
@@ -71,6 +60,10 @@ const forwardHistory = async () => {
   const executedCommands = context.value.executedCommands
   const historyPosition = context.value.historyPosition
 
+  if (isEmpty(executedCommands)) {
+    return
+  }
+
   if (historyPosition < executedCommands.size) {
     setHistoryPosition(historyPosition + 1)
     query.value = [...executedCommands][historyPosition + 1]
@@ -80,20 +73,21 @@ const backwardHistory = () => {
   const executedCommands = context.value.executedCommands
   const historyPosition = context.value.historyPosition
 
-  if (historyPosition > executedCommands.size) {
+  if (isEmpty(executedCommands)) {
     return
   }
 
+  if (historyPosition > executedCommands.size) {
+    return
+  }
   if (historyPosition === executedCommands.size) {
     setHistoryPosition(executedCommands.size - 1)
     query.value = [...executedCommands][executedCommands.size - 1]
     return
   }
-
   if (historyPosition === 0) {
     query.value = [...executedCommands][0]
   }
-
   if (historyPosition > 0) {
     setHistoryPosition(historyPosition - 1)
     query.value = [...executedCommands][historyPosition - 1]

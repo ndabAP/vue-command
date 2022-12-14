@@ -59,15 +59,13 @@ export default {
 <style lang="scss">
 body {
   font-family: sans-serif;
-
   display: grid;
   place-items: center;
   margin: 0;
 
   .vue-command {
     .vue-command__window {
-      height: 300px;
-      width: 420px;
+      height: 250px;
     }
   }
 }

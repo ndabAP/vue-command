@@ -16,7 +16,7 @@
           v-for="(component, index) in local.history"
           v-show="showHistoryEntry(index)"
           :key="index"
-          class="vue-command__history-entry">
+          :class="{ 'vue-command__history-entry': true, 'vue-command__window__content--fullscreen': local.isFullscreen }">
           <component :is="component" />
         </div>
       </div>
@@ -263,8 +263,6 @@ provide('setQuery', setQuery)
   .vue-command__window {
     background-color: #111316;
     border-radius: 10px;
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 
   .vue-command__window__actions {
@@ -302,8 +300,9 @@ provide('setQuery', setQuery)
   }
 
   .vue-command__window__content {
+    overflow-y: auto;
     display: block;
-    padding: 4px 12px 10px;
+    padding: 0 12px 10px;
     margin: 0;
     white-space: pre-line;
     line-height: 1.33;
@@ -311,13 +310,19 @@ provide('setQuery', setQuery)
     font-size: 1rem;
     font-family: monospace;
     color: #ffffff;
+    height: 100%;
 
-    a,
-    span,
     input,
     textarea {
       color: #ffffff;
     }
+  }
+
+  .vue-command__window__content--fullscreen {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div v-if="context.isFullscreen.value">
+  <div v-show="context.isFullscreen">
     <textarea
       ref="nano"
-      rows="13"
+      rows="10"
       @keyup.ctrl.x.exact="exit">This is a Nano text editor emulator! Press Ctrl + x to leave.</textarea>
   </div>
 </template>
@@ -28,7 +28,6 @@ textarea {
   outline: none;
   flex: 1;
   width: 100%;
-  height: 100%;
   font-family: monospace;
   font-size: 1rem;
   resize: none;
