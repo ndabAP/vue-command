@@ -3,7 +3,7 @@
     <slot name="prompt">
       <span
         v-if="!hidePrompt"
-        class="vue-command__query-prompt">
+        class="vue-command__query__prompt">
         {{ prompt }}
       </span>
     </slot>
@@ -11,7 +11,7 @@
     <input
       ref="queryRef"
       v-model="query"
-      class="vue-command__query-input"
+      class="vue-command__query__input"
       :disabled="isOutdated"
       :placeholder="placeholder"
       autocapitalize="none"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, onMounted, watch, inject, defineExpose } from 'vue'
+import { ref, onMounted, watch, inject, defineExpose } from 'vue'
 
 const dispatch = inject('dispatch')
 const hidePrompt = inject('hidePrompt')
@@ -42,15 +42,16 @@ const focus = () => {
   queryRef.value.focus()
 }
 
+// Deactivates this query and dispatches it to execute the command
 const submit = () => {
   isOutdated.value = true
   dispatch(query.value)
 }
 
+// Apply given cursor position to actual cursor position
 const unwatchQuery = watch(query, () => {
   setCursorPosition(queryRef.value.selectionStart)
 })
-// Apply given cursor position to actual cursor position
 const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
   queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
 })
@@ -74,6 +75,7 @@ onMounted(() => {
   const helpTimeout = inject('helpTimeout')
   const showHelp = inject('showHelp')
 
+  // Show help and disable watcher
   if (showHelp && !isOutdated.value) {
     const timeout = setTimeout(() => {
       placeholder.value = helpText
@@ -97,7 +99,7 @@ defineExpose({
     display: flex;
   }
 
-  .vue-command__query-input {
+  .vue-command__query__input {
     background: none;
     border: none;
     outline: none;
@@ -111,7 +113,7 @@ defineExpose({
     }
   }
 
-  .vue-command__query-prompt {
+  .vue-command__query__prompt {
     margin-right: 0.25rem;
   }
 }

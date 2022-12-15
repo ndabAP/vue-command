@@ -20,7 +20,7 @@ $ npm i --save vue-command
   </main>
 </template>
 
-<script>
+<script lang="js">
 import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import { createStdout, createQuery, newDefaultHistory } from '@/library'

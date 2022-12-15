@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 const API_URL = 'https://api.chucknorris.io/jokes/random'
 const API_TIMEOUT = 5000 // 5 seconds
 

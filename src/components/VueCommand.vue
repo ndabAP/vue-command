@@ -3,9 +3,9 @@
     ref="vueCommandRef"
     class="vue-command">
     <div class="vue-command__actions">
-      <span class="vue-command__action-button vue-command__action-button--close"></span>
-      <span class="vue-command__action-button vue-command__action-button--minimize"></span>
-      <span class="vue-command__action-button vue-command__action-button--fullscreen"></span>
+      <span class="vue-command__actions__button vue-command__actions__button--close"></span>
+      <span class="vue-command__actions__button vue-command__actions__button--minimize"></span>
+      <span class="vue-command__actions__button vue-command__actions__button--fullscreen"></span>
     </div>
 
     <div
@@ -17,13 +17,14 @@
         v-show="shouldShowHistoryEntry(index)"
         :key="index"
         :class="{
-          'vue-command__history__entry-container': true,
-          'vue-command__history__entry-container--fullscreen': local.isFullscreen
+          'vue-command__history__entry': true,
+          'vue-command__history__entry--fullscreen': local.isFullscreen
         }">
+        <!-- User given components like bash -->
         <component
           :is="component"
-          ref="vueCommandHistoryEntriesRef"
-          class="vue-command__history__entry" />
+          ref="vueCommandHistoryEntryComponentRefs"
+          class="vue-command__history__entry__component" />
       </div>
     </div>
   </div>
@@ -53,6 +54,8 @@ const props = defineProps({
   },
 
   dispatchedQueries: {
+    // A set is self-cleans equal queries and assigns them as the first element
+    // if the set is converted to an array
     default: new Set(),
     required: false,
     type: Set
@@ -124,6 +127,7 @@ const props = defineProps({
   }
 })
 
+// Update user given properties
 const emits = defineEmits([
   'update:cursorPosition',
   'update:dispatchedQueries',
@@ -133,7 +137,8 @@ const emits = defineEmits([
   'update:query'
 ])
 
-const vueCommandHistoryEntriesRef = ref(null)
+// DOM references
+const vueCommandHistoryEntryComponentRefs = ref(null)
 const vueCommandHistoryRef = ref(null)
 const vueCommandRef = ref(null)
 
@@ -199,26 +204,28 @@ const autoHistoryPosition = () => {
 
 // Waits for the DOM and scrolls to the bottom of the history
 const scrollToBottom = async () => {
-  // TODO Listen for some query ready event and scroll only then
+  // TODO Listen for some query ready event and scroll only then since its
+  // triggered by a history change, whose entries are not finished loading, yet
   await nextTick()
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
 }
 
 // Not the query component needs to maintain the validation upon focus but
-// rather the terminal
+// rather the terminal itself
 const autoFocus = () => {
   if (local.isFullscreen) {
     return
   }
 
-  // Only focus if last history entry is query
+  // Only focus if last history entry is library query
+  // TODO Find a better way to verify that
   const lastHistoryEntry = last(local.history)
   if (!eq(get(lastHistoryEntry, '__name'), 'VueCommandQuery')) {
     return
   }
 
   // Do the actual focus
-  const lastHistoryEntryRef = last(vueCommandHistoryEntriesRef.value)
+  const lastHistoryEntryRef = last(vueCommandHistoryEntryComponentRefs.value)
   const focus = get(lastHistoryEntryRef, 'focus')
   focus()
 }
@@ -275,9 +282,10 @@ const exit = () => {
 }
 
 // Scroll to bottom if history was mutated
-watch([local.history, props.history], async () => {
+watch(local.history, async () => {
   await scrollToBottom()
 })
+// Mirror user properties with local ones
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
 })
@@ -301,26 +309,27 @@ watch(() => props.query, query => {
 })
 
 onMounted(() => {
-  // Bind given event listeners and pass references and exposed methods
+  // Bind given event listeners, pass DOM references and exposed methods and
+  // values
   const currentInstance = getCurrentInstance()
   for (const bindEventListener of props.eventResolver) {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
 })
 
-provide('terminal', terminal)
+provide('addDispatchedQuery', addDispatchedQuery)
 provide('dispatch', dispatch)
 provide('exit', exit)
-provide('addDispatchedQuery', addDispatchedQuery)
-provide('setCursorPosition', setCursorPosition)
-provide('setFullscreen', setFullscreen)
-provide('setHistoryPosition', setHistoryPosition)
-provide('setQuery', setQuery)
 provide('helpText', props.helpText)
 provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
-provide('prompt', props.prompt)
+provide('setCursorPosition', setCursorPosition)
+provide('setFullscreen', setFullscreen)
+provide('setHistoryPosition', setHistoryPosition)
 provide('showHelp', props.showHelp)
+provide('setQuery', setQuery)
+provide('prompt', props.prompt)
+provide('terminal', terminal)
 
 defineExpose({
   addDispatchedQuery,
@@ -360,7 +369,7 @@ defineExpose({
     background-color: #111316;
   }
 
-  .vue-command__action-button {
+  .vue-command__actions__button {
     display: inline-block;
     border-radius: 100%;
 
@@ -376,15 +385,15 @@ defineExpose({
     }
   }
 
-  .vue-command__action-button--close {
+  .vue-command__actions__button--close {
     background-color: #ff5f58;
   }
 
-  .vue-command__action-button--minimize {
+  .vue-command__actions__button--minimize {
     background-color: #ffbd2e;
   }
 
-  .vue-command__action-button--fullscreen {
+  .vue-command__actions__button--fullscreen {
     background-color: #29ca41;
   }
 
@@ -421,7 +430,7 @@ defineExpose({
     }
   }
 
-  .vue-command__history__entry-container--fullscreen {
+  .vue-command__history__entry--fullscreen {
     height: 100%;
   }
 }

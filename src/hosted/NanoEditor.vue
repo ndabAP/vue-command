@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
   inject: ['exit', 'setFullscreen', 'terminal'],
 
