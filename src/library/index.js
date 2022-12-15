@@ -11,43 +11,56 @@ export const C_KEY = 67
 export const R_KEY = 82
 export const TAB_KEY = 9
 
+// Returns a history with one query
 export const newDefaultHistory = () => [createQuery()]
 
+// Returns a list of with default event resolver
+export const newDefaultEventResolver = () => [historyEventResolver]
+
+// A simple command parser which splits arguments by spaces
 export const defaultParser = command => split(trim(command), ' ')
 
-export const defaultEventResolver = () => [historyEventResolver]
-
-// TODO: Test with instance
-export const historyEventResolver = vueCommandRef => {
-  const { provides } = vueCommandRef
+// Cycles through executed commands
+export const historyEventResolver = (refs, eventProvider) => {
+  const vueCommandHistoryRef = refs.vueCommandHistoryRef
 
   const eventResolver = event => {
-    // console.debug(vueCommandRef)
+    const terminal = eventProvider.terminal.value
+    const executedCommands = terminal.executedCommands
 
     switch (event.keyCode) {
+      // Validate history event
       case ARROW_UP_KEY:
       case ARROW_DOWN_KEY:
+
+        // TODO Check if arrows keys are pressed exactly without any other key
+
+        event.preventDefault()
 
         switch (event.keyCode) {
           // Back in history, index down
           case ARROW_UP_KEY:
-            // event.preventDefault()
-            if (provides.terminal.value.historyPosition !== 0) {
-              provides.setHistoryPosition(33)
-              provides.setQuery('TEST')
+            if (terminal.historyPosition !== 0) {
+              eventProvider.setHistoryPosition(terminal.historyPosition - 1)
+              eventProvider.setQuery([...executedCommands][terminal.historyPosition - 1])
             }
-
             break
 
           // Back in history, index up
           case ARROW_DOWN_KEY:
+            if (executedCommands.size - 1 >= terminal.historyPosition) {
+              eventProvider.setHistoryPosition(terminal.historyPosition + 1)
+              eventProvider.setQuery([...executedCommands][terminal.historyPosition + 1])
+            }
             break
         }
     }
   }
 
-  vueCommandRef.refs.vueCommandHistoryRef.addEventListener('keydown', eventResolver)
+  vueCommandHistoryRef.addEventListener('keydown', eventResolver)
 }
+
+// Creates a new query component
 export const createQuery = () => markRaw(VueCommandQuery)
 
 // Returns a Stdout component containing a span element with given text or as
