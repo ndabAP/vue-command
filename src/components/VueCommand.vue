@@ -177,14 +177,14 @@ const addDispatchedQuery = dispatchedQuery => {
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
 
-const setFullscreen = isFullscreen => {
-  local.isFullscreen = isFullscreen
-  emits('update:isFullscreen', isFullscreen)
-}
-
 const setHistoryPosition = historyPosition => {
   local.historyPosition = historyPosition
   emits('update:historyPosition', historyPosition)
+}
+
+const setFullscreen = isFullscreen => {
+  local.isFullscreen = isFullscreen
+  emits('update:isFullscreen', isFullscreen)
 }
 
 const setQuery = query => {

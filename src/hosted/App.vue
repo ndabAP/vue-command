@@ -23,7 +23,7 @@ $ npm i --save vue-command
 <script>
 import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
-import { createQuery, newDefaultHistory } from '@/library'
+import { createStdout, createQuery, newDefaultHistory } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
 
@@ -43,6 +43,14 @@ export default {
         clear: () => {
           history.value = []
           return createQuery()
+        },
+
+        help: () => {
+          return createStdout(`clear
+            help
+            nano
+            norris
+          `)
         },
 
         nano: () => NanoEditor,

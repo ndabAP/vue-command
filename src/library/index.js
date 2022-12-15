@@ -2,7 +2,7 @@ import { defineComponent, h, inject, markRaw, onMounted } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import VueCommandQuery from '@/components/VueCommandQuery'
 import split from 'lodash.split'
-import { trim } from 'lodash'
+import trim from 'lodash.trim'
 
 // Suffix "KEY" is added to avoid JavaScript collisions
 export const ARROW_UP_KEY = 38

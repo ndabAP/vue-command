@@ -24,7 +24,6 @@ export default {
 
 <style lang="scss" scoped>
 textarea {
-  font-family: monospace;
   height: 100%;
 }
 </style>
