@@ -29,7 +29,8 @@ import {
   onMounted,
   watch,
   inject,
-  defineExpose
+  defineExpose,
+  onBeforeMount
 } from 'vue'
 
 const dispatch = inject('dispatch')
@@ -74,9 +75,11 @@ const unwatchIsDisabled = watch(isOutdated, () => {
   placeholder.value = ''
 })
 
-onMounted(() => {
-  console.debug(terminal)
+onBeforeMount(() => {
   prompt.value = terminal.value.prompt
+})
+
+onMounted(() => {
   focus()
 
   const helpText = inject('helpText')

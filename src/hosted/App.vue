@@ -53,6 +53,9 @@ export default {
           if (parsed[1] === 'home') {
             prompt.value = `${PROMPT}/home`
           }
+          if ((parsed[1] === '../' || parsed[1] === '..') && prompt.value === `${PROMPT}/home`) {
+            prompt.value = `${PROMPT}`
+          }
 
           return createQuery()
         },
@@ -63,7 +66,8 @@ export default {
         },
 
         help: () => {
-          return createStdout(`clear
+          return createStdout(`cd
+            clear
             help
             nano
             norris
