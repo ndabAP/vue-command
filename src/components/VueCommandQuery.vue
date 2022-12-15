@@ -24,7 +24,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, inject, defineExpose } from 'vue'
+import {
+  ref,
+  onMounted,
+  watch,
+  inject,
+  defineExpose
+} from 'vue'
 
 const dispatch = inject('dispatch')
 const hidePrompt = inject('hidePrompt')

@@ -1,4 +1,10 @@
-import { defineComponent, h, inject, markRaw, onMounted } from 'vue'
+import {
+  defineComponent,
+  h,
+  inject,
+  markRaw,
+  onMounted
+} from 'vue'
 import VueCommand from '@/components/VueCommand'
 import VueCommandQuery from '@/components/VueCommandQuery'
 import split from 'lodash.split'

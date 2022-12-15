@@ -23,7 +23,11 @@ $ npm i --save vue-command
 <script lang="js">
 import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
-import { createStdout, createQuery, newDefaultHistory } from '@/library'
+import {
+  createStdout,
+  createQuery,
+  newDefaultHistory
+} from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
 

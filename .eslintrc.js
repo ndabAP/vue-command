@@ -10,9 +10,14 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
+  plugins: [
+    'modules-newline'
+  ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+    'modules-newline/import-declaration-newline': 'error',
 
     'vue/no-mutating-props': 'off',
     'no-unused-vars': 'off',

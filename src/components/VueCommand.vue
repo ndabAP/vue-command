@@ -31,8 +31,29 @@
 </template>
 
 <script setup>
-import { ref, defineExpose, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick, getCurrentInstance } from 'vue'
-import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, newDefaultEventResolver } from '@/library'
+import {
+  ref,
+  defineExpose,
+  defineProps,
+  defineEmits,
+  markRaw,
+  defineComponent,
+  provide,
+  watch,
+  reactive,
+  h,
+  computed,
+  onMounted,
+  nextTick,
+  getCurrentInstance
+} from 'vue'
+import {
+  createCommandNotFound,
+  createQuery,
+  defaultParser,
+  newDefaultHistory,
+  newDefaultEventResolver
+} from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
