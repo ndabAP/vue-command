@@ -12,29 +12,28 @@
       ref="queryRef"
       v-model="query"
       class="vue-command__query-input"
-      :disabled="isDisabled"
+      :disabled="isOutdated"
       :placeholder="placeholder"
       autocapitalize="none"
       autocorrect="off"
       type="text"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
-      @keyup.enter.exact="dispatch($event.target.value)" />
+      @keyup.enter.exact="submit($event.target.value)" />
   </div>
 </template>
 
 <script setup>
 import { defineEmits, ref, onMounted, watch, inject, defineExpose } from 'vue'
 
-const emits = defineEmits(['dispatch'])
-
-const terminal = inject('terminal')
+const dispatch = inject('dispatch')
+const hidePrompt = inject('hidePrompt')
 const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
-const hidePrompt = inject('hidePrompt')
+const terminal = inject('terminal')
 const prompt = inject('prompt')
 
-const isDisabled = ref(false)
+const isOutdated = ref(false)
 const placeholder = ref('')
 const query = ref('')
 const queryRef = ref(null)
@@ -43,29 +42,10 @@ const focus = () => {
   queryRef.value.focus()
 }
 
-const dispatch = query => {
-  isDisabled.value = true
-  emits('dispatch', query)
+const submit = () => {
+  isOutdated.value = true
+  dispatch(query.value)
 }
-
-onMounted(() => {
-  focus()
-
-  const helpText = inject('helpText')
-  const helpTimeout = inject('helpTimeout')
-  const showHelp = inject('showHelp')
-
-  if (showHelp && !isDisabled.value) {
-    const timeout = setTimeout(() => {
-      placeholder.value = helpText
-    }, helpTimeout)
-
-    const unwatchIsDisabled = watch(isDisabled, () => {
-      clearTimeout(timeout)
-      unwatchIsDisabled()
-    })
-  }
-})
 
 const unwatchQuery = watch(query, () => {
   setCursorPosition(queryRef.value.selectionStart)
@@ -74,18 +54,36 @@ const unwatchQuery = watch(query, () => {
 const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
   queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
 })
-// To allow user to mutate query from outside not only from a history component
-const unwatchTerminalQuery = watch(() => terminal.value.query, newQuery => {
-  if (!isDisabled.value) {
-    query.value = newQuery
-  }
+// This allows to mutate the query from outside the component and not only as a
+// history entry
+const unwatchTerminalQuery = watch(() => terminal.value.query, queryValue => {
+  query.value = queryValue
 })
-const unwatchIsDisabled = watch(isDisabled, () => {
+const unwatchIsDisabled = watch(isOutdated, () => {
   unwatchTerminalQuery()
   unwatchQuery()
   unwatchTerminalCursorPosition()
-  placeholder.value = ''
   unwatchIsDisabled()
+  placeholder.value = ''
+})
+
+onMounted(() => {
+  focus()
+
+  const helpText = inject('helpText')
+  const helpTimeout = inject('helpTimeout')
+  const showHelp = inject('showHelp')
+
+  if (showHelp && !isOutdated.value) {
+    const timeout = setTimeout(() => {
+      placeholder.value = helpText
+    }, helpTimeout)
+
+    const unwatchIsDisabled = watch(isOutdated, () => {
+      clearTimeout(timeout)
+      unwatchIsDisabled()
+    })
+  }
 })
 
 defineExpose({

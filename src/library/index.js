@@ -1,6 +1,6 @@
 import { defineComponent, h, inject, markRaw, onMounted } from 'vue'
 import VueCommand from '@/components/VueCommand'
-import XQuery from '@/components/XQuery'
+import VueCommandQuery from '@/components/VueCommandQuery'
 import split from 'lodash.split'
 import { trim } from 'lodash'
 
@@ -17,11 +17,12 @@ export const defaultParser = command => split(trim(command), ' ')
 
 export const defaultEventResolver = () => [historyEventResolver]
 
+// TODO: Test with instance
 export const historyEventResolver = vueCommandRef => {
   const { provides } = vueCommandRef
 
   const eventResolver = event => {
-    console.debug(vueCommandRef)
+    // console.debug(vueCommandRef)
 
     switch (event.keyCode) {
       case ARROW_UP_KEY:
@@ -47,26 +48,7 @@ export const historyEventResolver = vueCommandRef => {
 
   vueCommandRef.refs.vueCommandHistoryRef.addEventListener('keydown', eventResolver)
 }
-
-export const createQuery = (name = 'VueCommandXQuery') => markRaw(defineComponent({
-  name,
-  setup () {
-    const dispatch = inject('dispatch')
-    const terminal = inject('terminal')
-
-    const prompt = terminal.value.prompt
-
-    return () => [
-      h(
-        XQuery,
-        {
-          prompt,
-          onDispatch: dispatch
-        }
-      )
-    ]
-  }
-}))
+export const createQuery = () => markRaw(VueCommandQuery)
 
 // Returns a Stdout component containing a span element with given text or as
 // inner HTML

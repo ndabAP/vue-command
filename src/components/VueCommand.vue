@@ -16,19 +16,21 @@
         v-for="(component, index) in local.history"
         v-show="shouldShowHistoryEntry(index)"
         :key="index"
-        :ref="`vueCommandHistoryEntryRef-${index}`"
         :class="{
-          'vue-command__history-entry': true,
-          'vue-command__history-entry--fullscreen': local.isFullscreen
+          'vue-command__history__entry-container': true,
+          'vue-command__history__entry-container--fullscreen': local.isFullscreen
         }">
-        <component :is="component" />
+        <component
+          :is="component"
+          ref="vueCommandHistoryEntriesRef"
+          class="vue-command__history__entry" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineExpose, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick, getCurrentInstance } from 'vue'
+import { ref, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick, getCurrentInstance } from 'vue'
 import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultEventResolver } from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
@@ -132,8 +134,10 @@ const emits = defineEmits([
 ])
 
 const vueCommandHistoryRef = ref(null)
+const vueCommandHistoryEntriesRef = ref(null)
 const vueCommandRef = ref(null)
 
+// A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
   executedCommands: props.executedCommands,
@@ -177,6 +181,7 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
+// Sets history position by given executed commands
 const autoHistoryPosition = () => {
   setHistoryPosition(local.executedCommands.size)
 }
@@ -186,8 +191,23 @@ const scrollToBottom = async () => {
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
 }
 
+// Not the query component needs to maintain the validation upon focus but
+// rather the terminal
 const autoFocus = () => {
-  // TODO Autofocus to last query if last history entry is query.
+  if (local.isFullscreen) {
+    return
+  }
+
+  // Only focus if last history entry is query
+  const lastHistoryEntry = last(local.history)
+  if (!eq(get(lastHistoryEntry, '__name'), 'VueCommandQuery')) {
+    return
+  }
+
+  // Do the actual focus
+  const lastHistoryEntryRef = last(vueCommandHistoryEntriesRef.value)
+  const focus = get(lastHistoryEntryRef, 'focus')
+  focus()
 }
 
 const dispatch = async query => {
@@ -224,8 +244,8 @@ const dispatch = async query => {
     appendToHistory(markRaw(component))
     return
   }
-
   // Command not found
+
   appendToHistory(createCommandNotFound(program))
 }
 
@@ -255,8 +275,9 @@ watch(() => props.query, query => {
 })
 
 onMounted(() => {
-  for (const invoker of props.eventResolver) {
-    invoker(getCurrentInstance())
+  for (const bindEventListener of props.eventResolver) {
+    // TODO: Invoke with vueCommandRef as "this"?
+    bindEventListener(getCurrentInstance())
   }
 })
 
@@ -288,12 +309,6 @@ provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('prompt', props.prompt)
 provide('showHelp', props.showHelp)
-
-// defineExpose(reactive({
-//   historyPosition: local.historyPosition,
-//   setHistoryPosition,
-//   setQuery
-// }))
 </script>
 
 <style lang="scss">
@@ -371,7 +386,7 @@ provide('showHelp', props.showHelp)
     }
   }
 
-  .vue-command__history-entry--fullscreen {
+  .vue-command__history__entry-container--fullscreen {
     height: 100%;
   }
 }
