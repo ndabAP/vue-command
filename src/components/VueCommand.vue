@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="vueCommand"
+    ref="vueCommandRef"
     class="vue-command">
     <div class="vue-command__actions">
       <span class="vue-command__action-button vue-command__action-button--close"></span>
@@ -14,7 +14,7 @@
       @click="autoFocus">
       <div
         v-for="(component, index) in local.history"
-        v-show="showHistoryEntry(index)"
+        v-show="shouldShowHistoryEntry(index)"
         :key="index"
         :ref="`vueCommandHistoryEntryRef-${index}`"
         :class="{
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick } from 'vue'
+import { ref, defineExpose, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick, getCurrentInstance } from 'vue'
 import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultEventResolver } from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
@@ -97,11 +97,6 @@ const props = defineProps({
     type: Boolean
   },
 
-  options: {
-    required: false,
-    type: Object
-  },
-
   parser: {
     default: defaultParser,
     required: false,
@@ -137,6 +132,7 @@ const emits = defineEmits([
 ])
 
 const vueCommandHistoryRef = ref(null)
+const vueCommandRef = ref(null)
 
 const local = reactive({
   cursorPosition: props.cursorPosition,
@@ -147,7 +143,7 @@ const local = reactive({
   query: props.query
 })
 
-const showHistoryEntry = computed(() => {
+const shouldShowHistoryEntry = computed(() => {
   return index => !local.isFullscreen || (local.isFullscreen && (index === local.history.length - 1))
 })
 
@@ -181,7 +177,7 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-const autoSetHistoryPosition = () => {
+const autoHistoryPosition = () => {
   setHistoryPosition(local.executedCommands.size)
 }
 
@@ -258,6 +254,12 @@ watch(() => props.query, query => {
   // User has to take care of new cursor position
 })
 
+onMounted(() => {
+  for (const invoker of props.eventResolver) {
+    invoker(getCurrentInstance())
+  }
+})
+
 provide('terminal', computed(() => ({
   cursorPosition: local.cursorPosition,
   executedCommands: local.executedCommands,
@@ -270,7 +272,7 @@ provide('dispatch', dispatch)
 provide('exit', () => {
   // Tear down
   appendToHistory(createQuery())
-  autoSetHistoryPosition()
+  autoHistoryPosition()
   setCursorPosition(0)
   setQuery('')
   setFullscreen(false)
@@ -286,6 +288,12 @@ provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('prompt', props.prompt)
 provide('showHelp', props.showHelp)
+
+// defineExpose(reactive({
+//   historyPosition: local.historyPosition,
+//   setHistoryPosition,
+//   setQuery
+// }))
 </script>
 
 <style lang="scss">

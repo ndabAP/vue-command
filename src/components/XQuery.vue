@@ -19,8 +19,7 @@
       type="text"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
-      @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown="resolveEvents($event, terminal)" />
+      @keyup.enter.exact="dispatch($event.target.value)" />
   </div>
 </template>
 
@@ -34,25 +33,11 @@ const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
 const hidePrompt = inject('hidePrompt')
 const prompt = inject('prompt')
-const eventResolver = inject('eventResolver')
 
 const isDisabled = ref(false)
 const placeholder = ref('')
 const query = ref('')
 const queryRef = ref(null)
-
-// To allow user to mutate query from outside not only from a history component
-const unwatchTerminalQuery = watch(() => terminal.value.query, newQuery => {
-  if (!isDisabled.value) {
-    query.value = newQuery
-  }
-})
-
-const resolveEvents = (event, terminal) => {
-  for (const invoker of eventResolver) {
-    invoker(event, terminal)
-  }
-}
 
 const focus = () => {
   queryRef.value.focus()
@@ -62,17 +47,6 @@ const dispatch = query => {
   isDisabled.value = true
   emits('dispatch', query)
 }
-
-const unwatchQuery = watch(query, () => {
-  setCursorPosition(queryRef.value.selectionStart)
-})
-
-// Apply given cursor position to actual cursor position
-// TODO This gets called for every input since cursor position is mutated at the
-// mother component. It's eventually necessary
-const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
-  queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
-})
 
 onMounted(() => {
   focus()
@@ -93,6 +67,19 @@ onMounted(() => {
   }
 })
 
+const unwatchQuery = watch(query, () => {
+  setCursorPosition(queryRef.value.selectionStart)
+})
+// Apply given cursor position to actual cursor position
+const unwatchTerminalCursorPosition = watch(() => terminal.value.cursorPosition, cursorPosition => {
+  queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
+})
+// To allow user to mutate query from outside not only from a history component
+const unwatchTerminalQuery = watch(() => terminal.value.query, newQuery => {
+  if (!isDisabled.value) {
+    query.value = newQuery
+  }
+})
 const unwatchIsDisabled = watch(isDisabled, () => {
   unwatchTerminalQuery()
   unwatchQuery()
