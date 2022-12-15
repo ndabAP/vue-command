@@ -170,6 +170,7 @@ const local = reactive({
   history: props.history,
   historyPosition: props.historyPosition,
   isFullscreen: props.isFullscreen,
+  prompt: props.prompt,
   query: props.query
 })
 
@@ -180,6 +181,7 @@ const terminal = computed(() => ({
   history: local.history,
   historyPosition: local.historyPosition,
   isFullscreen: local.isFullscreen,
+  prompt: local.prompt,
   query: local.query
 }))
 
@@ -271,6 +273,15 @@ const dispatch = async query => {
   if (isFunction(getCommand)) {
     // Command found
     const command = await Promise.resolve(getCommand(parsedQuery))
+
+    // If command is query, don't provide any context and
+    if (eq(get(command, '__name'), 'VueCommandQuery')) {
+      const query = command
+      appendToHistory(query)
+      return
+    }
+
+    // Command is user created component
     const component = defineComponent({
       provide () {
         return {
@@ -324,6 +335,9 @@ watch(() => props.historyPosition, historyPosition => {
 watch(() => props.isFullscreen, isFullscreen => {
   local.isFullscreen = isFullscreen
 })
+watch(() => props.prompt, prompt => {
+  local.prompt = prompt
+})
 watch(() => props.query, query => {
   local.query = query
   // User has to take care of new cursor position
@@ -349,7 +363,6 @@ provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('showHelp', props.showHelp)
 provide('setQuery', setQuery)
-provide('prompt', props.prompt)
 provide('terminal', terminal)
 
 defineExpose({

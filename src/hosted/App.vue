@@ -31,7 +31,7 @@ import {
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
 
-const PROMPT = '~neil@moon:#/'
+const PROMPT = '~$'
 
 export default {
   components: {
@@ -40,10 +40,23 @@ export default {
 
   setup () {
     const history = ref(newDefaultHistory())
+    const prompt = ref(PROMPT)
     const query = ref('')
 
     return {
+
       commands: {
+        cd: (parsed) => {
+          if (parsed.length < 1) {
+            return
+          }
+          if (parsed[1] === 'home') {
+            prompt.value = `${PROMPT}/home`
+          }
+
+          return createQuery()
+        },
+
         clear: () => {
           history.value = []
           return createQuery()
@@ -62,7 +75,7 @@ export default {
       },
 
       history,
-      prompt: PROMPT,
+      prompt,
       query
     }
   }

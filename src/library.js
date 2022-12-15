@@ -69,6 +69,7 @@ export const historyEventResolver = (refs, eventProvider) => {
 }
 
 // Creates a new query component
+// TODO Add name
 export const createQuery = () => markRaw(VueCommandQuery)
 
 // Creates a textual "stdout" component containing a div element with given text

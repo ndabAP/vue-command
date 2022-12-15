@@ -37,10 +37,10 @@ const hidePrompt = inject('hidePrompt')
 const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
 const terminal = inject('terminal')
-const prompt = inject('prompt')
 
 const isOutdated = ref(false)
 const placeholder = ref('')
+const prompt = ref('')
 const query = ref('')
 const queryRef = ref(null)
 
@@ -75,6 +75,8 @@ const unwatchIsDisabled = watch(isOutdated, () => {
 })
 
 onMounted(() => {
+  console.debug(terminal)
+  prompt.value = terminal.value.prompt
   focus()
 
   const helpText = inject('helpText')
