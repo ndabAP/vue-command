@@ -9,12 +9,14 @@
     </div>
 
     <div
-      ref="vueCommandHistory"
-      class="vue-command__history">
+      ref="vueCommandHistoryRef"
+      class="vue-command__history"
+      @click="autoFocus">
       <div
         v-for="(component, index) in local.history"
         v-show="showHistoryEntry(index)"
         :key="index"
+        :ref="`vueCommandHistoryEntryRef-${index}`"
         :class="{
           'vue-command__history-entry': true,
           'vue-command__history-entry--fullscreen': local.isFullscreen
@@ -26,12 +28,14 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted } from 'vue'
+import { ref, defineProps, defineEmits, markRaw, defineComponent, provide, watch, reactive, h, computed, onMounted, nextTick } from 'vue'
 import { createCommandNotFound, createQuery, defaultParser, newDefaultHistory, defaultEventResolver } from '@/library'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
 import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
+import last from 'lodash.last'
+import eq from 'lodash.eq'
 
 const props = defineProps({
   commands: {
@@ -132,6 +136,8 @@ const emits = defineEmits([
   'update:query'
 ])
 
+const vueCommandHistoryRef = ref(null)
+
 const local = reactive({
   cursorPosition: props.cursorPosition,
   executedCommands: props.executedCommands,
@@ -179,11 +185,21 @@ const autoSetHistoryPosition = () => {
   setHistoryPosition(local.executedCommands.size)
 }
 
+const scrollToBottom = async () => {
+  await nextTick()
+  vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+}
+
+const autoFocus = () => {
+  // TODO Autofocus to last query if last history entry is query.
+}
+
 const dispatch = async query => {
   if (isEmpty(query)) {
     appendToHistory(createQuery())
     return
   }
+  // bash --help
   addExecutedCommands(query)
 
   // ['bash', '--help']
@@ -217,6 +233,9 @@ const dispatch = async query => {
   appendToHistory(createCommandNotFound(program))
 }
 
+watch([local.history, props.history], async () => {
+  await scrollToBottom()
+})
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
 })
@@ -239,10 +258,6 @@ watch(() => props.query, query => {
   // User has to take care of new cursor position
 })
 
-onMounted(() => {
-  autoSetHistoryPosition()
-})
-
 provide('terminal', computed(() => ({
   cursorPosition: local.cursorPosition,
   executedCommands: local.executedCommands,
@@ -256,9 +271,9 @@ provide('exit', () => {
   // Tear down
   appendToHistory(createQuery())
   autoSetHistoryPosition()
-  setFullscreen(false)
   setCursorPosition(0)
   setQuery('')
+  setFullscreen(false)
 })
 provide('addExecutedCommands', addExecutedCommands)
 provide('setCursorPosition', setCursorPosition)

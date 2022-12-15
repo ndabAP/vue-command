@@ -20,12 +20,12 @@
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
       @keyup.enter.exact="dispatch($event.target.value)"
-      @keydown.exact="resolveEvents($event, terminal)" />
+      @keydown="resolveEvents($event, terminal)" />
   </div>
 </template>
 
 <script setup>
-import { defineEmits, ref, onMounted, watch, inject } from 'vue'
+import { defineEmits, ref, onMounted, watch, inject, defineExpose } from 'vue'
 
 const emits = defineEmits(['dispatch'])
 
@@ -53,6 +53,7 @@ const resolveEvents = (event, terminal) => {
     invoker(event, terminal)
   }
 }
+
 const focus = () => {
   queryRef.value.focus()
 }
@@ -98,6 +99,10 @@ const unwatchIsDisabled = watch(isDisabled, () => {
   unwatchTerminalCursorPosition()
   placeholder.value = ''
   unwatchIsDisabled()
+})
+
+defineExpose({
+  focus
 })
 </script>
 
