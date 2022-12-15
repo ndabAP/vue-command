@@ -1,7 +1,31 @@
 {
   "name": "vue-command",
-  "version": "0.1.0",
-  "private": true,
+  "version": "24.0.0",
+  "private": false,
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndabAP/vue-command"
+  },
+  "license": "MIT",
+  "keywords": [
+    "bash",
+    "emulator",
+    "sh",
+    "shell",
+    "terminal",
+    "vue",
+    "vuejs"
+  ],
+  "main": "./dist/vue-command.common.js",
+  "files": [
+    "dist/*.css",
+    "dist/*.css.map",
+    "dist/*.js",
+    "dist/*.js.map"
+  ],
   "scripts": {
     "build": "yarn build:lib; yarn build:docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
@@ -13,7 +37,6 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "fstream-ignore": "^1.0.5",
-    "getopts": "^2.3.0",
     "lodash.eq": "^4.0.0",
     "lodash.get": "^4.4.2",
     "lodash.gt": "^3.9.2",
@@ -29,12 +52,17 @@
     "module": "^1.2.5",
     "readline": "^1.3.0",
     "register-service-worker": "^1.7.1",
-    "shell": "^0.5.1",
-    "shell-quote": "^1.7.4",
-    "util": "^0.12.5",
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^9.0.1",
+    "@commitlint/config-conventional": "^9.1.2",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.1.1",
+    "@semantic-release/npm": "^7.0.6",
+    "@semantic-release/release-notes-generator": "^9.0.1",
     "@vue/cli-plugin-babel": "~4.5.13",
     "@vue/cli-plugin-eslint": "~4.5.13",
     "@vue/cli-plugin-pwa": "~4.5.13",
@@ -53,7 +81,14 @@
     "eslint-plugin-vue": "^7.0.0",
     "sass": "^1.56.2",
     "sass-loader": "^8.0.2",
+    "semantic-release": "^17.1.2",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS; yarn lint --fix",
+      "pre-push": "yarn test"
+    }
   }
 }
