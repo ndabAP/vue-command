@@ -11,22 +11,22 @@ export const C_KEY = 67
 export const R_KEY = 82
 export const TAB_KEY = 9
 
-// Returns a history with one query
+// Returns a history with one query as first input
 export const newDefaultHistory = () => [createQuery()]
 
-// Returns a list of with default event resolver
+// Returns a list of default event resolver
 export const newDefaultEventResolver = () => [historyEventResolver]
 
 // A simple command parser which splits arguments by spaces
 export const defaultParser = command => split(trim(command), ' ')
 
-// Cycles through executed commands
+// Cycles through executed commands with arrow keyes
 export const historyEventResolver = (refs, eventProvider) => {
   const vueCommandHistoryRef = refs.vueCommandHistoryRef
 
   const eventResolver = event => {
     const terminal = eventProvider.terminal.value
-    const executedCommands = terminal.executedCommands
+    const dispatchedQueries = terminal.dispatchedQueries
 
     switch (event.keyCode) {
       // Validate history event
@@ -42,16 +42,18 @@ export const historyEventResolver = (refs, eventProvider) => {
           case ARROW_UP_KEY:
             if (terminal.historyPosition !== 0) {
               eventProvider.setHistoryPosition(terminal.historyPosition - 1)
-              eventProvider.setQuery([...executedCommands][terminal.historyPosition - 1])
+              eventProvider.setQuery([...dispatchedQueries][terminal.historyPosition - 1])
             }
+
             break
 
           // Back in history, index up
           case ARROW_DOWN_KEY:
-            if (executedCommands.size - 1 >= terminal.historyPosition) {
+            if (dispatchedQueries.size - 1 >= terminal.historyPosition) {
               eventProvider.setHistoryPosition(terminal.historyPosition + 1)
-              eventProvider.setQuery([...executedCommands][terminal.historyPosition + 1])
+              eventProvider.setQuery([...dispatchedQueries][terminal.historyPosition + 1])
             }
+
             break
         }
     }
@@ -63,8 +65,8 @@ export const historyEventResolver = (refs, eventProvider) => {
 // Creates a new query component
 export const createQuery = () => markRaw(VueCommandQuery)
 
-// Returns a Stdout component containing a span element with given text or as
-// inner HTML
+// Creates a textual "stdout" component containing a div element with given text
+// or as inner HTML
 export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false) => markRaw(defineComponent({
   name,
   setup () {
@@ -80,7 +82,7 @@ export const createStdout = (text, name = 'VueCommandStdout', innerHTML = false)
   }
 }))
 
-// Returns a command not found component
+// Creates a command not found component
 export const createCommandNotFound = (command, text = 'command not found', name = 'VueCommandCommandNotFound') => createStdout(`${command}: ${text}`, name)
 
 export default VueCommand

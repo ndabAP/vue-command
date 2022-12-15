@@ -52,16 +52,16 @@ const props = defineProps({
     type: Number
   },
 
+  dispatchedQueries: {
+    default: new Set(),
+    required: false,
+    type: Set
+  },
+
   eventResolver: {
     default: newDefaultEventResolver,
     required: false,
     type: Array
-  },
-
-  executedCommands: {
-    default: new Set(),
-    required: false,
-    type: Set
   },
 
   helpText: {
@@ -126,7 +126,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:cursorPosition',
-  'update:executedCommands',
+  'update:dispatchedQueries',
   'update:history',
   'update:historyPosition',
   'update:isFullscreen',
@@ -140,7 +140,7 @@ const vueCommandRef = ref(null)
 // A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
-  executedCommands: props.executedCommands,
+  dispatchedQueries: props.dispatchedQueries,
   history: props.history,
   historyPosition: props.historyPosition,
   isFullscreen: props.isFullscreen,
@@ -150,7 +150,7 @@ const local = reactive({
 // Reactive terminal states
 const terminal = computed(() => ({
   cursorPosition: local.cursorPosition,
-  executedCommands: local.executedCommands,
+  dispatchedQueries: local.dispatchedQueries,
   history: local.history,
   historyPosition: local.historyPosition,
   isFullscreen: local.isFullscreen,
@@ -172,9 +172,9 @@ const setCursorPosition = cursorPosition => {
   emits('update:cursorPosition', cursorPosition)
 }
 
-const addExecutedCommands = executedCommands => {
-  local.executedCommands.add(executedCommands)
-  emits('update:executedCommands', local.executedCommands)
+const addDispatchedQuery = dispatchedQuery => {
+  local.dispatchedQueries.add(dispatchedQuery)
+  emits('update:dispatchedQueries', local.dispatchedQueries)
 }
 
 const setFullscreen = isFullscreen => {
@@ -194,11 +194,12 @@ const setQuery = query => {
 
 // Sets history position by given executed commands
 const autoHistoryPosition = () => {
-  setHistoryPosition(local.executedCommands.size)
+  setHistoryPosition(local.dispatchedQueries.size)
 }
 
 // Waits for the DOM and scrolls to the bottom of the history
 const scrollToBottom = async () => {
+  // TODO Listen for some query ready event and scroll only then
   await nextTick()
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
 }
@@ -231,7 +232,7 @@ const dispatch = async query => {
     return
   }
   // bash --help
-  addExecutedCommands(query)
+  addDispatchedQuery(query)
 
   // ['bash', '--help']
   const parsedQuery = props.parser(query)
@@ -273,14 +274,15 @@ const exit = () => {
   setFullscreen(false)
 }
 
+// Scroll to bottom if history was mutated
 watch([local.history, props.history], async () => {
   await scrollToBottom()
 })
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
 })
-watch(() => props.executedCommands, executedCommands => {
-  local.executedCommands = executedCommands
+watch(() => props.dispatchedQueries, dispatchedQueries => {
+  local.dispatchedQueries = dispatchedQueries
   // User has to take care of new history position
 })
 watch(() => props.history, history => {
@@ -299,6 +301,7 @@ watch(() => props.query, query => {
 })
 
 onMounted(() => {
+  // Bind given event listeners and pass references and exposed methods
   const currentInstance = getCurrentInstance()
   for (const bindEventListener of props.eventResolver) {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
@@ -308,7 +311,7 @@ onMounted(() => {
 provide('terminal', terminal)
 provide('dispatch', dispatch)
 provide('exit', exit)
-provide('addExecutedCommands', addExecutedCommands)
+provide('addDispatchedQuery', addDispatchedQuery)
 provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
@@ -320,7 +323,7 @@ provide('prompt', props.prompt)
 provide('showHelp', props.showHelp)
 
 defineExpose({
-  addExecutedCommands,
+  addDispatchedQuery,
   dispatch,
   exit,
   setCursorPosition,
@@ -401,6 +404,19 @@ defineExpose({
 
     input,
     textarea {
+      background: none;
+      border: none;
+      outline: none;
+      flex: 1;
+      width: 100%;
+      font-size: 1rem;
+      resize: none;
+      overflow: hidden;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
       color: #ffffff;
     }
   }

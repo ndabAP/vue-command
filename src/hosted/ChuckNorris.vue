@@ -22,7 +22,8 @@ export default {
   }),
 
   async mounted () {
-    // Abort getting joke when API request takes longer than defined in "API_TIMEOUT"
+    // Abort getting joke when API request takes longer than defined in
+    // "API_TIMEOUT"
     setTimeout(() => {
       if (this.isLoading) {
         abortController.abort()
