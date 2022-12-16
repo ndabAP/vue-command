@@ -1,18 +1,27 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
-    jest: true
+    node: true
   },
-
   extends: [
-    'plugin:vue/essential',
+    'plugin:vue/vue3-essential',
     '@vue/standard'
   ],
-
+  parserOptions: {
+    parser: 'babel-eslint'
+  },
+  plugins: [
+    'modules-newline'
+  ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+    'modules-newline/import-declaration-newline': 'error',
+
+    'vue/no-mutating-props': 'off',
+    'no-unused-vars': 'off',
+
     'vue/html-closing-bracket-newline': ['error', {
       singleline: 'never',
       multiline: 'never'
@@ -28,8 +37,15 @@ module.exports = {
     'vue/html-indent': 'error',
     quotes: ['error', 'single']
   },
-
-  parserOptions: {
-    parser: 'babel-eslint'
-  }
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 }

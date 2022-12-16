@@ -1,9 +1,10 @@
-import Vue from 'vue'
+// This mounts the documentation and not the library
+import { createApp } from 'vue'
+import HostedApp from './hosted/App.vue'
+import './registerServiceWorker'
 
-import App from './hosted/App.vue'
+const app = createApp(HostedApp)
 
-Vue.config.productionTip = false
+app.config.unwrapInjectedRef = true
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')

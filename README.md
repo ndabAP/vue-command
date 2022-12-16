@@ -4,12 +4,15 @@ A fully working, most feature-rich Vue.js terminal emulator. See the [demo](http
 
 ## Features
 
-- Parses arguments with [`getopts`](https://www.npmjs.com/package/getopts)
+- Simple, yet extensible API
 - Supports asynchronous commands
-- Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
+- Supports fullscreen mode
+- Provide your own parser (falls back to simple one)
+- Provide your own event resolver
 - Autocompletion resolver (with <kbd>↹</kbd>)
-- Customize terminal with slots
-- Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>)
+- Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
+- Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)
+- Customize the terminal with slots
 
 ## Installation
 
@@ -19,7 +22,8 @@ $ npm install vue-command --save
 
 ## Usage
 
-Let's start with a very simple example. We want to send "Hello world" to `Stdout` when entering `hello-world`.
+Let's start with a dead simple example. We want to send "Hello world" to
+`Stdout` when entering `hello-world`.
 
 ```vue
 <template>
@@ -27,42 +31,47 @@ Let's start with a very simple example. We want to send "Hello world" to `Stdout
 </template>
 
 <script>
-import VueCommand, { createStdout } from 'vue-command'
-import 'vue-command/dist/vue-command.css'
+import VueCommand, { createStdout } from "vue-command";
+import "vue-command/dist/vue-command.css";
 
 export default {
   components: {
-    VueCommand
+    VueCommand,
   },
 
-  data: () =>  ({
-    commands: { 
-      'hello-world': () => createStdout('Hello world') 
-    }
-  })
-}
+  data: () => ({
+    commands: {
+      "hello-world": () => createStdout("Hello world"),
+    },
+  }),
+};
 </script>
 ```
 
-Now a more complex one. Let's assume we want to build the Nano editor available in many shells. 
+Now a more complex one. Let's assume we want to build the nano editor available
+in many shells.
 
-We will use the provided `environment` variable to make sure the editor is only visible when this command is executing and inject a function called `terminate` to tell the terminal that the command has been finished when the user enters <kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we inject the `setIsFullscreen` function to switch the terminal into fullscreen mode.
+We inject `terminal` to make sure the editor is only visible when the terminal
+is in fullscreen mode and also a function called `exit` to tell the terminal
+that the command has been finished when the user enters
+<kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we use `setFullscreen` to
+switch the terminal into fullscreen mode.
 
 ```vue
 <template>
-  <div v-if="environment.isExecuting">
-    <textarea
-      ref="nano"
-      @keydown.ctrl.88="terminate">This is a text editor! Press Ctrl + x to leave.</textarea>
+  <div v-show="terminal.isFullscreen" style="height: 100%">
+    <textarea ref="nano" @keyup.ctrl.x.exact="exit">
+This is a nano text editor emulator! Press Ctrl + x to leave.</textarea
+    >
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
-  inject: ['setIsFullscreen', 'terminate'],
+  inject: ['exit', 'setFullscreen', 'terminal'],
 
   created () {
-    this.setIsFullscreen(true)
+    this.setFullscreen(true)
   },
 
   mounted () {
@@ -70,6 +79,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+textarea {
+  height: 100%;
+}
+</style>
 ```
 
 Now the command has to return the component.
@@ -80,452 +95,186 @@ Now the command has to return the component.
 </template>
 
 <script>
-import VueCommand from 'vue-command'
-import 'vue-command/dist/vue-command.css'
-
-import NanoEditor from '@/components/NanoEditor.vue'
+import VueCommand from "vue-command";
+import "vue-command/dist/vue-command.css";
+import NanoEditor from "@/components/NanoEditor.vue";
 
 export default {
   components: {
-    VueCommand
+    VueCommand,
   },
 
-  data: () =>  ({
-    commands: { 
-      nano: () => NanoEditor 
-    }
-  })
-}
+  data: () => ({
+    commands: {
+      nano: () => NanoEditor,
+    },
+  }),
+};
 </script>
 ```
 
 ## Properties
 
-There are two types of commands: Built-in and regular ones. In most cases regular commands are appropriate. Built-in commands provide higher flexibility, see section [Built-in](#built-in) for more information. 
+Some properties can be changed, therefore, adding the `v-model` directive is
+required.
 
-Some properties can be changed by the terminal, therefore, the `sync` modifier has to be added.
-
-| Property                  | Type       | Default                                                                           | Sync | Description                                                                                  |
-|---------------------------|------------|-----------------------------------------------------------------------------------|------|----------------------------------------------------------------------------------------------|
-| `autocompletion-resolver` | `Function` | `null`                                                                            | No   | See [Autocompletion resolver](#autocompletion-resolver)                                      |
-| `built-in`                | `Object`   | `{}`                                                                              | No   | See [Built-in](#built-in) section                                                            |
-| `commands`                | `Object`   | `{}`                                                                              | No   | See [Commands](#commands) section                                                            |
-| `cursor`                  | `Number`   | `0`                                                                               | Yes  | Sets the `Stdin` cursor position                                                             |
-| `event-listeners`         | `Array`    | `[EVENT_LISTENERS.autocomplete, EVENT_LISTENERS.history, EVENT_LISTENERS.search]` | No   | See [Event listeners](#event-listeners) section                                              |
-| `executed`                | `Set`      | `new Set()`                                                                       | Yes  | Executed programs, see ["Overwriting `executed` functions"](#overwriting-executed-functions) |
-| `help-text`               | `String`   | `Type help`                                                                       | No   | Sets the placeholder                                                                         |
-| `help-timeout`            | `Number`   | `4000`                                                                            | No   | Sets the placeholder timeout                                                                 |
-| `hide-bar`                | `Boolean`  | `false`                                                                           | No   | Hides the bar                                                                                |
-| `hide-prompt`             | `Boolean`  | `false`                                                                           | No   | Hides the prompt                                                                             |
-| `hide-title`              | `Boolean`  | `false`                                                                           | No   | Hides the title                                                                              |
-| `history`                 | `Array`    | `[]`                                                                              | Yes  | Executed commands                                                                            |
-| `intro`                   | `String`   | `Fasten your seatbelts!`                                                          | No   | Sets the intro                                                                               |
-| `is-fullscreen`           | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal fullscreen mode                                                            |
-| `is-in-progress`          | `Boolean`  | `false`                                                                           | Yes  | Sets the terminal progress status                                                            |
-| `not-found`               | `String`   | `not found`                                                                       | No   | Sets the command not found text                                                              |
-| `parser-options`          | `Object`   | `{}`                                                                              | No   | Sets the [parser options](https://github.com/jorgebucaran/getopts#api)                       |
-| `pointer`                 | `Number`   | `0`                                                                               | Yes  | Sets the command pointer                                                                     |
-| `prompt`                  | `String`   | `~neil@moon:#`                                                                    | No   | Sets the prompt                                                                              |
-| `show-help`               | `Boolean`  | `false`                                                                           | No   | Shows the placeholder                                                                        |
-| `show-intro`              | `Boolean`  | `false`                                                                           | No   | Shows the intro                                                                              |
-| `stdin`                   | `String`   | `''`                                                                              | Yes  | Sets the current `Stdin`                                                                     |
-| `title`                   | `String`   | `neil@moon: ~`                                                                    | No   | Sets the title                                                                               |
+| Property             | Description                                     | Type       | Default value                 | Required | `v-model` |
+| -------------------- | ----------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
+| `commands`           | See [Commands](#commands)                       | `Object`   | `{}`                          | No       | No        |
+| `cursor-position`    | Cursor position                                 | `Number`   | `0`                           | No       | Yes       |
+| `dispatched-queries` | Non-empty dispatched queries, successful or not | `Set`      | `new Set()`                   | No       | Yes       |
+| `event-resolver`     | See [Event resolver](#Event-resolver) section   | `Function` | See `newDefaultEventResolver` | No       | No        |
+| `help-text`          | Query help                                      | `String`   | `''`                          | No       | Yes       |
+| `help-timeout`       | Query help timeout                              | `Number`   | `3500`                        | No       | No        |
+| `hide-prompt`        | Hides the prompt                                | `Boolean`  | `false`                       | No       | No        |
+| `history`            | Terminal history                                | `Array`    | `[]`                          | No       | Yes       |
+| `history-position`   | Points to the latest dispatched query entry     | `Number`   | `0`                           | No       | Yes       |
+| `is-fullscreen`      | Terminal fullscreen mode                        | `Boolean`  | `false`                       | No       | Yes       |
+| `options-resolver`   | See [Options resolver](#Options-resolver)       | `Function` | `null`                        | No       | No        |
+| `parser`             | Query parser                                    | `Function` | See `defaultParser`           | No       | No        |
+| `prompt`             | Terminal prompt                                 | `String`   | `~$`                          | No       | No        |
+| `show-help`          | Show query help                                 | `Boolean`  | `false`                       | No       | No        |
+| `query`              | Terminal query                                  | `String`   | `''`                          | No       | Yes       |
 
 ### Commands
 
-`commands` must be an object containing key-value pairs where key is the command and the value is a function that will be called with the [`getops` arguments](https://www.npmjs.com/package/getopts). The function can return a `Promise` and must return or resolve a Vue.js component. To return strings or nothing use one of the convenient helper methods:
+`commands` must be an object containing key-value pairs where key is the command
+and the value is a function that will be called with the parsed arguments. The
+function can return a `Promise` and must return or resolve a Vue.js component.
+To return strings or a new query, use one of the convenient helper methods.
 
-| Function                                                                                                             | Description                                                                     |
-|----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| `createStdout(content: String, isInnerText: Boolean, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object` | Returns a `Stdout` component containing a span element with given inner content |
-| `createStderr(content: String, isEscapeHtml: Boolean, name: String, ...mixins: Array): Object`                       | Returns a `Stderr` component containing a span element with given inner content |
-| `createDummyStdout(name: String, ...mixins: Array): Object`                                                          | Returns a dummy `Stdout` to show a `Stdin`                                      |
+### Event resolver
 
-Helper methods can be imported by name:
+It's possible to provide an array property `eventResolver` which is called when
+the terminal is mounted. Each event resolver will be called with the terminals
+references and exposed values.
 
-```js
-import { createStdout, createStderr, createDummyStdout } from 'vue-command'
-```
+The libraries `defaultHistoryEventResolver` makes usage of that and allows to
+cycle through commands with <kbd>↑</kbd>/<kbd>↓</kbd>.
 
-If none of the helper methods is used, the command has to be manually terminated inside the component. Next to termination it's possible to inject the following functions to manipulate the terminal or signal an event:
+### Options resolver
 
-| Function                                 | Description                                                 |
-|------------------------------------------|-------------------------------------------------------------|
-| `emitExecute`                            | Emit command execution event                                |
-| `emitExecuted`                           | Emit command executed event                                 |
-| `emitInput(input: String)`               | Emit the current input                                      |
-| `setCursor(cursor: Number)`              | Set cursor position                                         |
-| `setIsFullscreen(isFullscreen: Boolean)` | Change if the terminal is in fullscreen mode                |
-| `setIsInProgress(isInProgress: Boolean)` | Change if the terminal is in progress                       |
-| `setPointer(pointer: Number)`            | Set command history pointer                                 |
-| `setStdin(stdin: String)`                | Set the current `Stdin`                                     |
-| `terminate`                              | Executes common final tasks after command has been finished |
-
-Functions can be injected into your component by name:
-
-```js
-inject: ['setIsFullscreen', 'setIsInProgress', 'terminate']
-```
-
-In your component you have access to a `context` and an `environment` variable. The `environment` variable contains the following properties (note that built-in commands have to take care by theirselves about the terminals state):
-
-| Property                | Description                                        |
-|-------------------------|----------------------------------------------------|
-| `isExecuting: Boolean`  | Is the current component executing                 |
-| `isFullscreen: Boolean` | Is the terminal in fullscreen mode                 |
-| `isInProgress: Boolean` | Is any command active                              |
-
-The `context` variable contains the following properties:
-
-| Property         | Description                        |
-|------------------|------------------------------------|
-| `cursor: Number` | Copy of cursor position at `Stdin` |
-| `executed: Set`  | Copy of executed programs          |
-| `history: Array` | Copy of executed commands          |
-| `parsed: Object` | Parsed `getops` arguments          |
-| `pointer: Number`| Copy of history command pointer    |
-| `stdin: String`  | Copy of `Stdin`                    | 
-
-### Built-in
-
-Built-in commands provide more control over the terminals behaviour. On the other side, they have to take care about every regular command step. As a matter of fact, regular commands are just calling helper methods or change properties which could be also called or changed by built-in commands. Regular commands can be seen as a facade to built-in commands.
-
-Since built-in commands can capture any command, it's necessary to take care of autocompletion and the command not found experience.
-
-The first argument that is called within the built-in command is the unparsed `Stdin`. It's possible to use a custom parser at this place. The second argument is the terminal instance. You can use the `commandNotFound` method if no built-in or regular command has been found.
-
-To fully simulate a regular command circle a built-in command has to follow these steps:
-
-1. Call `setIsInProgress` with `true` to tell there is a command in progress
-2. Add the programm to the `executed` `Set` property
-3. Increase the history pointer with `setPointer`
-4. Execute actual task
-5. Push the `Stdout` component into the `history` property
-6. Call `setIsInProgress` with `false` to tell there is no command in progress anymore
-
-### Autocompletion resolver
-
-It is possible to provide a function that is called when the user hits the <kbd>↹</kbd> key. This function needs to take care of the autocompletion experience and should make usage of properties like `history` and `stdin`. The following shows a possible, simple autocompletion function:
-
-```js
-this.autocompletionResolver = () => {
-  // Make sure only programs are autocompleted. See below for version with options
-  const command = this.stdin.split(' ')
-  if (command.length > 1) {
-    return
-  }
-
-  const autocompleteableProgram = command[0]
-  // Collect all autocompletion candidates
-  let candidates = []
-  const programs = [...Object.keys(this.commands)].sort()
-  programs.forEach(program => {
-    if (program.startsWith(autocompleteableProgram)) {
-      candidates.push(program)
-    }
-  })
-
-  // Autocompletion resolved into multiple results
-  if (this.stdin !== '' && candidates.length > 1) {
-    this.history.push({
-      // Build table programmatically
-      render: createElement => {
-        const columns = candidates.length < 5 ? candidates.length : 4
-        const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
-
-        let index = 0
-        let table = []
-        for (let i = 0; i < rows; i++) {
-          let row = []
-          for (let j = 0; j < columns; j++) {
-            row.push(createElement('td', candidates[index]))
-            index++
-          }
-
-          table.push(createElement('tr', [row]))
-        }
-
-        return createElement('table', { style: { width: '100%' } }, [table])
-      }
-    })
-  }
-
-  // Autocompletion resolved into one result
-  if (candidates.length === 1) {
-    this.stdin = candidates[0]
-  }
-}
-```
-
-<details>
-  <summary>Advanced version with option autocompletion</summary>
-  
-  ```js
-  this.autocompletionResolver = () => {
-    // Preserve cursor position
-    const cursor = this.cursor
-
-    // Reverse concatenate autocompletable according to cursor
-    let pointer = this.cursor
-    let autocompleteableStdin = ''
-    while (this.stdin[pointer - 1] !== ' ' && pointer - 1 > 0) {
-      pointer--
-      autocompleteableStdin = `${this.stdin[pointer]}${autocompleteableStdin}`
-    }
-
-    // Divide by arguments
-    const command = this.stdin.split(' ')
-
-    // Autocompleteable is program
-    if (command.length === 1) {
-      const autocompleteableProgram = command[0]
-      // Collect all autocompletion candidates
-      const candidates = []
-      const programs = [...Object.keys(this.commands)].sort()
-      programs.forEach(program => {
-        if (program.startsWith(autocompleteableProgram)) {
-          candidates.push(program)
-        }
-      })
-
-      // Autocompletion resolved into multiple results
-      if (this.stdin !== '' && candidates.length > 1) {
-        this.history.push({
-          // Build table programmatically
-          render: createElement => {
-            const columns = candidates.length < 5 ? candidates.length : 4
-            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
-
-            let index = 0
-            const table = []
-            for (let i = 0; i < rows; i++) {
-              const row = []
-              for (let j = 0; j < columns; j++) {
-                row.push(createElement('td', candidates[index]))
-                index++
-              }
-
-              table.push(createElement('tr', [row]))
-            }
-
-            return createElement('table', { style: { width: '100%' } }, [table])
-          }
-        })
-      }
-
-      // Autocompletion resolved into one result
-      if (candidates.length === 1) {
-        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
-        const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 0)
-
-          unwatch()
-        })
-
-        this.stdin = candidates[0]
-      }
-
-      return
-    }
-
-    // Check if option might be completed already or option is last tokens
-    if ((this.stdin[cursor] !== '' && this.stdin[cursor] !== ' ') && typeof this.stdin[cursor] !== 'undefined') {
-      return
-    }
-
-    // Get the executable
-    const program = command[0]
-
-    // Check if any autocompleteable exists
-    if (typeof this.options.long[program] === 'undefined' && typeof this.options.short[program] === 'undefined') {
-      return
-    }
-
-    // Autocompleteable is long option
-    if (autocompleteableStdin.substring(0, 2) === '--') {
-      const candidates = []
-      this.options.long[program].forEach(option => {
-        // If only dashes are present, user requests all options
-        if (`--${option}`.startsWith(autocompleteableStdin) || autocompleteableStdin === '--') {
-          candidates.push(option)
-        }
-      })
-
-      // Autocompletion resolved into one result
-      if (candidates.length === 1) {
-        const autocompleted = `${this.stdin.substring(0, pointer - 1)} --${candidates[0]}`
-        const rest = `${this.stdin.substring(this.cursor)}`
-
-        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
-        const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 2)
-
-          unwatch()
-        })
-
-        this.stdin = `${autocompleted}${rest}`
-
-        return
-      }
-
-      // Autocompletion resolved into multiple result
-      if (autocompleteableStdin === '--' || candidates.length > 1) {
-        this.history.push({
-          // Build table programmatically
-          render: createElement => {
-            const columns = candidates.length < 5 ? candidates.length : 4
-            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
-
-            let index = 0
-            const table = []
-            for (let i = 0; i < rows; i++) {
-              const row = []
-              for (let j = 0; j < columns; j++) {
-                row.push(createElement('td', `--${candidates[index]}`))
-                index++
-              }
-
-              table.push(createElement('tr', [row]))
-            }
-
-            return createElement('table', { style: { width: '100%' } }, [table])
-          }
-        })
-      }
-
-      return
-    }
-
-    // Autocompleteable is option
-    if (autocompleteableStdin.substring(0, 1) === '-') {
-      const candidates = []
-      this.options.short[program].forEach(option => {
-        // If only one dash is present, user requests all options
-        if (`-${option}`.startsWith(autocompleteableStdin) || autocompleteableStdin === '-') {
-          candidates.push(option)
-        }
-      })
-
-      // Autocompletion resolved into one result
-      if (candidates.length === 1) {
-        const autocompleted = `${this.stdin.substring(0, pointer - 1)} -${candidates[0]}`
-        const rest = `${this.stdin.substring(this.cursor)}`
-
-        // Mutating Stdin mutates the cursor, so we've to wait to push it to the end
-        const unwatch = this.$watch(() => this.cursor, () => {
-          this.cursor = cursor + (candidates[0].length - autocompleteableStdin.length + 1)
-
-          unwatch()
-        })
-
-        this.stdin = `${autocompleted}${rest}`
-
-        return
-      }
-
-      // Autocompletion resolved into multiple result
-      if (autocompleteableStdin === '-' || candidates.length > 1) {
-        this.history.push({
-          // Build table programmatically
-          render: createElement => {
-            const columns = candidates.length < 5 ? candidates.length : 4
-            const rows = candidates.length < 5 ? 1 : Math.ceil(candidates.length / columns)
-
-            let index = 0
-            const table = []
-            for (let i = 0; i < rows; i++) {
-              const row = []
-              for (let j = 0; j < columns; j++) {
-                row.push(createElement('td', `-${candidates[index]}`))
-                index++
-              }
-
-              table.push(createElement('tr', [row]))
-            }
-
-            return createElement('table', { style: { width: '100%' } }, [table])
-          }
-        })
-      }
-    }
-  }
-  ```
-</details>
-
-### Event listeners
-
-Event listeners trigger terminal behaviour under certain conditions like pressing a button. Pass an array of event listeners you want to bind via the `event-listeners` property. This library provides three event listeners per default which can be imported:
-
-- **Autocompletion**: Autocompletion when pressing <kbd>↹</kbd>
-- **History**: Cycle through history with <kbd>↑</kbd>/<kbd>↓</kbd>
-- **Search**: Search history with <kbd>Ctrl</kbd> and <kbd>r</kbd>
-
-An event listener is called with the Vue.js component instance as argument. 
+The terminal provides a built-in autocompletion for the given commands. As soon
+as the query has been autocompleted by the terminal, it's calling the options
+resolver provided as property. The resolver is called with the program, parsed
+query and a setter to update the query.
 
 ## Slots
 
 ### Bar
 
-It's possible to fully customize the terminal bar using slots as shown in the following. **Note**: If using the bar slot, the properties `hide-bar` and `title` will be ignored.
+You can customize the terminals bar with the named slot `bar`. This will replace
+the whole element, including the action buttons and its assigned CSS classes.
 
 ```vue
-<template>
-  <vue-command>
-    <div slot="bar">
-      Pokedex
-    </div>
-  </vue-command>
-</template>
+<vue-command :commands="commands">
+  <template #bar>&times; &#95; &square;</template>
+</vue-command>
 ```
 
-### Prompt
+## Library
 
-Customize the prompt with the `prompt` slot. **Note**: If using the prompt slot, the property `prompt` will be ignored and the CSS class `term-ps` has to be manually applied.
+| Function                      | Parameters                                                         | Description                           |
+| ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
+| `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
+| `createStdout`                | `text, name = 'VueCommandStdout', innerHTML = false`               | Creates a "stdout" component          |
+| `createQuery`                 |                                                                    | Creates a query component             |
+| `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
+| `defaultParser`               | `query`                                                            | Returns the default parser            |
+| `newDefaultEventResolver`     |                                                                    | Returns a new default event resolver  |
+| `newDefaultHistory`           |                                                                    | Returns a new default history         |
 
-```vue
-<template>
-  <vue-command prompt="neil">
-    <span
-      class="term-ps" 
-      slot="prompt">
-      {{ prompt }} ready to take off:
-    </span>
-  </vue-command>
-</template>
+Helper methods can be imported by name:
+
+```js
+import { createStdout, createQuery } from "vue-command";
 ```
 
-## Events
+## Provided
 
-| Event     | Type        | Description                       | Note
-|-----------|-------------|-----------------------------------|-----------------------------------------------------|
-| `input`   | `String`    | Emits the current input           |                                                     |
-| `execute` | `String`    | Emits when executing command      | Built-in commands have to manually emit this event  |
-| `executed`| `String`    | Emits after command execution     | Built-in commands have to manually emit this event. All helper methods emit this event  |
+| Provided             |
+| -------------------- |
+| `addDispatchedQuery` |
+| `dispatch`           |
+| `decrementHistory`   |
+| `exit`               |
+| `helpText`           |
+| `helpTimeout`        |
+| `hidePrompt`         |
+| `incrementHistory`   |
+| `optionsResolver`    |
+| `parser`             |
+| `programs`           |
+| `setCursorPosition`  |
+| `setFullscreen`      |
+| `setHistoryPosition` |
+| `showHelp`           |
+| `setQuery`           |
+| `terminal`           |
+
+Provider can be injected into your component by name:
+
+```js
+inject: ["exit", "terminal"],
+```
+
+## Exposed
+
+| Exposed              |
+| -------------------- |
+| `addDispatchedQuery` |
+| `decrementHistory`   |
+| `dispatch`           |
+| `exit`               |
+| `incrementHistory`   |
+| `programs`           |
+| `setCursorPosition`  |
+| `setFullscreen`      |
+| `setHistoryPosition` |
+| `setQuery`           |
+| `terminal`           |
+
+## Nice-to-haves
+
+These features didn't make it into the last release. If you would like to
+contribute please consult `CONTRIBUTING.md`.
+
+- Draggable terminal
+- Events (like query dispatched, close button clicked, etc.)
+- More terminal slots
+- Multi-line queries
+- Syntax highlighting
 
 ## Browser support
 
-This library uses the `ResizeObserver` to track if the terminals inner height changes. You may need a pollyfill to support your target browser.
-
-## Overwriting `executed` functions
-
-To track when the `executed` property has been mutated, this library overwrites the functions `add`, `clear` and `delete` of it. That means if you plan to overwrite the named `Set` functions by yourself, this library won't work. 
+This library uses the `ResizeObserver` to track if the terminals height changes.
+You may need a pollyfill to support your target browser.
 
 ## Projects using vue-command
 
+- [curvy-idle-game](https://github.com/n4n0GH/curvy-idle-game) - Short idle game
+  where you get to pat her
 - [docker-management-dashboard](https://github.com/zero4994/docker-management-dashboard) - A management dashboard for your local docker containers
-- [saber-theme-klieh](https://github.com/krmax44/saber-theme-klieh) - A Saber theme mimicking a terminal
-- [ts-git](https://github.com/nfriend/ts-git) - A naïve implementation of git, written in TypeScript
-- [curvy-idle-game](https://github.com/n4n0GH/curvy-idle-game) - Short idle game where you get to pat her
+- [saber-theme-klieh](https://github.com/krmax44/saber-theme-klieh) - A Saber
+  theme mimicking a terminal
+- [ts-git](https://github.com/nfriend/ts-git) - A naïve implementation of git,
+  written in TypeScript
+- [Venom](https://github.com/J0LGER/Venom) - Venom is a Command and Control framework
 
 ## Chuck Norris API
 
-The Chuck Norris jokes are comming from [this](https://api.chucknorris.io/) API. This library has no relation to Chuck Norris or the services provided by the API.
+The Chuck Norris jokes are comming from [this](https://api.chucknorris.io/) API.
+This library has no relation to Chuck Norris or the services provided by the
+API.
 
 ## Author
 
-[Julian Claus](https://www.julian-claus.de) and contributors. Special thanks to [krmax44](https://github.com/krmax44) for the amazing work!
+[Julian Claus](https://www.julian-claus.de) and contributors. Special thanks to
+[krmax44](https://github.com/krmax44) for the amazing work!
 
-I apologize to some contributors that are not in the Git history anymore since I had to delete the repository because of problems with [semantic-release](https://github.com/semantic-release/semantic-release). 
+I apologize to some contributors that are not in the Git history anymore since I
+had to delete the repository because of problems with
+[semantic-release](https://github.com/semantic-release/semantic-release).
 
 ## License
 
