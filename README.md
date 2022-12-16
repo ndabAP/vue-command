@@ -54,8 +54,8 @@ in many shells.
 We inject `terminal` to make sure the editor is only visible when the terminal
 is in fullscreen mode and also a function called `exit` to tell the terminal
 that the command has been finished when the user enters
-<kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we use `setFullscreen` to
-switch the terminal into fullscreen mode.
+<kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we use `setFullscreen` to switch
+the terminal into fullscreen mode.
 
 ```vue
 <template>
