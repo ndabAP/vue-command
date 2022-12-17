@@ -23,7 +23,8 @@
     "shell",
     "terminal",
     "vue",
-    "vuejs"
+    "vuejs",
+    "xterm"
   ],
   "main": "./dist/vue-command.common.js",
   "files": [
