@@ -1,3 +1,14 @@
+## [25.0.0](https://github.com/ndabAP/vue-command/compare/v24.0.0...v25.0.0) (2022-12-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* enforce release
+
+### Miscellaneous Chores
+
+* enforce release ([0fcaba4](https://github.com/ndabAP/vue-command/commit/0fcaba4450ecb12dc1c49ebde207fb8c8892bcb7))
+
 ## [24.0.0](https://github.com/ndabAP/vue-command/compare/v23.0.1...v24.0.0) (2022-12-17)
 
 
