@@ -1,7 +1,5 @@
 <template>
-  <div
-    v-show="terminal.isFullscreen"
-    style="height: 100%">
+  <div v-show="terminal.isFullscreen">
     <textarea
       ref="nano"
       @keyup.ctrl.x.exact="exit">This is a nano text editor emulator! Press Ctrl + x to leave.</textarea>
@@ -23,6 +21,7 @@ export default {
 </script>
 
 <style scoped>
+div,
 textarea {
   height: 100%;
 }

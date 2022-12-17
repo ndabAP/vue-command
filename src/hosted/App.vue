@@ -1,7 +1,7 @@
 <template>
   <main>
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
-    <p>A fully working, most feature-rich Vue.js terminal emulator.</p>
+    <p>A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support!</p>
 
     <vue-command
       v-model:history="history"
@@ -25,7 +25,9 @@ import VueCommand from '@/components/VueCommand'
 import {
   createStdout,
   createQuery,
-  newDefaultHistory
+  listFormatter,
+  newDefaultHistory,
+  textFormatter
 } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
@@ -51,7 +53,8 @@ export default {
           if (parsed[1] === 'home') {
             prompt.value = `${PROMPT}/home`
           }
-          if ((parsed[1] === '../' || parsed[1] === '..') && prompt.value === `${PROMPT}/home`) {
+          if ((parsed[1] === '../' || parsed[1] === '..') &&
+            prompt.value === `${PROMPT}/home`) {
             prompt.value = `${PROMPT}`
           }
 
@@ -63,16 +66,15 @@ export default {
           return createQuery()
         },
 
-        'hello-world': () => createStdout('Hello world'),
+        'hello-world': () => {
+          const text = 'Hello world'
+          return createStdout(textFormatter(text))
+        },
 
+        // TODO Create terminal-like columns
         help: () => {
-          return createStdout(`cd
-            clear
-            hello-world
-            help
-            nano
-            norris
-          `)
+          const list = ['cd', 'hello-world', 'help', 'nano', 'norris']
+          return createStdout(listFormatter(...list))
         },
 
         nano: () => NanoEditor,
@@ -94,34 +96,40 @@ body {
   place-items: center;
   margin: 0;
 
-  .vue-command {
-    width: 400px;
+  main {
+    max-width: 400px;
 
-    ::-webkit-scrollbar {
-      width: 6px;
+    p {
+      font-family: monospace;
     }
 
-    ::-webkit-scrollbar-track {
-      background: #252525;
-    }
+    .vue-command {
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: #f1f1f1;
-    }
+      ::-webkit-scrollbar-track {
+        background: #252525;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #333;
-    }
+      ::-webkit-scrollbar-thumb {
+        background: #f1f1f1;
+      }
 
-    .vue-command__actions {
-      border-top-right-radius: 5px;
-      border-top-left-radius: 5px;
-    }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #333;
+      }
 
-    .vue-command__history {
-      height: 260px;
-      border-bottom-right-radius: 5px;
-      border-bottom-left-radius: 5px;
+      .vue-command__bar {
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+      }
+
+      .vue-command__history {
+        height: 260px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
     }
   }
 }

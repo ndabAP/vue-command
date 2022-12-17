@@ -3,11 +3,13 @@
     ref="vueCommandRef"
     class="vue-command">
     <slot name="bar">
-      <div class="vue-command__actions">
+      <div
+        v-if="!hideBar"
+        class="vue-command__bar">
         <!-- TODO Emit unique event per button -->
-        <span class="vue-command__actions__button vue-command__actions__button--close"></span>
-        <span class="vue-command__actions__button vue-command__actions__button--minimize"></span>
-        <span class="vue-command__actions__button vue-command__actions__button--fullscreen"></span>
+        <span class="vue-command__bar__button vue-command__bar__button--close"></span>
+        <span class="vue-command__bar__button vue-command__bar__button--minimize"></span>
+        <span class="vue-command__bar__button vue-command__bar__button--fullscreen"></span>
       </div>
     </slot>
 
@@ -68,7 +70,7 @@ import isEmpty from 'lodash.isempty'
 import last from 'lodash.last'
 import eq from 'lodash.eq'
 import nth from 'lodash.nth'
-import gte from 'lodash.gte'
+import lt from 'lodash.lt'
 
 const props = defineProps({
   commands: {
@@ -91,7 +93,7 @@ const props = defineProps({
   },
 
   eventResolver: {
-    default: newDefaultEventResolver,
+    default: () => newDefaultEventResolver(),
     required: false,
     type: Array
   },
@@ -102,9 +104,15 @@ const props = defineProps({
   },
 
   helpTimeout: {
-    default: 3500,
+    default: 3000,
     required: false,
     type: Number
+  },
+
+  hideBar: {
+    default: false,
+    required: false,
+    type: Boolean
   },
 
   hidePrompt: {
@@ -114,11 +122,12 @@ const props = defineProps({
   },
 
   history: {
-    default: newDefaultHistory,
+    default: () => newDefaultHistory(),
     required: false,
     type: Array
   },
 
+  // TODO Eventually remove this since its a built-in feature
   historyPosition: {
     default: 0,
     required: false,
@@ -139,7 +148,8 @@ const props = defineProps({
   },
 
   parser: {
-    default: defaultParser,
+    // See: https://vuejs.org/guide/components/props.html#prop-validation
+    default: query => defaultParser(query),
     required: false,
     type: Function
   },
@@ -230,19 +240,25 @@ const appendToHistory = (...components) => {
 }
 
 const incrementHistory = () => {
-  if (gte(local.dispatchedQueries.size - 1, local.historyPosition)) {
-    setHistoryPosition(local.historyPosition + 1)
-    const query = nth([...local.dispatchedQueries], local.historyPosition)
-    setQuery(query)
+  // History pointer must be lower query history
+  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
+    return
   }
+
+  setHistoryPosition(local.historyPosition + 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
 }
 
 const decrementHistory = () => {
-  if (!eq(local.historyPosition, 0)) {
-    setHistoryPosition(local.historyPosition - 1)
-    const query = nth([...local.dispatchedQueries], local.historyPosition)
-    setQuery(query)
+  // History pointer must be greater zero
+  if (eq(local.historyPosition, 0)) {
+    return
   }
+
+  setHistoryPosition(local.historyPosition - 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
 }
 
 const setCursorPosition = cursorPosition => {
@@ -405,6 +421,7 @@ onMounted(() => {
 })
 
 provide('addDispatchedQuery', addDispatchedQuery)
+provide('appendToHistory', appendToHistory)
 provide('dispatch', dispatch)
 provide('decrementHistory', decrementHistory)
 provide('exit', exit)
@@ -424,6 +441,7 @@ provide('terminal', terminal)
 
 defineExpose({
   addDispatchedQuery,
+  appendToHistory,
   decrementHistory,
   dispatch,
   exit,
@@ -457,22 +475,25 @@ defineExpose({
   overflow-y: hidden;
   overflow-x: hidden;
 
-  .vue-command__actions {
+  .vue-command__bar {
     @include clearfix();
     position: inherit;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: #111316;
   }
 
-  .vue-command__actions__button {
+  .vue-command__bar__button {
     display: inline-block;
     border-radius: 100%;
 
     &:before {
       content: ' ';
       display: block;
-      height: 13px;
-      width: 13px;
+      height: 12px;
+      width: 12px;
     }
 
     &:not(:last-child) {
@@ -480,23 +501,24 @@ defineExpose({
     }
   }
 
-  .vue-command__actions__button--close {
+  .vue-command__bar__button--close {
     background-color: #ff5f58;
   }
 
-  .vue-command__actions__button--minimize {
+  .vue-command__bar__button--minimize {
     background-color: #ffbd2e;
   }
 
-  .vue-command__actions__button--fullscreen {
+  .vue-command__bar__button--fullscreen {
     background-color: #29ca41;
   }
 
   .vue-command__history {
     overflow: auto;
+    word-break: break-all;
     background-color: #111316;
     display: block;
-    padding: 0 12px 10px;
+    padding: 12px 12px 12px 12px;
     margin: 0;
     white-space: pre-line;
     line-height: 1.33;
@@ -505,6 +527,13 @@ defineExpose({
     font-family: monospace;
     color: #ffffff;
     height: 100%;
+
+    /* Provide reasonable default values */
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
 
     input,
     textarea {

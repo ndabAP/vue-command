@@ -8909,6 +8909,11 @@ lodash.escaperegexp@^4.1.2:
   resolved "https://registry.npmjs.org/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz"
   integrity sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==
 
+lodash.foreach@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
+  integrity sha512-aEXTF4d+m05rVOAUG3z4vZZ4xVexLKZGF0lIxuHZ1Hplpk/3B6Z1+/ICICYRLm7c41Z2xiejbkCkJoTlypoXhQ==
+
 lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.npmjs.org/lodash.get/-/lodash.get-4.4.2.tgz"
@@ -8981,7 +8986,7 @@ lodash.lt@^3.9.2:
 
 lodash.lte@^3.9.2:
   version "3.9.2"
-  resolved "https://registry.npmjs.org/lodash.lte/-/lodash.lte-3.9.2.tgz"
+  resolved "https://registry.yarnpkg.com/lodash.lte/-/lodash.lte-3.9.2.tgz#1935204977fe1fe04a19cde085b4045c58b242a6"
   integrity sha512-+aUD4QzTflQGmE3C/wKCDtIhgoi9NLhElWDEYjoqF95YYZ0TGM2SzP87a6qrwIqcL/GQT7ogxwc505GIc4HyZg==
 
 lodash.mapvalues@^4.6.0:
@@ -9013,6 +9018,11 @@ lodash.rest@^4.0.0:
   version "4.0.5"
   resolved "https://registry.npmjs.org/lodash.rest/-/lodash.rest-4.0.5.tgz"
   integrity sha512-hsypEpebNAt0hj1aX9isQqi2CIZoNS1lP6PSWhB3hcMnBivobYzPZRPYq4cr38+RtvrlxQTgaW+sIuHAhBoHrA==
+
+lodash.size@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.size/-/lodash.size-4.2.0.tgz#71fe75ed3eabdb2bcb73a1b0b4f51c392ee27b86"
+  integrity sha512-wbu3SF1XC5ijqm0piNxw59yCbuUf2kaShumYBLWUrcCvwh6C8odz6SY/wGVzCWTQTFL/1Ygbvqg2eLtspUVVAQ==
 
 lodash.snakecase@^4.1.1:
   version "4.1.1"

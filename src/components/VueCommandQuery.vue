@@ -6,7 +6,8 @@
       {{ prompt }}
     </span>
 
-    <!-- TODO Move autocomplete and search to terminal -->
+    <!-- TODO Move autocomplete and search to parent -->
+    <!-- TODO Make textarea to enforce word break -->
     <input
       ref="queryRef"
       v-model="query"
@@ -31,19 +32,26 @@ import {
   watch,
   inject,
   defineExpose,
-  onBeforeMount
+  onBeforeMount,
+  nextTick
 } from 'vue'
 import {
   and
 } from '@/utils'
-import { defaultParser } from '@/library'
+import {
+  defaultParser,
+  createStdout,
+  listFormatter
+} from '@/library'
 import head from 'lodash.head'
 import lt from 'lodash.lt'
 import gt from 'lodash.gt'
 import isFunction from 'lodash.isfunction'
 import trimStart from 'lodash.trimstart'
 import isEmpty from 'lodash.isempty'
+import size from 'lodash.size'
 
+const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
 const hidePrompt = inject('hidePrompt')
 const optionsResolver = inject('optionsResolver')
@@ -61,8 +69,8 @@ const queryRef = ref(null)
 
 // Autocompletes a command and calls options resolver with found program
 // and parsed query if there are more than two arguments
-const autocompleteQuery = () => {
-  // An empty query is an empty string
+const autocompleteQuery = async () => {
+  // An empty query shall be never autocompleted
   if (isEmpty(query.value)) {
     return
   }
@@ -72,26 +80,61 @@ const autocompleteQuery = () => {
   // bash, make, sh
   const command = head(parsedQuery)
 
+  const commands = []
+  // TODO Use lodashs filter
   for (const program of programs.value) {
-    // If query starts with program, autcomplete
-    if (!program.startsWith(command)) {
-      continue
+    // If program starts with command, add command to be possibly autocompleted
+    if (program.startsWith(command)) {
+      commands.push(program)
+    }
+  }
+
+  // Print commands based on length
+  switch (size(commands)) {
+    // No command
+    case 0:
+      break
+
+    // One command
+    case 1: {
+      const program = head(commands)
+      if (and(
+        // Check if query expects autocomplete
+        lt(program.length, size(trimStart(query.value))),
+        // Check if user provided options resolver
+        isFunction(optionsResolver), isFunction(parser))
+      ) {
+        optionsResolver(program, parser(query.value), setQuery)
+        return
+      }
+
+      // If query has white spaces at the end, ignore
+      if (gt(program.length, size(trimStart(query.value)))) {
+        setQuery(program)
+      }
+
+      break
     }
 
-    if (and(
-      // Check if query expects autocomplete
-      lt(program.length, trimStart(query.value).length),
-      // Check if user provided options resolver
-      isFunction(optionsResolver) && isFunction(parser))
-    ) {
-      optionsResolver(program, parser(query.value), setQuery)
-      return
-    }
+    // Multiple commands
+    default: {
+      // TODO Create terminal-like columns
 
-    // If query has white spaces at the end, ignore
-    if (gt(program.length, trimStart(query.value).length)) {
-      setQuery(program)
-      return
+      // Print a list of commands
+
+      // Preserve the current query since it gets emptied after "createStdout"
+      // exited
+      const previousQuery = query.value
+      appendToHistory(createStdout(listFormatter(...commands)))
+
+      // Wait until the query component has been rendered
+      await nextTick()
+
+      // Set the previous query again
+      setQuery(previousQuery)
+      query.value = previousQuery
+      // Invalidate query
+      isOutdated.value = true
     }
   }
 }

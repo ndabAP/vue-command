@@ -31,7 +31,7 @@ Let's start with a dead simple example. We want to send "Hello world" to
 </template>
 
 <script>
-import VueCommand, { createStdout } from "vue-command";
+import VueCommand, { createStdout, textFormatter } from "vue-command";
 import "vue-command/dist/vue-command.css";
 
 export default {
@@ -41,7 +41,7 @@ export default {
 
   data: () => ({
     commands: {
-      "hello-world": () => createStdout("Hello world"),
+      "hello-world": () => createStdout(textFormatter("Hello world")),
     },
   }),
 };
@@ -54,8 +54,8 @@ in many shells.
 We inject `terminal` to make sure the editor is only visible when the terminal
 is in fullscreen mode and also a function called `exit` to tell the terminal
 that the command has been finished when the user enters
-<kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we use `setFullscreen` to switch
-the terminal into fullscreen mode.
+<kbd>Ctrl</kbd> + <kbd>x</kbd>. Furthermore, we use `setFullscreen` to
+switch the terminal into fullscreen mode.
 
 ```vue
 <template>
@@ -81,6 +81,7 @@ export default {
 </script>
 
 <style scoped>
+div,
 textarea {
   height: 100%;
 }
@@ -124,8 +125,9 @@ required.
 | `cursor-position`    | Cursor position                                 | `Number`   | `0`                           | No       | Yes       |
 | `dispatched-queries` | Non-empty dispatched queries, successful or not | `Set`      | `new Set()`                   | No       | Yes       |
 | `event-resolver`     | See [Event resolver](#Event-resolver) section   | `Function` | See `newDefaultEventResolver` | No       | No        |
-| `help-text`          | Query help                                      | `String`   | `''`                          | No       | Yes       |
-| `help-timeout`       | Query help timeout                              | `Number`   | `3500`                        | No       | No        |
+| `help-text`          | Command help                                    | `String`   | `''`                          | No       | Yes       |
+| `help-timeout`       | Command help timeout                            | `Number`   | `3000`                        | No       | No        |
+| `hide-bar`           | Hides the bar                                   | `Boolean`  | `false`                       | No       | No        |
 | `hide-prompt`        | Hides the prompt                                | `Boolean`  | `false`                       | No       | No        |
 | `history`            | Terminal history                                | `Array`    | `[]`                          | No       | Yes       |
 | `history-position`   | Points to the latest dispatched query entry     | `Number`   | `0`                           | No       | Yes       |
@@ -174,6 +176,8 @@ the whole element, including the action buttons and its assigned CSS classes.
 
 ## Library
 
+Library provides helper methods to render terminal related content.
+
 | Function                      | Parameters                                                         | Description                           |
 | ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
@@ -181,8 +185,11 @@ the whole element, including the action buttons and its assigned CSS classes.
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
 | `defaultParser`               | `query`                                                            | Returns the default parser            |
+| `listFormatter`               | `...lis`                                                           | See [Formatters](#formatters)         |
 | `newDefaultEventResolver`     |                                                                    | Returns a new default event resolver  |
 | `newDefaultHistory`           |                                                                    | Returns a new default history         |
+| `tableFormatter`              | `rows`                                                             | See [Formatters](#formatters)         |
+| `textFormatter`               | `text, innerHtml = false`                                          | See [Formatters](#formatters)         |
 
 Helper methods can be imported by name:
 
@@ -190,11 +197,29 @@ Helper methods can be imported by name:
 import { createStdout, createQuery } from "vue-command";
 ```
 
+### Formatters
+
+`createStdout` requires a formatter as the first argument to format the content
+as a list or table or something else.
+
+| Formatters       |
+| ---------------- |
+| `listFormatter`  |
+| `tableFormatter` |
+| `textFormatter`  |
+
+Formatters can be imported by name:
+
+```js
+import { listFormatter } from "vue-command";
+```
+
 ## Provided
 
 | Provided             |
 | -------------------- |
 | `addDispatchedQuery` |
+| `appendToHistory`    |
 | `dispatch`           |
 | `decrementHistory`   |
 | `exit`               |
@@ -223,6 +248,7 @@ inject: ["exit", "terminal"],
 | Exposed              |
 | -------------------- |
 | `addDispatchedQuery` |
+| `appendToHistory`    |
 | `decrementHistory`   |
 | `dispatch`           |
 | `exit`               |
