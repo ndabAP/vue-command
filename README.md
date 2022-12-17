@@ -181,7 +181,7 @@ Library provides helper methods to render terminal related content.
 | Function                      | Parameters                                                         | Description                           |
 | ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
-| `createStdout`                | `text, name = 'VueCommandStdout', innerHTML = false`               | Creates a "stdout" component          |
+| `createStdout`                | `formatter, name = 'VueCommandStdout'`                             | Creates a "stdout" component          |
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
 | `defaultParser`               | `query`                                                            | Returns the default parser            |
