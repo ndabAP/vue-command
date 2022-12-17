@@ -50,8 +50,8 @@ export const defaultHistoryEventResolver = (refs, eventProvider) => {
 // Returns a list of default event resolver
 export const newDefaultEventResolver = () => [defaultHistoryEventResolver]
 
-// Creates a "stdout" with the given formatter and name. It exists as soon as
-// component is rendered
+// Creates a "stdout" with the given formatter and name. It exits as soon as
+// the component has been mounted
 export const createStdout = (formatter, name = 'VueCommandStdout') => markRaw(defineComponent({
   name,
   setup () {

@@ -1,22 +1,46 @@
 <template>
   <div class="vue-command__query">
-    <span v-if="isReverseISearch" class="command__query__reverse-i-search__prompt">
+    <span
+      v-if="isReverseISearch"
+      class="command__query__reverse-i-search__prompt">
       {{ reverseISearch }}
     </span>
-    <input v-if="isReverseISearch" ref="queryRef" v-model="query" class="vue-command__query__reverse-i-search__input"
-      :disabled="isOutdated" :placeholder="placeholder" autocapitalize="none" autocorrect="off" type="text"
-      @click="setCursorPosition($refs.queryRef.selectionStart)" @input="setQuery($event.target.value)"
-      @keydown.tab.exact.prevent="autocompleteQuery" @keydown.ctrl.r.exact.prevent="showReverseISearch"
+    <input
+      v-if="isReverseISearch"
+      ref="queryRef"
+      v-model="query"
+      class="vue-command__query__reverse-i-search__input"
+      :disabled="isOutdated"
+      :placeholder="placeholder"
+      autocapitalize="none"
+      autocorrect="off"
+      type="text"
+      @click="setCursorPosition($refs.queryRef.selectionStart)"
+      @input="setQuery($event.target.value)"
+      @keydown.tab.exact.prevent="autocompleteQuery"
+      @keydown.ctrl.r.exact.prevent="showReverseISearch"
       @keyup.enter.exact="submit($event.target.value)" />
 
-    <span v-if="!hidePrompt && !isReverseISearch" class="vue-command__query__prompt">
+    <span
+      v-if="!hidePrompt && !isReverseISearch"
+      class="vue-command__query__prompt">
       {{ prompt }}
     </span>
     <!-- TODO Make textarea to enforce word break -->
-    <input v-if="!isReverseISearch" ref="queryRef" v-model="query" class="vue-command__query__input"
-      :disabled="isOutdated" :placeholder="placeholder" autocapitalize="none" autocorrect="off" type="text"
-      @click="setCursorPosition($refs.queryRef.selectionStart)" @input="setQuery($event.target.value)"
-      @keydown.tab.exact.prevent="autocompleteQuery" @keydown.ctrl.r.exact.prevent="showReverseISearch"
+    <input
+      v-if="!isReverseISearch"
+      ref="queryRef"
+      v-model="query"
+      class="vue-command__query__input"
+      :disabled="isOutdated"
+      :placeholder="placeholder"
+      autocapitalize="none"
+      autocorrect="off"
+      type="text"
+      @click="setCursorPosition($refs.queryRef.selectionStart)"
+      @input="setQuery($event.target.value)"
+      @keydown.tab.exact.prevent="autocompleteQuery"
+      @keydown.ctrl.r.exact.prevent="showReverseISearch"
       @keyup.enter.exact="submit($event.target.value)" />
   </div>
 </template>
