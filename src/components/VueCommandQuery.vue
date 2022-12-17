@@ -1,26 +1,22 @@
 <template>
   <div class="vue-command__query">
-    <span
-      v-if="!hidePrompt"
-      class="vue-command__query__prompt">
+    <span v-if="isReverseISearch" class="command__query__reverse-i-search__prompt">
+      {{ reverseISearch }}
+    </span>
+    <input v-if="isReverseISearch" ref="queryRef" v-model="query" class="vue-command__query__reverse-i-search__input"
+      :disabled="isOutdated" :placeholder="placeholder" autocapitalize="none" autocorrect="off" type="text"
+      @click="setCursorPosition($refs.queryRef.selectionStart)" @input="setQuery($event.target.value)"
+      @keydown.tab.exact.prevent="autocompleteQuery" @keydown.ctrl.r.exact.prevent="showReverseISearch"
+      @keyup.enter.exact="submit($event.target.value)" />
+
+    <span v-if="!hidePrompt && !isReverseISearch" class="vue-command__query__prompt">
       {{ prompt }}
     </span>
-
-    <!-- TODO Move autocomplete and search to parent -->
     <!-- TODO Make textarea to enforce word break -->
-    <input
-      ref="queryRef"
-      v-model="query"
-      class="vue-command__query__input"
-      :disabled="isOutdated"
-      :placeholder="placeholder"
-      autocapitalize="none"
-      autocorrect="off"
-      type="text"
-      @click="setCursorPosition($refs.queryRef.selectionStart)"
-      @input="setQuery($event.target.value)"
-      @keydown.tab.exact.prevent="autocompleteQuery"
-      @keydown.ctrl.r.exact.prevent="reverseISearch"
+    <input v-if="!isReverseISearch" ref="queryRef" v-model="query" class="vue-command__query__input"
+      :disabled="isOutdated" :placeholder="placeholder" autocapitalize="none" autocorrect="off" type="text"
+      @click="setCursorPosition($refs.queryRef.selectionStart)" @input="setQuery($event.target.value)"
+      @keydown.tab.exact.prevent="autocompleteQuery" @keydown.ctrl.r.exact.prevent="showReverseISearch"
       @keyup.enter.exact="submit($event.target.value)" />
   </div>
 </template>
@@ -62,6 +58,8 @@ const setQuery = inject('setQuery')
 const terminal = inject('terminal')
 
 const isOutdated = ref(false)
+const isReverseISearch = ref(false)
+const reverseISearch = ref('(reverse-i-search)`\': ')
 const placeholder = ref('')
 const prompt = ref('')
 const query = ref('')
@@ -144,7 +142,8 @@ const focus = () => {
   queryRef.value.focus()
 }
 
-const reverseISearch = event => {
+const showReverseISearch = event => {
+  isReverseISearch.value = true
   // TODO
   // console.debug(event)
 }
