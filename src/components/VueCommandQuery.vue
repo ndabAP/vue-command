@@ -7,11 +7,10 @@
     </span>
     <input
       v-if="isReverseISearch"
-      ref="queryRef"
-      v-model="query"
+      ref="reverseISearchRef"
+      v-model="reverseISearch"
       class="vue-command__query__reverse-i-search__input"
       :disabled="isOutdated"
-      :placeholder="placeholder"
       autocapitalize="none"
       autocorrect="off"
       type="text"
