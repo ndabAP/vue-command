@@ -50,6 +50,7 @@
     "lodash.gt": "^3.9.2",
     "lodash.gte": "^3.9.2",
     "lodash.head": "^4.0.1",
+    "lodash.includes": "^4.3.0",
     "lodash.isempty": "^4.4.0",
     "lodash.isfunction": "^3.0.9",
     "lodash.last": "^3.0.0",

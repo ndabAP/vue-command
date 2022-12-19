@@ -423,6 +423,7 @@ onMounted(() => {
 provide('addDispatchedQuery', addDispatchedQuery)
 provide('appendToHistory', appendToHistory)
 provide('dispatch', dispatch)
+provide('dispatchedQueries', props.dispatchedQueries)
 provide('decrementHistory', decrementHistory)
 provide('exit', exit)
 provide('helpText', props.helpText)
