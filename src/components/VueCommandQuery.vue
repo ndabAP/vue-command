@@ -1,23 +1,22 @@
 <template>
   <div class="vue-command__query">
     <span
-      v-if="isReverseISearch"
+      v-show="isReverseISearch"
       class="command__query__reverse-i-search__prompt">
-      {{ reverseISearch }}
-    </span>
+      (reverse-i-search)`</span>
     <input
-      v-if="isReverseISearch"
+      v-show="isReverseISearch"
       ref="reverseISearchRef"
       v-model="reverseISearch"
       class="vue-command__query__reverse-i-search__input"
-      :disabled="isOutdated"
       autocapitalize="none"
       autocorrect="off"
       type="text"
       @input="searchIReverse($event.target.value)"
-      @keydown.tab.exact.prevent="cancel"
-      @keydown.esc.exact.prevent="cancel"
-      @keyup.enter.exact="submit" />
+      @keydown.tab.exact.prevent="hideReverseISearch"
+      @keydown.esc.exact.prevent="hideReverseISearch"
+      @keyup.enter.exact="submit" /><span v-show="isReverseISearch">':
+      </span>
 
     <span
       v-if="!hidePrompt && !isReverseISearch"
@@ -26,11 +25,10 @@
     </span>
     <!-- TODO Make textarea to enforce word break -->
     <input
-      v-if="!isReverseISearch"
       ref="queryRef"
       v-model="local.query"
       class="vue-command__query__input"
-      :disabled="isOutdated"
+      :disabled="isOutdated || isReverseISearch"
       :placeholder="placeholder"
       autocapitalize="none"
       autocorrect="off"
@@ -53,7 +51,8 @@ import {
   inject,
   defineExpose,
   onBeforeMount,
-  reactive
+  reactive,
+  nextTick
 } from 'vue'
 import {
   and
@@ -75,18 +74,21 @@ import includes from 'lodash.includes'
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
 const dispatchedQueries = inject('dispatchedQueries')
-// TODO Inject dispatched queries
 const hidePrompt = inject('hidePrompt')
+const helpText = inject('helpText')
+const helpTimeout = inject('helpTimeout')
 const optionsResolver = inject('optionsResolver')
 const parser = inject('parser')
 const programs = inject('programs')
+const showHelp = inject('showHelp')
 const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
 const terminal = inject('terminal')
 
 const isOutdated = ref(false)
 const isReverseISearch = ref(false)
-const reverseISearch = ref('(reverse-i-search)`\': ')
+const reverseISearch = ref('')
+const reverseISearchRef = ref('')
 const placeholder = ref('')
 const queryRef = ref(null)
 
@@ -94,6 +96,8 @@ const local = reactive({
   prompt: '',
   query: ''
 })
+
+let setTimeoutHelp = null
 
 // Autocompletes a command and calls options resolver with found program
 // and parsed query if there are more than two arguments
@@ -164,17 +168,58 @@ const focus = () => {
   queryRef.value.focus()
 }
 const searchIReverse = () => {
-  console.debug()
+  for (const dispatchedQuery of dispatchedQueries) {
+    if (includes(dispatchedQuery, reverseISearch.value)) {
+      setQuery(dispatchedQuery)
+      return
+    }
+  }
 }
-const showReverseISearch = () => {
+const showDelayedHelp = () => {
+  // Show eventually help as placeholder
+  if (and(showHelp, !isOutdated.value)) {
+    setTimeoutHelp = setTimeout(() => {
+      placeholder.value = helpText
+    }, helpTimeout)
+
+    const unwatchIsDisabled = watch(isOutdated, () => {
+      clearTimeout(setTimeoutHelp)
+      unwatchIsDisabled()
+    })
+  }
+}
+const resizeReverseISearch = () => {
+  // Resize input about character length
+  reverseISearchRef.value.style['max-width'] = `${reverseISearch.value.length}ch`
+}
+const hideReverseISearch = async () => {
+  isReverseISearch.value = false
+
+  await nextTick()
+
+  reverseISearchRef.value.removeEventListener('input', resizeReverseISearch)
+  focus()
+  showDelayedHelp()
+}
+const showReverseISearch = async () => {
   isReverseISearch.value = true
+
+  await nextTick()
+
+  clearTimeout(setTimeoutHelp)
+
+  reverseISearchRef.value.addEventListener('input', resizeReverseISearch)
+  resizeReverseISearch.call(reverseISearchRef.value)
+
+  reverseISearchRef.value.focus()
+  placeholder.value = ''
 }
+
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
   isOutdated.value = true
-  dispatch(local.query)
+  dispatch()
 }
-
 // Apply given cursor position to actual cursor position
 const unwatchLocalQuery = watch(() => local.query, () => {
   setCursorPosition(queryRef.value.selectionStart)
@@ -193,11 +238,15 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
+const unwatchReverseISearch = watch(reverseISearch, () => {
+  searchIReverse()
+})
 const unwatchIsDisabled = watch(isOutdated, () => {
   unwatchTerminalQuery()
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
   unwatchIsDisabled()
+  unwatchReverseISearch()
   isReverseISearch.value = false
   placeholder.value = ''
 })
@@ -207,22 +256,7 @@ onBeforeMount(() => {
 })
 onMounted(() => {
   focus()
-
-  const helpText = inject('helpText')
-  const helpTimeout = inject('helpTimeout')
-  const showHelp = inject('showHelp')
-
-  // Show eventually help as placeholder
-  if (and(showHelp, !isOutdated.value)) {
-    const timeout = setTimeout(() => {
-      placeholder.value = helpText
-    }, helpTimeout)
-
-    const unwatchIsDisabled = watch(isOutdated, () => {
-      clearTimeout(timeout)
-      unwatchIsDisabled()
-    })
-  }
+  showDelayedHelp()
 })
 
 defineExpose({
@@ -233,21 +267,30 @@ defineExpose({
 <style lang="scss">
 .vue-command {
   .vue-command__query {
-    display: flex;
+    // display: flex;
   }
 
   .vue-command__query__input {
+    // width: 100%;
+  }
+
+  .vue-command__query__input,
+  .vue-command__query__reverse-i-search__input {
     background: none;
     border: none;
     outline: none;
     flex: 1;
-    width: 100%;
     font-family: monospace;
     font-size: 1rem;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.5);
     }
+  }
+
+  .vue-command__query__reverse-i-search__input {
+    caret-color: transparent;
+    width: 0;
   }
 
   .vue-command__query__prompt {
