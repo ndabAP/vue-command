@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="js">
 import {
   ref,
   onMounted,
