@@ -9,6 +9,7 @@
       :commands="commands"
       :prompt="prompt"
       help-text="Type in help"
+      :invert="invert"
       show-help>
     </vue-command>
     <pre>
@@ -41,6 +42,7 @@ export default {
 
   setup () {
     const history = ref(newDefaultHistory())
+    const invert = ref(true)
     const prompt = ref(PROMPT)
     const query = ref('')
 
@@ -82,6 +84,7 @@ export default {
       },
 
       history,
+      invert,
       prompt,
       query
     }
@@ -99,15 +102,27 @@ body {
   main {
     max-width: 400px;
 
-    p {
-      font-family: monospace;
-    }
-
-    .vue-command {
+    .vue-command,
+    .vue-command--invert {
       ::-webkit-scrollbar {
         width: 6px;
       }
 
+      .vue-command__bar,
+      .vue-command__bar--invert {
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+      }
+
+      .vue-command__history,
+      .vue-command__history--invert {
+        height: 260px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+    }
+
+    .vue-command {
       ::-webkit-scrollbar-track {
         background: #252525;
       }
@@ -119,16 +134,19 @@ body {
       ::-webkit-scrollbar-thumb:hover {
         background: #333;
       }
+    }
 
-      .vue-command__bar {
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
+    .vue-command--invert {
+      ::-webkit-scrollbar-track {
+        background: #dadada;
       }
 
-      .vue-command__history {
-        height: 260px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+      ::-webkit-scrollbar-thumb {
+        background: #0e0e0e;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #cccccc;
       }
     }
   }
