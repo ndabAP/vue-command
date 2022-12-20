@@ -6,10 +6,15 @@
       <div
         v-if="!hideBar"
         class="vue-command__bar">
-        <!-- TODO Emit unique event per button -->
-        <span class="vue-command__bar__button vue-command__bar__button--close"></span>
-        <span class="vue-command__bar__button vue-command__bar__button--minimize"></span>
-        <span class="vue-command__bar__button vue-command__bar__button--fullscreen"></span>
+        <span
+          class="vue-command__bar__button vue-command__bar__button--close"
+          @click="emits('click-close')"></span>
+        <span
+          class="vue-command__bar__button vue-command__bar__button--minimize"
+          @click="emits('click-minimize')"></span>
+        <span
+          class="vue-command__bar__button vue-command__bar__button--fullscreen"
+          @click="emits('click-fullscreen')"></span>
       </div>
     </slot>
 
@@ -175,6 +180,9 @@ const props = defineProps({
 
 // Update user given properties
 const emits = defineEmits([
+  'click-close',
+  'click-minimize',
+  'click-fullscreen',
   'update:cursorPosition',
   'update:dispatchedQueries',
   'update:history',
