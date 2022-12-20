@@ -3,14 +3,14 @@
     <span
       v-if="!hidePrompt"
       class="vue-command__query__prompt">
-      {{ prompt }}
+      {{ local.prompt }}
     </span>
 
     <!-- TODO Move autocomplete and search to parent -->
     <!-- TODO Make textarea to enforce word break -->
     <input
       ref="queryRef"
-      v-model="query"
+      v-model="local.query"
       class="vue-command__query__input"
       :disabled="isOutdated"
       :placeholder="placeholder"
@@ -21,7 +21,7 @@
       @input="setQuery($event.target.value)"
       @keydown.tab.exact.prevent="autocompleteQuery"
       @keydown.ctrl.r.exact.prevent="reverseISearch"
-      @keyup.enter.exact="submit($event.target.value)" />
+      @keyup.enter.exact="submit" />
   </div>
 </template>
 
@@ -33,6 +33,7 @@ import {
   inject,
   defineExpose,
   onBeforeMount,
+  reactive,
   nextTick
 } from 'vue'
 import {
@@ -54,34 +55,41 @@ import size from 'lodash.size'
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
 const hidePrompt = inject('hidePrompt')
+const helpText = inject('helpText')
+const helpTimeout = inject('helpTimeout')
 const optionsResolver = inject('optionsResolver')
 const parser = inject('parser')
 const programs = inject('programs')
 const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
+const showHelp = inject('showHelp')
 const terminal = inject('terminal')
 
 const isOutdated = ref(false)
 const placeholder = ref('')
-const prompt = ref('')
-const query = ref('')
 const queryRef = ref(null)
+
+const local = reactive({
+  prompt: '',
+  query: ''
+})
 
 // Autocompletes a command and calls options resolver with found program
 // and parsed query if there are more than two arguments
 const autocompleteQuery = async () => {
+  const query = local.query
   // An empty query shall be never autocompleted
-  if (isEmpty(query.value)) {
+  if (isEmpty(query)) {
     return
   }
 
   // ['bash', '--help']
-  const parsedQuery = defaultParser(query.value)
+  const parsedQuery = defaultParser(query)
   // bash, make, sh
   const command = head(parsedQuery)
 
   const commands = []
-  // TODO Use lodashs filter
+  // TODO Use lodash
   for (const program of programs.value) {
     // If program starts with command, add command to be possibly autocompleted
     if (program.startsWith(command)) {
@@ -100,16 +108,16 @@ const autocompleteQuery = async () => {
       const program = head(commands)
       if (and(
         // Check if query expects autocomplete
-        lt(program.length, size(trimStart(query.value))),
+        lt(program.length, size(trimStart(query))),
         // Check if user provided options resolver
         isFunction(optionsResolver), isFunction(parser))
       ) {
-        optionsResolver(program, parser(query.value), setQuery)
+        optionsResolver(program, parser(query), setQuery)
         return
       }
 
       // If query has white spaces at the end, ignore
-      if (gt(program.length, size(trimStart(query.value)))) {
+      if (gt(program.length, size(trimStart(query)))) {
         setQuery(program)
       }
 
@@ -122,33 +130,37 @@ const autocompleteQuery = async () => {
 
       // Print a list of commands
 
-      // Preserve the current query since it gets emptied after "createStdout"
-      // exited
-      const previousQuery = query.value
+      // Invalidate query since a new one is created and to the current one
+      isOutdated.value = true
+
       appendToHistory(createStdout(listFormatter(...commands)))
 
-      // Wait until the query component has been rendered
+      // We have to wait for the query to be loaded
       await nextTick()
 
-      // Set the previous query again
-      setQuery(previousQuery)
-      query.value = previousQuery
-      // Invalidate query
-      isOutdated.value = true
+      // Overwrite new query with old one
+      setQuery(local.query)
     }
   }
 }
-
 // Focuses the input
 const focus = () => {
   queryRef.value.focus()
 }
-
 const reverseISearch = event => {
   // TODO
   // console.debug(event)
 }
+const showDelayedHelp = () => {
+  const timeout = setTimeout(() => {
+    placeholder.value = helpText
+  }, helpTimeout)
 
+  const unwatchIsDisabled = watch(isOutdated, () => {
+    clearTimeout(timeout)
+    unwatchIsDisabled()
+  })
+}
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
   isOutdated.value = true
@@ -156,7 +168,7 @@ const submit = () => {
 }
 
 // Apply given cursor position to actual cursor position
-const unwatchQuery = watch(query, () => {
+const unwatchLocalQuery = watch(() => local.query, () => {
   setCursorPosition(queryRef.value.selectionStart)
 })
 const unwatchTerminalCursorPosition = watch(
@@ -169,38 +181,27 @@ const unwatchTerminalCursorPosition = watch(
 // inside a history entry
 const unwatchTerminalQuery = watch(
   () => terminal.value.query,
-  queryValue => {
-    query.value = queryValue
+  query => {
+    local.query = query
   }
 )
 const unwatchIsDisabled = watch(isOutdated, () => {
   unwatchTerminalQuery()
-  unwatchQuery()
+  unwatchLocalQuery()
   unwatchTerminalCursorPosition()
   unwatchIsDisabled()
   placeholder.value = ''
 })
 
 onBeforeMount(() => {
-  prompt.value = terminal.value.prompt
+  local.prompt = terminal.value.prompt
 })
 onMounted(() => {
   focus()
 
-  const helpText = inject('helpText')
-  const helpTimeout = inject('helpTimeout')
-  const showHelp = inject('showHelp')
-
   // Show eventually help as placeholder
   if (and(showHelp, !isOutdated.value)) {
-    const timeout = setTimeout(() => {
-      placeholder.value = helpText
-    }, helpTimeout)
-
-    const unwatchIsDisabled = watch(isOutdated, () => {
-      clearTimeout(timeout)
-      unwatchIsDisabled()
-    })
+    showDelayedHelp()
   }
 })
 
