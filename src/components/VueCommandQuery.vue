@@ -21,6 +21,8 @@
       @input="setQuery($event.target.value)"
       @keydown.tab.exact.prevent="autocompleteQuery"
       @keydown.ctrl.r.exact.prevent="reverseISearch"
+      @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
+      @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup.enter.exact="submit" />
   </div>
 </template>
