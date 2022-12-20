@@ -1,39 +1,22 @@
 <template>
-  <div
-    ref="vueCommandRef"
-    class="vue-command">
+  <div ref="vueCommandRef" class="vue-command">
     <slot name="bar">
-      <div
-        v-if="!hideBar"
-        class="vue-command__bar">
-        <span
-          class="vue-command__bar__button vue-command__bar__button--close"
-          @click="emits('click-close')"></span>
-        <span
-          class="vue-command__bar__button vue-command__bar__button--minimize"
+      <div v-if="!hideBar" class="vue-command__bar">
+        <span class="vue-command__bar__button vue-command__bar__button--close" @click="emits('click-close')"></span>
+        <span class="vue-command__bar__button vue-command__bar__button--minimize"
           @click="emits('click-minimize')"></span>
-        <span
-          class="vue-command__bar__button vue-command__bar__button--fullscreen"
+        <span class="vue-command__bar__button vue-command__bar__button--fullscreen"
           @click="emits('click-fullscreen')"></span>
       </div>
     </slot>
 
-    <div
-      ref="vueCommandHistoryRef"
-      class="vue-command__history"
-      @click="autoFocus">
-      <div
-        v-for="(component, index) in local.history"
-        v-show="shouldShowHistoryEntry(index)"
-        :key="index"
-        :class="{
-          'vue-command__history__entry': true,
-          'vue-command__history__entry--fullscreen': shouldBeFullscreen(index)
-        }">
+    <div ref="vueCommandHistoryRef" class="vue-command__history" @click="autoFocus">
+      <div v-for="(component, index) in local.history" v-show="shouldShowHistoryEntry(index)" :key="index" :class="{
+        'vue-command__history__entry': true,
+        'vue-command__history__entry--fullscreen': shouldBeFullscreen(index)
+      }">
         <!-- User given components like bash and query -->
-        <component
-          :is="component"
-          ref="vueCommandHistoryEntryComponentRefs"
+        <component :is="component" ref="vueCommandHistoryEntryComponentRefs"
           class="vue-command__history__entry__component" />
       </div>
     </div>
@@ -241,54 +224,6 @@ const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.add(dispatchedQuery)
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
-
-const appendToHistory = (...components) => {
-  local.history.push(...components)
-  emits('update:history', local.history)
-}
-
-const incrementHistory = () => {
-  // History pointer must be lower query history
-  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
-    return
-  }
-
-  setHistoryPosition(local.historyPosition + 1)
-  const query = nth([...local.dispatchedQueries], local.historyPosition)
-  setQuery(query)
-}
-
-const decrementHistory = () => {
-  // History pointer must be greater zero
-  if (eq(local.historyPosition, 0)) {
-    return
-  }
-
-  setHistoryPosition(local.historyPosition - 1)
-  const query = nth([...local.dispatchedQueries], local.historyPosition)
-  setQuery(query)
-}
-
-const setCursorPosition = cursorPosition => {
-  local.cursorPosition = cursorPosition
-  emits('update:cursorPosition', cursorPosition)
-}
-
-const setFullscreen = isFullscreen => {
-  local.isFullscreen = isFullscreen
-  emits('update:isFullscreen', isFullscreen)
-}
-
-const setHistoryPosition = historyPosition => {
-  local.historyPosition = historyPosition
-  emits('update:historyPosition', historyPosition)
-}
-
-const setQuery = query => {
-  local.query = query
-  emits('update:query', query)
-}
-
 // Focuses to the last query input if the last history entry is a query input
 const autoFocus = () => {
   // Not the query needs to maintain the validation upon focus but rather the
@@ -307,15 +242,12 @@ const autoFocus = () => {
 
   // Do the actual focus
   const lastHistoryEntryRef = last(vueCommandHistoryEntryComponentRefs.value)
-  const focus = get(lastHistoryEntryRef, 'focus')
-  focus()
+  lastHistoryEntryRef.focus()
 }
-
 // Sets history position by given dispatched queries
 const autoHistoryPosition = () => {
   setHistoryPosition(local.dispatchedQueries.size)
 }
-
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
 const dispatch = async () => {
@@ -355,7 +287,7 @@ const dispatch = async () => {
 
   // Command is user created component. Decorate component
   const component = defineComponent({
-    provide () {
+    provide() {
       return {
         // This will be unique for the component and not reactive by design
         context: {
@@ -371,6 +303,10 @@ const dispatch = async () => {
   appendToHistory(markRaw(component))
 }
 
+const appendToHistory = (...components) => {
+  local.history.push(...components)
+  emits('update:history', local.history)
+}
 // Tear down component and execute final steps
 const exit = () => {
   // TODO Does order matter?
@@ -380,11 +316,46 @@ const exit = () => {
   setFullscreen(false)
   setQuery('')
 }
+const incrementHistory = () => {
+  // History pointer must be lower query history
+  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
+    return
+  }
 
+  setHistoryPosition(local.historyPosition + 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
+}
+const decrementHistory = () => {
+  // History pointer must be greater zero
+  if (eq(local.historyPosition, 0)) {
+    return
+  }
+
+  setHistoryPosition(local.historyPosition - 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
+}
 // Waits for the DOM and scrolls to the bottom of the history
 const scrollToBottom = async () => {
   await nextTick()
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+}
+const setCursorPosition = cursorPosition => {
+  local.cursorPosition = cursorPosition
+  emits('update:cursorPosition', cursorPosition)
+}
+const setFullscreen = isFullscreen => {
+  local.isFullscreen = isFullscreen
+  emits('update:isFullscreen', isFullscreen)
+}
+const setHistoryPosition = historyPosition => {
+  local.historyPosition = historyPosition
+  emits('update:historyPosition', historyPosition)
+}
+const setQuery = query => {
+  local.query = query
+  emits('update:query', query)
 }
 
 watch(local.history, async () => {
@@ -507,7 +478,7 @@ defineExpose({
     }
 
     &:not(:last-child) {
-      margin-right: 7px;
+      margin-right: 8px;
     }
   }
 
