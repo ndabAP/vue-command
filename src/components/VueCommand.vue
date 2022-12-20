@@ -310,7 +310,9 @@ const autoHistoryPosition = () => {
 
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
-const dispatch = async query => {
+const dispatch = async () => {
+  const query = local.query
+
   // An empty query is an empty string
   if (isEmpty(query)) {
     appendToHistory(createQuery())

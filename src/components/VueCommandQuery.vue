@@ -166,7 +166,7 @@ const showDelayedHelp = () => {
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
   isOutdated.value = true
-  dispatch(query.value)
+  dispatch()
 }
 
 // Apply given cursor position to actual cursor position
