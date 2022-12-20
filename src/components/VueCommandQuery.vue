@@ -228,14 +228,18 @@ defineExpose({
   .vue-command__query--invert {
     display: flex;
 
+    input::placeholder,
+    input {
+      font: 1rem monospace;
+    }
+
     .vue-command__query__input,
     .vue-command__query__input--invert {
       border: none;
       outline: none;
       flex: 1;
       width: 100%;
-      font-family: monospace;
-      font-size: 1rem;
+
     }
 
     .vue-command__query__prompt,
@@ -248,8 +252,6 @@ defineExpose({
 .vue-command {
   .vue-command__query {
     .vue-command__query__input {
-      background: none;
-
       &::placeholder {
         color: rgba(255, 255, 255, 0.5);
       }
@@ -260,8 +262,6 @@ defineExpose({
 .vue-command--invert {
   .vue-command__query--invert {
     .vue-command__query__input--invert {
-      background: none;
-
       &::placeholder {
         color: rgba(0, 0, 0, 0.5);
       }

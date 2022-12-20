@@ -1,22 +1,16 @@
 <template>
   <main>
-    <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
-    <p>A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support!</p>
-
-    <vue-command
-      v-model:history="history"
-      v-model:query="query"
-      :commands="commands"
-      :prompt="prompt"
-      help-text="Type in help"
-      :invert="invert"
-      show-help>
-    </vue-command>
-    <pre>
-      <code>
-$ npm install --save vue-command
-      </code>
-    </pre>
+    <div>
+      <vue-command
+        v-model:history="history"
+        v-model:query="query"
+        :commands="commands"
+        :prompt="prompt"
+        help-text="Type in help"
+        :invert="invert"
+        show-help>
+      </vue-command>
+    </div>
   </main>
 </template>
 
@@ -33,7 +27,7 @@ import {
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
 
-const PROMPT = '~$'
+const PROMPT = 'neil@moon~$'
 
 export default {
   components: {
@@ -94,59 +88,66 @@ export default {
 
 <style lang="scss">
 body {
-  font-family: sans-serif;
-  display: grid;
-  place-items: center;
-  margin: 0;
+  color: #fff;
+  background: #000;
 
   main {
-    max-width: 400px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
-    .vue-command,
-    .vue-command--invert {
-      ::-webkit-scrollbar {
-        width: 6px;
+    div {
+
+      .vue-command,
+      .vue-command--invert {
+        width: 450px;
+
+        ::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .vue-command__bar,
+        .vue-command__bar--invert {
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+        }
+
+        .vue-command__history,
+        .vue-command__history--invert {
+          height: 260px;
+          border-bottom-right-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
       }
 
-      .vue-command__bar,
-      .vue-command__bar--invert {
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
+      .vue-command {
+        ::-webkit-scrollbar-track {
+          background: #252525;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #333;
+        }
       }
 
-      .vue-command__history,
-      .vue-command__history--invert {
-        height: 260px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-    }
+      .vue-command--invert {
+        ::-webkit-scrollbar-track {
+          background: #dadada;
+        }
 
-    .vue-command {
-      ::-webkit-scrollbar-track {
-        background: #252525;
-      }
+        ::-webkit-scrollbar-thumb {
+          background: #0e0e0e;
+        }
 
-      ::-webkit-scrollbar-thumb {
-        background: #f1f1f1;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: #333;
-      }
-    }
-
-    .vue-command--invert {
-      ::-webkit-scrollbar-track {
-        background: #dadada;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: #0e0e0e;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: #cccccc;
+        ::-webkit-scrollbar-thumb:hover {
+          background: #cccccc;
+        }
       }
     }
   }

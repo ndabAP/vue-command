@@ -501,6 +501,7 @@ defineExpose({
 <style lang="scss">
 .vue-command,
 .vue-command--invert {
+  font-family: 'Fira Code', monospace;
 
   @mixin clearfix() {
 
@@ -554,8 +555,6 @@ defineExpose({
     margin: 0;
     white-space: pre-line;
     line-height: 1.33;
-    font-size: 1rem;
-    font-family: monospace;
     height: 100%;
 
     /* Provide reasonable default values */
@@ -571,8 +570,8 @@ defineExpose({
       border: none;
       outline: none;
       flex: 1;
-      width: 100%;
       font-size: 1rem;
+      width: 100%;
       resize: none;
       overflow: hidden;
     }
