@@ -4,9 +4,10 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <h1>vue-command </h1>
+            <h1>vue-command</h1>
             <p class="lead">
-              A fully working, most feature-rich Vue.js terminal emulator.
+              A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support! <a
+                href="https://github.com/ndabAP/vue-command">Github</a>
             </p>
           </div>
         </div>
@@ -22,6 +23,7 @@
               :invert="invert"
               :prompt="prompt"
               help-text="Type in help"
+              :options-resolver="optionsResolver"
               show-help />
           </div>
         </div>
@@ -62,6 +64,23 @@ export default {
     const invert = ref(false)
     const prompt = ref(PROMPT)
     const query = ref('')
+
+    const optionsResolver = (program, parsedQuery, setQuery) => {
+      switch (program) {
+        case 'cd':
+          switch (parsedQuery.length) {
+            case 1:
+              setQuery('cd home')
+              break
+            case 2:
+              if ('home'.startsWith(parsedQuery[1]) && parsedQuery[1] !== 'home') {
+                setQuery('cd home')
+              }
+              break
+          }
+          break
+      }
+    }
 
     return {
       commands: {
@@ -104,7 +123,9 @@ export default {
       history,
       invert,
       prompt,
-      query
+      query,
+
+      optionsResolver
     }
   }
 }
@@ -113,13 +134,13 @@ export default {
 <style lang="scss">
 @media (min-width: 1200px) {
   .container {
-    max-width: 768px;
+    max-width: 720px;
   }
 }
 
 .vue-command,
 .vue-command--invert {
-  width: 670px;
+  width: 100%;
 
   ::-webkit-scrollbar {
     width: 6px;
@@ -133,7 +154,7 @@ export default {
 
   .vue-command__history,
   .vue-command__history--invert {
-    height: 384px;
+    height: 350px;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
   }
