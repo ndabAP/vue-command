@@ -119,24 +119,24 @@ export default {
 Some properties can be changed, therefore, adding the `v-model` directive is
 required.
 
-| Property             | Description                                     | Type       | Default value                 | Required | `v-model` |
-| -------------------- | ----------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
-| `commands`           | See [Commands](#commands)                       | `Object`   | `{}`                          | No       | No        |
-| `cursor-position`    | Cursor position                                 | `Number`   | `0`                           | No       | Yes       |
-| `dispatched-queries` | Non-empty dispatched queries, successful or not | `Set`      | `new Set()`                   | No       | Yes       |
-| `event-resolver`     | See [Event resolver](#Event-resolver) section   | `Function` | See `newDefaultEventResolver` | No       | No        |
-| `help-text`          | Command help                                    | `String`   | `''`                          | No       | Yes       |
-| `help-timeout`       | Command help timeout                            | `Number`   | `3000`                        | No       | No        |
-| `hide-bar`           | Hides the bar                                   | `Boolean`  | `false`                       | No       | No        |
-| `hide-prompt`        | Hides the prompt                                | `Boolean`  | `false`                       | No       | No        |
-| `history`            | Terminal history                                | `Array`    | `[]`                          | No       | Yes       |
-| `history-position`   | Points to the latest dispatched query entry     | `Number`   | `0`                           | No       | Yes       |
-| `is-fullscreen`      | Terminal fullscreen mode                        | `Boolean`  | `false`                       | No       | Yes       |
-| `options-resolver`   | See [Options resolver](#Options-resolver)       | `Function` | `null`                        | No       | No        |
-| `parser`             | Query parser                                    | `Function` | See `defaultParser`           | No       | No        |
-| `prompt`             | Terminal prompt                                 | `String`   | `~$`                          | No       | No        |
-| `show-help`          | Show query help                                 | `Boolean`  | `false`                       | No       | No        |
-| `query`              | Terminal query                                  | `String`   | `''`                          | No       | Yes       |
+| Property             | Description                                   | Type       | Default value                 | Required | `v-model` |
+| -------------------- | --------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
+| `commands`           | See [Commands](#commands)                     | `Object`   | `{}`                          | No       | No        |
+| `cursor-position`    | Cursor position                               | `Number`   | `0`                           | No       | Yes       |
+| `dispatched-queries` | Non-empty dispatched queries                  | `Set`      | `new Set()`                   | No       | Yes       |
+| `event-resolver`     | See [Event resolver](#Event-resolver) section | `Function` | See `newDefaultEventResolver` | No       | No        |
+| `help-text`          | Command help                                  | `String`   | `''`                          | No       | Yes       |
+| `help-timeout`       | Command help timeout                          | `Number`   | `3000`                        | No       | No        |
+| `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                       | No       | No        |
+| `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
+| `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
+| `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
+| `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                       | No       | Yes       |
+| `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                        | No       | No        |
+| `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
+| `prompt`             | Terminal prompt                               | `String`   | `~$`                          | No       | No        |
+| `show-help`          | Show query help                               | `Boolean`  | `false`                       | No       | No        |
+| `query`              | Terminal query                                | `String`   | `''`                          | No       | Yes       |
 
 ### Commands
 
