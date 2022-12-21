@@ -10,6 +10,7 @@ import VueCommandQuery from '@/components/VueCommandQuery'
 import split from 'lodash.split'
 import trim from 'lodash.trim'
 import forEach from 'lodash.foreach'
+import isFunction from 'lodash.isfunction'
 
 // Suffix "KEY" is added to avoid collisions
 const ARROW_UP_KEY = 'ArrowUp'
@@ -50,9 +51,9 @@ export const defaultHistoryEventResolver = (refs, eventProvider) => {
 // Returns a list of default event resolver
 export const newDefaultEventResolver = () => [defaultHistoryEventResolver]
 
-// Creates a "stdout" with the given formatter and name. It exists as soon as
-// component is rendered
-export const createStdout = (formatter, name = 'VueCommandStdout') => markRaw(defineComponent({
+// Creates a "stdout" with the given formatter or text and name. It exits as
+// soon as the component has been mounted
+export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
   name,
   setup () {
     // This tears down the component automatically
@@ -60,7 +61,14 @@ export const createStdout = (formatter, name = 'VueCommandStdout') => markRaw(de
     onMounted(exit)
   },
 
-  render: formatter
+  render () {
+    if (isFunction(formatterOrText)) {
+      // This is automatically called with the given arguments
+      return formatterOrText()
+    }
+
+    return h('div', formatterOrText)
+  }
 }))
 
 // Formats the given text

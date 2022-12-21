@@ -181,7 +181,7 @@ Library provides helper methods to render terminal related content.
 | Function                      | Parameters                                                         | Description                           |
 | ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
-| `createStdout`                | `formatter, name = 'VueCommandStdout'`                             | Creates a "stdout" component          |
+| `createStdout`                | `formatterOrText, name = 'VueCommandStdout'`                       | Creates a "stdout" component          |
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
 | `defaultParser`               | `query`                                                            | Returns the default parser            |
@@ -199,8 +199,9 @@ import { createStdout, createQuery } from "vue-command";
 
 ### Formatters
 
-`createStdout` requires a formatter as the first argument to format the content
-as a list or table or something else.
+The first argument of `createStdout` can be either a primitive
+(`boolean`, `number` or `string`) or a formatter. A formatter formats the
+content as a list or table or something else.
 
 | Formatters       |
 | ---------------- |
@@ -213,6 +214,8 @@ Formatters can be imported by name:
 ```js
 import { listFormatter } from "vue-command";
 ```
+
+Another possible formatter could be a `jsonFormatter`.
 
 ## Provided
 
