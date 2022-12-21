@@ -1,3 +1,27 @@
+## [27.0.0](https://github.com/ndabAP/vue-command/compare/v26.0.0...v27.0.0) (2022-12-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* shorten description
+
+### Features
+
+* allow text as stdout helper argument ([e322c40](https://github.com/ndabAP/vue-command/commit/e322c40dbfb00777b154cbfe03b79066429f7836))
+* emit button events ([240a1ef](https://github.com/ndabAP/vue-command/commit/240a1efadf2118c57d45f7b46f7db2ebfc7df4fb))
+* set cursor position on arrow left/right ([c5ceeb0](https://github.com/ndabAP/vue-command/commit/c5ceeb0d404ff74c73ae19b7f3380ccf3fc6cf47))
+
+
+### Bug Fixes
+
+* dispatch without argument ([5982182](https://github.com/ndabAP/vue-command/commit/5982182d8c87cf8c5e86d15aed267a6e7da2fc71))
+* use recommended event wording ([567f04a](https://github.com/ndabAP/vue-command/commit/567f04afb1ab3cee63044da38a5cfb4adb4dccf5))
+
+
+### Documentation
+
+* shorten description ([86bf74f](https://github.com/ndabAP/vue-command/commit/86bf74f59c522c102f54a861189917653673ab83))
+
 ## [26.0.0](https://github.com/ndabAP/vue-command/compare/v25.0.0...v26.0.0) (2022-12-17)
 
 
