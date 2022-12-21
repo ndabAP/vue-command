@@ -119,24 +119,24 @@ export default {
 Some properties can be changed, therefore, adding the `v-model` directive is
 required.
 
-| Property             | Description                                     | Type       | Default value                 | Required | `v-model` |
-| -------------------- | ----------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
-| `commands`           | See [Commands](#commands)                       | `Object`   | `{}`                          | No       | No        |
-| `cursor-position`    | Cursor position                                 | `Number`   | `0`                           | No       | Yes       |
-| `dispatched-queries` | Non-empty dispatched queries, successful or not | `Set`      | `new Set()`                   | No       | Yes       |
-| `event-resolver`     | See [Event resolver](#Event-resolver) section   | `Function` | See `newDefaultEventResolver` | No       | No        |
-| `help-text`          | Command help                                    | `String`   | `''`                          | No       | Yes       |
-| `help-timeout`       | Command help timeout                            | `Number`   | `3000`                        | No       | No        |
-| `hide-bar`           | Hides the bar                                   | `Boolean`  | `false`                       | No       | No        |
-| `hide-prompt`        | Hides the prompt                                | `Boolean`  | `false`                       | No       | No        |
-| `history`            | Terminal history                                | `Array`    | `[]`                          | No       | Yes       |
-| `history-position`   | Points to the latest dispatched query entry     | `Number`   | `0`                           | No       | Yes       |
-| `is-fullscreen`      | Terminal fullscreen mode                        | `Boolean`  | `false`                       | No       | Yes       |
-| `options-resolver`   | See [Options resolver](#Options-resolver)       | `Function` | `null`                        | No       | No        |
-| `parser`             | Query parser                                    | `Function` | See `defaultParser`           | No       | No        |
-| `prompt`             | Terminal prompt                                 | `String`   | `~$`                          | No       | No        |
-| `show-help`          | Show query help                                 | `Boolean`  | `false`                       | No       | No        |
-| `query`              | Terminal query                                  | `String`   | `''`                          | No       | Yes       |
+| Property             | Description                                   | Type       | Default value                 | Required | `v-model` |
+| -------------------- | --------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
+| `commands`           | See [Commands](#commands)                     | `Object`   | `{}`                          | No       | No        |
+| `cursor-position`    | Cursor position                               | `Number`   | `0`                           | No       | Yes       |
+| `dispatched-queries` | Non-empty dispatched queries                  | `Set`      | `new Set()`                   | No       | Yes       |
+| `event-resolver`     | See [Event resolver](#Event-resolver) section | `Function` | See `newDefaultEventResolver` | No       | No        |
+| `help-text`          | Command help                                  | `String`   | `''`                          | No       | Yes       |
+| `help-timeout`       | Command help timeout                          | `Number`   | `3000`                        | No       | No        |
+| `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                       | No       | No        |
+| `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
+| `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
+| `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
+| `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                       | No       | Yes       |
+| `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                        | No       | No        |
+| `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
+| `prompt`             | Terminal prompt                               | `String`   | `~$`                          | No       | No        |
+| `show-help`          | Show query help                               | `Boolean`  | `false`                       | No       | No        |
+| `query`              | Terminal query                                | `String`   | `''`                          | No       | Yes       |
 
 ### Commands
 
@@ -181,7 +181,7 @@ Library provides helper methods to render terminal related content.
 | Function                      | Parameters                                                         | Description                           |
 | ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
-| `createStdout`                | `formatter, name = 'VueCommandStdout'`                             | Creates a "stdout" component          |
+| `createStdout`                | `formatterOrText, name = 'VueCommandStdout'`                       | Creates a "stdout" component          |
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
 | `defaultParser`               | `query`                                                            | Returns the default parser            |
@@ -199,8 +199,9 @@ import { createStdout, createQuery } from "vue-command";
 
 ### Formatters
 
-`createStdout` requires a formatter as the first argument to format the content
-as a list or table or something else.
+The first argument of `createStdout` can be either a primitive
+(`boolean`, `number` or `string`) or a formatter. A formatter formats the
+content as a list or table or something else.
 
 | Formatters       |
 | ---------------- |
@@ -213,6 +214,8 @@ Formatters can be imported by name:
 ```js
 import { listFormatter } from "vue-command";
 ```
+
+Another possible formatter could be a `jsonFormatter`.
 
 ## Provided
 
@@ -260,13 +263,21 @@ inject: ["exit", "terminal"],
 | `setQuery`           |
 | `terminal`           |
 
+## Events
+
+| Name                | Description                        |
+| ------------------- | ---------------------------------- |
+| `closeClicked`      | Emitted on button close click      |
+| `minimizeClicked`   | Emitted on button minimize click   |
+| `fullscreenClicked` | Emitted on button fullscreen click |
+
 ## Nice-to-haves
 
 These features didn't make it into the last release. If you would like to
 contribute please consult `CONTRIBUTING.md`.
 
 - Draggable terminal
-- Events (like query dispatched, close button clicked, etc.)
+- More events (like query dispatched)
 - More terminal slots
 - Multi-line queries
 - Syntax highlighting

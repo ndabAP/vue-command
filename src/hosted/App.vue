@@ -8,8 +8,7 @@
         :prompt="prompt"
         help-text="Type in help"
         :invert="invert"
-        show-help>
-      </vue-command>
+        show-help />
     </div>
   </main>
 </template>
@@ -21,8 +20,7 @@ import {
   createStdout,
   createQuery,
   listFormatter,
-  newDefaultHistory,
-  textFormatter
+  newDefaultHistory
 } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
@@ -63,8 +61,7 @@ export default {
         },
 
         'hello-world': () => {
-          const text = 'Hello world'
-          return createStdout(textFormatter(text))
+          return createStdout('Hello world')
         },
 
         // TODO Create terminal-like columns
@@ -92,6 +89,8 @@ body {
   background: #000;
 
   main {
+    margin-left: 5px;
+    margin-right: 5px;
     position: absolute;
     left: 50%;
     top: 50%;
