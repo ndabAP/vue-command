@@ -31,7 +31,7 @@ Let's start with a dead simple example. We want to send "Hello world" to
 </template>
 
 <script>
-import VueCommand, { createStdout, textFormatter } from "vue-command";
+import VueCommand, { createStdout } from "vue-command";
 import "vue-command/dist/vue-command.css";
 
 export default {
@@ -41,7 +41,7 @@ export default {
 
   data: () => ({
     commands: {
-      "hello-world": () => createStdout(textFormatter("Hello world")),
+      "hello-world": () => createStdout("Hello world"),
     },
   }),
 };
@@ -59,7 +59,7 @@ switch the terminal into fullscreen mode.
 
 ```vue
 <template>
-  <div v-show="terminal.isFullscreen" style="height: 100%">
+  <div v-show="terminal.isFullscreen">
     <textarea ref="nano" @keyup.ctrl.x.exact="exit">
 This is a nano text editor emulator! Press Ctrl + x to leave.</textarea
     >
@@ -131,6 +131,7 @@ required.
 | `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
 | `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
 | `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
+| `invert`             | Inverts the terminals colors                  | `Boolean`  | `false`                       | No       | No        |
 | `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                       | No       | Yes       |
 | `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                        | No       | No        |
 | `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
