@@ -494,7 +494,11 @@ defineExpose({
 <style lang="scss">
 .vue-command,
 .vue-command--invert {
-  font-family: 'Fira Code', monospace;
+  font-family: Consolas,
+    Monaco,
+    'Andale Mono',
+    'Ubuntu Mono',
+    monospace;
 
   @mixin clearfix() {
 

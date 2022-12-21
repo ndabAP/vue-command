@@ -235,7 +235,12 @@ defineExpose({
 
     input::placeholder,
     input {
-      font: 1rem monospace;
+      font: 1rem Consolas,
+        Monaco,
+        'Andale Mono',
+        'Ubuntu Mono',
+        monospace;
+      ;
     }
 
     .vue-command__query__input,
