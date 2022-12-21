@@ -1,40 +1,69 @@
 <template>
   <div
     ref="vueCommandRef"
-    class="vue-command">
+    :class="{
+      'vue-command': !invert,
+      'vue-command--invert': invert
+    }">
     <slot name="bar">
       <div
         v-if="!hideBar"
-        class="vue-command__bar">
+        :class="{
+          'vue-command__bar': !invert,
+          'vue-command__bar--invert': invert
+        }">
         <span
-          class="vue-command__bar__button vue-command__bar__button--close"
+          :class="{
+            'vue-command__bar__button': !invert,
+            'vue-command__bar__button--invert': invert,
+            'vue-command__bar__button--fullscreen': !invert,
+            'vue-command__bar__button--fullscreen--invert': invert
+          }"
           @click="emits('closeClicked')" />
         <span
-          class="vue-command__bar__button vue-command__bar__button--minimize"
+          :class="{
+            'vue-command__bar__button': !invert,
+            'vue-command__bar__button--invert': invert,
+            'vue-command__bar__button--minimize': !invert,
+            'vue-command__bar__button--minimize--invert': invert
+          }"
           @click="emits('minimizeClicked')" />
         <span
-          class="vue-command__bar__button vue-command__bar__button--fullscreen"
+          :class="{
+            'vue-command__bar__button': !invert,
+            'vue-command__bar__button--invert': invert,
+            'vue-command__bar__button--close': !invert,
+            'vue-command__bar__button--close--invert': invert
+          }"
           @click="emits('fullscreenClicked')" />
       </div>
     </slot>
 
     <div
       ref="vueCommandHistoryRef"
-      class="vue-command__history"
+      :class="{
+        'vue-command__history': !invert,
+        'vue-command__history--invert': invert
+      }"
       @click="autoFocus">
       <div
         v-for="(component, index) in local.history"
         v-show="shouldShowHistoryEntry(index)"
         :key="index"
         :class="{
-          'vue-command__history__entry': true,
-          'vue-command__history__entry--fullscreen': shouldBeFullscreen(index)
+          'vue-command__history__entry': !invert,
+          'vue-command__history__entry--invert': invert,
+          'vue-command__history__entry--fullscreen': shouldBeFullscreen(index),
+          'vue-command__history__entry--fullscreen--invert': invert && shouldBeFullscreen(index)
         }">
         <!-- User given components like bash and query -->
         <component
           :is="component"
           ref="vueCommandHistoryEntryComponentRefs"
-          class="vue-command__history__entry__component" />
+          :class="{
+            'vue-command__history__entry__component': !invert,
+            'vue-command__history__entry__component--invert': invert
+          }" />
       </div>
     </div>
   </div>
@@ -140,6 +169,12 @@ const props = defineProps({
     type: Number
   },
 
+  invert: {
+    default: false,
+    required: false,
+    type: Boolean
+  },
+
   isFullscreen: {
     default: false,
     required: false,
@@ -214,6 +249,7 @@ const terminal = computed(() => ({
   dispatchedQueries: local.dispatchedQueries,
   history: local.history,
   historyPosition: local.historyPosition,
+  invert: props.invert,
   isFullscreen: local.isFullscreen,
   prompt: local.prompt,
   query: local.query
@@ -428,6 +464,7 @@ provide('helpText', props.helpText)
 provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('incrementHistory', incrementHistory)
+provide('invert', props.invert)
 provide('optionsResolver', props.optionsResolver)
 provide('parser', props.parser)
 provide('programs', programs)
@@ -455,8 +492,13 @@ defineExpose({
 </script>
 
 <style lang="scss">
-.vue-command {
-  $seashell: #f1f1f1;
+.vue-command,
+.vue-command--invert {
+  font-family: Consolas,
+    Monaco,
+    'Andale Mono',
+    'Ubuntu Mono',
+    monospace;
 
   @mixin clearfix() {
 
@@ -474,17 +516,18 @@ defineExpose({
   overflow-y: hidden;
   overflow-x: hidden;
 
-  .vue-command__bar {
+  .vue-command__bar,
+  .vue-command__bar--invert {
     @include clearfix();
     position: inherit;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    background-color: #111316;
   }
 
-  .vue-command__bar__button {
+  .vue-command__bar__button,
+  .vue-command__bar__button--invert {
     display: inline-block;
     border-radius: 100%;
 
@@ -500,31 +543,15 @@ defineExpose({
     }
   }
 
-  .vue-command__bar__button--close {
-    background-color: #ff5f58;
-  }
-
-  .vue-command__bar__button--minimize {
-    background-color: #ffbd2e;
-  }
-
-  .vue-command__bar__button--fullscreen {
-    background-color: #29ca41;
-  }
-
+  .vue-command__history--invert,
   .vue-command__history {
     overflow: auto;
     word-break: break-all;
-    background-color: #111316;
     display: block;
     padding: 12px 12px 12px 12px;
     margin: 0;
     white-space: pre-line;
     line-height: 1.33;
-    color: $seashell;
-    font-size: 1rem;
-    font-family: monospace;
-    color: #ffffff;
     height: 100%;
 
     /* Provide reasonable default values */
@@ -540,10 +567,45 @@ defineExpose({
       border: none;
       outline: none;
       flex: 1;
-      width: 100%;
       font-size: 1rem;
+      width: 100%;
       resize: none;
       overflow: hidden;
+    }
+  }
+
+  .vue-command__history__entry--fullscreen {
+    height: 100%;
+  }
+}
+
+.vue-command {
+  $seashell: #f1f1f1;
+
+  .vue-command__bar {
+    background-color: #111316;
+  }
+
+  .vue-command__bar__button--close {
+    background-color: #ff5f58;
+  }
+
+  .vue-command__bar__button--minimize {
+    background-color: #ffbd2e;
+  }
+
+  .vue-command__bar__button--fullscreen {
+    background-color: #29ca41;
+  }
+
+  .vue-command__history {
+    background-color: #111316;
+    color: $seashell;
+
+    /* Provide reasonable default values */
+    input,
+    textarea {
+      background: none;
       color: #ffffff;
 
       &::placeholder {
@@ -551,9 +613,41 @@ defineExpose({
       }
     }
   }
+}
 
-  .vue-command__history__entry--fullscreen {
-    height: 100%;
+.vue-command--invert {
+  $seashell-invert: #0e0e0e;
+
+  .vue-command__bar--invert {
+    background-color: #eeece9;
+  }
+
+  .vue-command__bar__button--close--invert {
+    background-color: #00a0a7;
+  }
+
+  .vue-command__bar__button--minimize--invert {
+    background-color: #0042d1;
+  }
+
+  .vue-command__bar__button--fullscreen--invert {
+    background-color: #d635be;
+  }
+
+  .vue-command__history--invert {
+    background-color: #eeece9;
+    color: $seashell-invert;
+
+    /* Provide reasonable default values */
+    input,
+    textarea {
+      background: none;
+      color: #000000;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
   }
 }
 </style>

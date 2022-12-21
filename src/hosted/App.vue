@@ -1,34 +1,39 @@
 <template>
-  <main>
-    <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
-    <p>A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support!</p>
+  <section>
+    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h1>vue-command </h1>
+            <p class="lead">
+              A fully working, most feature-rich Vue.js terminal emulator.
+            </p>
+          </div>
+        </div>
 
-    <ul>
-      <li> Simple, yet extensible API</li>
-      <li> Supports asynchronous commands</li>
-      <li> Supports fullscreen mode</li>
-      <li> Provide your own parser (falls back to simple one)</li>
-      <li> Provide your own event resolver</li>
-      <li> Autocompletion resolver (with <kbd>↹</kbd>)</li>
-      <li> Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)</li>
-      <li> Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)</li>
-      <li> Customize the terminal with slots</li>
-    </ul>
+        <div class="row mb-4">
+          <div class="col">
+            <vue-command
+              v-model:history="history"
+              v-model:query="query"
+              :commands="commands"
+              :hide-bar="hideBar"
+              :hide-prompt="hidePrompt"
+              :invert="invert"
+              :prompt="prompt"
+              help-text="Type in help"
+              show-help />
+          </div>
+        </div>
 
-    <vue-command
-      v-model:history="history"
-      v-model:query="query"
-      :commands="commands"
-      :prompt="prompt"
-      help-text="Type in help"
-      show-help />
-
-    <pre>
-      <code>
-$ npm install --save vue-command
-      </code>
-    </pre>
-  </main>
+        <div class="row">
+          <div class="col">
+            <pre><code>$ npm install --save vue-command</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="js">
@@ -43,7 +48,7 @@ import {
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
 
-const PROMPT = '~$'
+const PROMPT = 'neil@moon~$'
 
 export default {
   components: {
@@ -51,7 +56,10 @@ export default {
   },
 
   setup () {
+    const hideBar = ref(false)
+    const hidePrompt = ref(false)
     const history = ref(newDefaultHistory())
+    const invert = ref(false)
     const prompt = ref(PROMPT)
     const query = ref('')
 
@@ -91,7 +99,10 @@ export default {
         norris: () => ChuckNorris
       },
 
+      hideBar,
+      hidePrompt,
       history,
+      invert,
       prompt,
       query
     }
@@ -100,45 +111,59 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  font-family: sans-serif;
-  display: grid;
-  place-items: center;
-  margin: 0;
+@media (min-width: 1200px) {
+  .container {
+    max-width: 768px;
+  }
+}
 
-  main {
-    max-width: 400px;
-    margin-left: 5px;
-    margin-right: 5px;
+.vue-command,
+.vue-command--invert {
+  width: 670px;
 
-    .vue-command {
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
 
-      ::-webkit-scrollbar-track {
-        background: #252525;
-      }
+  .vue-command__bar,
+  .vue-command__bar--invert {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+  }
 
-      ::-webkit-scrollbar-thumb {
-        background: #f1f1f1;
-      }
+  .vue-command__history,
+  .vue-command__history--invert {
+    height: 384px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+}
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: #333;
-      }
+.vue-command {
+  ::-webkit-scrollbar-track {
+    background: #252525;
+  }
 
-      .vue-command__bar {
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
-      }
+  ::-webkit-scrollbar-thumb {
+    background: #f1f1f1;
+  }
 
-      .vue-command__history {
-        height: 260px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-    }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+}
+
+.vue-command--invert {
+  ::-webkit-scrollbar-track {
+    background: #dadada;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #0e0e0e;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #cccccc;
   }
 }
 </style>

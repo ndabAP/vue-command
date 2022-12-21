@@ -1,8 +1,15 @@
 <template>
-  <div class="vue-command__query">
+  <div
+    :class="{
+      'vue-command__query': !invert,
+      'vue-command__query--invert': invert
+    }">
     <span
       v-if="!hidePrompt"
-      class="vue-command__query__prompt">
+      :class="{
+        'vue-command__query__prompt': !invert,
+        'vue-command__query__prompt--invert': invert
+      }">
       {{ local.prompt }}
     </span>
 
@@ -11,7 +18,10 @@
     <input
       ref="queryRef"
       v-model="local.query"
-      class="vue-command__query__input"
+      :class="{
+        'vue-command__query__input': !invert,
+        'vue-command__query__input--invert': invert
+      }"
       :disabled="isOutdated"
       :placeholder="placeholder"
       autocapitalize="none"
@@ -57,6 +67,7 @@ import size from 'lodash.size'
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
 const hidePrompt = inject('hidePrompt')
+const invert = inject('invert')
 const helpText = inject('helpText')
 const helpTimeout = inject('helpTimeout')
 const optionsResolver = inject('optionsResolver')
@@ -215,27 +226,56 @@ defineExpose({
 </script>
 
 <style lang="scss">
-.vue-command {
-  .vue-command__query {
+.vue-command,
+.vue-command--invert {
+
+  .vue-command__query,
+  .vue-command__query--invert {
     display: flex;
-  }
 
-  .vue-command__query__input {
-    background: none;
-    border: none;
-    outline: none;
-    flex: 1;
-    width: 100%;
-    font-family: monospace;
-    font-size: 1rem;
+    input::placeholder,
+    input {
+      font: 1rem Consolas,
+        Monaco,
+        'Andale Mono',
+        'Ubuntu Mono',
+        monospace;
+      ;
+    }
 
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+    .vue-command__query__input,
+    .vue-command__query__input--invert {
+      border: none;
+      outline: none;
+      flex: 1;
+      width: 100%;
+
+    }
+
+    .vue-command__query__prompt,
+    .vue-command__query__prompt--invert {
+      margin-right: 0.25rem;
     }
   }
+}
 
-  .vue-command__query__prompt {
-    margin-right: 0.25rem;
+.vue-command {
+  .vue-command__query {
+    .vue-command__query__input {
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}
+
+.vue-command--invert {
+  .vue-command__query--invert {
+    .vue-command__query__input--invert {
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
   }
 }
 </style>
