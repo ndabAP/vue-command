@@ -1,3 +1,14 @@
+## [28.0.0](https://github.com/ndabAP/vue-command/compare/v27.1.0...v28.0.0) (2022-12-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* add missing invert
+
+### Documentation
+
+* add missing invert ([4d2a5de](https://github.com/ndabAP/vue-command/commit/4d2a5deaf953f89309f62fff216ddaaaa023247f))
+
 ## [27.1.0](https://github.com/ndabAP/vue-command/compare/v27.0.0...v27.1.0) (2022-12-21)
 
 
