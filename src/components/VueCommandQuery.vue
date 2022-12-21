@@ -23,11 +23,11 @@
       @keydown.ctrl.r.exact.prevent="reverseISearch"
       @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
       @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
-      @keyup.enter.exact="submit" />
+      @keyup.enter.exact="submit">
   </div>
 </template>
 
-<script setup lang="js">
+<script setup>
 import {
   ref,
   onMounted,
@@ -138,6 +138,8 @@ const autocompleteQuery = async () => {
       appendToHistory(createStdout(listFormatter(...commands)))
 
       // We have to wait for the query to be loaded
+      // TODO Maybe listen to some event, indicating that the query has been
+      // mounted
       await nextTick()
 
       // Overwrite new query with old one

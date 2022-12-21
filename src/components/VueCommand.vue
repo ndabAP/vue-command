@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script setup lang="js">
+<script setup>
 import {
   ref,
   defineExpose,
@@ -104,6 +104,7 @@ const props = defineProps({
   },
 
   helpText: {
+    default: null,
     required: false,
     type: String
   },
