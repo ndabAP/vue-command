@@ -8,13 +8,13 @@
         class="vue-command__bar">
         <span
           class="vue-command__bar__button vue-command__bar__button--close"
-          @click="emits('click-close')"></span>
+          @click="emits('closeClicked')" />
         <span
           class="vue-command__bar__button vue-command__bar__button--minimize"
-          @click="emits('click-minimize')"></span>
+          @click="emits('minimizeClicked')" />
         <span
           class="vue-command__bar__button vue-command__bar__button--fullscreen"
-          @click="emits('click-fullscreen')"></span>
+          @click="emits('fullscreenClicked')" />
       </div>
     </slot>
 
@@ -180,9 +180,9 @@ const props = defineProps({
 
 // Update user given properties
 const emits = defineEmits([
-  'click-close',
-  'click-minimize',
-  'click-fullscreen',
+  'closeClicked',
+  'minimizeClicked',
+  'fullscreenClicked',
   'update:cursorPosition',
   'update:dispatchedQueries',
   'update:history',

@@ -260,13 +260,21 @@ inject: ["exit", "terminal"],
 | `setQuery`           |
 | `terminal`           |
 
+## Events
+
+| Name                | Description                        |
+| ------------------- | ---------------------------------- |
+| `closeClicked`      | Emitted on button close click      |
+| `minimizeClicked`   | Emitted on button minimize click   |
+| `fullscreenClicked` | Emitted on button fullscreen click |
+
 ## Nice-to-haves
 
 These features didn't make it into the last release. If you would like to
 contribute please consult `CONTRIBUTING.md`.
 
 - Draggable terminal
-- Events (like query dispatched, close button clicked, etc.)
+- More events (like query dispatched)
 - More terminal slots
 - Multi-line queries
 - Syntax highlighting
