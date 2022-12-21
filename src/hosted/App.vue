@@ -3,14 +3,26 @@
     <h1><a href="https://github.com/ndabAP/vue-command">vue-command</a></h1>
     <p>A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support!</p>
 
+    <ul>
+      <li> Simple, yet extensible API</li>
+      <li> Supports asynchronous commands</li>
+      <li> Supports fullscreen mode</li>
+      <li> Provide your own parser (falls back to simple one)</li>
+      <li> Provide your own event resolver</li>
+      <li> Autocompletion resolver (with <kbd>↹</kbd>)</li>
+      <li> Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)</li>
+      <li> Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)</li>
+      <li> Customize the terminal with slots</li>
+    </ul>
+
     <vue-command
       v-model:history="history"
       v-model:query="query"
       :commands="commands"
       :prompt="prompt"
       help-text="Type in help"
-      show-help>
-    </vue-command>
+      show-help />
+
     <pre>
       <code>
 $ npm install --save vue-command
@@ -26,8 +38,7 @@ import {
   createStdout,
   createQuery,
   listFormatter,
-  newDefaultHistory,
-  textFormatter
+  newDefaultHistory
 } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
@@ -67,8 +78,7 @@ export default {
         },
 
         'hello-world': () => {
-          const text = 'Hello world'
-          return createStdout(textFormatter(text))
+          return createStdout('Hello world')
         },
 
         // TODO Create terminal-like columns
@@ -98,10 +108,8 @@ body {
 
   main {
     max-width: 400px;
-
-    p {
-      font-family: monospace;
-    }
+    margin-left: 5px;
+    margin-right: 5px;
 
     .vue-command {
       ::-webkit-scrollbar {
