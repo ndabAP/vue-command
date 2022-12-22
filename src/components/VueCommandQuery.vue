@@ -29,6 +29,7 @@
       type="text"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
+      @keydown.ctrl.c.exact.prevent="sigint"
       @keydown.tab.exact.prevent="autocompleteQuery"
       @keydown.ctrl.r.exact.prevent="reverseISearch"
       @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
@@ -54,6 +55,7 @@ import {
 import {
   defaultParser,
   createStdout,
+  createQuery,
   listFormatter
 } from '@/library'
 import head from 'lodash.head'
@@ -182,6 +184,12 @@ const showDelayedHelp = () => {
     unwatchIsOutdated()
   })
 }
+// Cancels the current query and creates a new one
+const sigint = () => {
+  isOutdated.value = true
+  local.query = `${local.query}^C`
+  appendToHistory(createQuery())
+}
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
   isOutdated.value = true
@@ -222,7 +230,7 @@ onMounted(() => {
   focus()
 
   // Show eventually help as placeholder
-    showDelayedHelp()
+  showDelayedHelp()
 })
 
 defineExpose({
