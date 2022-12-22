@@ -167,14 +167,19 @@ const reverseISearch = event => {
   // TODO
   // console.debug(event)
 }
+// Shows a user defined help text as placeholder after timeout millseconds
 const showDelayedHelp = () => {
+  if (and(!showHelp, isOutdated.value)) {
+    return
+  }
+
   const timeout = setTimeout(() => {
     placeholder.value = helpText
   }, helpTimeout)
 
-  const unwatchIsDisabled = watch(isOutdated, () => {
+  const unwatchIsOutdated = watch(isOutdated, () => {
     clearTimeout(timeout)
-    unwatchIsDisabled()
+    unwatchIsOutdated()
   })
 }
 // Deactivates this query and dispatches it to execute the command
@@ -217,9 +222,7 @@ onMounted(() => {
   focus()
 
   // Show eventually help as placeholder
-  if (and(showHelp, !isOutdated.value)) {
     showDelayedHelp()
-  }
 })
 
 defineExpose({
