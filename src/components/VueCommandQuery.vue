@@ -91,6 +91,7 @@ const local = reactive({
 // and parsed query if there are more than two arguments
 const autocompleteQuery = async () => {
   const query = local.query
+
   // An empty query shall be never autocompleted
   if (isEmpty(query)) {
     return
@@ -121,7 +122,7 @@ const autocompleteQuery = async () => {
       const program = head(commands)
       if (and(
         // Check if query expects autocomplete
-        lt(program.length, size(trimStart(query))),
+        lt(size(program), size(trimStart(query))),
         // Check if user provided options resolver
         isFunction(optionsResolver), isFunction(parser))
       ) {
@@ -130,7 +131,7 @@ const autocompleteQuery = async () => {
       }
 
       // If query has white spaces at the end, ignore
-      if (gt(program.length, size(trimStart(query)))) {
+      if (gt(size(program), size(trimStart(query)))) {
         setQuery(program)
       }
 
@@ -200,11 +201,12 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
-const unwatchIsDisabled = watch(isOutdated, () => {
+// Free resources if query is outdated/inactive
+const unwatchIsOutdated = watch(isOutdated, () => {
   unwatchTerminalQuery()
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
-  unwatchIsDisabled()
+  unwatchIsOutdated()
   placeholder.value = ''
 })
 

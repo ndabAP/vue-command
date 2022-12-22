@@ -105,6 +105,7 @@ import last from 'lodash.last'
 import eq from 'lodash.eq'
 import nth from 'lodash.nth'
 import lt from 'lodash.lt'
+import size from 'lodash.size'
 
 const props = defineProps({
   commands: {
@@ -265,11 +266,11 @@ const programs = computed(() => {
 const shouldShowHistoryEntry = computed(() => {
   return index => or(
     !local.isFullscreen,
-    and(local.isFullscreen, eq(index, local.history.length - 1))
+    and(local.isFullscreen, eq(index, size(local.history) - 1))
   )
 })
 const shouldBeFullscreen = computed(() => {
-  return index => and(local.isFullscreen, eq(index, local.history.length - 1))
+  return index => and(local.isFullscreen, eq(index, size(local.history) - 1))
 })
 
 // Removes and adds the dispatched query to enforce the quries first position
