@@ -15,6 +15,7 @@
         <div class="row mb-4">
           <div class="col">
             <vue-command
+              v-model:dispatched-queries="dispatchedQueries"
               v-model:history="history"
               v-model:query="query"
               :commands="commands"
@@ -22,8 +23,8 @@
               :hide-prompt="hidePrompt"
               :invert="invert"
               :prompt="prompt"
-              help-text="Type in help"
               :options-resolver="optionsResolver"
+              help-text="Type in help"
               show-help />
           </div>
         </div>
@@ -45,7 +46,9 @@ import {
   createStdout,
   createQuery,
   listFormatter,
-  newDefaultHistory
+  newDefaultHistory,
+  tableFormatter,
+  jsonFormatter
 } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
@@ -58,6 +61,7 @@ export default {
   },
 
   setup () {
+    const dispatchedQueries = ref(new Set())
     const hideBar = ref(false)
     const hidePrompt = ref(false)
     const history = ref(newDefaultHistory())
@@ -72,6 +76,7 @@ export default {
             case 1:
               setQuery('cd home')
               break
+            // TODO Check last index instead of second
             case 2:
               if ('home'.startsWith(parsedQuery[1]) && parsedQuery[1] !== 'home') {
                 setQuery('cd home')
@@ -114,10 +119,15 @@ export default {
           return createStdout(listFormatter(...list))
         },
 
+        json: () => {
+          return createStdout(jsonFormatter({ test: 1 }))
+        },
+
         nano: () => NanoEditor,
         norris: () => ChuckNorris
       },
 
+      dispatchedQueries,
       hideBar,
       hidePrompt,
       history,

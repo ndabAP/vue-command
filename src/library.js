@@ -110,6 +110,11 @@ export const listFormatter = (...lis) => {
 // Returns a history with one query as first input
 export const newDefaultHistory = () => [createQuery()]
 
+// Formats the object as json
+export const jsonFormatter = value => {
+  return h('div', JSON.stringify(value, null, 2))
+}
+
 // Formats the rows as HTML table
 export const tableFormatter = rows => {
   return () => {

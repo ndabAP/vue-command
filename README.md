@@ -206,6 +206,7 @@ content as a list or table or something else.
 
 | Formatters       |
 | ---------------- |
+| `jsonFormatter`  |
 | `listFormatter`  |
 | `tableFormatter` |
 | `textFormatter`  |
@@ -215,8 +216,6 @@ Formatters can be imported by name:
 ```js
 import { listFormatter } from "vue-command";
 ```
-
-Another possible formatter could be a `jsonFormatter`.
 
 ## Provided
 
