@@ -1,3 +1,11 @@
+## [28.1.0](https://github.com/ndabAP/vue-command/compare/v28.0.0...v28.1.0) (2022-12-22)
+
+
+### Features
+
+* add ctrl + c ([37911a1](https://github.com/ndabAP/vue-command/commit/37911a168cb2cb769136059bfd10fc1d1e8c71d2))
+* add json formatter ([9a24401](https://github.com/ndabAP/vue-command/commit/9a24401d514f77ca0d19d8a0ccd92b75324deb2a))
+
 ## [28.0.0](https://github.com/ndabAP/vue-command/compare/v27.1.0...v28.0.0) (2022-12-21)
 
 
