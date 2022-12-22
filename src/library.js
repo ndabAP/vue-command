@@ -63,7 +63,7 @@ export const createStdout = (formatterOrText, name = 'VueCommandStdout') => mark
 
   render () {
     if (isFunction(formatterOrText)) {
-      // This is automatically called with the given arguments
+      // This is automatically called with the bound arguments
       return formatterOrText()
     }
 
@@ -85,11 +85,10 @@ export const textFormatter = (text, innerHtml = false) => {
 // Creates a command not found component
 export const createCommandNotFound = (command, notFoundText = 'command not found', name = 'VueCommandNotFound') => {
   const text = `${command}: ${notFoundText}`
-  return createStdout(textFormatter(text), name)
+  return createStdout(text, name)
 }
 
 // Creates a new query component
-// TODO Add name
 export const createQuery = () => markRaw(VueCommandQuery)
 
 // A simple query parser which trims the query and splits the arguments by
@@ -97,7 +96,6 @@ export const createQuery = () => markRaw(VueCommandQuery)
 export const defaultParser = query => split(trim(query), ' ')
 
 // Formats the given elements as a list
-// TODO Use HTML to enforce a new line
 export const listFormatter = (...lis) => {
   return () => {
     const ul = []
@@ -118,13 +116,11 @@ export const tableFormatter = rows => {
     const tbody = []
     forEach(rows, row => {
       const trs = []
-      forEach(row, cell => {
-        const td = h('td', cell)
-        trs.push(td)
+      forEach(row, td => {
+        trs.push(h('td', td))
       })
 
-      const tr = h('tr', trs)
-      tbody.push(tr)
+      tbody.push(h('tr', trs))
     })
 
     return h('table', tbody)

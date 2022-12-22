@@ -35,6 +35,7 @@ module.exports = {
     'vue/attributes-order': 'error',
     'vue/order-in-components': 'error',
     'vue/html-indent': 'error',
+    'vue/one-component-per-file': 'off',
     quotes: ['error', 'single']
   },
   overrides: [
