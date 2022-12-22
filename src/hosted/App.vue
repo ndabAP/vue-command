@@ -91,7 +91,7 @@ export default {
       commands: {
         cd: parsed => {
           if (parsed.length < 1) {
-            return
+            return createQuery()
           }
           if (parsed[1] === 'home') {
             prompt.value = `${PROMPT}/home`
@@ -117,6 +117,15 @@ export default {
         help: () => {
           const list = ['cd', 'hello-world', 'help', 'nano', 'norris']
           return createStdout(listFormatter(...list))
+        },
+
+        history: () => {
+          const history = []
+          for (const [index, entry] of [...dispatchedQueries.value].entries()) {
+            history.push([index, entry])
+          }
+
+          return createStdout(tableFormatter(history))
         },
 
         json: () => {
