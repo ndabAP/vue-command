@@ -186,6 +186,7 @@ Library provides helper methods to render terminal related content.
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
 | `defaultParser`               | `query`                                                            | Returns the default parser            |
+| `jsonFormatter`               | `value`                                                            | See [Formatters](#formatters)         |
 | `listFormatter`               | `...lis`                                                           | See [Formatters](#formatters)         |
 | `newDefaultEventResolver`     |                                                                    | Returns a new default event resolver  |
 | `newDefaultHistory`           |                                                                    | Returns a new default history         |
