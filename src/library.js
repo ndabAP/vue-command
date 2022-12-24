@@ -16,10 +16,9 @@ import isFunction from 'lodash.isfunction'
 const ARROW_UP_KEY = 'ArrowUp'
 const ARROW_DOWN_KEY = 'ArrowDown'
 
-// Cycles through dispatched queries with arrow keyes
-export const defaultHistoryEventResolver = (refs, eventProvider) => {
-  // TODO Bind on last query?
-  const vueCommandHistoryRef = refs.vueCommandHistoryRef
+// Cycles through dispatched queries with arrow keys
+export const defaultHistoryEventResolver = (refs, { decrementHistory, incrementHistory }) => {
+  const vueCommandRef = refs.vueCommandRef
 
   const eventResolver = event => {
     switch (event.key) {
@@ -34,22 +33,35 @@ export const defaultHistoryEventResolver = (refs, eventProvider) => {
         switch (event.key) {
           // Back in history, index down
           case ARROW_UP_KEY:
-            eventProvider.decrementHistory()
+            decrementHistory()
             break
 
           // Back in history, index up
           case ARROW_DOWN_KEY:
-            eventProvider.incrementHistory()
+            incrementHistory()
             break
         }
     }
   }
 
-  vueCommandHistoryRef.addEventListener('keydown', eventResolver)
+  vueCommandRef.addEventListener('keydown', eventResolver)
+}
+
+export const defaultSignalEventResolver = (refs, { sendSignal }) => {
+  const vueCommandRef = refs.vueCommandRef
+
+  const eventResolver = event => {
+    switch (event.key) {
+      // Validate event
+    }
+    sendSignal('SIGINT')
+  }
+
+  vueCommandRef.addEventListener('keydown', eventResolver)
 }
 
 // Returns a list of default event resolver
-export const newDefaultEventResolver = () => [defaultHistoryEventResolver]
+export const newDefaultEventResolver = () => [defaultHistoryEventResolver, defaultSignalEventResolver]
 
 // Creates a "stdout" with the given formatter or text and name. It exits as
 // soon as the component has been mounted
