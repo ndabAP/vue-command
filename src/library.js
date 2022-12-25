@@ -15,6 +15,7 @@ import isFunction from 'lodash.isfunction'
 // Suffix "KEY" is added to avoid collisions
 const ARROW_UP_KEY = 'ArrowUp'
 const ARROW_DOWN_KEY = 'ArrowDown'
+const C_KEY = 'c'
 
 // Cycles through dispatched queries with arrow keys
 export const defaultHistoryEventResolver = (refs, { decrementHistory, incrementHistory }) => {
@@ -47,17 +48,24 @@ export const defaultHistoryEventResolver = (refs, { decrementHistory, incrementH
   vueCommandRef.addEventListener('keydown', eventResolver)
 }
 
-export const defaultSignalEventResolver = (refs, { sendSignal }) => {
-  const vueCommandRef = refs.vueCommandRef
-
+// Sends common signals based on certain keyboard inputs
+export const defaultSignalEventResolver = (_, { sendSignal }) => {
   const eventResolver = event => {
-    switch (event.key) {
-      // Validate event
+    switch (event.ctrlKey) {
+      case true:
+        switch (event.key) {
+          // SIGINT, Ctrl + c
+          case C_KEY:
+            sendSignal('SIGINT')
+        }
+        break
+
+      case false:
+        break
     }
-    sendSignal('SIGINT')
   }
 
-  vueCommandRef.addEventListener('keydown', eventResolver)
+  window.addEventListener('keydown', eventResolver)
 }
 
 // Returns a list of default event resolver

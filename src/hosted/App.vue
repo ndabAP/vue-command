@@ -128,10 +128,6 @@ export default {
           return createStdout(tableFormatter(history))
         },
 
-        json: () => {
-          return createStdout(jsonFormatter({ test: 1 }))
-        },
-
         nano: () => NanoEditor,
         norris: () => ChuckNorris
       },

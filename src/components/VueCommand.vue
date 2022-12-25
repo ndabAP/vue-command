@@ -352,6 +352,7 @@ const dispatch = async () => {
 
   // Command is user created component. Decorate component
   const component = defineComponent({
+    name: 'VueCommandEntryComponent',
     provide () {
       return {
         // This will be unique for the component and not reactive by design
@@ -376,16 +377,6 @@ const exit = () => {
   setFullscreen(false)
   setQuery('')
 }
-const incrementHistory = () => {
-  // History pointer must be lower query history
-  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
-    return
-  }
-
-  setHistoryPosition(local.historyPosition + 1)
-  const query = nth([...local.dispatchedQueries], local.historyPosition)
-  setQuery(query)
-}
 const decrementHistory = () => {
   // History pointer must be greater zero
   if (eq(local.historyPosition, 0)) {
@@ -396,13 +387,22 @@ const decrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
+const incrementHistory = () => {
+  // History pointer must be lower query history
+  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
+    return
+  }
+
+  setHistoryPosition(local.historyPosition + 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
+}
 // Waits for the DOM and scrolls to the bottom of the history
 const scrollToBottom = async () => {
   await nextTick()
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
 }
 const sendSignal = signal => {
-  console.log(signal)
   signals[PUBLISH_SYMBOL](signal)
 }
 const setCursorPosition = cursorPosition => {

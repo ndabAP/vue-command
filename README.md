@@ -280,14 +280,14 @@ inject: ["exit", "terminal"],
 
 ## Signals
 
-It's possible to send and receive signals like `SIGINT`, `SIGTERM` or `SIGKILL`.
-`SIGINT` is the only implemented signal. When the terminal user clicks
-<kbd>Ctrl</kbd> + <kbd>c</kbd>, you can listen to the event by providing the
+You can send and receive signals like `SIGINT`, `SIGTERM` or `SIGKILL`.
+`SIGINT` is the only implemented signal for now. When the user presses
+<kbd>Ctrl</kbd> + <kbd>c</kbd>, you can listen to this event by providing a
 signal name and a callback:
 
 ```js
 const signals = inject("signals");
-signals.on("SIGNINT", () => console.debug("SIGINT"));
+signals.on("SIGINT", () => console.debug("SIGINT"));
 ```
 
 ## Nice-to-haves
