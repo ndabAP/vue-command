@@ -48,7 +48,7 @@ export const defaultHistoryEventResolver = (refs, { decrementHistory, incrementH
   vueCommandRef.addEventListener('keydown', eventResolver)
 }
 
-// Sends common signals based on certain keyboard inputs
+// Sends common signals based on certain events
 export const defaultSignalEventResolver = (_, { sendSignal }) => {
   const eventResolver = event => {
     switch (event.ctrlKey) {
@@ -75,13 +75,13 @@ export const newDefaultEventResolver = () => [defaultHistoryEventResolver, defau
 // soon as the component has been mounted
 export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
   name,
-  setup () {
+  setup() {
     // This tears down the component automatically
     const exit = inject('exit')
     onMounted(exit)
   },
 
-  render () {
+  render() {
     if (isFunction(formatterOrText)) {
       // This is automatically called with the bound arguments
       return formatterOrText()

@@ -186,8 +186,9 @@ Library provides helper methods to render terminal related content.
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
 | `createStdout`                | `formatterOrText, name = 'VueCommandStdout'`                       | Creates a "stdout" component          |
 | `createQuery`                 |                                                                    | Creates a query component             |
-| `defaultHistoryEventResolver` | `refs, eventProvider`                                              | Returns the default history resolver  |
-| `defaultParser`               | `query`                                                            | Returns the default parser            |
+| `defaultHistoryEventResolver` | `refs, eventProvider`                                              | The default history event resolver    |
+| `defaultParser`               | `query`                                                            | The default parser                    |
+| `defaultSignalEventResolver`  | `refs, eventProvider`                                              | The default signal event resolver     |
 | `jsonFormatter`               | `value`                                                            | See [Formatters](#formatters)         |
 | `listFormatter`               | `...lis`                                                           | See [Formatters](#formatters)         |
 | `newDefaultEventResolver`     |                                                                    | Returns a new default event resolver  |
