@@ -1,3 +1,11 @@
+## [28.2.0](https://github.com/ndabAP/vue-command/compare/v28.1.0...v28.2.0) (2022-12-25)
+
+
+### Features
+
+* finalize signals ([22a0bfa](https://github.com/ndabAP/vue-command/commit/22a0bfa8a4a9d71f853f791613a3a9dc23300adb))
+* send signals ([1e31d32](https://github.com/ndabAP/vue-command/commit/1e31d32ed588821790d6410622b36061bf5245be))
+
 ## [28.1.0](https://github.com/ndabAP/vue-command/compare/v28.0.0...v28.1.0) (2022-12-22)
 
 
