@@ -29,7 +29,6 @@
       type="text"
       @click="setCursorPosition($refs.queryRef.selectionStart)"
       @input="setQuery($event.target.value)"
-      @keydown.ctrl.c.exact.prevent="sigint"
       @keydown.tab.exact.prevent="autocompleteQuery"
       @keydown.ctrl.r.exact.prevent="reverseISearch"
       @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
@@ -78,6 +77,7 @@ const programs = inject('programs')
 const setCursorPosition = inject('setCursorPosition')
 const setQuery = inject('setQuery')
 const showHelp = inject('showHelp')
+const signals = inject('signals')
 const terminal = inject('terminal')
 
 const isOutdated = ref(false)
@@ -165,6 +165,9 @@ const autocompleteQuery = async () => {
 const focus = () => {
   queryRef.value.focus()
 }
+const bindSignals = () => {
+  signals.on('SIGINT', sigint)
+}
 const reverseISearch = event => {
   // TODO
   // console.debug(event)
@@ -216,6 +219,7 @@ const unwatchTerminalQuery = watch(
 )
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
+  signals.off('SIGINT')
   unwatchTerminalQuery()
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
@@ -231,6 +235,9 @@ onMounted(() => {
 
   // Show eventually help as placeholder
   showDelayedHelp()
+
+  // Bind signals like "SIGINT"
+  bindSignals()
 })
 
 defineExpose({

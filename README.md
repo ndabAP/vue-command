@@ -1,6 +1,8 @@
 # vue-command
 
-A fully working, most feature-rich Vue.js terminal emulator. See the [demo](https://ndabap.github.io/vue-command/) and check the demo [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
+A fully working, most feature-rich Vue.js terminal emulator. See the
+[demo](https://ndabap.github.io/vue-command/) and check the demo
+[source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
 
 ## Features
 
@@ -234,10 +236,12 @@ import { listFormatter } from "vue-command";
 | `optionsResolver`    |
 | `parser`             |
 | `programs`           |
+| `sendSignal`         |
 | `setCursorPosition`  |
 | `setFullscreen`      |
 | `setHistoryPosition` |
 | `showHelp`           |
+| `signals`            |
 | `setQuery`           |
 | `terminal`           |
 
@@ -258,10 +262,12 @@ inject: ["exit", "terminal"],
 | `exit`               |
 | `incrementHistory`   |
 | `programs`           |
+| `sendSignal`         |
 | `setCursorPosition`  |
 | `setFullscreen`      |
 | `setHistoryPosition` |
 | `setQuery`           |
+| `signals`            |
 | `terminal`           |
 
 ## Events
@@ -271,6 +277,18 @@ inject: ["exit", "terminal"],
 | `closeClicked`      | Emitted on button close click      |
 | `minimizeClicked`   | Emitted on button minimize click   |
 | `fullscreenClicked` | Emitted on button fullscreen click |
+
+## Signals
+
+You can send and receive signals like `SIGINT`, `SIGTERM` or `SIGKILL`.
+`SIGINT` is the only implemented signal for now. When the user presses
+<kbd>Ctrl</kbd> + <kbd>c</kbd>, you can listen to this event by providing a
+signal name and a callback:
+
+```js
+const signals = inject("signals");
+signals.on("SIGINT", () => console.debug("SIGINT"));
+```
 
 ## Nice-to-haves
 

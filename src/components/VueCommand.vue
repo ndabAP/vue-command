@@ -95,7 +95,9 @@ import {
 } from '@/library'
 import {
   and,
-  or
+  or,
+  newEventBus,
+  PUBLISH_SYMBOL
 } from '@/utils'
 import head from 'lodash.head'
 import isFunction from 'lodash.isfunction'
@@ -233,6 +235,9 @@ const vueCommandHistoryEntryComponentRefs = ref(null)
 const vueCommandHistoryRef = ref(null)
 const vueCommandRef = ref(null)
 
+// Signals like SIGINT or SIGKILL
+const signals = reactive(newEventBus())
+
 // A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
@@ -269,6 +274,7 @@ const shouldShowHistoryEntry = computed(() => {
     and(local.isFullscreen, eq(index, size(local.history) - 1))
   )
 })
+// Determinates if the given history entry at index should be fullscreen or not
 const shouldBeFullscreen = computed(() => {
   return index => and(local.isFullscreen, eq(index, size(local.history) - 1))
 })
@@ -302,6 +308,10 @@ const autoFocus = () => {
 // Sets history position by given dispatched queries
 const autoHistoryPosition = () => {
   setHistoryPosition(local.dispatchedQueries.size)
+}
+const appendToHistory = (...components) => {
+  local.history.push(...components)
+  emits('update:history', local.history)
 }
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
@@ -342,6 +352,7 @@ const dispatch = async () => {
 
   // Command is user created component. Decorate component
   const component = defineComponent({
+    name: 'VueCommandEntryComponent',
     provide () {
       return {
         // This will be unique for the component and not reactive by design
@@ -357,11 +368,6 @@ const dispatch = async () => {
   })
   appendToHistory(markRaw(component))
 }
-
-const appendToHistory = (...components) => {
-  local.history.push(...components)
-  emits('update:history', local.history)
-}
 // Tear down component and execute final steps
 const exit = () => {
   // TODO Does order matter?
@@ -370,16 +376,6 @@ const exit = () => {
   setCursorPosition(0)
   setFullscreen(false)
   setQuery('')
-}
-const incrementHistory = () => {
-  // History pointer must be lower query history
-  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
-    return
-  }
-
-  setHistoryPosition(local.historyPosition + 1)
-  const query = nth([...local.dispatchedQueries], local.historyPosition)
-  setQuery(query)
 }
 const decrementHistory = () => {
   // History pointer must be greater zero
@@ -391,10 +387,23 @@ const decrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
+const incrementHistory = () => {
+  // History pointer must be lower query history
+  if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
+    return
+  }
+
+  setHistoryPosition(local.historyPosition + 1)
+  const query = nth([...local.dispatchedQueries], local.historyPosition)
+  setQuery(query)
+}
 // Waits for the DOM and scrolls to the bottom of the history
 const scrollToBottom = async () => {
   await nextTick()
   vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+}
+const sendSignal = signal => {
+  signals[PUBLISH_SYMBOL](signal)
 }
 const setCursorPosition = cursorPosition => {
   local.cursorPosition = cursorPosition
@@ -469,10 +478,12 @@ provide('invert', props.invert)
 provide('optionsResolver', props.optionsResolver)
 provide('parser', props.parser)
 provide('programs', programs)
+provide('sendSignal', sendSignal)
 provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
 provide('showHelp', props.showHelp)
+provide('signals', signals)
 provide('setQuery', setQuery)
 provide('terminal', terminal)
 
@@ -484,10 +495,12 @@ defineExpose({
   exit,
   incrementHistory,
   programs,
+  sendSignal,
   setCursorPosition,
   setFullscreen,
   setHistoryPosition,
   setQuery,
+  signals,
   terminal
 })
 </script>
