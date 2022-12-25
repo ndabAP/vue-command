@@ -1,3 +1,14 @@
+## [29.0.0](https://github.com/ndabAP/vue-command/compare/v28.2.0...v29.0.0) (2022-12-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* add missing signal resolver
+
+### Documentation
+
+* add missing signal resolver ([63ac8f2](https://github.com/ndabAP/vue-command/commit/63ac8f2e34f5cf904bbd2890d2ff2695da0ae28c))
+
 ## [28.2.0](https://github.com/ndabAP/vue-command/compare/v28.1.0...v28.2.0) (2022-12-25)
 
 
