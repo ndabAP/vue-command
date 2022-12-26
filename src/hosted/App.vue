@@ -120,7 +120,7 @@ export default {
 
         // TODO Create terminal-like columns
         help: () => {
-          const list = ['cd', 'hello-world', 'help', 'nano', 'norris']
+          const list = ['cd', 'clear', 'hello-world', 'help', 'history', 'nano', 'norris']
           return createStdout(listFormatter(...list))
         },
 
