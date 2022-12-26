@@ -1,3 +1,16 @@
+## [29.1.0](https://github.com/ndabAP/vue-command/compare/v29.0.0...v29.1.0) (2022-12-26)
+
+
+### Features
+
+* add new slots ([d8f6de7](https://github.com/ndabAP/vue-command/commit/d8f6de72cf8b54848fa9f4ff44a8a670a368a4f2))
+
+
+### Bug Fixes
+
+* add missing prevent default ([ca0583a](https://github.com/ndabAP/vue-command/commit/ca0583ae8be6dc45c30c4fadb8163e39d135c85a))
+* component out name ([b49d6db](https://github.com/ndabAP/vue-command/commit/b49d6db714c8814120d90974518ecccfd4284ad7))
+
 ## [29.0.0](https://github.com/ndabAP/vue-command/compare/v28.2.0...v29.0.0) (2022-12-25)
 
 
