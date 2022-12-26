@@ -25,12 +25,9 @@
               :invert="invert"
               :prompt="prompt"
               :options-resolver="optionsResolver"
+              title="bash - 720x350"
               help-text="Type in help"
-              show-help>
-              <template #title>
-                ~ 720x350
-              </template>
-            </vue-command>
+              show-help />
           </div>
         </div>
 

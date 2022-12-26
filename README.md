@@ -140,6 +140,7 @@ required.
 | `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
 | `prompt`             | Terminal prompt                               | `String`   | `~$`                          | No       | No        |
 | `show-help`          | Show query help                               | `Boolean`  | `false`                       | No       | No        |
+| `title`              | Terminal title                                | `String`   | `~$`                          | No       | No        |
 | `query`              | Terminal query                                | `String`   | `''`                          | No       | Yes       |
 
 ### Commands
@@ -201,7 +202,7 @@ property has no effect. Example:
 ```vue
 <vue-command>
   <template #title>
-    ~ 350x720
+    bash - 720x350
   </template>
 </vue-command>
 ```

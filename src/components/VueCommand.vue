@@ -47,7 +47,7 @@
               :class="{
                 'vue-command__bar__title': !invert,
                 'vue-command__bar__title--invert': invert
-              }">{{ prompt }}</span>
+              }">{{ title }}</span>
           </slot>
         </div>
         <div />
@@ -229,6 +229,12 @@ const props = defineProps({
     default: false,
     required: false,
     type: Boolean
+  },
+
+  title: {
+    default: '~$',
+    required: false,
+    type: String
   },
 
   query: {
