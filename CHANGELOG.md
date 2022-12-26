@@ -1,3 +1,10 @@
+## [29.2.0](https://github.com/ndabAP/vue-command/compare/v29.1.1...v29.2.0) (2022-12-26)
+
+
+### Features
+
+* set terminal title ([77c2f02](https://github.com/ndabAP/vue-command/commit/77c2f02412a001709f4599737becab1322ad53cc))
+
 ## [29.1.1](https://github.com/ndabAP/vue-command/compare/v29.1.0...v29.1.1) (2022-12-26)
 
 
