@@ -12,30 +12,45 @@
           'vue-command__bar': !invert,
           'vue-command__bar--invert': invert
         }">
-        <span
-          :class="{
-            'vue-command__bar__button': !invert,
-            'vue-command__bar__button--invert': invert,
-            'vue-command__bar__button--fullscreen': !invert,
-            'vue-command__bar__button--fullscreen--invert': invert
-          }"
-          @click="emits('closeClicked')" />
-        <span
-          :class="{
-            'vue-command__bar__button': !invert,
-            'vue-command__bar__button--invert': invert,
-            'vue-command__bar__button--minimize': !invert,
-            'vue-command__bar__button--minimize--invert': invert
-          }"
-          @click="emits('minimizeClicked')" />
-        <span
-          :class="{
-            'vue-command__bar__button': !invert,
-            'vue-command__bar__button--invert': invert,
-            'vue-command__bar__button--close': !invert,
-            'vue-command__bar__button--close--invert': invert
-          }"
-          @click="emits('fullscreenClicked')" />
+        <div>
+          <slot name="buttons">
+            <span
+              :class="{
+                'vue-command__bar__button': !invert,
+                'vue-command__bar__button--invert': invert,
+                'vue-command__bar__button--fullscreen': !invert,
+                'vue-command__bar__button--fullscreen--invert': invert
+              }"
+              @click="emits('closeClicked')" />
+            <span
+              :class="{
+                'vue-command__bar__button': !invert,
+                'vue-command__bar__button--invert': invert,
+                'vue-command__bar__button--minimize': !invert,
+                'vue-command__bar__button--minimize--invert': invert
+              }"
+              @click="emits('minimizeClicked')" />
+            <span
+              :class="{
+                'vue-command__bar__button': !invert,
+                'vue-command__bar__button--invert': invert,
+                'vue-command__bar__button--close': !invert,
+                'vue-command__bar__button--close--invert': invert
+              }"
+              @click="emits('fullscreenClicked')" />
+          </slot>
+        </div>
+        <div>
+          <slot name="title">
+            <span
+              v-if="!hideTitle"
+              :class="{
+                'vue-command__bar__title': !invert,
+                'vue-command__bar__title--invert': invert
+              }">{{ prompt }}</span>
+          </slot>
+        </div>
+        <div />
       </div>
     </slot>
 
@@ -154,6 +169,12 @@ const props = defineProps({
   },
 
   hidePrompt: {
+    default: false,
+    required: false,
+    type: Boolean
+  },
+
+  hideTitle: {
     default: false,
     required: false,
     type: Boolean
@@ -506,6 +527,8 @@ defineExpose({
 </script>
 
 <style lang="scss">
+/** Common attribues */
+
 .vue-command,
 .vue-command--invert {
   font-family: Consolas,
@@ -518,7 +541,6 @@ defineExpose({
 
     &:before,
     &:after {
-      content: " ";
       display: table;
     }
 
@@ -538,6 +560,9 @@ defineExpose({
     padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .vue-command__bar__button,
@@ -593,11 +618,18 @@ defineExpose({
   }
 }
 
+/** Individual attribues */
+
 .vue-command {
   $seashell: #f1f1f1;
 
   .vue-command__bar {
+    color: $seashell;
     background-color: #111316;
+  }
+
+  .vue-command__bar__title {
+    color: $seashell;
   }
 
   .vue-command__bar__button--close {
@@ -634,6 +666,10 @@ defineExpose({
 
   .vue-command__bar--invert {
     background-color: #eeece9;
+  }
+
+  .vue-command__bar__title--invert {
+    color: $seashell-invert;
   }
 
   .vue-command__bar__button--close--invert {

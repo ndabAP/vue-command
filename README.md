@@ -131,6 +131,7 @@ required.
 | `help-timeout`       | Command help timeout                          | `Number`   | `3000`                        | No       | No        |
 | `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                       | No       | No        |
 | `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
+| `hide-title`         | Hides the title                               | `Boolean`  | `false`                       | No       | No        |
 | `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
 | `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
 | `invert`             | Inverts the terminals colors                  | `Boolean`  | `false`                       | No       | No        |
@@ -168,12 +169,40 @@ query and a setter to update the query.
 
 ### Bar
 
-You can customize the terminals bar with the named slot `bar`. This will replace
-the whole element, including the action buttons and its assigned CSS classes.
+You can replace the whole terminal bar with the named slot `bar`. This will
+replace the whole element, including the action buttons and its assigned CSS
+classes. Example:
 
 ```vue
-<vue-command :commands="commands">
-  <template #bar>&times; &#95; &square;</template>
+<vue-command>
+  <template #bar>
+    &times; &#95; &square;
+  </template>
+</vue-command>
+```
+
+### Buttons
+
+Inside the bar, you can customize the buttons. Example:
+
+```vue
+<vue-command>
+  <template #buttons>
+    &times; &#95; &square;
+  </template>
+</vue-command>
+```
+
+### Title
+
+Inside the bar, you can customize the title. If you use this slot, `hideTitle`
+property has no effect. Example:
+
+```vue
+<vue-command>
+  <template #title>
+    ~ 350x720
+  </template>
 </vue-command>
 ```
 

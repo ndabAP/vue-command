@@ -21,11 +21,16 @@
               :commands="commands"
               :hide-bar="hideBar"
               :hide-prompt="hidePrompt"
+              :hide-title="hideTitle"
               :invert="invert"
               :prompt="prompt"
               :options-resolver="optionsResolver"
               help-text="Type in help"
-              show-help />
+              show-help>
+              <template #title>
+                ~ 720x350
+              </template>
+            </vue-command>
           </div>
         </div>
 
@@ -47,8 +52,7 @@ import {
   createQuery,
   listFormatter,
   newDefaultHistory,
-  tableFormatter,
-  jsonFormatter
+  tableFormatter
 } from '@/library'
 import NanoEditor from '@/hosted/NanoEditor.vue'
 import ChuckNorris from '@/hosted/ChuckNorris.vue'
@@ -64,6 +68,7 @@ export default {
     const dispatchedQueries = ref(new Set())
     const hideBar = ref(false)
     const hidePrompt = ref(false)
+    const hideTitle = ref(false)
     const history = ref(newDefaultHistory())
     const invert = ref(false)
     const prompt = ref(PROMPT)
@@ -135,6 +140,7 @@ export default {
       dispatchedQueries,
       hideBar,
       hidePrompt,
+      hideTitle,
       history,
       invert,
       prompt,
