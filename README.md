@@ -9,12 +9,12 @@ A fully working, most feature-rich Vue.js terminal emulator. See the
 - Simple, yet extensible API
 - Supports asynchronous commands
 - Supports fullscreen mode
+- Customize the terminal with slots
 - Provide your own parser (falls back to simple one)
 - Provide your own event resolver
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)
-- Customize the terminal with slots
 
 ## Installation
 
@@ -176,7 +176,7 @@ classes. Example:
 ```vue
 <vue-command>
   <template #bar>
-    &times; &#95; &square;
+    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   </template>
 </vue-command>
 ```
@@ -310,8 +310,8 @@ inject: ["exit", "terminal"],
 
 ## Signals
 
-You can send and receive signals like `SIGINT`, `SIGTERM` or `SIGKILL`.
-`SIGINT` is the only implemented signal for now. When the user presses
+You can send and receive signals like `SIGINT`, `SIGTERM` or `SIGKILL`. `SIGINT`
+is the only implemented signal for now. When the user presses
 <kbd>Ctrl</kbd> + <kbd>c</kbd>, you can listen to this event by providing a
 signal name and a callback:
 
