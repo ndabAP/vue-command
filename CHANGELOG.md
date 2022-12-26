@@ -1,3 +1,10 @@
+## [29.1.1](https://github.com/ndabAP/vue-command/compare/v29.1.0...v29.1.1) (2022-12-26)
+
+
+### Bug Fixes
+
+* slot bar documentation ([6dfc73c](https://github.com/ndabAP/vue-command/commit/6dfc73c5bc4af89c8ad99101a90845b960dc2928))
+
 ## [29.1.0](https://github.com/ndabAP/vue-command/compare/v29.0.0...v29.1.0) (2022-12-26)
 
 
