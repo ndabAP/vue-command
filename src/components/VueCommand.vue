@@ -352,7 +352,7 @@ const dispatch = async () => {
 
   // Command is user created component. Decorate component
   const component = defineComponent({
-    name: 'VueCommandEntryComponent',
+    name: 'VueCommandOut',
     provide () {
       return {
         // This will be unique for the component and not reactive by design
