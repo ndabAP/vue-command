@@ -63,7 +63,7 @@
         type="text"
         :value="multilineQuery"
         @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
-        @input="setMultilineQuery($event.target.value, index)"
+        @input="setLastMultilineQuery($event.target.value)"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.enter.exact="submit">
@@ -99,6 +99,8 @@ import trimStart from 'lodash.trimstart'
 import isEmpty from 'lodash.isempty'
 import size from 'lodash.size'
 import eq from 'lodash.eq'
+import last from 'lodash.last'
+import set from 'lodash.set'
 
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
@@ -226,24 +228,38 @@ const showDelayedHelp = () => {
 }
 // Cancels the current query and creates a new one
 const sigint = () => {
-  // TODO Append ^C to last multiline query
+  if (isOutdated.value) {
+    return
+  }
+
+  if (isEmpty(multilineQueries)) {
+    local.query = `${local.query}^C`
+  }
+
+  if (!isEmpty(multilineQueries)) {
+    const lastMultilineQuery = last(multilineQueries)
+    setLastMultilineQuery(`${lastMultilineQuery}^C`)
+  }
+
   isOutdated.value = true
-  local.query = `${local.query}^C`
+
   appendToHistory(createQuery())
 }
-const setMultilineQuery = (multilineQuery, index) => {
-  multilineQueries[index] = multilineQuery
+const setLastMultilineQuery = multilineQuery => {
+  set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
 }
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
   const query = local.query
 
-  isOutdated.value = true
+  // if (isEmpty(multilineQueries)) {
+  //   isOutdated.value = true
+  // }
 
   if (and(
     eq(query.at(-1), '\\'),
-    isEmpty(multilineQueries),
-    !eq(query.slice(-2), '\\\\') // Ignore "\\"
+    !eq(query.slice(-2), '\\\\'), // Ignore "\\"
+    isEmpty(multilineQueries)
   )) {
     multilineQueries.push('')
     return
@@ -272,7 +288,8 @@ const unwatchTerminalQuery = watch(
 )
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
-  signals.off('SIGINT')
+  // TODO This causes the multiline query to not react
+  // signals.off('SIGINT')
   unwatchTerminalQuery()
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()

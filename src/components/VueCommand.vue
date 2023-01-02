@@ -303,7 +303,10 @@ const shouldShowHistoryEntry = computed(() => {
 })
 // Determinates if the given history entry at index should be fullscreen or not
 const shouldBeFullscreen = computed(() => {
-  return index => and(local.isFullscreen, eq(index, size(local.history) - 1))
+  return index => and(
+    local.isFullscreen,
+    eq(index, size(local.history) - 1)
+  )
 })
 
 // Removes and adds the dispatched query to enforce the quries first position
