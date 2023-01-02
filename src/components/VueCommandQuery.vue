@@ -38,7 +38,7 @@
     </div>
 
     <div
-      v-for="(_, index) in multilineQueries"
+      v-for="(multilineQuery, index) in multilineQueries"
       :key="index"
       :class="{
         'vue-command__multiline-query': !invert,
@@ -61,6 +61,7 @@
         autocorrect="off"
         autofocus
         type="text"
+        :value="multilineQuery"
         @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @input="setMultilineQuery($event.target.value, index)"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
@@ -225,6 +226,7 @@ const showDelayedHelp = () => {
 }
 // Cancels the current query and creates a new one
 const sigint = () => {
+  // TODO Append ^C to last multiline query
   isOutdated.value = true
   local.query = `${local.query}^C`
   appendToHistory(createQuery())
@@ -268,9 +270,6 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
-const unwatchMultilineQueries = watch(() => multilineQueries, () => {
-  // setQuery(`${local.query}${multilineQueries.join('')}`)
-})
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
   signals.off('SIGINT')
@@ -278,7 +277,6 @@ const unwatchIsOutdated = watch(isOutdated, () => {
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
   unwatchIsOutdated()
-  unwatchMultilineQueries()
   placeholder.value = ''
 })
 
@@ -339,7 +337,7 @@ defineExpose({
     }
   }
 
-   .vue-command__multiline-query,
+  .vue-command__multiline-query,
   .vue-command__multiline-query--invert {
     display: flex;
 
