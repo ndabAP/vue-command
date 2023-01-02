@@ -31,8 +31,13 @@ export const newEventBus = () => {
   }
 }
 
-export const and = (x, y) => {
-  return x && y
+export const and = (...predicates) => {
+  for (const predicate of predicates) {
+    if (!predicate) {
+      return false
+    }
+  }
+  return true
 }
 
 export const or = (x, y) => {

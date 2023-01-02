@@ -121,27 +121,27 @@ export default {
 Some properties can be changed, therefore, adding the `v-model` directive is
 required.
 
-| Property             | Description                                   | Type       | Default value                 | Required | `v-model` |
-| -------------------- | --------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
-| `commands`           | See [Commands](#commands)                     | `Object`   | `{}`                          | No       | No        |
-| `cursor-position`    | Cursor position                               | `Number`   | `0`                           | No       | Yes       |
-| `dispatched-queries` | Non-empty dispatched queries                  | `Set`      | `new Set()`                   | No       | Yes       |
-| `event-resolver`     | See [Event resolver](#Event-resolver) section | `Function` | See `newDefaultEventResolver` | No       | No        |
-| `help-text`          | Command help                                  | `String`   | `''`                          | No       | Yes       |
-| `help-timeout`       | Command help timeout                          | `Number`   | `3000`                        | No       | No        |
-| `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                       | No       | No        |
-| `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
-| `hide-title`         | Hides the title                               | `Boolean`  | `false`                       | No       | No        |
-| `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
-| `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
-| `invert`             | Inverts the terminals colors                  | `Boolean`  | `false`                       | No       | No        |
-| `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                       | No       | Yes       |
-| `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                        | No       | No        |
-| `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
-| `prompt`             | Terminal prompt                               | `String`   | `~$`                          | No       | No        |
-| `show-help`          | Show query help                               | `Boolean`  | `false`                       | No       | No        |
-| `title`              | Terminal title                                | `String`   | `~$`                          | No       | No        |
-| `query`              | Terminal query                                | `String`   | `''`                          | No       | Yes       |
+| Property             | Description                                   | Type       | Default value             | Required | `v-model` |
+| -------------------- | --------------------------------------------- | ---------- | ------------------------- | -------- | --------- |
+| `commands`           | See [Commands](#commands)                     | `Object`   | `{}`                      | No       | No        |
+| `cursor-position`    | Cursor position                               | `Number`   | `0`                       | No       | Yes       |
+| `dispatched-queries` | Non-empty dispatched queries                  | `Set`      | `new Set()`               | No       | Yes       |
+| `event-resolver`     | See [Event resolver](#Event-resolver) section | `Function` | `newDefaultEventResolver` | No       | No        |
+| `help-text`          | Command help                                  | `String`   | `''`                      | No       | Yes       |
+| `help-timeout`       | Command help timeout                          | `Number`   | `3000`                    | No       | No        |
+| `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                   | No       | No        |
+| `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                   | No       | No        |
+| `hide-title`         | Hides the title                               | `Boolean`  | `false`                   | No       | No        |
+| `history`            | Terminal history                              | `Array`    | `[]`                      | No       | Yes       |
+| `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                       | No       | Yes       |
+| `invert`             | Inverts the terminals colors                  | `Boolean`  | `false`                   | No       | No        |
+| `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                   | No       | Yes       |
+| `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                    | No       | No        |
+| `parser`             | Query parser                                  | `Function` | `defaultParser`           | No       | No        |
+| `prompt`             | Terminal prompt                               | `String`   | `~$`                      | No       | No        |
+| `show-help`          | Show query help                               | `Boolean`  | `false`                   | No       | No        |
+| `title`              | Terminal title                                | `String`   | `~$`                      | No       | No        |
+| `query`              | Terminal query                                | `String`   | `''`                      | No       | Yes       |
 
 ### Commands
 
@@ -197,7 +197,7 @@ Inside the bar, you can customize the buttons. Example:
 ### Title
 
 Inside the bar, you can customize the title. If you use this slot, `hideTitle`
-property has no effect. Example:
+and `title` property have no effect. Example:
 
 ```vue
 <vue-command>
@@ -329,7 +329,7 @@ contribute please consult `CONTRIBUTING.md`.
 - Draggable terminal
 - More events (like query dispatched)
 - More terminal slots
-- Multi-line queries
+- Multi-line queriesd
 - Syntax highlighting
 
 ## Browser support

@@ -113,9 +113,11 @@ export const createCommandNotFound = (command, notFoundText = 'command not found
 // Creates a new query component
 export const createQuery = () => markRaw(VueCommandQuery)
 
-// A simple query parser which trims the query and splits the arguments by
-// spaces
-export const defaultParser = query => split(trim(query), ' ')
+// A simple query parser which trims the query, removes multiline characters and
+// splits the arguments by spaces
+export const defaultParser = query => {
+  return split(trim(query).replace(/\\/g, ''), ' ')
+}
 
 // Formats the given elements as a list
 export const listFormatter = (...lis) => {
@@ -132,7 +134,7 @@ export const listFormatter = (...lis) => {
 // Returns a history with one query as first input
 export const newDefaultHistory = () => [createQuery()]
 
-// Formats the object as json
+// Formats the value as json
 export const jsonFormatter = value => {
   return h('div', JSON.stringify(value, null, 2))
 }

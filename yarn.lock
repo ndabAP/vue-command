@@ -9014,6 +9014,11 @@ lodash.nth@^4.11.2:
   resolved "https://registry.npmjs.org/lodash.nth/-/lodash.nth-4.11.2.tgz"
   integrity sha512-nvnJclxAFSfktX7aV4ANp8UNnT4MOgqBeoL4irOB49Z/4S+wzvI8xGIOUwkop2TQGSuCEz8VXoNjdjUmFFSU0w==
 
+lodash.replace@^4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/lodash.replace/-/lodash.replace-4.1.4.tgz#531c0960dfb5256172afc1c34a4f0ba6f0cb20b8"
+  integrity sha512-zNLj0LzkduNNoFfFehdsbGFie6iQ4Tss0qYdU8HeDVFMz5bpY08cOqkrB6RM6MgAGINR9ojr4ZlnLE7v3NDyPg==
+
 lodash.rest@^4.0.0:
   version "4.0.5"
   resolved "https://registry.npmjs.org/lodash.rest/-/lodash.rest-4.0.5.tgz"

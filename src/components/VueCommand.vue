@@ -350,6 +350,7 @@ const dispatch = async () => {
     appendToHistory(createQuery())
     return
   }
+
   // bash --help
   addDispatchedQuery(query)
 
@@ -371,6 +372,7 @@ const dispatch = async () => {
 
   // If returned component is query, don't provide any context and push
   // instantly to history
+  // TODO Find a better way to find out the name
   if (eq(get(command, '__name'), 'VueCommandQuery')) {
     const query = command
     appendToHistory(query)
@@ -533,7 +535,7 @@ defineExpose({
 </script>
 
 <style lang="scss">
-/** Common attribues */
+/* Common attribues */
 
 .vue-command,
 .vue-command--invert {
@@ -624,7 +626,7 @@ defineExpose({
   }
 }
 
-/** Individual attribues */
+/* Individual attribues */
 
 .vue-command {
   $seashell: #f1f1f1;

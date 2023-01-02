@@ -1,39 +1,72 @@
 <template>
-  <div
-    :class="{
-      'vue-command__query': !invert,
-      'vue-command__query--invert': invert
-    }">
-    <span
-      v-if="!hidePrompt"
+  <div>
+    <div
       :class="{
-        'vue-command__query__prompt': !invert,
-        'vue-command__query__prompt--invert': invert
+        'vue-command__query': !invert,
+        'vue-command__query--invert': invert
       }">
-      {{ local.prompt }}
-    </span>
+      <span
+        v-if="!hidePrompt"
+        :class="{
+          'vue-command__query__prompt': !invert,
+          'vue-command__query__prompt--invert': invert
+        }">
+        {{ local.prompt }}
+      </span>
 
-    <!-- TODO Move autocomplete and search to parent -->
-    <!-- TODO Make textarea to enforce word break -->
-    <input
-      ref="queryRef"
-      v-model="local.query"
+      <!-- TODO Move autocomplete and search to parent -->
+      <!-- TODO Make textarea to enforce word break -->
+      <input
+        ref="queryRef"
+        v-model="local.query"
+        :class="{
+          'vue-command__query__input': !invert,
+          'vue-command__query__input--invert': invert
+        }"
+        :disabled="isOutdated"
+        :placeholder="placeholder"
+        autocapitalize="none"
+        autocorrect="off"
+        type="text"
+        @click="setCursorPosition($refs.queryRef.selectionStart)"
+        @input="setQuery($event.target.value)"
+        @keydown.tab.exact.prevent="autocompleteQuery"
+        @keydown.ctrl.r.exact.prevent="reverseISearch"
+        @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.enter.exact="submit">
+    </div>
+
+    <div
+      v-for="(_, index) in multilineQueries"
+      :key="index"
       :class="{
-        'vue-command__query__input': !invert,
-        'vue-command__query__input--invert': invert
-      }"
-      :disabled="isOutdated"
-      :placeholder="placeholder"
-      autocapitalize="none"
-      autocorrect="off"
-      type="text"
-      @click="setCursorPosition($refs.queryRef.selectionStart)"
-      @input="setQuery($event.target.value)"
-      @keydown.tab.exact.prevent="autocompleteQuery"
-      @keydown.ctrl.r.exact.prevent="reverseISearch"
-      @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
-      @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
-      @keyup.enter.exact="submit">
+        'vue-command__multiline-query': !invert,
+        'vue-command__multiline-query--invert': invert
+      }">
+      <span
+        :class="{
+          'vue-command__multiline-query__prompt': !invert,
+          'vue-command__multiline-query__prompt--invert': invert
+        }">></span>
+
+      <input
+        ref="multilineQueryRefs"
+        :class="{
+          'vue-command__multiline-query__input': !invert,
+          'vue-command__multiline-query__input--invert': invert
+        }"
+        :disabled="multilineQueries.length -1 > index"
+        autocapitalize="none"
+        autocorrect="off"
+        autofocus
+        type="text"
+        @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
+        @input="setMultilineQuery($event.target.value, index)"
+        @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
+        @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
+        @keyup.enter.exact="submit">
+    </div>
   </div>
 </template>
 
@@ -64,6 +97,7 @@ import isFunction from 'lodash.isfunction'
 import trimStart from 'lodash.trimstart'
 import isEmpty from 'lodash.isempty'
 import size from 'lodash.size'
+import eq from 'lodash.eq'
 
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
@@ -88,6 +122,8 @@ const local = reactive({
   prompt: '',
   query: ''
 })
+
+const multilineQueries = reactive([])
 
 // Autocompletes a command and calls options resolver with found program
 // and parsed query if there are more than two arguments
@@ -193,9 +229,24 @@ const sigint = () => {
   local.query = `${local.query}^C`
   appendToHistory(createQuery())
 }
+const setMultilineQuery = (multilineQuery, index) => {
+  multilineQueries[index] = multilineQuery
+}
 // Deactivates this query and dispatches it to execute the command
 const submit = () => {
+  const query = local.query
+
   isOutdated.value = true
+
+  if (and(
+    eq(query.at(-1), '\\'),
+    isEmpty(multilineQueries),
+    !eq(query.slice(-2), '\\\\') // Ignore "\\"
+  )) {
+    multilineQueries.push('')
+    return
+  }
+
   dispatch()
 }
 
@@ -217,6 +268,9 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
+const unwatchMultilineQueries = watch(() => multilineQueries, () => {
+  // setQuery(`${local.query}${multilineQueries.join('')}`)
+})
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
   signals.off('SIGINT')
@@ -224,6 +278,7 @@ const unwatchIsOutdated = watch(isOutdated, () => {
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
   unwatchIsOutdated()
+  unwatchMultilineQueries()
   placeholder.value = ''
 })
 
@@ -250,7 +305,9 @@ defineExpose({
 .vue-command--invert {
 
   .vue-command__query,
-  .vue-command__query--invert {
+  .vue-command__query--invert,
+  .vue-command__multiline-query,
+  .vue-command__multiline-query--invert {
     display: flex;
 
     input::placeholder,
@@ -264,7 +321,9 @@ defineExpose({
     }
 
     .vue-command__query__input,
-    .vue-command__query__input--invert {
+    .vue-command__query__input--invert,
+    .vue-command__multiline-query,
+    .vue-command__multiline-query--invert    {
       border: none;
       outline: none;
       flex: 1;
@@ -273,8 +332,34 @@ defineExpose({
     }
 
     .vue-command__query__prompt,
-    .vue-command__query__prompt--invert {
+    .vue-command__query__prompt--invert,
+    .vue-command__multiline-query__prompt,
+    .vue-command__multiline-query__prompt {
       margin-right: 0.25rem;
+    }
+  }
+
+   .vue-command__multiline-query,
+  .vue-command__multiline-query--invert {
+    display: flex;
+
+    input::placeholder,
+    input {
+      font: 1rem Consolas,
+        Monaco,
+        'Andale Mono',
+        'Ubuntu Mono',
+        monospace;
+      ;
+    }
+
+    .vue-command__multiline-query__input,
+    .vue-command__multiline-query__input--invert {
+      border: none;
+      outline: none;
+      flex: 1;
+      width: 100%;
+
     }
   }
 }
