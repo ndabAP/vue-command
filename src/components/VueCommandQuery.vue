@@ -27,6 +27,7 @@
         :placeholder="placeholder"
         autocapitalize="none"
         autocorrect="off"
+        autofocus
         type="text"
         @click="setCursorPosition($refs.queryRef.selectionStart)"
         @input="setQuery($event.target.value)"
@@ -56,7 +57,7 @@
           'vue-command__multiline-query__input': !invert,
           'vue-command__multiline-query__input--invert': invert
         }"
-        :disabled="multilineQueries.length -1 > index"
+        :disabled="isLastMultilineQuery(index)"
         autocapitalize="none"
         autocorrect="off"
         autofocus
@@ -80,7 +81,8 @@ import {
   defineExpose,
   onBeforeMount,
   reactive,
-  nextTick
+  nextTick,
+  computed
 } from 'vue'
 import {
   and
@@ -125,8 +127,11 @@ const local = reactive({
   prompt: '',
   query: ''
 })
-
 const multilineQueries = reactive([])
+
+const isLastMultilineQuery = computed(() => {
+  return index => eq(size(multilineQueries) - 1, index)
+})
 
 // Autocompletes a command and calls options resolver with found program
 // and parsed query if there are more than two arguments
@@ -202,6 +207,7 @@ const autocompleteQuery = async () => {
 }
 // Focuses the input
 const focus = () => {
+  // TODO Check for multiline query
   queryRef.value.focus()
 }
 const bindSignals = () => {
@@ -248,18 +254,28 @@ const sigint = () => {
 const setLastMultilineQuery = multilineQuery => {
   set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
 }
-// Deactivates this query and dispatches it to execute the command
+// Deactivates this query or spawns new multiline queries and dispatches it to
+// execute the command
 const submit = () => {
+  isOutdated.value = true
+
   const query = local.query
 
-  // if (isEmpty(multilineQueries)) {
-  //   isOutdated.value = true
-  // }
-
+  // Check query for new multiline request
   if (and(
     eq(query.at(-1), '\\'),
     !eq(query.slice(-2), '\\\\'), // Ignore "\\"
     isEmpty(multilineQueries)
+  )) {
+    multilineQueries.push('')
+    return
+  }
+
+  // Check last multiline query for next multiline request
+  const lastMultilineQuery = last(multilineQueries)
+  if (and(
+    eq(lastMultilineQuery.at(-1), '\\'),
+    !eq(lastMultilineQuery.slice(-2), '\\\\')
   )) {
     multilineQueries.push('')
     return
@@ -301,8 +317,6 @@ onBeforeMount(() => {
   local.prompt = terminal.value.prompt
 })
 onMounted(() => {
-  focus()
-
   // Show eventually help as placeholder
   showDelayedHelp()
 

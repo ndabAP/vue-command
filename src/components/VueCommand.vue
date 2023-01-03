@@ -264,7 +264,6 @@ const vueCommandRef = ref(null)
 
 // Signals like SIGINT or SIGKILL
 const signals = reactive(newEventBus())
-
 // A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
@@ -275,7 +274,6 @@ const local = reactive({
   prompt: props.prompt,
   query: props.query
 })
-
 // Reactive terminal state
 const terminal = computed(() => ({
   cursorPosition: local.cursorPosition,
@@ -292,7 +290,6 @@ const terminal = computed(() => ({
 const programs = computed(() => {
   return Object.keys(props.commands)
 })
-
 // If the terminal is in fullscreen mode, it hides any non-active history
 // entries
 const shouldShowHistoryEntry = computed(() => {
@@ -323,6 +320,8 @@ const autoFocus = () => {
   if (local.isFullscreen) {
     return
   }
+
+  // TODO Check for last multiline query
 
   // Only focus if last history entry is query
   const lastHistoryEntry = last(local.history)
@@ -409,6 +408,7 @@ const exit = () => {
   setFullscreen(false)
   setQuery('')
 }
+// Decreases the history about one and sets the new query
 const decrementHistory = () => {
   // History pointer must be greater zero
   if (eq(local.historyPosition, 0)) {
@@ -419,6 +419,7 @@ const decrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
+// Increases the history about one and sets the new query
 const incrementHistory = () => {
   // History pointer must be lower query history
   if (!lt(local.historyPosition, local.dispatchedQueries.size)) {

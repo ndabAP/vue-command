@@ -25,21 +25,27 @@ export const newEventBus = () => {
       events[event].push(callback)
     },
 
+    // TODO This deletes all callbacks assigned to any event
     off (event) {
       delete events[event]
     }
   }
 }
 
-export const and = (...predicates) => {
-  for (const predicate of predicates) {
-    if (!predicate) {
+export const and = (...operands) => {
+  for (const operand of operands) {
+    if (!operand) {
       return false
     }
   }
   return true
 }
 
-export const or = (x, y) => {
-  return x || y
+export const or = (...operands) => {
+  for (const operand of operands) {
+    if (operand) {
+      return true
+    }
+  }
+  return false
 }
