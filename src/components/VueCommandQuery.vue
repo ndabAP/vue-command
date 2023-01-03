@@ -57,7 +57,7 @@
           'vue-command__multiline-query__input': !invert,
           'vue-command__multiline-query__input--invert': invert
         }"
-        :disabled="isLastMultilineQuery(index)"
+        :disabled="isOutdatedMultilineQuery(index)"
         autocapitalize="none"
         autocorrect="off"
         autofocus
@@ -120,6 +120,7 @@ const signals = inject('signals')
 const terminal = inject('terminal')
 
 const isOutdated = ref(false)
+const multilineQueryRefs = ref(null)
 const placeholder = ref('')
 const queryRef = ref(null)
 
@@ -129,8 +130,8 @@ const local = reactive({
 })
 const multilineQueries = reactive([])
 
-const isLastMultilineQuery = computed(() => {
-  return index => eq(size(multilineQueries) - 1, index)
+const isOutdatedMultilineQuery = computed(() => {
+  return index => !isEmpty(multilineQueries) && !eq(index, size(multilineQueries) - 1)
 })
 
 // Autocompletes a command and calls options resolver with found program
@@ -209,6 +210,11 @@ const autocompleteQuery = async () => {
 const focus = () => {
   // TODO Check for multiline query
   queryRef.value.focus()
+
+  if (!isEmpty(multilineQueries)) {
+    const lastmultilineQueryRef = last(multilineQueryRefs.value)
+    lastmultilineQueryRef.focus()
+  }
 }
 const bindSignals = () => {
   signals.on('SIGINT', sigint)
@@ -256,7 +262,7 @@ const setLastMultilineQuery = multilineQuery => {
 }
 // Deactivates this query or spawns new multiline queries and dispatches it to
 // execute the command
-const submit = () => {
+const submit = async () => {
   isOutdated.value = true
 
   const query = local.query
@@ -268,6 +274,12 @@ const submit = () => {
     isEmpty(multilineQueries)
   )) {
     multilineQueries.push('')
+
+    await nextTick()
+
+    const lastmultilineQueryRef = last(multilineQueryRefs.value)
+    lastmultilineQueryRef.focus()
+
     return
   }
 
@@ -278,6 +290,11 @@ const submit = () => {
     !eq(lastMultilineQuery.slice(-2), '\\\\')
   )) {
     multilineQueries.push('')
+
+    await nextTick()
+
+    const lastmultilineQueryRef = last(multilineQueryRefs.value)
+    lastmultilineQueryRef.focus()
     return
   }
 

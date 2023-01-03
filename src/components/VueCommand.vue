@@ -262,8 +262,6 @@ const vueCommandHistoryEntryComponentRefs = ref(null)
 const vueCommandHistoryRef = ref(null)
 const vueCommandRef = ref(null)
 
-// Signals like SIGINT or SIGKILL
-const signals = reactive(newEventBus())
 // A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
@@ -274,6 +272,8 @@ const local = reactive({
   prompt: props.prompt,
   query: props.query
 })
+// Signals like SIGINT or SIGKILL
+const signals = reactive(newEventBus())
 // Reactive terminal state
 const terminal = computed(() => ({
   cursorPosition: local.cursorPosition,
@@ -290,19 +290,19 @@ const terminal = computed(() => ({
 const programs = computed(() => {
   return Object.keys(props.commands)
 })
+// Determinates if the given history entry at index should be fullscreen or not
+const shouldBeFullscreen = computed(() => {
+  return index => and(
+    local.isFullscreen,
+    eq(index, size(local.history) - 1)
+  )
+})
 // If the terminal is in fullscreen mode, it hides any non-active history
 // entries
 const shouldShowHistoryEntry = computed(() => {
   return index => or(
     !local.isFullscreen,
     and(local.isFullscreen, eq(index, size(local.history) - 1))
-  )
-})
-// Determinates if the given history entry at index should be fullscreen or not
-const shouldBeFullscreen = computed(() => {
-  return index => and(
-    local.isFullscreen,
-    eq(index, size(local.history) - 1)
   )
 })
 
