@@ -260,6 +260,7 @@ import { listFormatter } from "vue-command";
 | `dispatch`           |
 | `decrementHistory`   |
 | `exit`               |
+| `context`            |
 | `helpText`           |
 | `helpTimeout`        |
 | `hidePrompt`         |
