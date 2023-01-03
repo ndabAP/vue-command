@@ -265,12 +265,16 @@ const setLastMultilineQuery = multilineQuery => {
 const submit = async () => {
   isOutdated.value = true
 
-  const query = local.query
+  const requestsMultilineQuery = query => {
+    return and(
+      eq(query.at(-1), '\\'),
+      !eq(query.slice(-2), '\\\\') // Ignore "\\"
+    )
+  }
 
   // Check query for new multiline request
   if (and(
-    eq(query.at(-1), '\\'),
-    !eq(query.slice(-2), '\\\\'), // Ignore "\\"
+    requestsMultilineQuery(local.query),
     isEmpty(multilineQueries)
   )) {
     multilineQueries.push('')
@@ -286,8 +290,8 @@ const submit = async () => {
   // Check last multiline query for next multiline request
   const lastMultilineQuery = last(multilineQueries)
   if (and(
-    eq(lastMultilineQuery.at(-1), '\\'),
-    !eq(lastMultilineQuery.slice(-2), '\\\\')
+    requestsMultilineQuery(lastMultilineQuery),
+    !isEmpty(multilineQueries)
   )) {
     multilineQueries.push('')
 

@@ -1,4 +1,5 @@
 // These are helpers for the package
+import get from 'lodash.get'
 
 export const PUBLISH_SYMBOL = Symbol('publish')
 
@@ -7,7 +8,7 @@ export const newEventBus = () => {
   const events = {}
   return {
     [PUBLISH_SYMBOL] (event) {
-      const callbacks = events[event]
+      const callbacks = get(events, event)
       if (!callbacks) {
         return
       }
@@ -26,8 +27,18 @@ export const newEventBus = () => {
     },
 
     // TODO This deletes all callbacks assigned to any event
-    off (event) {
-      delete events[event]
+    off (event, xCallback) {
+      const callbacks = get(events, event)
+      if (!callbacks) {
+        return
+      }
+
+      for (const [index, yCallback] of callbacks.entries()) {
+        console.debug(xCallback, yCallback)
+        if (xCallback === yCallback) {
+          events[event].splice(index, 1)
+        }
+      }
     }
   }
 }
