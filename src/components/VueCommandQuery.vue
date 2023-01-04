@@ -23,11 +23,10 @@
           'vue-command__query__input': !invert,
           'vue-command__query__input--invert': invert
         }"
-        :disabled="isOutdated"
+        :disabled="isOutdatedQuery"
         :placeholder="placeholder"
         autocapitalize="none"
         autocorrect="off"
-        autofocus
         type="text"
         @click="setCursorPosition($refs.queryRef.selectionStart)"
         @input="setQuery($event.target.value)"
@@ -85,7 +84,8 @@ import {
   computed
 } from 'vue'
 import {
-  and
+  and,
+  or
 } from '@/utils'
 import {
   defaultParser,
@@ -119,6 +119,7 @@ const showHelp = inject('showHelp')
 const signals = inject('signals')
 const terminal = inject('terminal')
 
+// Indicates if the query, including multiline queries, is invalid
 const isOutdated = ref(false)
 const multilineQueryRefs = ref(null)
 const placeholder = ref('')
@@ -131,7 +132,13 @@ const local = reactive({
 const multilineQueries = reactive([])
 
 const isOutdatedMultilineQuery = computed(() => {
-  return index => !isEmpty(multilineQueries) && !eq(index, size(multilineQueries) - 1)
+  return index => or(
+    and(!isEmpty(multilineQueries), !eq(index, size(multilineQueries) - 1)),
+    isOutdated.value
+  )
+})
+const isOutdatedQuery = computed(() => {
+  return or(isOutdated.value, !isEmpty(multilineQueries))
 })
 
 // Autocompletes a command and calls options resolver with found program
@@ -223,14 +230,16 @@ const reverseISearch = event => {
   // TODO
   // console.debug(event)
 }
-// Shows a user defined help text as placeholder after timeout millseconds
+// Shows a user defined help text as placeholder after timeout milliseconds
 const showDelayedHelp = () => {
-  if (and(!showHelp, isOutdated.value)) {
+  if (!showHelp) {
     return
   }
 
   const timeout = setTimeout(() => {
-    placeholder.value = helpText
+    if (!isOutdated.value) {
+      placeholder.value = helpText
+    }
   }, helpTimeout)
 
   const unwatchIsOutdated = watch(isOutdated, () => {
@@ -240,10 +249,6 @@ const showDelayedHelp = () => {
 }
 // Cancels the current query and creates a new one
 const sigint = () => {
-  if (isOutdated.value) {
-    return
-  }
-
   if (isEmpty(multilineQueries)) {
     local.query = `${local.query}^C`
   }
@@ -254,53 +259,48 @@ const sigint = () => {
   }
 
   isOutdated.value = true
-
   appendToHistory(createQuery())
 }
 const setLastMultilineQuery = multilineQuery => {
   set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
 }
-// Deactivates this query or spawns new multiline queries and dispatches it to
-// execute the command
+// Deactivates this query or spawns new multiline queries and finally dispatches
+// it to execute the command
 const submit = async () => {
-  isOutdated.value = true
-
-  const requestsMultilineQuery = query => {
+  const doesRequestMultilineQuery = query => {
     return and(
       eq(query.at(-1), '\\'),
       !eq(query.slice(-2), '\\\\') // Ignore "\\"
     )
   }
-
-  // Check query for new multiline request
-  if (and(
-    requestsMultilineQuery(local.query),
-    isEmpty(multilineQueries)
-  )) {
+  const spawnMultilineQuery = async () => {
+    // TODO Better use dedicated multiline component
     multilineQueries.push('')
 
     await nextTick()
 
     const lastmultilineQueryRef = last(multilineQueryRefs.value)
     lastmultilineQueryRef.focus()
+  }
 
-    return
+  // Check query for new multiline request
+  if (isEmpty(multilineQueries)) {
+    if (doesRequestMultilineQuery(local.query)) {
+      spawnMultilineQuery()
+      return
+    }
   }
 
   // Check last multiline query for next multiline request
-  const lastMultilineQuery = last(multilineQueries)
-  if (and(
-    requestsMultilineQuery(lastMultilineQuery),
-    !isEmpty(multilineQueries)
-  )) {
-    multilineQueries.push('')
-
-    await nextTick()
-
-    const lastmultilineQueryRef = last(multilineQueryRefs.value)
-    lastmultilineQueryRef.focus()
-    return
+  if (!isEmpty(multilineQueries)) {
+    const lastMultilineQuery = last(multilineQueries)
+    if (doesRequestMultilineQuery(lastMultilineQuery)) {
+      spawnMultilineQuery()
+      return
+    }
   }
+
+  isOutdated.value = true
 
   dispatch()
 }
@@ -325,8 +325,7 @@ const unwatchTerminalQuery = watch(
 )
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
-  // TODO This causes the multiline query to not react
-  // signals.off('SIGINT')
+  signals.off('SIGINT', sigint)
   unwatchTerminalQuery()
   unwatchLocalQuery()
   unwatchTerminalCursorPosition()
@@ -338,6 +337,8 @@ onBeforeMount(() => {
   local.prompt = terminal.value.prompt
 })
 onMounted(() => {
+  focus()
+
   // Show eventually help as placeholder
   showDelayedHelp()
 

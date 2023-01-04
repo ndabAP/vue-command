@@ -85,6 +85,9 @@
 </template>
 
 <script setup>
+// TODO Doesn't autofocus new query
+// TODO Doesn't scroll to bottom for new stdout
+
 import {
   ref,
   defineExpose,

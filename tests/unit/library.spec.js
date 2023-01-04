@@ -7,9 +7,16 @@ describe('library.js', () => {
       expect(parsedQuery).toStrictEqual(['a'])
     })
 
-    it('parses multine queries', () => {
-      const parsedQuery = defaultParser('a \\ --b \\ -c=d .')
-      expect(parsedQuery).toStrictEqual(['a', '--b', '-c=d', '.'])
+    describe('multiline queries', () => {
+      it('parses one-backslashed multiline queries', () => {
+        const parsedQuery = defaultParser('a \\ --b \\ -c=d .')
+        expect(parsedQuery).toStrictEqual(['a', '--b', '-c=d', '.'])
+      })
+
+      it('ignores double backslashes', () => {
+        const parsedQuery = defaultParser('a \\\\ --b \\ -c=d .')
+        expect(parsedQuery).toStrictEqual(['a', '\\\\', '--b', '-c=d', '.'])
+      })
     })
   })
 })

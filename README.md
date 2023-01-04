@@ -319,7 +319,15 @@ signal name and a callback:
 
 ```js
 const signals = inject("signals");
-signals.on("SIGINT", () => console.debug("SIGINT"));
+const sigint = () => console.debug("SIGINT");
+signals.on("SIGINT", sigint);
+```
+
+To unsubscribe from the signal, pass the same signal name and callback you used
+to subscribe to the signal.
+
+```js
+signals.off("SIGINT", sigint);
 ```
 
 ## Nice-to-haves
@@ -329,9 +337,6 @@ contribute please consult `CONTRIBUTING.md`.
 
 - Draggable terminal
 - More events (like query dispatched)
-- More terminal slots
-- Multi-line queriesd
-- Syntax highlighting
 
 ## Browser support
 

@@ -1,5 +1,8 @@
 // These are helpers for the package
+
 import get from 'lodash.get'
+import set from 'lodash.set'
+import eq from 'lodash.eq'
 
 export const PUBLISH_SYMBOL = Symbol('publish')
 
@@ -19,14 +22,13 @@ export const newEventBus = () => {
     },
 
     on (event, callback) {
-      if (!events[event]) {
-        events[event] = []
+      if (!get(events, event)) {
+        set(events, event, [])
       }
 
       events[event].push(callback)
     },
 
-    // TODO This deletes all callbacks assigned to any event
     off (event, xCallback) {
       const callbacks = get(events, event)
       if (!callbacks) {
@@ -34,9 +36,9 @@ export const newEventBus = () => {
       }
 
       for (const [index, yCallback] of callbacks.entries()) {
-        console.debug(xCallback, yCallback)
-        if (xCallback === yCallback) {
+        if (eq(xCallback, yCallback)) {
           events[event].splice(index, 1)
+          return
         }
       }
     }
@@ -49,6 +51,7 @@ export const and = (...operands) => {
       return false
     }
   }
+
   return true
 }
 
@@ -58,5 +61,6 @@ export const or = (...operands) => {
       return true
     }
   }
+
   return false
 }

@@ -15,6 +15,8 @@ const ARROW_UP_KEY = 'ArrowUp'
 const ARROW_DOWN_KEY = 'ArrowDown'
 const C_KEY = 'c'
 
+// TODO Implement cursor keyboard combinations, e. g. Ctrl + u
+
 // Creates a command not found component
 export const createCommandNotFound = (command, notFoundText = 'command not found', name = 'VueCommandNotFound') => {
   const text = `${command}: ${notFoundText}`
@@ -47,7 +49,7 @@ export const createQuery = () => markRaw(VueCommandQuery)
 // A simple query parser which trims the query, removes multiline characters and
 // splits the arguments by spaces
 export const defaultParser = query => {
-  return query.trim().replace(/\\{1}/g, '').split(/[ ]+/)
+  return query.trim().replace(/(?<!\\)\\(?!\\)/g, ' ').split(/[ ]+/)
 }
 
 // Cycles through dispatched queries with arrow keys
