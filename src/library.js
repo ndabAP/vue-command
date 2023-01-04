@@ -46,10 +46,10 @@ export const createStdout = (formatterOrText, name = 'VueCommandStdout') => mark
 // Creates a new query component
 export const createQuery = () => markRaw(VueCommandQuery)
 
-// A simple query parser which trims the query, removes multiline characters and
-// splits the arguments by spaces
+// A simple query parser which trims the query and splits the arguments by
+// spaces
 export const defaultParser = query => {
-  return query.trim().replace(/(?<!\\)\\(?!\\)/g, ' ').split(/[ ]+/)
+  return query.trim().split(/[ ]+/)
 }
 
 // Cycles through dispatched queries with arrow keys

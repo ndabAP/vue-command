@@ -215,8 +215,10 @@ const autocompleteQuery = async () => {
 }
 // Focuses the input
 const focus = () => {
-  // TODO Check for multiline query
-  queryRef.value.focus()
+  if (isEmpty(multilineQueries)) {
+    queryRef.value.focus()
+    return
+  }
 
   if (!isEmpty(multilineQueries)) {
     const lastmultilineQueryRef = last(multilineQueryRefs.value)
@@ -298,6 +300,11 @@ const submit = async () => {
       spawnMultilineQuery()
       return
     }
+
+    const multilineQuery = local.query
+      .concat(multilineQueries.join(''))
+      .replaceAll(/(?<!\\)\\(?!\\)/g, '')
+    setQuery(multilineQuery)
   }
 
   isOutdated.value = true
@@ -326,11 +333,11 @@ const unwatchTerminalQuery = watch(
 // Free resources if query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
   signals.off('SIGINT', sigint)
-  unwatchTerminalQuery()
   unwatchLocalQuery()
+  unwatchTerminalQuery()
   unwatchTerminalCursorPosition()
-  unwatchIsOutdated()
   placeholder.value = ''
+  unwatchIsOutdated()
 })
 
 onBeforeMount(() => {
