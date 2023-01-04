@@ -44,13 +44,11 @@
         'vue-command__multiline-query': !invert,
         'vue-command__multiline-query--invert': invert
       }">
-      <span
-        :class="{
-          'vue-command__multiline-query__prompt': !invert,
-          'vue-command__multiline-query__prompt--invert': invert
-        }">></span>
+      <VueCommandMultilineQuery
+        :is-outdated="isOutdatedMultilineQuery(index)"
+        @update="setLastMultilineQuery" />
 
-      <input
+      <!-- <input
         ref="multilineQueryRefs"
         :class="{
           'vue-command__multiline-query__input': !invert,
@@ -66,7 +64,7 @@
         @input="setLastMultilineQuery($event.target.value)"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
-        @keyup.enter.exact="submit">
+        @keyup.enter.exact="submit"> -->
     </div>
   </div>
 </template>
@@ -81,7 +79,8 @@ import {
   onBeforeMount,
   reactive,
   nextTick,
-  computed
+  computed,
+  provide
 } from 'vue'
 import {
   and,
@@ -103,6 +102,7 @@ import size from 'lodash.size'
 import eq from 'lodash.eq'
 import last from 'lodash.last'
 import set from 'lodash.set'
+import VueCommandMultilineQuery from './VueCommandMultilineQuery.vue'
 
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
@@ -217,12 +217,6 @@ const autocompleteQuery = async () => {
 const focus = () => {
   if (isEmpty(multilineQueries)) {
     queryRef.value.focus()
-    return
-  }
-
-  if (!isEmpty(multilineQueries)) {
-    const lastmultilineQueryRef = last(multilineQueryRefs.value)
-    lastmultilineQueryRef.focus()
   }
 }
 const bindSignals = () => {
@@ -269,6 +263,8 @@ const setLastMultilineQuery = multilineQuery => {
 // Deactivates this query or spawns new multiline queries and finally dispatches
 // it to execute the command
 const submit = async () => {
+  // TODO Multiline component into history
+
   const doesRequestMultilineQuery = query => {
     return and(
       eq(query.at(-1), '\\'),
@@ -278,11 +274,6 @@ const submit = async () => {
   const spawnMultilineQuery = async () => {
     // TODO Better use dedicated multiline component
     multilineQueries.push('')
-
-    await nextTick()
-
-    const lastmultilineQueryRef = last(multilineQueryRefs.value)
-    lastmultilineQueryRef.focus()
   }
 
   // Check query for new multiline request
@@ -352,6 +343,8 @@ onMounted(() => {
   // Bind signals like "SIGINT"
   bindSignals()
 })
+
+provide('submit', submit)
 
 defineExpose({
   focus
