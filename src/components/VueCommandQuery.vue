@@ -141,8 +141,8 @@ const isOutdatedMultilineQuery = computed(() => {
 const isOutdatedQuery = computed(() => {
   return or(isOutdated.value, !isEmpty(multilineQueries))
 })
+// Returns the last query, including multiline queries
 const lastQuery = computed(() => {
-  // Check query for new multiline request
   if (isEmpty(multilineQueries)) {
     return local.query
   }
@@ -270,6 +270,7 @@ const submit = async () => {
   const multilineQuery = local.query
     .concat(multilineQueries.join(''))
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
+    .trim()
   setQuery(multilineQuery)
 
   isOutdated.value = true
@@ -280,6 +281,7 @@ const submit = async () => {
 const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
   focus()
+  // Set cursor
 })
 const unwatchLocalQuery = watch(() => local.query, query => {
   // Apply given cursor position to actual cursor position
