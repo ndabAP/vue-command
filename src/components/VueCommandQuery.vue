@@ -78,8 +78,7 @@ import {
   onBeforeMount,
   reactive,
   nextTick,
-  computed,
-  provide
+  computed
 } from 'vue'
 import {
   and,
@@ -238,7 +237,7 @@ const reverseISearch = event => {
   // TODO
   // console.debug(event)
 }
-// Cancels the current query and creates a new one
+// Cancels the current query or multiline query and creates a new query
 const sigint = () => {
   if (isEmpty(multilineQueries)) {
     local.query = `${local.query}^C`
@@ -267,11 +266,11 @@ const submit = async () => {
     return
   }
 
-  const multilineQuery = local.query
-    .concat(multilineQueries.join(''))
+  const query = local.query
+    .concat(join(multilineQueries, ''))
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
     .trim()
-  setQuery(multilineQuery)
+  setQuery(query)
 
   isOutdated.value = true
 
@@ -281,9 +280,12 @@ const submit = async () => {
 const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
   focus()
+
   // Set cursor
+  const lastMultilineQueryRef = last(multilineQueryRefs.value)
+  setCursorPosition(lastMultilineQueryRef.selectionStart)
 })
-const unwatchLocalQuery = watch(() => local.query, query => {
+const unwatchLocalQuery = watch(() => local.query, () => {
   // Apply given cursor position to actual cursor position
   setCursorPosition(queryRef.value.selectionStart)
 })

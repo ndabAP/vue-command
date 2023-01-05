@@ -451,6 +451,7 @@ const setHistoryPosition = historyPosition => {
   emits('update:historyPosition', historyPosition)
 }
 const setQuery = query => {
+  console.debug('setQuery')
   local.query = query
   emits('update:query', query)
 }
