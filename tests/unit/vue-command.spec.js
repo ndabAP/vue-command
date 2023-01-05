@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import VueCommand from '@/components/VueCommand.vue'
 import VueCommandQuery from '@/components/VueCommandQuery.vue'
 
-describe('VueCommand.vue', () => {
+describe('VueCommand', () => {
   describe('props', () => {
     it('hides the bar', () => {
       const wrapper = mount(VueCommand, {

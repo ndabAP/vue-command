@@ -1,8 +1,12 @@
 // These are helpers for the package
 
-import get from 'lodash.get'
-import set from 'lodash.set'
-import eq from 'lodash.eq'
+import {
+  entries,
+  eq,
+  get,
+  isUndefined,
+  set
+} from 'lodash'
 
 export const PUBLISH_SYMBOL = Symbol('publish')
 
@@ -12,7 +16,7 @@ export const newEventBus = () => {
   return {
     [PUBLISH_SYMBOL] (event) {
       const callbacks = get(events, event)
-      if (!callbacks) {
+      if (isUndefined(callbacks)) {
         return
       }
 
@@ -22,7 +26,7 @@ export const newEventBus = () => {
     },
 
     on (event, callback) {
-      if (!get(events, event)) {
+      if (isUndefined(get(events, event))) {
         set(events, event, [])
       }
 
@@ -31,11 +35,11 @@ export const newEventBus = () => {
 
     off (event, xCallback) {
       const callbacks = get(events, event)
-      if (!callbacks) {
+      if (isUndefined(callbacks)) {
         return
       }
 
-      for (const [index, yCallback] of callbacks.entries()) {
+      for (const [index, yCallback] of entries(callbacks)) {
         if (eq(xCallback, yCallback)) {
           events[event].splice(index, 1)
           return

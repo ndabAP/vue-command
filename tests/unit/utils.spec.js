@@ -3,7 +3,7 @@ import {
   PUBLISH_SYMBOL
 } from '../../src/utils'
 
-describe('index.js', () => {
+describe('utils', () => {
   describe('newEventBus', () => {
     it('publishes an event', () => {
       const eventBus = newEventBus()
@@ -15,7 +15,7 @@ describe('index.js', () => {
       expect(callback).toHaveBeenCalled()
     })
 
-    it('unsubscribes from event', () => {
+    it('unsubscribes from an event', () => {
       const eventBus = newEventBus()
 
       const event = 'TEST_EVENT'

@@ -7,8 +7,10 @@ import {
 } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import VueCommandQuery from '@/components/VueCommandQuery'
-import forEach from 'lodash.foreach'
-import isFunction from 'lodash.isfunction'
+import {
+  forEach,
+  isFunction
+} from 'lodash'
 
 // Suffix "KEY" is added to avoid collisions
 const ARROW_UP_KEY = 'ArrowUp'

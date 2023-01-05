@@ -108,6 +108,7 @@ export default {
 
         clear: () => {
           history.value = []
+          // query.value = ''
           return createQuery()
         },
 

@@ -85,9 +85,6 @@
 </template>
 
 <script setup>
-// TODO Doesn't autofocus new query
-// TODO Doesn't scroll to bottom for new stdout
-
 import {
   ref,
   defineExpose,
@@ -117,15 +114,18 @@ import {
   newEventBus,
   PUBLISH_SYMBOL
 } from '@/utils'
-import head from 'lodash.head'
-import isFunction from 'lodash.isfunction'
-import get from 'lodash.get'
-import isEmpty from 'lodash.isempty'
-import last from 'lodash.last'
-import eq from 'lodash.eq'
-import nth from 'lodash.nth'
-import lt from 'lodash.lt'
-import size from 'lodash.size'
+import {
+  eq,
+  size,
+  keys,
+  get,
+  last,
+  isEmpty,
+  head,
+  isFunction,
+  nth,
+  lt
+} from 'lodash'
 
 const props = defineProps({
   commands: {
@@ -291,7 +291,7 @@ const terminal = computed(() => ({
 
 // Provided commands as programs. It takes the keys of the commands object
 const programs = computed(() => {
-  return Object.keys(props.commands)
+  return keys(props.commands)
 })
 // Determinates if the given history entry at index should be fullscreen or not
 const shouldBeFullscreen = computed(() => {
@@ -324,8 +324,6 @@ const autoFocus = () => {
     return
   }
 
-  // TODO Check for last multiline query
-
   // Only focus if last history entry is query
   const lastHistoryEntry = last(local.history)
   // TODO Find a better way to verify that
@@ -337,13 +335,13 @@ const autoFocus = () => {
   const lastHistoryEntryRef = last(vueCommandHistoryEntryComponentRefs.value)
   lastHistoryEntryRef.focus()
 }
-// Sets history position by given dispatched queries
-const autoHistoryPosition = () => {
-  setHistoryPosition(local.dispatchedQueries.size)
-}
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
+}
+// Sets history position by given dispatched queries
+const autoHistoryPosition = () => {
+  setHistoryPosition(local.dispatchedQueries.size)
 }
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
@@ -396,6 +394,10 @@ const dispatch = async () => {
         }
       }
     },
+    // TODO On mounted send event
+    mounted () {
+      vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+    },
 
     // This nesting makes it possible to provide the context
     render: () => h(command)
@@ -433,11 +435,6 @@ const incrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
-// Waits for the DOM and scrolls to the bottom of the history
-const scrollToBottom = async () => {
-  await nextTick()
-  vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
-}
 const sendSignal = signal => {
   signals[PUBLISH_SYMBOL](signal)
 }
@@ -458,12 +455,6 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-watch(local.history, async () => {
-  // Scroll to bottom if history was mutated
-  // TODO Listen for some query ready event and scroll only then since its
-  // triggered by a history change whose entries might not done loading
-  await scrollToBottom()
-})
 // Mirror user properties with local ones
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
@@ -472,7 +463,7 @@ watch(() => props.dispatchedQueries, dispatchedQueries => {
   local.dispatchedQueries = dispatchedQueries
   // User has to take care of new history position
 })
-watch(() => props.history, history => {
+watch(() => props.history, async history => {
   local.history = history
   // User has to take care of new executed programs and history position
 })

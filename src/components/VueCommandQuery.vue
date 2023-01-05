@@ -57,7 +57,6 @@
         :disabled="isOutdatedMultilineQuery(index)"
         autocapitalize="none"
         autocorrect="off"
-        autofocus
         type="text"
         :value="multilineQuery"
         @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
@@ -92,16 +91,19 @@ import {
   createQuery,
   listFormatter
 } from '@/library'
-import head from 'lodash.head'
-import lt from 'lodash.lt'
-import gt from 'lodash.gt'
-import isFunction from 'lodash.isfunction'
-import trimStart from 'lodash.trimstart'
-import isEmpty from 'lodash.isempty'
-import size from 'lodash.size'
-import eq from 'lodash.eq'
-import last from 'lodash.last'
-import set from 'lodash.set'
+import {
+  head,
+  isEmpty,
+  eq,
+  size,
+  isFunction,
+  gt,
+  last,
+  set,
+  trimStart,
+  lt,
+  join
+} from 'lodash'
 
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
@@ -138,6 +140,16 @@ const isOutdatedMultilineQuery = computed(() => {
 })
 const isOutdatedQuery = computed(() => {
   return or(isOutdated.value, !isEmpty(multilineQueries))
+})
+const lastQuery = computed(() => {
+  // Check query for new multiline request
+  if (isEmpty(multilineQueries)) {
+    return local.query
+  }
+
+  // Check last multiline query for next multiline request
+  const lastMultilineQuery = last(multilineQueries)
+  return lastMultilineQuery
 })
 
 // Autocompletes a command and calls options resolver with found program
@@ -219,8 +231,8 @@ const focus = () => {
     return
   }
 
-  const lastMultilineQuery = last(multilineQueryRefs.value)
-  lastMultilineQuery.focus()
+  const lastMultilineQueryRef = last(multilineQueryRefs.value)
+  lastMultilineQueryRef.focus()
 }
 const reverseISearch = event => {
   // TODO
@@ -246,45 +258,31 @@ const setLastMultilineQuery = multilineQuery => {
 // Deactivates this query or spawns new multiline queries and finally dispatches
 // it to execute the command
 const submit = async () => {
-  const wantsMultilineQuery = query => {
-    return and(
-      eq(query.at(-1), '\\'),
-      !eq(query.slice(-2), '\\\\') // Ignore "\\"
-    )
-  }
-  const createMultilineQuery = () => {
-    multilineQueries.push('')
-  }
-
   // Check query for new multiline request
-  if (isEmpty(multilineQueries)) {
-    if (wantsMultilineQuery(local.query)) {
-      createMultilineQuery()
-      return
-    }
+  if (and(
+    eq(lastQuery.value.at(-1), '\\'),
+    !eq(lastQuery.value.slice(-2), '\\\\') // Ignore "\\"
+  )) {
+    multilineQueries.push('')
+    return
   }
 
-  // Check last multiline query for next multiline request
-  if (!isEmpty(multilineQueries)) {
-    const lastMultilineQuery = last(multilineQueries)
-    if (wantsMultilineQuery(lastMultilineQuery)) {
-      createMultilineQuery()
-      return
-    }
-
-    const multilineQuery = local.query
-      .concat(multilineQueries.join(''))
-      .replaceAll(/(?<!\\)\\(?!\\)/g, '')
-    setQuery(multilineQuery)
-  }
+  const multilineQuery = local.query
+    .concat(multilineQueries.join(''))
+    .replaceAll(/(?<!\\)\\(?!\\)/g, '')
+  setQuery(multilineQuery)
 
   isOutdated.value = true
 
   dispatch()
 }
 
-// Apply given cursor position to actual cursor position
-const unwatchLocalQuery = watch(() => local.query, () => {
+const unwatchMultilineQueries = watch(multilineQueries, async () => {
+  await nextTick()
+  focus()
+})
+const unwatchLocalQuery = watch(() => local.query, query => {
+  // Apply given cursor position to actual cursor position
   setCursorPosition(queryRef.value.selectionStart)
 })
 const unwatchTerminalCursorPosition = watch(
@@ -308,6 +306,7 @@ const unwatchIsOutdated = watch(isOutdated, () => {
   unwatchTerminalQuery()
   unwatchTerminalCursorPosition()
   placeholder.value = ''
+  unwatchMultilineQueries()
   unwatchIsOutdated()
 })
 

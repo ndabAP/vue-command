@@ -1,6 +1,6 @@
 import { defaultParser } from '../../src/library'
 
-describe('library.js', () => {
+describe('library', () => {
   describe('defaultParser', () => {
     it('parses one program', () => {
       const parsedQuery = defaultParser('a')
