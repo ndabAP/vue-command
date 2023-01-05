@@ -14,7 +14,6 @@
         {{ local.prompt }}
       </span>
 
-      <!-- TODO Move autocomplete and search to parent -->
       <!-- TODO Make textarea to enforce word break -->
       <input
         ref="queryRef"
@@ -44,11 +43,12 @@
         'vue-command__multiline-query': !invert,
         'vue-command__multiline-query--invert': invert
       }">
-      <VueCommandMultilineQuery
-        :is-outdated="isOutdatedMultilineQuery(index)"
-        @update="setLastMultilineQuery" />
-
-      <!-- <input
+      <span
+        :class="{
+          'vue-command__multiline-query__prompt': !invert,
+          'vue-command__multiline-query__prompt--invert': invert
+        }">></span>
+      <input
         ref="multilineQueryRefs"
         :class="{
           'vue-command__multiline-query__input': !invert,
@@ -64,7 +64,7 @@
         @input="setLastMultilineQuery($event.target.value)"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
-        @keyup.enter.exact="submit"> -->
+        @keyup.enter.exact="submit">
     </div>
   </div>
 </template>
@@ -102,7 +102,6 @@ import size from 'lodash.size'
 import eq from 'lodash.eq'
 import last from 'lodash.last'
 import set from 'lodash.set'
-import VueCommandMultilineQuery from './VueCommandMultilineQuery.vue'
 
 const appendToHistory = inject('appendToHistory')
 const dispatch = inject('dispatch')
@@ -213,35 +212,19 @@ const autocompleteQuery = async () => {
     }
   }
 }
-// Focuses the input
+// Focuses the query or multiline query
 const focus = () => {
   if (isEmpty(multilineQueries)) {
     queryRef.value.focus()
+    return
   }
-}
-const bindSignals = () => {
-  signals.on('SIGINT', sigint)
+
+  const lastMultilineQuery = last(multilineQueryRefs.value)
+  lastMultilineQuery.focus()
 }
 const reverseISearch = event => {
   // TODO
   // console.debug(event)
-}
-// Shows a user defined help text as placeholder after timeout milliseconds
-const showDelayedHelp = () => {
-  if (!showHelp) {
-    return
-  }
-
-  const timeout = setTimeout(() => {
-    if (!isOutdated.value) {
-      placeholder.value = helpText
-    }
-  }, helpTimeout)
-
-  const unwatchIsOutdated = watch(isOutdated, () => {
-    clearTimeout(timeout)
-    unwatchIsOutdated()
-  })
 }
 // Cancels the current query and creates a new one
 const sigint = () => {
@@ -263,23 +246,20 @@ const setLastMultilineQuery = multilineQuery => {
 // Deactivates this query or spawns new multiline queries and finally dispatches
 // it to execute the command
 const submit = async () => {
-  // TODO Multiline component into history
-
-  const doesRequestMultilineQuery = query => {
+  const wantsMultilineQuery = query => {
     return and(
       eq(query.at(-1), '\\'),
       !eq(query.slice(-2), '\\\\') // Ignore "\\"
     )
   }
-  const spawnMultilineQuery = async () => {
-    // TODO Better use dedicated multiline component
+  const createMultilineQuery = () => {
     multilineQueries.push('')
   }
 
   // Check query for new multiline request
   if (isEmpty(multilineQueries)) {
-    if (doesRequestMultilineQuery(local.query)) {
-      spawnMultilineQuery()
+    if (wantsMultilineQuery(local.query)) {
+      createMultilineQuery()
       return
     }
   }
@@ -287,8 +267,8 @@ const submit = async () => {
   // Check last multiline query for next multiline request
   if (!isEmpty(multilineQueries)) {
     const lastMultilineQuery = last(multilineQueries)
-    if (doesRequestMultilineQuery(lastMultilineQuery)) {
-      spawnMultilineQuery()
+    if (wantsMultilineQuery(lastMultilineQuery)) {
+      createMultilineQuery()
       return
     }
 
@@ -335,16 +315,24 @@ onBeforeMount(() => {
   local.prompt = terminal.value.prompt
 })
 onMounted(() => {
+  signals.on('SIGINT', sigint)
+
   focus()
 
   // Show eventually help as placeholder
-  showDelayedHelp()
+  if (showHelp) {
+    const timeout = setTimeout(() => {
+      if (!isOutdated.value) {
+        placeholder.value = helpText
+      }
+    }, helpTimeout)
 
-  // Bind signals like "SIGINT"
-  bindSignals()
+    const unwatchIsOutdated = watch(isOutdated, () => {
+      clearTimeout(timeout)
+      unwatchIsOutdated()
+    })
+  }
 })
-
-provide('submit', submit)
 
 defineExpose({
   focus
@@ -416,7 +404,9 @@ defineExpose({
 }
 
 .vue-command {
+  .vue-command__multiline-query,
   .vue-command__query {
+    .vue-command__multiline-query__input,
     .vue-command__query__input {
       &::placeholder {
         color: rgba(255, 255, 255, 0.5);
@@ -426,7 +416,9 @@ defineExpose({
 }
 
 .vue-command--invert {
+  .vue-command__multiline-query,
   .vue-command__query--invert {
+    .vue-command__multiline-query__input,
     .vue-command__query__input--invert {
       &::placeholder {
         color: rgba(0, 0, 0, 0.5);
