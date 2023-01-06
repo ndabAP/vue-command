@@ -129,7 +129,7 @@ const placeholder = ref('')
 const queryRef = ref(null)
 
 const local = reactive({
-  prompt: '',
+  prompt: terminal.value.prompt,
   query: ''
 })
 const multilineQueries = reactive([])
