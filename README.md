@@ -261,7 +261,7 @@ import { listFormatter } from "vue-command";
 | -------------------- | ---------- | -------------------------------- |
 | `addDispatchedQuery` | `Function` | `dispatchedQuery`                |
 | `appendToHistory`    | `Function` | `...components`                  |
-| `dispatch`           | `Function` |                                  |
+| `dispatch`           | `Function` | `query`                          |
 | `decrementHistory`   | `Function` |                                  |
 | `exit`               | `Function` |                                  |
 | `context`            | `Object`   |                                  |
@@ -294,7 +294,7 @@ inject: ["exit", "terminal"],
 | `addDispatchedQuery` | `Function` | `dispatchedQuery` |
 | `appendToHistory`    | `Function` | `...components`   |
 | `decrementHistory`   | `Function` |                   |
-| `dispatch`           | `Function` |                   |
+| `dispatch`           | `Function` | `query`           |
 | `exit`               | `Function` |                   |
 | `incrementHistory`   | `Function` |                   |
 | `programs`           | `Function` |                   |

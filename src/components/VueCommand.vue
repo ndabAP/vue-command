@@ -342,9 +342,7 @@ const appendToHistory = (...components) => {
 }
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
-const dispatch = async () => {
-  const query = local.query
-
+const dispatch = async query => {
   // An empty query is an empty string
   if (isEmpty(query)) {
     appendToHistory(createQuery())
@@ -374,8 +372,7 @@ const dispatch = async () => {
   // instantly to history
   // TODO Find a better way to find out the name
   if (eq(get(command, '__name'), 'VueCommandQuery')) {
-    const query = command
-    appendToHistory(query)
+    appendToHistory(command)
     return
   }
 
@@ -406,7 +403,7 @@ const exit = () => {
   setFullscreen(false)
   setQuery('')
 }
-// Decreases the history about one and sets the new query
+// Decreases the history position about one and sets the new query
 const decrementHistory = () => {
   // History pointer must be greater zero
   if (eq(local.historyPosition, 0)) {
@@ -417,7 +414,7 @@ const decrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
-// Increases the history about one and sets the new query
+// Increases the history position about one and sets the new query
 const incrementHistory = () => {
   // History pointer must be lower query history
   if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
@@ -448,6 +445,8 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
+// TODO Local cursor position not emitted
+
 // Mirror user properties with local ones
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
@@ -472,7 +471,7 @@ watch(() => props.prompt, prompt => {
 })
 watch(() => props.query, query => {
   local.query = query
-  // Cursor position gets automatically updated in query component
+  // Cursor position gets updated in query component
 })
 
 onMounted(() => {
@@ -484,19 +483,13 @@ onMounted(() => {
   }
 
   // Scroll to bottom if history changes
-  const mutationObserver = new MutationObserver(async (mutations) => {
-    await nextTick()
-
-    for (const mutation of mutations) {
-      if (eq(mutation.type, 'childList')) {
-        // TODO Only scroll to bottom if it was scrolled to bottom before
-        vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
-        return
-      }
-    }
+  const resizeObsever = new ResizeObserver(() => {
+    // TODO Only scroll to bottom if user scrolled to bottom before
+    vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
   })
-
-  mutationObserver.observe(vueCommandHistoryRef.value, { childList: true })
+  for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
+    resizeObsever.observe(vueCommandHistoryEntry)
+  }
 })
 
 provide('addDispatchedQuery', addDispatchedQuery)

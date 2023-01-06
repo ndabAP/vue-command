@@ -281,31 +281,34 @@ const submit = async () => {
   }
 
   // No multiline query requested
+  isOutdated.value = true
 
   // Concatenate base query with multiline queries and remove slashes
   const query = local.query
     .concat(join(multilineQueries, ''))
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
     .trim()
-  setQuery(query)
 
-  isOutdated.value = true
-
-  dispatch()
+  dispatch(query)
 }
 
 const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
+
   const lastMultilineQueryRef = last(multilineQueryRefs.value)
   setCursorPosition(lastMultilineQueryRef.selectionStart)
 })
-const unwatchLocalQuery = watch(() => local.query, () => {
+const unwatchLocalQuery = watch(() => local.query, async () => {
+  await nextTick()
+
   // Apply given cursor position to actual cursor position
   setCursorPosition(queryRef.value.selectionStart)
 })
 const unwatchTerminalCursorPosition = watch(
   () => terminal.value.cursorPosition,
-  cursorPosition => {
+  async cursorPosition => {
+    await nextTick()
+
     queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
   }
 )
@@ -313,7 +316,9 @@ const unwatchTerminalCursorPosition = watch(
 // inside a history entry
 const unwatchTerminalQuery = watch(
   () => terminal.value.query,
-  query => {
+  async query => {
+    await nextTick()
+
     local.query = query
   }
 )
@@ -334,7 +339,12 @@ onBeforeMount(() => {
 onMounted(() => {
   signals.on('SIGINT', sigint)
 
-  focus()
+  // Initial state
+  setQuery('')
+  setCursorPosition(0)
+
+  // Focus query
+  queryRef.value.focus()
 
   // Show eventually help as placeholder
   if (showHelp) {
