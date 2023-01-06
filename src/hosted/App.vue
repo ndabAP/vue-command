@@ -82,7 +82,7 @@ export default {
               break
             // TODO Check last index instead of second
             case 2:
-              if ('home'.startsWith(parsedQuery[1]) && parsedQuery[1] !== 'home') {
+              if ('home'.startsWith(parsedQuery[parsedQuery.length - 1]) && parsedQuery[parsedQuery.length - 1] !== 'home') {
                 setQuery('cd home')
               }
               break
@@ -92,14 +92,14 @@ export default {
     }
 
     const commands = {
-      cd: parsed => {
-        if (parsed.length < 2) {
+      cd: parsedQuery => {
+        if (parsedQuery.length < 2) {
           return createQuery()
         }
-        if (parsed[parsed.length - 1] === 'home') {
+        if (parsedQuery[parsedQuery.length - 1] === 'home') {
           prompt.value = `${PROMPT}/home`
         }
-        if ((parsed[parsed.length - 1] === '../' || parsed[parsed.length - 1] === '..') &&
+        if ((parsedQuery[parsedQuery.length - 1] === '../' || parsedQuery[parsedQuery.length - 1] === '..') &&
             prompt.value === `${PROMPT}/home`) {
           prompt.value = `${PROMPT}`
         }
