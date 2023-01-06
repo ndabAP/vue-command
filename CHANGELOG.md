@@ -1,3 +1,12 @@
+## [32.0.1](https://github.com/ndabAP/vue-command/compare/v32.0.0...v32.0.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* set cursor position for end ([d2a7506](https://github.com/ndabAP/vue-command/commit/d2a75061b646f73089fa2700e8b3e781353ca826))
+* unsubscribe query ([a90303b](https://github.com/ndabAP/vue-command/commit/a90303b8e7dd7446d40c0b5dc77e36a97bcbb1cc))
+* use terminal prompt ([e513e3e](https://github.com/ndabAP/vue-command/commit/e513e3e4526156a8d62f0ccc273f274c433a204b))
+
 ## [32.0.0](https://github.com/ndabAP/vue-command/compare/v31.0.0...v32.0.0) (2023-01-06)
 
 
