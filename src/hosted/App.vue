@@ -108,7 +108,9 @@ export default {
       },
 
       clear: () => {
-        history.value = []
+        // This is necessary since Vue.js losses its reactivity if set to empty
+        history.value.splice(0, history.value.length)
+
         return createQuery()
       },
 

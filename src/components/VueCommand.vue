@@ -445,8 +445,6 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-// TODO Local cursor position not emitted
-
 // Mirror user properties with local ones
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
@@ -461,7 +459,6 @@ watch(() => props.history, history => {
 watch(() => props.historyPosition, historyPosition => {
   local.historyPosition = historyPosition
   // User has to take care of new query
-  // TODO Really?
 })
 watch(() => props.isFullscreen, isFullscreen => {
   local.isFullscreen = isFullscreen
@@ -476,20 +473,31 @@ watch(() => props.query, query => {
 
 onMounted(() => {
   // Binds given event listeners and calls them with the terminals references
-  // and exposed methods and values
+  // and exposed properties
   const currentInstance = getCurrentInstance()
   for (const bindEventListener of props.eventResolver) {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
 
-  // Scroll to bottom if history changes
   const resizeObsever = new ResizeObserver(() => {
     // TODO Only scroll to bottom if user scrolled to bottom before
     vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
   })
+
+  // Scroll to bottom if history changes
   for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
     resizeObsever.observe(vueCommandHistoryEntry)
   }
+
+  // If history changes, unobserve all history entries and observe again
+  watch(local.history, async () => {
+    await nextTick()
+
+    resizeObsever.disconnect()
+    for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
+      resizeObsever.observe(vueCommandHistoryEntry)
+    }
+  })
 })
 
 provide('addDispatchedQuery', addDispatchedQuery)
