@@ -1,3 +1,14 @@
+## [31.0.0](https://github.com/ndabAP/vue-command/compare/v30.0.1...v31.0.0) (2023-01-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix cd
+
+### Documentation
+
+* fix cd ([f993e15](https://github.com/ndabAP/vue-command/commit/f993e152c9e85a515d8af7482bfd6f04cf1b2f98))
+
 ## [30.0.1](https://github.com/ndabAP/vue-command/compare/v30.0.0...v30.0.1) (2023-01-06)
 
 
