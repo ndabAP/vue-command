@@ -1,3 +1,14 @@
+## [32.0.0](https://github.com/ndabAP/vue-command/compare/v31.0.0...v32.0.0) (2023-01-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* add vue.js 3 support
+
+### Documentation
+
+* add vue.js 3 support ([0511fc1](https://github.com/ndabAP/vue-command/commit/0511fc153ec7f84188c1f76e3b16d7ae3c7ae264))
+
 ## [31.0.0](https://github.com/ndabAP/vue-command/compare/v30.0.1...v31.0.0) (2023-01-06)
 
 
