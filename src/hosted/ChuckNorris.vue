@@ -22,14 +22,15 @@ export default {
   async mounted () {
     const abortController = new AbortController()
 
-    this.signals.on('SIGINT', () => {
+    const sigint = () => {
       abortController.abort()
       this.signals.off('SIGINT')
-    })
+    }
+    this.signals.on('SIGINT', sigint)
 
     try {
       const response = await fetch(API_URL, { signal: abortController.signal })
-      this.signals.off('SIGINT')
+      this.signals.off('SIGINT', sigint)
       if (!response.ok) {
         this.isLoading = false
         this.isError = true

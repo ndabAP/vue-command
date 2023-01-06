@@ -15,6 +15,7 @@
         <div class="row mb-4">
           <div class="col">
             <vue-command
+              v-model:cursor-position="cursorPosition"
               v-model:dispatched-queries="dispatchedQueries"
               v-model:history="history"
               v-model:query="query"
@@ -62,6 +63,7 @@ export default {
   },
 
   setup () {
+    const cursorPosition = ref(0)
     const dispatchedQueries = ref(new Set())
     const hideBar = ref(false)
     const hidePrompt = ref(false)
@@ -89,51 +91,55 @@ export default {
       }
     }
 
-    return {
-      commands: {
-        cd: parsed => {
-          if (parsed.length < 1) {
-            return createQuery()
-          }
-          if (parsed[1] === 'home') {
-            prompt.value = `${PROMPT}/home`
-          }
-          if ((parsed[1] === '../' || parsed[1] === '..') &&
+    const commands = {
+      cd: parsed => {
+        if (parsed.length < 2) {
+          return createQuery()
+        }
+        if (parsed[parsed.length - 1] === 'home') {
+          prompt.value = `${PROMPT}/home`
+        }
+        if ((parsed[parsed.length - 1] === '../' || parsed[parsed.length - 1] === '..') &&
             prompt.value === `${PROMPT}/home`) {
-            prompt.value = `${PROMPT}`
-          }
+          prompt.value = `${PROMPT}`
+        }
 
-          return createQuery()
-        },
-
-        clear: () => {
-          history.value = []
-          return createQuery()
-        },
-
-        'hello-world': () => {
-          return createStdout('Hello world')
-        },
-
-        // TODO Create terminal-like columns
-        help: () => {
-          const list = ['cd', 'clear', 'hello-world', 'help', 'history', 'nano', 'norris']
-          return createStdout(listFormatter(...list))
-        },
-
-        history: () => {
-          const history = []
-          for (const [index, entry] of [...dispatchedQueries.value].entries()) {
-            history.push([index, entry])
-          }
-
-          return createStdout(tableFormatter(history))
-        },
-
-        nano: () => NanoEditor,
-        norris: () => ChuckNorris
+        return createQuery()
       },
 
+      clear: () => {
+        // This is necessary since Vue.js losses its reactivity if set to empty
+        history.value.splice(0, history.value.length)
+
+        return createQuery()
+      },
+
+      'hello-world': () => {
+        return createStdout('Hello world')
+      },
+
+      history: () => {
+        const history = []
+        for (const [index, entry] of [...dispatchedQueries.value].entries()) {
+          history.push([index, entry])
+        }
+
+        return createStdout(tableFormatter(history))
+      },
+
+      nano: () => NanoEditor,
+      norris: () => ChuckNorris
+    }
+    commands.help = () => {
+      // TODO Create terminal-like columns
+      const list = Object.keys(commands)
+      return createStdout(listFormatter(...list))
+    }
+
+    return {
+      commands,
+
+      cursorPosition,
       dispatchedQueries,
       hideBar,
       hidePrompt,

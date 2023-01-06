@@ -11,7 +11,8 @@ A fully working, most feature-rich Vue.js terminal emulator. See the
 - Supports fullscreen mode
 - Customize the terminal with slots
 - Provide your own parser (falls back to simple one)
-- Provide your own event resolver
+- Provide your own event resolver to support keyboard
+- Multiline support with `\`
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)
@@ -118,30 +119,30 @@ export default {
 
 ## Properties
 
-Some properties can be changed, therefore, adding the `v-model` directive is
-required.
+Some properties can be mutated by the terminal. Therefore, adding the `v-model`
+directive is required.
 
-| Property             | Description                                   | Type       | Default value                 | Required | `v-model` |
-| -------------------- | --------------------------------------------- | ---------- | ----------------------------- | -------- | --------- |
-| `commands`           | See [Commands](#commands)                     | `Object`   | `{}`                          | No       | No        |
-| `cursor-position`    | Cursor position                               | `Number`   | `0`                           | No       | Yes       |
-| `dispatched-queries` | Non-empty dispatched queries                  | `Set`      | `new Set()`                   | No       | Yes       |
-| `event-resolver`     | See [Event resolver](#Event-resolver) section | `Function` | See `newDefaultEventResolver` | No       | No        |
-| `help-text`          | Command help                                  | `String`   | `''`                          | No       | Yes       |
-| `help-timeout`       | Command help timeout                          | `Number`   | `3000`                        | No       | No        |
-| `hide-bar`           | Hides the bar                                 | `Boolean`  | `false`                       | No       | No        |
-| `hide-prompt`        | Hides the prompt                              | `Boolean`  | `false`                       | No       | No        |
-| `hide-title`         | Hides the title                               | `Boolean`  | `false`                       | No       | No        |
-| `history`            | Terminal history                              | `Array`    | `[]`                          | No       | Yes       |
-| `history-position`   | Points to the latest dispatched query entry   | `Number`   | `0`                           | No       | Yes       |
-| `invert`             | Inverts the terminals colors                  | `Boolean`  | `false`                       | No       | No        |
-| `is-fullscreen`      | Terminal fullscreen mode                      | `Boolean`  | `false`                       | No       | Yes       |
-| `options-resolver`   | See [Options resolver](#Options-resolver)     | `Function` | `null`                        | No       | No        |
-| `parser`             | Query parser                                  | `Function` | See `defaultParser`           | No       | No        |
-| `prompt`             | Terminal prompt                               | `String`   | `~$`                          | No       | No        |
-| `show-help`          | Show query help                               | `Boolean`  | `false`                       | No       | No        |
-| `title`              | Terminal title                                | `String`   | `~$`                          | No       | No        |
-| `query`              | Terminal query                                | `String`   | `''`                          | No       | Yes       |
+| Property             | Description                                 | Type       | Default value             | Required | Two-way binding |
+| -------------------- | ------------------------------------------- | ---------- | ------------------------- | -------- | --------------- |
+| `commands`           | See [Commands](#commands)                   | `Object`   | `{}`                      | No       | No              |
+| `cursor-position`    | Cursor position                             | `Number`   | `0`                       | No       | Yes             |
+| `dispatched-queries` | Non-empty dispatched queries                | `Set`      | `new Set()`               | No       | Yes             |
+| `event-resolver`     | See [Event resolver](#Event-resolver)       | `Function` | `newDefaultEventResolver` | No       | No              |
+| `help-text`          | Command help                                | `String`   | `''`                      | No       | Yes             |
+| `help-timeout`       | Command help timeout                        | `Number`   | `3000`                    | No       | No              |
+| `hide-bar`           | Hides the bar                               | `Boolean`  | `false`                   | No       | No              |
+| `hide-prompt`        | Hides the prompt                            | `Boolean`  | `false`                   | No       | No              |
+| `hide-title`         | Hides the title                             | `Boolean`  | `false`                   | No       | No              |
+| `history`            | Terminal history                            | `Array`    | `[]`                      | No       | Yes             |
+| `history-position`   | Points to the latest dispatched query entry | `Number`   | `0`                       | No       | Yes             |
+| `invert`             | Inverts the terminals colors                | `Boolean`  | `false`                   | No       | No              |
+| `is-fullscreen`      | Terminal fullscreen mode                    | `Boolean`  | `false`                   | No       | Yes             |
+| `options-resolver`   | See [Options resolver](#Options-resolver)   | `Function` | `null`                    | No       | No              |
+| `parser`             | Query parser                                | `Function` | `defaultParser`           | No       | No              |
+| `prompt`             | Terminal prompt                             | `String`   | `~$`                      | No       | No              |
+| `show-help`          | Show query help                             | `Boolean`  | `false`                   | No       | No              |
+| `title`              | Terminal title                              | `String`   | `~$`                      | No       | No              |
+| `query`              | Terminal query                              | `String`   | `''`                      | No       | Yes             |
 
 ### Commands
 
@@ -149,6 +150,9 @@ required.
 and the value is a function that will be called with the parsed arguments. The
 function can return a `Promise` and must return or resolve a Vue.js component.
 To return strings or a new query, use one of the convenient helper methods.
+
+Any component that is not the query component can inject the context. The
+context includes the parsed and raw query as fields.
 
 ### Event resolver
 
@@ -197,7 +201,7 @@ Inside the bar, you can customize the buttons. Example:
 ### Title
 
 Inside the bar, you can customize the title. If you use this slot, `hideTitle`
-property has no effect. Example:
+and `title` property have no effect. Example:
 
 ```vue
 <vue-command>
@@ -235,15 +239,15 @@ import { createStdout, createQuery } from "vue-command";
 ### Formatters
 
 The first argument of `createStdout` can be either a primitive
-(`boolean`, `number` or `string`) or a formatter. A formatter formats the
+(`Boolean`, `Number` or `String`) or a formatter. A formatter formats the
 content as a list or table or something else.
 
-| Formatters       |
-| ---------------- |
-| `jsonFormatter`  |
-| `listFormatter`  |
-| `tableFormatter` |
-| `textFormatter`  |
+| Function         | Parameters                |
+| ---------------- | ------------------------- |
+| `jsonFormatter`  | `value`                   |
+| `listFormatter`  | `...lis`                  |
+| `tableFormatter` | `rows`                    |
+| `textFormatter`  | `text, innerHtml = false` |
 
 Formatters can be imported by name:
 
@@ -253,28 +257,29 @@ import { listFormatter } from "vue-command";
 
 ## Provided
 
-| Provided             |
-| -------------------- |
-| `addDispatchedQuery` |
-| `appendToHistory`    |
-| `dispatch`           |
-| `decrementHistory`   |
-| `exit`               |
-| `helpText`           |
-| `helpTimeout`        |
-| `hidePrompt`         |
-| `incrementHistory`   |
-| `optionsResolver`    |
-| `parser`             |
-| `programs`           |
-| `sendSignal`         |
-| `setCursorPosition`  |
-| `setFullscreen`      |
-| `setHistoryPosition` |
-| `showHelp`           |
-| `signals`            |
-| `setQuery`           |
-| `terminal`           |
+| Identifier           | Type       | Parameters                       |
+| -------------------- | ---------- | -------------------------------- |
+| `addDispatchedQuery` | `Function` | `dispatchedQuery`                |
+| `appendToHistory`    | `Function` | `...components`                  |
+| `dispatch`           | `Function` | `query`                          |
+| `decrementHistory`   | `Function` |                                  |
+| `exit`               | `Function` |                                  |
+| `context`            | `Object`   |                                  |
+| `helpText`           | `String`   |                                  |
+| `helpTimeout`        | `Number`   |                                  |
+| `hidePrompt`         | `Boolean`  |                                  |
+| `incrementHistory`   | `Function` |                                  |
+| `optionsResolver`    | `Function` | `program, parsedQuery, setQuery` |
+| `parser`             | `Function` | `query`                          |
+| `programs`           | `Array`    |                                  |
+| `sendSignal`         | `Function` | `signal`                         |
+| `setCursorPosition`  | `Function` | `cursorPosition`                 |
+| `setFullscreen`      | `Function` | `isFullscreen`                   |
+| `setHistoryPosition` | `Function` | `historyPosition`                |
+| `showHelp`           | `Boolean`  |                                  |
+| `signals`            | `Object`   |                                  |
+| `setQuery`           | `Function` | `query`                          |
+| `terminal`           | `Object`   |                                  |
 
 Provider can be injected into your component by name:
 
@@ -284,22 +289,22 @@ inject: ["exit", "terminal"],
 
 ## Exposed
 
-| Exposed              |
-| -------------------- |
-| `addDispatchedQuery` |
-| `appendToHistory`    |
-| `decrementHistory`   |
-| `dispatch`           |
-| `exit`               |
-| `incrementHistory`   |
-| `programs`           |
-| `sendSignal`         |
-| `setCursorPosition`  |
-| `setFullscreen`      |
-| `setHistoryPosition` |
-| `setQuery`           |
-| `signals`            |
-| `terminal`           |
+| Identifier           | Type       | Parameters        |
+| -------------------- | ---------- | ----------------- |
+| `addDispatchedQuery` | `Function` | `dispatchedQuery` |
+| `appendToHistory`    | `Function` | `...components`   |
+| `decrementHistory`   | `Function` |                   |
+| `dispatch`           | `Function` | `query`           |
+| `exit`               | `Function` |                   |
+| `incrementHistory`   | `Function` |                   |
+| `programs`           | `Function` |                   |
+| `sendSignal`         | `Function` | `signal`          |
+| `setCursorPosition`  | `Function` | `cursorPosition`  |
+| `setFullscreen`      | `Function` | `isFullscreen`    |
+| `setHistoryPosition` | `Function` | `historyPosition` |
+| `setQuery`           | `Function` | `query`           |
+| `signals`            | `Object`   |                   |
+| `terminal`           | `Function` |                   |
 
 ## Events
 
@@ -318,7 +323,17 @@ signal name and a callback:
 
 ```js
 const signals = inject("signals");
-signals.on("SIGINT", () => console.debug("SIGINT"));
+const sigint = () => {
+  // Tear down component
+};
+signals.on("SIGINT", sigint);
+```
+
+To unsubscribe from the signal, pass the same signal name and callback you used
+to subscribe to the signal.
+
+```js
+signals.off("SIGINT", sigint);
 ```
 
 ## Nice-to-haves
@@ -328,14 +343,12 @@ contribute please consult `CONTRIBUTING.md`.
 
 - Draggable terminal
 - More events (like query dispatched)
-- More terminal slots
-- Multi-line queries
-- Syntax highlighting
+- More key combinations
 
 ## Browser support
 
-This library uses the `ResizeObserver` to track if the terminals height changes.
-You may need a pollyfill to support your target browser.
+This library uses the `MutationObserver` to track if the terminal needs to
+scroll to the bottom. You may need a pollyfill to support your target browser.
 
 ## Projects using vue-command
 

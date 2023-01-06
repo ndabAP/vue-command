@@ -7,15 +7,51 @@ import {
 } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import VueCommandQuery from '@/components/VueCommandQuery'
-import split from 'lodash.split'
-import trim from 'lodash.trim'
-import forEach from 'lodash.foreach'
-import isFunction from 'lodash.isfunction'
+import {
+  forEach,
+  isFunction
+} from 'lodash'
 
 // Suffix "KEY" is added to avoid collisions
 const ARROW_UP_KEY = 'ArrowUp'
 const ARROW_DOWN_KEY = 'ArrowDown'
 const C_KEY = 'c'
+
+// TODO Implement cursor keyboard combinations, e. g. Ctrl + u
+
+// Creates a command not found component
+export const createCommandNotFound = (command, notFoundText = 'command not found', name = 'VueCommandNotFound') => {
+  const text = `${command}: ${notFoundText}`
+  return createStdout(text, name)
+}
+
+// Creates a "stdout" with the given formatter or text and name. It exits as
+// soon as the component has been mounted
+export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
+  name,
+  setup () {
+    // This tears down the component automatically
+    const exit = inject('exit')
+    onMounted(exit)
+  },
+
+  render () {
+    if (isFunction(formatterOrText)) {
+      // This is automatically called with the bound arguments
+      return formatterOrText()
+    }
+
+    return h('div', formatterOrText)
+  }
+}))
+
+// Creates a new query component
+export const createQuery = () => markRaw(VueCommandQuery)
+
+// A simple query parser which splits the arguments by spaces
+export const defaultParser = query => {
+  return query.split(/[ ]+/)
+}
 
 // Cycles through dispatched queries with arrow keys
 export const defaultHistoryEventResolver = (refs, { decrementHistory, incrementHistory }) => {
@@ -70,52 +106,10 @@ export const defaultSignalEventResolver = (_, { sendSignal }) => {
   window.addEventListener('keydown', eventResolver)
 }
 
-// Returns a list of default event resolver
-export const newDefaultEventResolver = () => [defaultHistoryEventResolver, defaultSignalEventResolver]
-
-// Creates a "stdout" with the given formatter or text and name. It exits as
-// soon as the component has been mounted
-export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
-  name,
-  setup () {
-    // This tears down the component automatically
-    const exit = inject('exit')
-    onMounted(exit)
-  },
-
-  render () {
-    if (isFunction(formatterOrText)) {
-      // This is automatically called with the bound arguments
-      return formatterOrText()
-    }
-
-    return h('div', formatterOrText)
-  }
-}))
-
-// Formats the given text
-export const textFormatter = (text, innerHtml = false) => {
-  return () => {
-    if (innerHtml) {
-      return h('div', { innerHtml: text })
-    }
-
-    return h('div', text)
-  }
+// Formats the value as json
+export const jsonFormatter = value => {
+  return h('div', JSON.stringify(value, null, 2))
 }
-
-// Creates a command not found component
-export const createCommandNotFound = (command, notFoundText = 'command not found', name = 'VueCommandNotFound') => {
-  const text = `${command}: ${notFoundText}`
-  return createStdout(text, name)
-}
-
-// Creates a new query component
-export const createQuery = () => markRaw(VueCommandQuery)
-
-// A simple query parser which trims the query and splits the arguments by
-// spaces
-export const defaultParser = query => split(trim(query), ' ')
 
 // Formats the given elements as a list
 export const listFormatter = (...lis) => {
@@ -132,10 +126,8 @@ export const listFormatter = (...lis) => {
 // Returns a history with one query as first input
 export const newDefaultHistory = () => [createQuery()]
 
-// Formats the object as json
-export const jsonFormatter = value => {
-  return h('div', JSON.stringify(value, null, 2))
-}
+// Returns a list of default event resolver
+export const newDefaultEventResolver = () => [defaultHistoryEventResolver, defaultSignalEventResolver]
 
 // Formats the rows as HTML table
 export const tableFormatter = rows => {
@@ -151,6 +143,17 @@ export const tableFormatter = rows => {
     })
 
     return h('table', tbody)
+  }
+}
+
+// Formats the given text. Optionally as inner HTML
+export const textFormatter = (text, innerHtml = false) => {
+  return () => {
+    if (innerHtml) {
+      return h('div', { innerHtml: text })
+    }
+
+    return h('div', text)
   }
 }
 
