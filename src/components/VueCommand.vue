@@ -114,15 +114,18 @@ import {
   newEventBus,
   PUBLISH_SYMBOL
 } from '@/utils'
-import head from 'lodash.head'
-import isFunction from 'lodash.isfunction'
-import get from 'lodash.get'
-import isEmpty from 'lodash.isempty'
-import last from 'lodash.last'
-import eq from 'lodash.eq'
-import nth from 'lodash.nth'
-import lt from 'lodash.lt'
-import size from 'lodash.size'
+import {
+  eq,
+  size,
+  keys,
+  get,
+  last,
+  isEmpty,
+  head,
+  isFunction,
+  nth,
+  lt
+} from 'lodash'
 
 const props = defineProps({
   commands: {
@@ -262,9 +265,6 @@ const vueCommandHistoryEntryComponentRefs = ref(null)
 const vueCommandHistoryRef = ref(null)
 const vueCommandRef = ref(null)
 
-// Signals like SIGINT or SIGKILL
-const signals = reactive(newEventBus())
-
 // A local copy to allow the absence of properties
 const local = reactive({
   cursorPosition: props.cursorPosition,
@@ -275,7 +275,8 @@ const local = reactive({
   prompt: props.prompt,
   query: props.query
 })
-
+// Signals like SIGINT or SIGKILL
+const signals = reactive(newEventBus())
 // Reactive terminal state
 const terminal = computed(() => ({
   cursorPosition: local.cursorPosition,
@@ -290,9 +291,15 @@ const terminal = computed(() => ({
 
 // Provided commands as programs. It takes the keys of the commands object
 const programs = computed(() => {
-  return Object.keys(props.commands)
+  return keys(props.commands)
 })
-
+// Determinates if the given history entry at index should be fullscreen or not
+const shouldBeFullscreen = computed(() => {
+  return index => and(
+    local.isFullscreen,
+    eq(index, size(local.history) - 1)
+  )
+})
 // If the terminal is in fullscreen mode, it hides any non-active history
 // entries
 const shouldShowHistoryEntry = computed(() => {
@@ -301,10 +308,6 @@ const shouldShowHistoryEntry = computed(() => {
     and(local.isFullscreen, eq(index, size(local.history) - 1))
   )
 })
-// Determinates if the given history entry at index should be fullscreen or not
-const shouldBeFullscreen = computed(() => {
-  return index => and(local.isFullscreen, eq(index, size(local.history) - 1))
-})
 
 // Removes and adds the dispatched query to enforce the quries first position
 const addDispatchedQuery = dispatchedQuery => {
@@ -312,7 +315,8 @@ const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.add(dispatchedQuery)
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
-// Focuses to the last query input if the last history entry is a query input
+// Focuses to the last query or multiline query input
+// if the last history entry is a query input
 const autoFocus = () => {
   // Not the query needs to maintain the validation upon focus but rather the
   // terminal itself
@@ -332,24 +336,19 @@ const autoFocus = () => {
   const lastHistoryEntryRef = last(vueCommandHistoryEntryComponentRefs.value)
   lastHistoryEntryRef.focus()
 }
-// Sets history position by given dispatched queries
-const autoHistoryPosition = () => {
-  setHistoryPosition(local.dispatchedQueries.size)
-}
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
 }
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
-const dispatch = async () => {
-  const query = local.query
-
+const dispatch = async query => {
   // An empty query is an empty string
   if (isEmpty(query)) {
     appendToHistory(createQuery())
     return
   }
+
   // bash --help
   addDispatchedQuery(query)
 
@@ -371,9 +370,9 @@ const dispatch = async () => {
 
   // If returned component is query, don't provide any context and push
   // instantly to history
+  // TODO Find a better way to find out the name
   if (eq(get(command, '__name'), 'VueCommandQuery')) {
-    const query = command
-    appendToHistory(query)
+    appendToHistory(command)
     return
   }
 
@@ -399,11 +398,12 @@ const dispatch = async () => {
 const exit = () => {
   // TODO Does order matter?
   appendToHistory(createQuery())
-  autoHistoryPosition()
+  setHistoryPosition(local.dispatchedQueries.size)
   setCursorPosition(0)
   setFullscreen(false)
   setQuery('')
 }
+// Decreases the history position about one and sets the new query
 const decrementHistory = () => {
   // History pointer must be greater zero
   if (eq(local.historyPosition, 0)) {
@@ -414,6 +414,7 @@ const decrementHistory = () => {
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
 }
+// Increases the history position about one and sets the new query
 const incrementHistory = () => {
   // History pointer must be lower query history
   if (!lt(local.historyPosition, local.dispatchedQueries.size)) {
@@ -423,11 +424,6 @@ const incrementHistory = () => {
   setHistoryPosition(local.historyPosition + 1)
   const query = nth([...local.dispatchedQueries], local.historyPosition)
   setQuery(query)
-}
-// Waits for the DOM and scrolls to the bottom of the history
-const scrollToBottom = async () => {
-  await nextTick()
-  vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
 }
 const sendSignal = signal => {
   signals[PUBLISH_SYMBOL](signal)
@@ -449,12 +445,6 @@ const setQuery = query => {
   emits('update:query', query)
 }
 
-watch(local.history, async () => {
-  // Scroll to bottom if history was mutated
-  // TODO Listen for some query ready event and scroll only then since its
-  // triggered by a history change whose entries might not done loading
-  await scrollToBottom()
-})
 // Mirror user properties with local ones
 watch(() => props.cursorPosition, cursorPosition => {
   local.cursorPosition = cursorPosition
@@ -465,12 +455,10 @@ watch(() => props.dispatchedQueries, dispatchedQueries => {
 })
 watch(() => props.history, history => {
   local.history = history
-  // User has to take care of new executed programs and history position
 })
 watch(() => props.historyPosition, historyPosition => {
   local.historyPosition = historyPosition
   // User has to take care of new query
-  // TODO Really?
 })
 watch(() => props.isFullscreen, isFullscreen => {
   local.isFullscreen = isFullscreen
@@ -480,16 +468,36 @@ watch(() => props.prompt, prompt => {
 })
 watch(() => props.query, query => {
   local.query = query
-  // Cursor position gets automatically updated in query component
+  // Cursor position gets updated in query component
 })
 
 onMounted(() => {
   // Binds given event listeners and calls them with the terminals references
-  // and exposed methods and values
+  // and exposed properties
   const currentInstance = getCurrentInstance()
   for (const bindEventListener of props.eventResolver) {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
+
+  const resizeObsever = new ResizeObserver(() => {
+    // TODO Only scroll to bottom if user scrolled to bottom before
+    vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+  })
+
+  // Scroll to bottom if history changes
+  for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
+    resizeObsever.observe(vueCommandHistoryEntry)
+  }
+
+  // If history changes, unobserve all history entries and observe again
+  watch(local.history, async () => {
+    await nextTick()
+
+    resizeObsever.disconnect()
+    for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
+      resizeObsever.observe(vueCommandHistoryEntry)
+    }
+  })
 })
 
 provide('addDispatchedQuery', addDispatchedQuery)
@@ -533,7 +541,7 @@ defineExpose({
 </script>
 
 <style lang="scss">
-/** Common attribues */
+/* Common attribues */
 
 .vue-command,
 .vue-command--invert {
@@ -624,7 +632,7 @@ defineExpose({
   }
 }
 
-/** Individual attribues */
+/* Individual attribues */
 
 .vue-command {
   $seashell: #f1f1f1;

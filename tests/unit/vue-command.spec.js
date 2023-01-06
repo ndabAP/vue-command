@@ -2,7 +2,18 @@ import { mount } from '@vue/test-utils'
 import VueCommand from '@/components/VueCommand.vue'
 import VueCommandQuery from '@/components/VueCommandQuery.vue'
 
-describe('VueCommand.vue', () => {
+// Mock
+class ResizeObserver {
+  observe () { }
+
+  unobserve () { }
+
+  disconnect () { }
+}
+
+window.ResizeObserver = ResizeObserver
+
+describe('VueCommand', () => {
   describe('props', () => {
     it('hides the bar', () => {
       const wrapper = mount(VueCommand, {
@@ -13,6 +24,7 @@ describe('VueCommand.vue', () => {
 
       expect(wrapper.find('.vue-command__bar').exists()).toBe(false)
     })
+
     it('renders the given prompt', () => {
       const prompt = 'TEST_PROMPT'
       const wrapper = mount(VueCommand, {
