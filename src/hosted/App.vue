@@ -19,6 +19,7 @@
               v-model:history="history"
               v-model:query="query"
               :commands="commands"
+              :cursor-position="cursorPosition"
               :hide-bar="hideBar"
               :hide-prompt="hidePrompt"
               :hide-title="hideTitle"
@@ -62,6 +63,7 @@ export default {
   },
 
   setup () {
+    const cursorPosition = ref(0)
     const dispatchedQueries = ref(new Set())
     const hideBar = ref(false)
     const hidePrompt = ref(false)
@@ -108,7 +110,8 @@ export default {
 
         clear: () => {
           history.value = []
-          // query.value = ''
+          cursorPosition.value = 0
+          query.value = ''
           return createQuery()
         },
 
@@ -135,6 +138,7 @@ export default {
         norris: () => ChuckNorris
       },
 
+      cursorPosition,
       dispatchedQueries,
       hideBar,
       hidePrompt,

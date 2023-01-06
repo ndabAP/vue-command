@@ -315,7 +315,8 @@ const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.add(dispatchedQuery)
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
-// Focuses to the last query input if the last history entry is a query input
+// Focuses to the last query or multiline query input
+// if the last history entry is a query input
 const autoFocus = () => {
   // Not the query needs to maintain the validation upon focus but rather the
   // terminal itself
@@ -338,10 +339,6 @@ const autoFocus = () => {
 const appendToHistory = (...components) => {
   local.history.push(...components)
   emits('update:history', local.history)
-}
-// Sets history position by given dispatched queries
-const autoHistoryPosition = () => {
-  setHistoryPosition(local.dispatchedQueries.size)
 }
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
@@ -394,10 +391,6 @@ const dispatch = async () => {
         }
       }
     },
-    // TODO On mounted send event
-    mounted () {
-      vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
-    },
 
     // This nesting makes it possible to provide the context
     render: () => h(command)
@@ -408,7 +401,7 @@ const dispatch = async () => {
 const exit = () => {
   // TODO Does order matter?
   appendToHistory(createQuery())
-  autoHistoryPosition()
+  setHistoryPosition(local.dispatchedQueries.size)
   setCursorPosition(0)
   setFullscreen(false)
   setQuery('')
@@ -451,7 +444,6 @@ const setHistoryPosition = historyPosition => {
   emits('update:historyPosition', historyPosition)
 }
 const setQuery = query => {
-  console.debug('setQuery')
   local.query = query
   emits('update:query', query)
 }
@@ -466,7 +458,6 @@ watch(() => props.dispatchedQueries, dispatchedQueries => {
 })
 watch(() => props.history, async history => {
   local.history = history
-  // User has to take care of new executed programs and history position
 })
 watch(() => props.historyPosition, historyPosition => {
   local.historyPosition = historyPosition
@@ -491,6 +482,21 @@ onMounted(() => {
   for (const bindEventListener of props.eventResolver) {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
+
+  // Scroll to bottom if history changes
+  const mutationObserver = new MutationObserver(async (mutations) => {
+    await nextTick()
+
+    for (const mutation of mutations) {
+      if (eq(mutation.type, 'childList')) {
+        // TODO Only scroll to bottom if it was scrolled to bottom before
+        vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+        return
+      }
+    }
+  })
+
+  mutationObserver.observe(vueCommandHistoryRef.value, { childList: true })
 })
 
 provide('addDispatchedQuery', addDispatchedQuery)

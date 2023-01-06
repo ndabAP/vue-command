@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Query -->
     <div
       :class="{
         'vue-command__query': !invert,
@@ -36,6 +37,7 @@
         @keyup.enter.exact="submit">
     </div>
 
+    <!-- Multiline queries -->
     <div
       v-for="(multilineQuery, index) in multilineQueries"
       :key="index"
@@ -61,6 +63,7 @@
         :value="multilineQuery"
         @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @input="setLastMultilineQuery($event.target.value)"
+        @keydown.ctrl.r.exact.prevent="reverseISearch"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.enter.exact="submit">
@@ -133,8 +136,8 @@ const multilineQueries = reactive([])
 
 const isOutdatedMultilineQuery = computed(() => {
   return index => or(
-    and(!isEmpty(multilineQueries), !eq(index, size(multilineQueries) - 1)),
-    isOutdated.value
+    isOutdated.value,
+    and(!isEmpty(multilineQueries), !eq(index, size(multilineQueries) - 1))
   )
 })
 const isOutdatedQuery = computed(() => {
@@ -208,7 +211,7 @@ const autocompleteQuery = async () => {
 
       // Print a list of commands
 
-      // Invalidate query since a new one is created and to the current one
+      // Invalidate query since a new one will be created
       isOutdated.value = true
 
       appendToHistory(createStdout(listFormatter(...commands)))
@@ -223,7 +226,7 @@ const autocompleteQuery = async () => {
     }
   }
 }
-// Focuses the query or multiline query
+// Focuses the last query or multiline query
 const focus = () => {
   if (isEmpty(multilineQueries)) {
     queryRef.value.focus()
@@ -240,6 +243,8 @@ const reverseISearch = event => {
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
   if (isEmpty(multilineQueries)) {
+    // "setQuery" would overwrite the given query while we only need to
+    // overwrite the locale one
     local.query = `${local.query}^C`
   }
 
@@ -251,21 +256,33 @@ const sigint = () => {
   isOutdated.value = true
   appendToHistory(createQuery())
 }
+// Sets the last multiline query
 const setLastMultilineQuery = multilineQuery => {
   set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
 }
-// Deactivates this query or spawns new multiline queries and finally dispatches
-// it to execute the command
+// Deactivates this query or spawns eventually new multiline queries and finally
+// dispatches the query to execute it
 const submit = async () => {
   // Check query for new multiline request
   if (and(
+    // Look for "\"
     eq(lastQuery.value.at(-1), '\\'),
-    !eq(lastQuery.value.slice(-2), '\\\\') // Ignore "\\"
+    // Ignore "\\"
+    !eq(lastQuery.value.slice(-2), '\\\\')
   )) {
     multilineQueries.push('')
+
+    // Focus newest multiline query. "autofocus" doesn't seem to work
+    await nextTick()
+    const lastMultilineQueryRef = last(multilineQueryRefs.value)
+    lastMultilineQueryRef.focus()
+
     return
   }
 
+  // No multiline query requested
+
+  // Concatenate base query with multiline queries and remove slashes
   const query = local.query
     .concat(join(multilineQueries, ''))
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
@@ -279,9 +296,6 @@ const submit = async () => {
 
 const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
-  focus()
-
-  // Set cursor
   const lastMultilineQueryRef = last(multilineQueryRefs.value)
   setCursorPosition(lastMultilineQueryRef.selectionStart)
 })
