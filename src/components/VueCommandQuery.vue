@@ -34,6 +34,7 @@
         @keydown.ctrl.r.exact.prevent="reverseISearch"
         @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.end.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.enter.exact="submit">
     </div>
 
@@ -66,6 +67,7 @@
         @keydown.ctrl.r.exact.prevent="reverseISearch"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
+        @keyup.end.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.enter.exact="submit">
     </div>
   </div>
@@ -143,19 +145,19 @@ const isOutdatedMultilineQuery = computed(() => {
 const isOutdatedQuery = computed(() => {
   return or(isOutdated.value, !isEmpty(multilineQueries))
 })
-// Returns the last query, including multiline queries
+// Returns the last query or last multiline query
 const lastQuery = computed(() => {
   if (isEmpty(multilineQueries)) {
     return local.query
   }
 
-  // Check last multiline query for next multiline request
+  // Return last multiline query
   const lastMultilineQuery = last(multilineQueries)
   return lastMultilineQuery
 })
 
-// Autocompletes a command and calls options resolver with found program
-// and parsed query if there are more than two arguments
+// Autocompletes a command and calls the options resolver with found program and
+// parsed query if there are more than two arguments
 const autocompleteQuery = async () => {
   const query = local.query
 
@@ -243,7 +245,7 @@ const reverseISearch = event => {
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
   if (isEmpty(multilineQueries)) {
-    // "setQuery" would overwrite the given query while we only need to
+    // "setQuery" would overwrite the parent query while we only need to
     // overwrite the locale one
     local.query = `${local.query}^C`
   }
@@ -253,6 +255,7 @@ const sigint = () => {
     setLastMultilineQuery(`${lastMultilineQuery}^C`)
   }
 
+  // Invalidate current query
   isOutdated.value = true
   appendToHistory(createQuery())
 }
@@ -280,15 +283,17 @@ const submit = async () => {
     return
   }
 
-  // No multiline query requested
+  // No new multiline query requested
   isOutdated.value = true
 
-  // Concatenate base query with multiline queries and remove slashes
+  // Concatenate base query with multiline queries and remove slashes and white
+  // spaces
   const query = local.query
     .concat(join(multilineQueries, ''))
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
     .trim()
 
+  // Dispatch the query to the parent
   dispatch(query)
 }
 
@@ -296,6 +301,7 @@ const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
 
   const lastMultilineQueryRef = last(multilineQueryRefs.value)
+  // Apply given cursor position to actual cursor position
   setCursorPosition(lastMultilineQueryRef.selectionStart)
 })
 const unwatchLocalQuery = watch(() => local.query, async () => {
@@ -309,6 +315,7 @@ const unwatchTerminalCursorPosition = watch(
   async cursorPosition => {
     await nextTick()
 
+    // Apply given cursor position to actual cursor position
     queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
   }
 )
@@ -322,7 +329,7 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
-// Free resources if query is outdated/inactive
+// Free resources if query or multiline query is outdated/inactive
 const unwatchIsOutdated = watch(isOutdated, () => {
   signals.off('SIGINT', sigint)
   unwatchLocalQuery()
@@ -333,13 +340,11 @@ const unwatchIsOutdated = watch(isOutdated, () => {
   unwatchIsOutdated()
 })
 
-onBeforeMount(() => {
-  local.prompt = terminal.value.prompt
-})
 onMounted(() => {
+  // Bind signals
   signals.on('SIGINT', sigint)
 
-  // Initial state
+  // Set initial query state
   setQuery('')
   setCursorPosition(0)
 
