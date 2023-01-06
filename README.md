@@ -3,6 +3,7 @@
 A fully working, most feature-rich Vue.js terminal emulator. See the
 [demo](https://ndabap.github.io/vue-command/) and check the demo
 [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
+Now with Vue.js 3 support!
 
 ## Features
 
