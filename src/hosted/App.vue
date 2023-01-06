@@ -93,7 +93,7 @@ export default {
 
     const commands = {
       cd: parsed => {
-        if (parsed.length < 1) {
+        if (parsed.length < 2) {
           return createQuery()
         }
         if (parsed[parsed.length - 1] === 'home') {
