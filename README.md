@@ -253,29 +253,29 @@ import { listFormatter } from "vue-command";
 
 ## Provided
 
-| Provided             |
-| -------------------- |
-| `addDispatchedQuery` |
-| `appendToHistory`    |
-| `dispatch`           |
-| `decrementHistory`   |
-| `exit`               |
-| `context`            |
-| `helpText`           |
-| `helpTimeout`        |
-| `hidePrompt`         |
-| `incrementHistory`   |
-| `optionsResolver`    |
-| `parser`             |
-| `programs`           |
-| `sendSignal`         |
-| `setCursorPosition`  |
-| `setFullscreen`      |
-| `setHistoryPosition` |
-| `showHelp`           |
-| `signals`            |
-| `setQuery`           |
-| `terminal`           |
+| Identifier           | Type       | Parameters                       |
+| -------------------- | ---------- | -------------------------------- |
+| `addDispatchedQuery` | `function` | `dispatchedQuery`                |
+| `appendToHistory`    | `function` | `...components`                  |
+| `dispatch`           | `function` |                                  |
+| `decrementHistory`   | `function` |                                  |
+| `exit`               | `function` |                                  |
+| `context`            | `object`   |                                  |
+| `helpText`           | `string`   |                                  |
+| `helpTimeout`        | `number`   |                                  |
+| `hidePrompt`         | `boolean`  |                                  |
+| `incrementHistory`   | `function` |                                  |
+| `optionsResolver`    | `function` | `program, parsedQuery, setQuery` |
+| `parser`             | `function` | `query`                          |
+| `programs`           | `array`    |                                  |
+| `sendSignal`         | `function` | `signal`                         |
+| `setCursorPosition`  | `function` | `cursorPosition`                 |
+| `setFullscreen`      | `function` | `isFullscreen`                   |
+| `setHistoryPosition` | `function` | `historyPosition`                |
+| `showHelp`           | `boolean`  |                                  |
+| `signals`            | `object`   |                                  |
+| `setQuery`           | `function` | `query`                          |
+| `terminal`           | `object`   |                                  |
 
 Provider can be injected into your component by name:
 

@@ -456,7 +456,7 @@ watch(() => props.dispatchedQueries, dispatchedQueries => {
   local.dispatchedQueries = dispatchedQueries
   // User has to take care of new history position
 })
-watch(() => props.history, async history => {
+watch(() => props.history, history => {
   local.history = history
 })
 watch(() => props.historyPosition, historyPosition => {
