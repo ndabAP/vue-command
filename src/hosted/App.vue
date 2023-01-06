@@ -2,40 +2,105 @@
   <section>
     <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
       <div class="container">
-        <div class="row">
-          <div class="col">
-            <h1>vue-command</h1>
-            <p class="lead">
-              A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support! <a
-                href="https://github.com/ndabAP/vue-command">Github</a>
-            </p>
-          </div>
+        <h1>vue-command</h1>
+        <p class="lead">
+          A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support! <a
+            href="https://github.com/ndabAP/vue-command">Github</a>
+        </p>
+
+        <pre><code>$ npm install --save vue-command</code></pre>
+
+        <div class="mb-4">
+          <vue-command
+            v-model:cursor-position="cursorPosition"
+            v-model:dispatched-queries="dispatchedQueries"
+            v-model:is-fullscreen="isFullscreen"
+            v-model:history="history"
+            v-model:historyPosition="historyPosition"
+            v-model:query="query"
+            :commands="commands"
+            :hide-bar="hideBar"
+            :hide-prompt="hidePrompt"
+            :hide-title="hideTitle"
+            :invert="invert"
+            :prompt="prompt"
+            :options-resolver="optionsResolver"
+            :show-help="showHelp"
+            title="bash - 720x350"
+            help-text="Type in help" />
         </div>
 
-        <div class="row mb-4">
-          <div class="col">
-            <vue-command
-              v-model:cursor-position="cursorPosition"
-              v-model:dispatched-queries="dispatchedQueries"
-              v-model:history="history"
-              v-model:query="query"
-              :commands="commands"
-              :hide-bar="hideBar"
-              :hide-prompt="hidePrompt"
-              :hide-title="hideTitle"
-              :invert="invert"
-              :prompt="prompt"
-              :options-resolver="optionsResolver"
-              title="bash - 720x350"
-              help-text="Type in help"
-              show-help />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <pre><code>$ npm install --save vue-command</code></pre>
-          </div>
+        <div class="table-responsive">
+          <table class="table ">
+            <thead>
+              <tr>
+                <th scope="col">
+                  Property
+                </th>
+                <th scope="col">
+                  Description
+                </th>
+                <th scope="col">
+                  Value
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><pre><code>cursor-position</code></pre></td>
+                <td />
+                <td>
+                  <pre><code>{{ cursorPosition }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>dispatched-queries</code></pre></td>
+                <td>Non-empty dispatched queries</td>
+                <td>
+                  <pre><code>{{ [...dispatchedQueries] }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>history-position</code></pre></td>
+                <td>Points to the latest dispatched query entry</td>
+                <td>
+                  <pre><code>{{ historyPosition }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>invert</code></pre></td>
+                <td>Inverts the terminals colors</td>
+                <td>
+                  <input
+                    v-model="invert"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="">
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>is-fullscreen</code></pre></td>
+                <td>Terminal fullscreen mode</td>
+                <td>
+                  <pre><code>{{ isFullscreen }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>prompt</code></pre></td>
+                <td />
+                <td>
+                  <pre><code>{{ prompt }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>query</code></pre></td>
+                <td />
+                <td>
+                  <pre><code>{{ query }}</code></pre>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -69,9 +134,12 @@ export default {
     const hidePrompt = ref(false)
     const hideTitle = ref(false)
     const history = ref(newDefaultHistory())
+    const historyPosition = ref(0)
     const invert = ref(false)
+    const isFullscreen = ref(false)
     const prompt = ref(PROMPT)
     const query = ref('')
+    const showHelp = ref(true)
 
     const optionsResolver = (program, parsedQuery, setQuery) => {
       switch (program) {
@@ -93,7 +161,7 @@ export default {
 
     const commands = {
       cd: parsedQuery => {
-        if (parsedQuery.length < 2) {
+        if (parsedQuery.length < 2 || parsedQuery[parsedQuery.length - 1] === '.') {
           return createQuery()
         }
         if (parsedQuery[parsedQuery.length - 1] === 'home') {
@@ -103,12 +171,16 @@ export default {
             prompt.value === `${PROMPT}/home`) {
           prompt.value = `${PROMPT}`
         }
+        if (parsedQuery[parsedQuery.length - 1] !== 'home' && parsedQuery[parsedQuery.length - 1] !== '../' && parsedQuery[parsedQuery.length - 1] !== '..') {
+          return createStdout(`bash: cd: ${parsedQuery[parsedQuery.length - 1]}: No such file or directory`)
+        }
 
         return createQuery()
       },
 
       clear: () => {
-        // This is necessary since Vue.js losses its reactivity if set to empty
+        // "splice" is necessary since Vue.js losses its reactivity if array is
+        // set to empty
         history.value.splice(0, history.value.length)
 
         return createQuery()
@@ -131,8 +203,8 @@ export default {
       norris: () => ChuckNorris
     }
     commands.help = () => {
-      // TODO Create terminal-like columns
       const list = Object.keys(commands)
+      // TODO Create terminal-like columns
       return createStdout(listFormatter(...list))
     }
 
@@ -145,9 +217,12 @@ export default {
       hidePrompt,
       hideTitle,
       history,
+      historyPosition,
       invert,
+      isFullscreen,
       prompt,
       query,
+      showHelp,
 
       optionsResolver
     }
