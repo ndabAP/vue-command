@@ -1,3 +1,10 @@
+## [30.0.1](https://github.com/ndabAP/vue-command/compare/v30.0.0...v30.0.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* dependabot ([83fcca0](https://github.com/ndabAP/vue-command/commit/83fcca00a80a1dc9d193848db88a1524cc8689fc))
+
 ## [30.0.0](https://github.com/ndabAP/vue-command/compare/v29.2.0...v30.0.0) (2023-01-06)
 
 
