@@ -297,7 +297,7 @@ inject: ["exit", "terminal"],
 | `dispatch`           | `Function` | `query`           |
 | `exit`               | `Function` |                   |
 | `incrementHistory`   | `Function` |                   |
-| `programs`           | `Function` |                   |
+| `programs`           | `Array`    |                   |
 | `sendSignal`         | `Function` | `signal`          |
 | `setCursorPosition`  | `Function` | `cursorPosition`  |
 | `setFullscreen`      | `Function` | `isFullscreen`    |
