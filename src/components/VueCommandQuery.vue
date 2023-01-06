@@ -80,7 +80,7 @@ import {
   watch,
   inject,
   defineExpose,
-  onBeforeMount,
+  onBeforeUnmount,
   reactive,
   nextTick,
   computed
@@ -244,6 +244,7 @@ const reverseISearch = event => {
 }
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
+  console.debug('sigint')
   if (isEmpty(multilineQueries)) {
     // "setQuery" would overwrite the parent query while we only need to
     // overwrite the locale one
@@ -364,6 +365,10 @@ onMounted(() => {
       unwatchIsOutdated()
     })
   }
+})
+onBeforeUnmount(() => {
+  // If query is removed from history, unsubscribe from "SIGINT"
+  signals.off('SIGINT', sigint)
 })
 
 defineExpose({
