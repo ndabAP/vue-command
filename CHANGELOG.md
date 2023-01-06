@@ -1,3 +1,14 @@
+## [30.0.0](https://github.com/ndabAP/vue-command/compare/v29.2.0...v30.0.0) (2023-01-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* support multiline queries
+
+### Features
+
+* support multiline queries ([df09dde](https://github.com/ndabAP/vue-command/commit/df09dded80f19530fad39f606f65fc38bf382a44))
+
 ## [29.2.0](https://github.com/ndabAP/vue-command/compare/v29.1.1...v29.2.0) (2022-12-26)
 
 
