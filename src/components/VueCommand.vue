@@ -309,14 +309,14 @@ const shouldShowHistoryEntry = computed(() => {
   )
 })
 
-// Removes and adds the dispatched query to enforce the quries first position
+// Removes and adds the dispatched query to enforce the queries first position
 const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.delete(dispatchedQuery)
   local.dispatchedQueries.add(dispatchedQuery)
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
-// Focuses to the last query or multiline query input
-// if the last history entry is a query input
+// Focuses to the last query or multiline query input if the last history entry
+// is a query input
 const autoFocus = () => {
   // Not the query needs to maintain the validation upon focus but rather the
   // terminal itself
