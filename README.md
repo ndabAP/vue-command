@@ -277,9 +277,9 @@ import { listFormatter } from "vue-command";
 | `setCursorPosition`  | `Function` | `cursorPosition`                 |
 | `setFullscreen`      | `Function` | `isFullscreen`                   |
 | `setHistoryPosition` | `Function` | `historyPosition`                |
+| `setQuery`           | `Function` | `query`                          |
 | `showHelp`           | `Boolean`  |                                  |
 | `signals`            | `Object`   |                                  |
-| `setQuery`           | `Function` | `query`                          |
 | `terminal`           | `Object`   |                                  |
 
 Provider can be injected into your component by name:
@@ -305,7 +305,7 @@ inject: ["exit", "terminal"],
 | `setHistoryPosition` | `Function` | `historyPosition` |
 | `setQuery`           | `Function` | `query`           |
 | `signals`            | `Object`   |                   |
-| `terminal`           | `Function` |                   |
+| `terminal`           | `Object`   |                   |
 
 ## Events
 
