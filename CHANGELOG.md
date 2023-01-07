@@ -1,3 +1,10 @@
+## [32.0.3](https://github.com/ndabAP/vue-command/compare/v32.0.2...v32.0.3) (2023-01-07)
+
+
+### Bug Fixes
+
+* remove log ([e469f82](https://github.com/ndabAP/vue-command/commit/e469f8286fcdb72c0771749d20cf77c0a4aaa99d))
+
 ## [32.0.2](https://github.com/ndabAP/vue-command/compare/v32.0.1...v32.0.2) (2023-01-07)
 
 
