@@ -479,16 +479,14 @@ onMounted(() => {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
 
+  // Scroll to bottom if history changes
   const resizeObsever = new ResizeObserver(() => {
     // TODO Only scroll to bottom if user scrolled to bottom before
     vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
   })
-
-  // Scroll to bottom if history changes
   for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
     resizeObsever.observe(vueCommandHistoryEntry)
   }
-
   // If history changes, unobserve all history entries and observe again
   watch(local.history, async () => {
     await nextTick()
