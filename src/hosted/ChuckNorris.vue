@@ -50,6 +50,7 @@ export default {
         this.isLoading = false
       }
     } finally {
+      this.signals.off('SIGINT', sigint)
       this.exit()
     }
   }
