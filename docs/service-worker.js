@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.7a5af143191b99cba3e89b1bee3ab016.js"
+  "precache-manifest.1bed96f9679b06a91ec8db5b2ba75525.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vue-command"});

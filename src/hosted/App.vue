@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div class="mt-4">
       <div class="container">
         <h1>vue-command</h1>
         <p class="lead">
