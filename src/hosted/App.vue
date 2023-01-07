@@ -19,6 +19,8 @@
             v-model:historyPosition="historyPosition"
             v-model:query="query"
             :commands="commands"
+            :help-text="helpText"
+            :help-timeout="helpTimeout"
             :hide-bar="hideBar"
             :hide-prompt="hidePrompt"
             :hide-title="hideTitle"
@@ -26,19 +28,15 @@
             :prompt="prompt"
             :options-resolver="optionsResolver"
             :show-help="showHelp"
-            title="bash - 720x350"
-            help-text="Type in help" />
+            :title="title" />
         </div>
 
         <div class="table-responsive">
-          <table class="table ">
+          <table class="table table-striped table-borderless">
             <thead>
               <tr>
                 <th scope="col">
                   Property
-                </th>
-                <th scope="col">
-                  Description
                 </th>
                 <th scope="col">
                   Value
@@ -48,28 +46,70 @@
             <tbody>
               <tr>
                 <td><pre><code>cursor-position</code></pre></td>
-                <td />
                 <td>
                   <pre><code>{{ cursorPosition }}</code></pre>
                 </td>
               </tr>
               <tr>
                 <td><pre><code>dispatched-queries</code></pre></td>
-                <td>Non-empty dispatched queries</td>
                 <td>
-                  <pre><code>{{ [...dispatchedQueries] }}</code></pre>
+                  <pre><code>{{ dispatchedQueries }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>help-text</code></pre></td>
+                <td>
+                  <pre><code>{{ helpText }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>help-timeout</code></pre></td>
+                <td>
+                  <pre><code>{{ helpTimeout }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>hide-bar</code></pre></td>
+                <td>
+                  <pre><code>{{ hideBar }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>hide-prompt</code></pre></td>
+                <td>
+                  <pre><code>{{ hidePrompt }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>hide-title</code></pre></td>
+                <td>
+                  <input
+                    v-model="hideTitle"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="">
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>help-timeout</code></pre></td>
+                <td>
+                  <pre><code>{{ helpTimeout }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>history</code></pre></td>
+                <td>
+                  <pre><code>{{ history }}</code></pre>
                 </td>
               </tr>
               <tr>
                 <td><pre><code>history-position</code></pre></td>
-                <td>Points to the latest dispatched query entry</td>
                 <td>
                   <pre><code>{{ historyPosition }}</code></pre>
                 </td>
               </tr>
               <tr>
                 <td><pre><code>invert</code></pre></td>
-                <td>Inverts the terminals colors</td>
                 <td>
                   <input
                     v-model="invert"
@@ -80,23 +120,26 @@
               </tr>
               <tr>
                 <td><pre><code>is-fullscreen</code></pre></td>
-                <td>Terminal fullscreen mode</td>
                 <td>
                   <pre><code>{{ isFullscreen }}</code></pre>
                 </td>
               </tr>
               <tr>
                 <td><pre><code>prompt</code></pre></td>
-                <td />
                 <td>
                   <pre><code>{{ prompt }}</code></pre>
                 </td>
               </tr>
               <tr>
                 <td><pre><code>query</code></pre></td>
-                <td />
                 <td>
                   <pre><code>{{ query }}</code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>title</code></pre></td>
+                <td>
+                  <pre><code>{{ title }}</code></pre>
                 </td>
               </tr>
             </tbody>
@@ -130,6 +173,8 @@ export default {
   setup () {
     const cursorPosition = ref(0)
     const dispatchedQueries = ref(new Set())
+    const helpText = ref('Type in help')
+    const helpTimeout = ref(3500)
     const hideBar = ref(false)
     const hidePrompt = ref(false)
     const hideTitle = ref(false)
@@ -140,6 +185,7 @@ export default {
     const prompt = ref(PROMPT)
     const query = ref('')
     const showHelp = ref(true)
+    const title = ref('bash - 720x350')
 
     const optionsResolver = (program, parsedQuery, setQuery) => {
       switch (program) {
@@ -213,6 +259,8 @@ export default {
 
       cursorPosition,
       dispatchedQueries,
+      helpText,
+      helpTimeout,
       hideBar,
       hidePrompt,
       hideTitle,
@@ -223,6 +271,7 @@ export default {
       prompt,
       query,
       showHelp,
+      title,
 
       optionsResolver
     }
