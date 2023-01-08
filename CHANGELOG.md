@@ -1,3 +1,10 @@
+## [32.1.3](https://github.com/ndabAP/vue-command/compare/v32.1.2...v32.1.3) (2023-01-08)
+
+
+### Bug Fixes
+
+* multiline query reverse i search ([a995d52](https://github.com/ndabAP/vue-command/commit/a995d527031c7f438e855f4e8edc1e69093e9af1))
+
 ## [32.1.2](https://github.com/ndabAP/vue-command/compare/v32.1.1...v32.1.2) (2023-01-08)
 
 
