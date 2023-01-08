@@ -1,3 +1,10 @@
+## [32.1.1](https://github.com/ndabAP/vue-command/compare/v32.1.0...v32.1.1) (2023-01-08)
+
+
+### Bug Fixes
+
+* docs ([3d15c04](https://github.com/ndabAP/vue-command/commit/3d15c04cdbcf7c7eab3f73b75df35f788cdb56d6))
+
 ## [32.1.0](https://github.com/ndabAP/vue-command/compare/v32.0.3...v32.1.0) (2023-01-08)
 
 
