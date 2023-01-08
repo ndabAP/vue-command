@@ -101,7 +101,7 @@
         @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.end.exact="setCursorPosition($refs.queryRef.selectionStart)"
-        @keyup.enter.exact="submit">': {{ reverseISearchMatch }}
+        @keyup.enter.exact="submit">': {{ lastQuery }}
     </div>
   </div>
 </template>
@@ -165,7 +165,6 @@ const multilineQueryRefs = ref(null)
 const placeholder = ref('')
 const reverseISearch = ref('')
 const reverseISearchRef = ref(null)
-const reverseISearchMatch = ref('')
 const reverseISearchStatus = ref('reverse-i-search')
 const queryRef = ref(null)
 
@@ -315,14 +314,6 @@ const resizeReverseISearch = () => {
 }
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
-  if (isReverseISearch.value) {
-    reverseISearchMatch.value = `${reverseISearchMatch.value}^C`
-    // Invalidate current query
-    isOutdated.value = true
-    appendToHistory(createQuery())
-    return
-  }
-
   if (isEmpty(multilineQueries)) {
     // "setQuery" would overwrite the parent query while we only need to
     // overwrite the locale one
@@ -421,8 +412,13 @@ const unwatchTerminalQuery = watch(
 const unwatchReverseISearch = watch(reverseISearch, () => {
   for (const dispatchedQuery of terminal.value.dispatchedQueries) {
     if (dispatchedQuery.startsWith(reverseISearch.value)) {
-      setQuery(dispatchedQuery)
-      reverseISearchMatch.value = dispatchedQuery
+      if (isEmpty(multilineQueries)) {
+        setQuery(dispatchedQuery)
+      }
+
+      if (!isEmpty(multilineQueries)) {
+        setLastMultilineQuery(dispatchedQuery)
+      }
 
       // Reset status if dispatched query has been found
       reverseISearchStatus.value = 'reverse-i-search'
