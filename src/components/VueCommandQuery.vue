@@ -2,6 +2,7 @@
   <div>
     <!-- Query -->
     <div
+      v-show="shouldShowQuery"
       :class="{
         'vue-command__query': !invert,
         'vue-command__query--invert': invert
@@ -29,9 +30,8 @@
         autocorrect="off"
         type="text"
         @click="setCursorPosition($refs.queryRef.selectionStart)"
-        @input="setQuery($event.target.value)"
         @keydown.tab.exact.prevent="autocompleteQuery"
-        @keydown.ctrl.r.exact.prevent="reverseISearch"
+        @keydown.ctrl.r.exact.prevent="showReverseISearch()"
         @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
         @keyup.end.exact="setCursorPosition($refs.queryRef.selectionStart)"
@@ -41,6 +41,7 @@
     <!-- Multiline queries -->
     <div
       v-for="(multilineQuery, index) in multilineQueries"
+      v-show="isBeforeReverseISearch(index)"
       :key="index"
       :class="{
         'vue-command__multiline-query': !invert,
@@ -58,17 +59,49 @@
           'vue-command__multiline-query__input--invert': invert
         }"
         :disabled="isOutdatedMultilineQuery(index)"
+        :value="multilineQuery"
         autocapitalize="none"
         autocorrect="off"
         type="text"
-        :value="multilineQuery"
         @click="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @input="setLastMultilineQuery($event.target.value)"
-        @keydown.ctrl.r.exact.prevent="reverseISearch"
+        @keydown.ctrl.r.exact.prevent="showReverseISearch()"
         @keyup.arrow-left.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.arrow-right.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.end.exact="setCursorPosition($refs.multilineQueryRefs[index].selectionStart)"
         @keyup.enter.exact="submit">
+    </div>
+
+    <!-- Reverse I search -->
+    <div
+      v-if="isReverseISearch"
+      :class="{
+        'vue-command__reverse-i-search': !invert,
+        'vue-command__reverse-i-search--invert': invert
+      }">
+      <span
+        :class="{
+          'vue-command__reverse-i-search-status': !invert,
+          'vue-command__reverse-i-search-status--invert': invert
+        }">({{ reverseISearchStatus }})`</span><input
+        ref="reverseISearchRef"
+        v-model="reverseISearch"
+        :class="{
+          'vue-command__reverse-i-search__input': !invert,
+          'vue-command__reverse-i-search__input--invert': invert
+        }"
+        :disabled="isOutdated"
+        autocapitalize="none"
+        autocorrect="off"
+        type="text"
+        @click="setCursorPosition($refs.queryRef.selectionStart)"
+        @input="resizeReverseISearch"
+        @keydown.ctrl.r.exact.prevent="cycleReverseISearch"
+        @keydown.esc.exact="hideReverseISearch()"
+        @keyup.arrow-left.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.arrow-right.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.end.exact="setCursorPosition($refs.queryRef.selectionStart)"
+        @keyup.enter.exact="submit">': {{ local.query }}
     </div>
   </div>
 </template>
@@ -87,7 +120,8 @@ import {
 } from 'vue'
 import {
   and,
-  or
+  or,
+  xor
 } from '@/utils'
 import {
   defaultParser,
@@ -126,8 +160,12 @@ const terminal = inject('terminal')
 
 // Indicates if the query, including multiline queries, is invalid
 const isOutdated = ref(false)
+const isReverseISearch = ref(false)
 const multilineQueryRefs = ref(null)
 const placeholder = ref('')
+const reverseISearch = ref('')
+const reverseISearchRef = ref(null)
+const reverseISearchStatus = ref('reverse-i-search')
 const queryRef = ref(null)
 
 const local = reactive({
@@ -136,10 +174,22 @@ const local = reactive({
 })
 const multilineQueries = reactive([])
 
+const isBeforeReverseISearch = computed(() => {
+  return index => xor(
+    !isReverseISearch.value,
+    and(
+      isReverseISearch.value,
+      lt(index, size(multilineQueries) - 1)
+    )
+  )
+})
 const isOutdatedMultilineQuery = computed(() => {
   return index => or(
     isOutdated.value,
-    and(!isEmpty(multilineQueries), !eq(index, size(multilineQueries) - 1))
+    and(
+      !isEmpty(multilineQueries),
+      !eq(index, size(multilineQueries) - 1)
+    )
   )
 })
 const isOutdatedQuery = computed(() => {
@@ -154,6 +204,15 @@ const lastQuery = computed(() => {
   // Return last multiline query
   const lastMultilineQuery = last(multilineQueries)
   return lastMultilineQuery
+})
+const shouldShowQuery = computed(() => {
+  return or(
+    !isReverseISearch.value,
+    and(
+      isReverseISearch.value,
+      !isEmpty(multilineQueries)
+    )
+  )
 })
 
 // Autocompletes a command and calls the options resolver with found program and
@@ -228,6 +287,9 @@ const autocompleteQuery = async () => {
     }
   }
 }
+const cycleReverseISearch = () => {
+  // TODO
+}
 // Focuses the last query or multiline query
 const focus = () => {
   if (isEmpty(multilineQueries)) {
@@ -238,9 +300,17 @@ const focus = () => {
   const lastMultilineQueryRef = last(multilineQueryRefs.value)
   lastMultilineQueryRef.focus()
 }
-const reverseISearch = event => {
-  // TODO
-  // console.debug(event)
+// Hides reverse I search and focused last query
+const hideReverseISearch = async () => {
+  isReverseISearch.value = false
+
+  // Focus last query
+  await nextTick()
+  focus()
+}
+// Resizes the reverse I search input according to its length
+const resizeReverseISearch = () => {
+  reverseISearchRef.value.style.width = `${parseInt(reverseISearch.value.length)}ch`
 }
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
@@ -262,6 +332,14 @@ const sigint = () => {
 // Sets the last multiline query
 const setLastMultilineQuery = multilineQuery => {
   set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
+}
+// Shows and focuses the reverse I search
+const showReverseISearch = async () => {
+  isReverseISearch.value = true
+
+  // Wait for DOM
+  await nextTick()
+  reverseISearchRef.value.focus()
 }
 // Deactivates this query or spawns eventually new multiline queries and finally
 // dispatches the query to execute it
@@ -285,6 +363,8 @@ const submit = async () => {
 
   // No new multiline query requested
   isOutdated.value = true
+  // No reverse I search anymore requested
+  isReverseISearch.value = false
 
   // Concatenate base query with multiline queries and remove slashes and white
   // spaces
@@ -319,18 +399,34 @@ const unwatchTerminalCursorPosition = watch(
     queryRef.value.setSelectionRange(cursorPosition, cursorPosition)
   }
 )
-// This allows to mutate the query from outside the component and not only
-// inside a history entry
 const unwatchTerminalQuery = watch(
   () => terminal.value.query,
   async query => {
     await nextTick()
 
+    // This allows to mutate the query from outside the component and not only
+    // inside a history entry
     local.query = query
   }
 )
-// Free resources if query or multiline query is outdated/inactive
+const unwatchReverseISearch = watch(reverseISearch, () => {
+  for (const dispatchedQuery of terminal.value.dispatchedQueries) {
+    if (dispatchedQuery.startsWith(reverseISearch.value)) {
+      setQuery(dispatchedQuery)
+
+      // Reset status if dispatched query has been found
+      reverseISearchStatus.value = 'reverse-i-search'
+
+      return
+    }
+  }
+
+  reverseISearchStatus.value = 'failed reverse-i-search'
+})
 const unwatchIsOutdated = watch(isOutdated, () => {
+  // Free resources if query, multiline query or reverse I search is
+  // outdated/inactive
+
   signals.off('SIGINT', sigint)
   unwatchLocalQuery()
   unwatchTerminalQuery()
@@ -338,6 +434,7 @@ const unwatchIsOutdated = watch(isOutdated, () => {
   placeholder.value = ''
   unwatchMultilineQueries()
   unwatchIsOutdated()
+  unwatchReverseISearch()
 })
 
 onMounted(() => {
@@ -379,6 +476,16 @@ defineExpose({
 .vue-command,
 .vue-command--invert {
 
+  /* TODO Separate, simplify */
+
+  .vue-command__reverse-i-search {
+    .vue-command__reverse-i-search__input {
+      caret-color: transparent;
+      padding: 0;
+      width: 0ch;
+    }
+  }
+
   .vue-command__query,
   .vue-command__query--invert,
   .vue-command__multiline-query,
@@ -398,12 +505,18 @@ defineExpose({
     .vue-command__query__input,
     .vue-command__query__input--invert,
     .vue-command__multiline-query,
-    .vue-command__multiline-query--invert    {
+    .vue-command__multiline-query--invert,
+    .vue-command__reverse-i-search__input,
+    .vue-command__reverse-i-search__input--invert {
       border: none;
       outline: none;
-      flex: 1;
-      width: 100%;
+    }
 
+    .vue-command__query__input,
+    .vue-command__query__input--invert,
+    .vue-command__multiline-query,
+    .vue-command__multiline-query--invert {
+      width: 100%;
     }
 
     .vue-command__query__prompt,
@@ -434,7 +547,6 @@ defineExpose({
       outline: none;
       flex: 1;
       width: 100%;
-
     }
   }
 }

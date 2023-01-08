@@ -68,3 +68,5 @@ export const or = (...operands) => {
 
   return false
 }
+
+export const xor = (x, y) => x ^ y

@@ -16,7 +16,7 @@ Now with Vue.js 3 support!
 - Multiline support with `\`
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
-- Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>) (comming soon)
+- Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>)
 
 ## Installation
 
@@ -348,8 +348,8 @@ contribute please consult `CONTRIBUTING.md`.
 
 ## Browser support
 
-This library uses the `MutationObserver` to track if the terminal needs to
-scroll to the bottom. You may need a pollyfill to support your target browser.
+This library uses the `ResizeObserver` to track if the terminal needs to scroll
+to the bottom. You may need a pollyfill to support your target browser.
 
 ## Projects using vue-command
 
