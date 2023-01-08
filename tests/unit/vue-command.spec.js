@@ -5,9 +5,7 @@ import VueCommandQuery from '@/components/VueCommandQuery.vue'
 // Mock
 class ResizeObserver {
   observe () { }
-
   unobserve () { }
-
   disconnect () { }
 }
 

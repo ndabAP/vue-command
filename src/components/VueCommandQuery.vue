@@ -158,7 +158,8 @@ const showHelp = inject('showHelp')
 const signals = inject('signals')
 const terminal = inject('terminal')
 
-// Indicates if the query, including multiline queries, is invalid
+// Indicates if the query, including multiline queries and reverse I search, is
+// invalid
 const isOutdated = ref(false)
 const isReverseISearch = ref(false)
 const multilineQueryRefs = ref(null)
@@ -172,6 +173,7 @@ const local = reactive({
   prompt: terminal.value.prompt,
   query: ''
 })
+// Entered with "\"
 const multilineQueries = reactive([])
 
 const isBeforeReverseISearch = computed(() => {
@@ -290,8 +292,13 @@ const autocompleteQuery = async () => {
 const cycleReverseISearch = () => {
   // TODO
 }
-// Focuses the last query or multiline query
+// Focuses the last query, multiline query or reverse I search
 const focus = () => {
+  if (isReverseISearch.value) {
+    reverseISearchRef.value.focus()
+    return
+  }
+
   if (isEmpty(multilineQueries)) {
     queryRef.value.focus()
     return
@@ -312,6 +319,18 @@ const hideReverseISearch = async () => {
 const resizeReverseISearch = () => {
   reverseISearchRef.value.style.width = `${parseInt(reverseISearch.value.length)}ch`
 }
+// Sets the last multiline query
+const setLastMultilineQuery = multilineQuery => {
+  set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
+}
+// Shows and focuses the reverse I search
+const showReverseISearch = async () => {
+  isReverseISearch.value = true
+
+  // Wait for DOM
+  await nextTick()
+  reverseISearchRef.value.focus()
+}
 // Cancels the current query or multiline query and creates a new query
 const sigint = () => {
   if (isEmpty(multilineQueries)) {
@@ -328,18 +347,6 @@ const sigint = () => {
   // Invalidate current query
   isOutdated.value = true
   appendToHistory(createQuery())
-}
-// Sets the last multiline query
-const setLastMultilineQuery = multilineQuery => {
-  set(multilineQueries, size(multilineQueries) - 1, multilineQuery)
-}
-// Shows and focuses the reverse I search
-const showReverseISearch = async () => {
-  isReverseISearch.value = true
-
-  // Wait for DOM
-  await nextTick()
-  reverseISearchRef.value.focus()
 }
 // Deactivates this query or spawns eventually new multiline queries and finally
 // dispatches the query to execute it
@@ -373,10 +380,29 @@ const submit = async () => {
     .replaceAll(/(?<!\\)\\(?!\\)/g, '')
     .trim()
 
-  // Dispatch the query to the parent
+  // Dispatch the query to the terminal
   dispatch(query)
 }
 
+const unwatchIsOutdated = watch(isOutdated, () => {
+  // Free resources if query, multiline query or reverse I search are
+  // outdated/inactive
+
+  signals.off('SIGINT', sigint)
+  unwatchLocalQuery()
+  unwatchTerminalQuery()
+  unwatchTerminalCursorPosition()
+  placeholder.value = ''
+  unwatchMultilineQueries()
+  unwatchIsOutdated()
+  unwatchReverseISearch()
+})
+const unwatchLocalQuery = watch(() => local.query, async () => {
+  await nextTick()
+
+  // Apply given cursor position to actual cursor position
+  setCursorPosition(queryRef.value.selectionStart)
+})
 const unwatchMultilineQueries = watch(multilineQueries, async () => {
   await nextTick()
 
@@ -384,11 +410,26 @@ const unwatchMultilineQueries = watch(multilineQueries, async () => {
   // Apply given cursor position to actual cursor position
   setCursorPosition(lastMultilineQueryRef.selectionStart)
 })
-const unwatchLocalQuery = watch(() => local.query, async () => {
-  await nextTick()
+const unwatchReverseISearch = watch(reverseISearch, () => {
+  // Search in dispatched queries
+  for (const dispatchedQuery of terminal.value.dispatchedQueries) {
+    if (dispatchedQuery.startsWith(reverseISearch.value)) {
+      if (isEmpty(multilineQueries)) {
+        setQuery(dispatchedQuery)
+      }
 
-  // Apply given cursor position to actual cursor position
-  setCursorPosition(queryRef.value.selectionStart)
+      if (!isEmpty(multilineQueries)) {
+        setLastMultilineQuery(dispatchedQuery)
+      }
+
+      // Reset status if dispatched query has been found
+      reverseISearchStatus.value = 'reverse-i-search'
+
+      return
+    }
+  }
+
+  reverseISearchStatus.value = 'failed reverse-i-search'
 })
 const unwatchTerminalCursorPosition = watch(
   () => terminal.value.cursorPosition,
@@ -409,45 +450,12 @@ const unwatchTerminalQuery = watch(
     local.query = query
   }
 )
-const unwatchReverseISearch = watch(reverseISearch, () => {
-  for (const dispatchedQuery of terminal.value.dispatchedQueries) {
-    if (dispatchedQuery.startsWith(reverseISearch.value)) {
-      if (isEmpty(multilineQueries)) {
-        setQuery(dispatchedQuery)
-      }
-
-      if (!isEmpty(multilineQueries)) {
-        setLastMultilineQuery(dispatchedQuery)
-      }
-
-      // Reset status if dispatched query has been found
-      reverseISearchStatus.value = 'reverse-i-search'
-
-      return
-    }
-  }
-
-  reverseISearchStatus.value = 'failed reverse-i-search'
-})
-const unwatchIsOutdated = watch(isOutdated, () => {
-  // Free resources if query, multiline query or reverse I search is
-  // outdated/inactive
-
-  signals.off('SIGINT', sigint)
-  unwatchLocalQuery()
-  unwatchTerminalQuery()
-  unwatchTerminalCursorPosition()
-  placeholder.value = ''
-  unwatchMultilineQueries()
-  unwatchIsOutdated()
-  unwatchReverseISearch()
-})
 
 onMounted(() => {
   // Bind signals
   signals.on('SIGINT', sigint)
 
-  // Set initial query state
+  // Set initial query states
   setQuery('')
   setCursorPosition(0)
 

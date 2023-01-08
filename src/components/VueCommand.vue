@@ -5,6 +5,7 @@
       'vue-command': !invert,
       'vue-command--invert': invert
     }">
+    <!-- Bar -->
     <slot name="bar">
       <div
         v-if="!hideBar"
@@ -54,6 +55,7 @@
       </div>
     </slot>
 
+    <!-- History -->
     <div
       ref="vueCommandHistoryRef"
       :class="{
@@ -71,7 +73,7 @@
           'vue-command__history__entry--fullscreen': shouldBeFullscreen(index),
           'vue-command__history__entry--fullscreen--invert': invert && shouldBeFullscreen(index)
         }">
-        <!-- User given components like bash and query -->
+        <!-- Components -->
         <component
           :is="component"
           ref="vueCommandHistoryEntryComponentRefs"
@@ -315,8 +317,8 @@ const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.add(dispatchedQuery)
   emits('update:dispatchedQueries', local.dispatchedQueries)
 }
-// Focuses to the last query or multiline query input if the last history entry
-// is a query input
+// Focuses to the last query, multiline query or reverse I search input if the
+// last history entry is a query input
 const autoFocus = () => {
   // Not the query needs to maintain the validation upon focus but rather the
   // terminal itself
@@ -398,9 +400,9 @@ const dispatch = async query => {
 const exit = () => {
   // TODO Does order matter?
   appendToHistory(createQuery())
-  setHistoryPosition(local.dispatchedQueries.size)
   setCursorPosition(0)
   setFullscreen(false)
+  setHistoryPosition(local.dispatchedQueries.size)
   setQuery('')
 }
 // Decreases the history position about one and sets the new query
