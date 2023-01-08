@@ -1,3 +1,10 @@
+## [32.1.0](https://github.com/ndabAP/vue-command/compare/v32.0.3...v32.1.0) (2023-01-08)
+
+
+### Features
+
+* reverse i search ([f8891e6](https://github.com/ndabAP/vue-command/commit/f8891e63b6db762620d07ad1bf7d81c27d22da11))
+
 ## [32.0.3](https://github.com/ndabAP/vue-command/compare/v32.0.2...v32.0.3) (2023-01-07)
 
 
