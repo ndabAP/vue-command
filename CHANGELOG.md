@@ -1,3 +1,10 @@
+## [32.2.0](https://github.com/ndabAP/vue-command/compare/v32.1.3...v32.2.0) (2023-01-08)
+
+
+### Features
+
+* focus reverse i search ([290c00f](https://github.com/ndabAP/vue-command/commit/290c00f2a2a72ddc56c90d87779de5e496ff6fba))
+
 ## [32.1.3](https://github.com/ndabAP/vue-command/compare/v32.1.2...v32.1.3) (2023-01-08)
 
 
