@@ -1,15 +1,12 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    es2021: true
   },
   extends: [
     'plugin:vue/vue3-recommended',
     '@vue/standard'
   ],
-  parserOptions: {
-    parser: 'babel-eslint'
-  },
   plugins: [
     'modules-newline'
   ],

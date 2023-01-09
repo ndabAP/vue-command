@@ -122,13 +122,13 @@ import {
   and,
   or,
   xor
-} from '@/utils'
+} from '../utils'
 import {
   defaultParser,
   createStdout,
   createQuery,
   listFormatter
-} from '@/library'
+} from '../library'
 import {
   head,
   isEmpty,

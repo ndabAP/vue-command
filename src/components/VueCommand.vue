@@ -109,13 +109,13 @@ import {
   defaultParser,
   newDefaultHistory,
   newDefaultEventResolver
-} from '@/library'
+} from '../library'
 import {
   and,
   or,
   newEventBus,
   PUBLISH_SYMBOL
-} from '@/utils'
+} from '../utils'
 import {
   eq,
   size,

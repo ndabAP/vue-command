@@ -152,16 +152,16 @@
 
 <script lang="js">
 import { ref } from 'vue'
-import VueCommand from '@/components/VueCommand'
+import VueCommand from '../library'
 import {
   createStdout,
   createQuery,
   listFormatter,
   newDefaultHistory,
   tableFormatter
-} from '@/library'
-import NanoEditor from '@/hosted/NanoEditor.vue'
-import ChuckNorris from '@/hosted/ChuckNorris.vue'
+} from '../library'
+import NanoEditor from './NanoEditor.vue'
+import ChuckNorris from './ChuckNorris.vue'
 
 const PROMPT = 'neil@moon~$'
 

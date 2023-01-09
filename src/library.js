@@ -5,8 +5,8 @@ import {
   markRaw,
   onMounted
 } from 'vue'
-import VueCommand from '@/components/VueCommand'
-import VueCommandQuery from '@/components/VueCommandQuery'
+import VueCommand from './components/VueCommand.vue'
+import VueCommandQuery from './components/VueCommandQuery.vue'
 import {
   forEach,
   isFunction
@@ -29,13 +29,13 @@ export const createCommandNotFound = (command, notFoundText = 'command not found
 // soon as the component has been mounted
 export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
   name,
-  setup () {
+  setup() {
     // This tears down the component automatically
     const exit = inject('exit')
     onMounted(exit)
   },
 
-  render () {
+  render() {
     if (isFunction(formatterOrText)) {
       // This is automatically called with the bound arguments
       return formatterOrText()
