@@ -1,3 +1,10 @@
+## [32.2.1](https://github.com/ndabAP/vue-command/compare/v32.2.0...v32.2.1) (2023-01-11)
+
+
+### Bug Fixes
+
+* text formatter inner html ([32cbcbc](https://github.com/ndabAP/vue-command/commit/32cbcbc76f65b540f006453201bafe3bfac69fb2))
+
 ## [32.2.0](https://github.com/ndabAP/vue-command/compare/v32.1.3...v32.2.0) (2023-01-08)
 
 
