@@ -188,15 +188,20 @@ export default {
     const title = ref('bash - 720x350')
 
     const optionsResolver = (program, parsedQuery, setQuery) => {
+      const lastArgument = parsedQuery[parsedQuery.length - 1]
+
       switch (program) {
         case 'cd':
           switch (parsedQuery.length) {
+            case 0:
+              break
+
             case 1:
               setQuery('cd home')
               break
-            // TODO Check last index instead of second
-            case 2:
-              if ('home'.startsWith(parsedQuery[parsedQuery.length - 1]) && parsedQuery[parsedQuery.length - 1] !== 'home') {
+
+            default:
+              if ('home'.startsWith(lastArgument) && lastArgument !== 'home') {
                 setQuery('cd home')
               }
               break
@@ -210,15 +215,18 @@ export default {
         if (parsedQuery.length < 2 || parsedQuery[parsedQuery.length - 1] === '.') {
           return createQuery()
         }
-        if (parsedQuery[parsedQuery.length - 1] === 'home') {
+
+        const lastArgument = parsedQuery[parsedQuery.length - 1]
+
+        if (lastArgument === 'home') {
           prompt.value = `${PROMPT}/home`
         }
-        if ((parsedQuery[parsedQuery.length - 1] === '../' || parsedQuery[parsedQuery.length - 1] === '..') &&
+        if ((lastArgument === '../' || lastArgument === '..') &&
             prompt.value === `${PROMPT}/home`) {
           prompt.value = `${PROMPT}`
         }
-        if (parsedQuery[parsedQuery.length - 1] !== 'home' && parsedQuery[parsedQuery.length - 1] !== '../' && parsedQuery[parsedQuery.length - 1] !== '..') {
-          return createStdout(`bash: cd: ${parsedQuery[parsedQuery.length - 1]}: No such file or directory`)
+        if (lastArgument !== 'home' && lastArgument !== '../' && lastArgument !== '..') {
+          return createStdout(`bash: cd: ${lastArgument}: No such file or directory`)
         }
 
         return createQuery()
