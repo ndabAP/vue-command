@@ -150,7 +150,7 @@ export const tableFormatter = rows => {
 export const textFormatter = (text, innerHtml = false) => {
   return () => {
     if (innerHtml) {
-      return h('div', { innerHtml: text })
+      return h('div', { innerHTML: text })
     }
 
     return h('div', text)
