@@ -24,7 +24,7 @@
           'vue-command__query__input': !invert,
           'vue-command__query__input--invert': invert
         }"
-        :disabled="isOutdatedQuery"
+        :disabled="isDisabledQuery"
         :placeholder="placeholder"
         autocapitalize="none"
         autocorrect="off"
@@ -58,7 +58,7 @@
           'vue-command__multiline-query__input': !invert,
           'vue-command__multiline-query__input--invert': invert
         }"
-        :disabled="isOutdatedMultilineQuery(index)"
+        :disabled="isDisabledMultilineQuery(index)"
         :value="multilineQuery"
         autocapitalize="none"
         autocorrect="off"
@@ -176,6 +176,8 @@ const local = reactive({
 // Entered with "\"
 const multilineQueries = reactive([])
 
+// Determinates if the given multiline query by index is before the current
+// reverse I search or if reverse I search is not active
 const isBeforeReverseISearch = computed(() => {
   return index => xor(
     !isReverseISearch.value,
@@ -185,7 +187,8 @@ const isBeforeReverseISearch = computed(() => {
     )
   )
 })
-const isOutdatedMultilineQuery = computed(() => {
+// Determinates if the given multiline query by index is outdated
+const isDisabledMultilineQuery = computed(() => {
   return index => or(
     isOutdated.value,
     and(
@@ -194,7 +197,8 @@ const isOutdatedMultilineQuery = computed(() => {
     )
   )
 })
-const isOutdatedQuery = computed(() => {
+// As soon as the there multiline queries, query is disabled
+const isDisabledQuery = computed(() => {
   return or(isOutdated.value, !isEmpty(multilineQueries))
 })
 // Returns the last query or last multiline query

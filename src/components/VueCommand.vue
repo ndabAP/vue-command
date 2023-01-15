@@ -63,6 +63,7 @@
         'vue-command__history--invert': invert
       }"
       @click="autoFocus">
+      <!-- History entries -->
       <div
         v-for="(component, index) in local.history"
         v-show="shouldShowHistoryEntry(index)"
@@ -71,9 +72,10 @@
           'vue-command__history__entry': !invert,
           'vue-command__history__entry--invert': invert,
           'vue-command__history__entry--fullscreen': shouldBeFullscreen(index),
-          'vue-command__history__entry--fullscreen--invert': invert && shouldBeFullscreen(index)
+          'vue-command__history__entry--fullscreen--invert': and(
+            invert, shouldBeFullscreen(index)
+          )
         }">
-        <!-- Components -->
         <component
           :is="component"
           ref="vueCommandHistoryEntryComponentRefs"
@@ -126,7 +128,9 @@ import {
   head,
   isFunction,
   nth,
-  lt
+  lt,
+  floor,
+  debounce
 } from 'lodash'
 
 const props = defineProps({
@@ -311,6 +315,9 @@ const shouldShowHistoryEntry = computed(() => {
   )
 })
 
+// Determinates if the scrollbar is at the bottom
+let scrolledToBottom = true
+
 // Removes and adds the dispatched query to enforce the queries first position
 const addDispatchedQuery = dispatchedQuery => {
   local.dispatchedQueries.delete(dispatchedQuery)
@@ -481,10 +488,46 @@ onMounted(() => {
     bindEventListener(currentInstance.refs, currentInstance.exposed)
   }
 
+  // TODO Norris' async response triggers new resize!
+
   // Scroll to bottom if history changes
+  // Compute history height
+  const computeHistoryHeight = () => {
+    let historyHeight = 0
+    for (const vueCommandHistroyEntry of vueCommandHistoryRef.value.children) {
+      historyHeight += get(vueCommandHistroyEntry.getBoundingClientRect(), 'height')
+    }
+
+    return historyHeight
+  }
+  let isTriggeredByResize = false
+  // Observe if scrolled to bottom
+  // We use a timeout to force resize observer to run first
+  // Is called twice: First resize, then scroll to bottom
+  const eventListener = () => {
+    setTimeout(() => {
+      console.debug(isTriggeredByResize)
+      if (isTriggeredByResize) {
+        return
+      }
+      // Determinate if user scrolled to bottom
+      scrolledToBottom = eq(
+        floor(Math.abs(
+          vueCommandHistoryRef.value.scrollTop + vueCommandHistoryRef.value.clientHeight >= vueCommandHistoryRef.value.scrollHeight
+        )),
+        0)
+    }, 0)
+  }
+  vueCommandHistoryRef.value.addEventListener('scroll', eventListener)
+
+  // Scroll to bottom if resized and scrolled to bottom before
   const resizeObsever = new ResizeObserver(() => {
-    // TODO Only scroll to bottom if user scrolled to bottom before
-    vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+    isTriggeredByResize = true
+    if (scrolledToBottom != null) {
+      // This fires scroll
+      vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+    }
+    isTriggeredByResize = false
   })
   for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
     resizeObsever.observe(vueCommandHistoryEntry)
