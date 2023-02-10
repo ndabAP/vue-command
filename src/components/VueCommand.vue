@@ -71,7 +71,10 @@
           'vue-command__history__entry': !invert,
           'vue-command__history__entry--invert': invert,
           'vue-command__history__entry--fullscreen': shouldBeFullscreen(index),
-          'vue-command__history__entry--fullscreen--invert': invert && shouldBeFullscreen(index)
+          'vue-command__history__entry--fullscreen--invert': and(
+            invert,
+            shouldBeFullscreen(index)
+          )
         }">
         <!-- Components -->
         <component
@@ -202,6 +205,14 @@ const props = defineProps({
     default: false,
     required: false,
     type: Boolean
+  },
+
+  // An interpreter allows to execute arbitrary code after a query has been
+  // dispatched
+  interpreter: {
+    default: null,
+    required: false,
+    type: Function
   },
 
   isFullscreen: {
@@ -345,6 +356,12 @@ const appendToHistory = (...components) => {
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
 const dispatch = async query => {
+  // Call given interpreter to execute arbitrary code, if given
+  if (isFunction(props.interpreter)) {
+    props.interpreter(query)
+    return
+  }
+
   // An empty query is an empty string
   if (isEmpty(query)) {
     appendToHistory(createQuery())

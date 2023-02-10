@@ -128,7 +128,7 @@ directive is required.
 | `commands`           | See [Commands](#commands)                   | `Object`   | `{}`                      | No       | No              |
 | `cursor-position`    | Cursor position                             | `Number`   | `0`                       | No       | Yes             |
 | `dispatched-queries` | Non-empty dispatched queries                | `Set`      | `new Set()`               | No       | Yes             |
-| `event-resolver`     | See [Event resolver](#Event-resolver)       | `Function` | `newDefaultEventResolver` | No       | No              |
+| `event-resolver`     | See [Event resolver](#event-resolver)       | `Function` | `newDefaultEventResolver` | No       | No              |
 | `help-text`          | Command help                                | `String`   | `''`                      | No       | Yes             |
 | `help-timeout`       | Command help timeout                        | `Number`   | `3000`                    | No       | No              |
 | `hide-bar`           | Hides the bar                               | `Boolean`  | `false`                   | No       | No              |
@@ -136,9 +136,10 @@ directive is required.
 | `hide-title`         | Hides the title                             | `Boolean`  | `false`                   | No       | No              |
 | `history`            | Terminal history                            | `Array`    | `[]`                      | No       | Yes             |
 | `history-position`   | Points to the latest dispatched query entry | `Number`   | `0`                       | No       | Yes             |
+| `interpreter`        | See [Interpreter](#interpreter)             | `Function` | `null`                    | No       | No              |
 | `invert`             | Inverts the terminals colors                | `Boolean`  | `false`                   | No       | No              |
 | `is-fullscreen`      | Terminal fullscreen mode                    | `Boolean`  | `false`                   | No       | Yes             |
-| `options-resolver`   | See [Options resolver](#Options-resolver)   | `Function` | `null`                    | No       | No              |
+| `options-resolver`   | See [Options resolver](#options-resolver)   | `Function` | `null`                    | No       | No              |
 | `parser`             | Query parser                                | `Function` | `defaultParser`           | No       | No              |
 | `prompt`             | Terminal prompt                             | `String`   | `~$`                      | No       | No              |
 | `show-help`          | Show query help                             | `Boolean`  | `false`                   | No       | No              |
@@ -170,6 +171,17 @@ The terminal provides a built-in autocompletion for the given commands. As soon
 as the query has been autocompleted by the terminal, it's calling the options
 resolver provided as property. The resolver is called with the program, parsed
 query and a setter to update the query.
+
+### Interpreter
+
+An interpreter allows to execute arbitrary code after the query has been
+dispatched and to not rely on missing functionality which includes pipes,
+streams or running multiple commands in parallel.
+
+The interpreter is a property function that is called with the unparsed query
+right after the query component calls `dispatch` and terminates it at the same
+time. After the call, you must use the [properties](#properties) and
+[exposed functions](#exposed) to reach the desired behaviour.
 
 ## Slots
 

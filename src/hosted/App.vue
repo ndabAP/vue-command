@@ -16,7 +16,7 @@
             v-model:dispatched-queries="dispatchedQueries"
             v-model:is-fullscreen="isFullscreen"
             v-model:history="history"
-            v-model:historyPosition="historyPosition"
+            v-model:history-position="historyPosition"
             v-model:query="query"
             :commands="commands"
             :help-text="helpText"
