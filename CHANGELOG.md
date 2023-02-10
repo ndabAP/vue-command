@@ -1,3 +1,10 @@
+## [32.3.0](https://github.com/ndabAP/vue-command/compare/v32.2.1...v32.3.0) (2023-02-10)
+
+
+### Features
+
+* interpreter ([7b7258c](https://github.com/ndabAP/vue-command/commit/7b7258cbcb10cc313987403ab61169ced2b2d43c))
+
 ## [32.2.1](https://github.com/ndabAP/vue-command/compare/v32.2.0...v32.2.1) (2023-01-11)
 
 
