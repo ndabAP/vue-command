@@ -1,3 +1,14 @@
+## [33.0.0](https://github.com/ndabAP/vue-command/compare/v32.4.0...v33.0.0) (2023-02-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* code style, explain signals
+
+### Documentation
+
+* code style, explain signals ([e7f34c0](https://github.com/ndabAP/vue-command/commit/e7f34c0eb7b416b2059357c599aac633f97df435))
+
 ## [32.4.0](https://github.com/ndabAP/vue-command/compare/v32.3.0...v32.4.0) (2023-02-12)
 
 
