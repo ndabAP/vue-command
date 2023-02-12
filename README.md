@@ -224,6 +224,19 @@ and `title` property have no effect. Example:
 </vue-command>
 ```
 
+### Prompt
+
+You can overwrite the prompt with the prompt slot. If you use this slot,
+`hidePrompt` and `prompt` property have no effect. Example:
+
+```vue
+<vue-command>
+  <template #prompt>
+    ~$
+  </template>
+</vue-command>
+```
+
 ## Library
 
 Library provides helper methods to render terminal related content.
@@ -292,6 +305,7 @@ import { listFormatter } from "vue-command";
 | `setQuery`           | `Function` | `query`                          |
 | `showHelp`           | `Boolean`  |                                  |
 | `signals`            | `Object`   |                                  |
+| `slots`              | `Object`   |                                  |
 | `terminal`           | `Object`   |                                  |
 
 Provider can be injected into your component by name:
@@ -348,6 +362,9 @@ to subscribe to the signal.
 ```js
 signals.off("SIGINT", sigint);
 ```
+
+The libraries query component makes usage of that and allows to cancel a query
+with `SIGIN`.
 
 ## Nice-to-haves
 

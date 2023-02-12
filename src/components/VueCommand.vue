@@ -104,7 +104,8 @@ import {
   computed,
   onMounted,
   nextTick,
-  getCurrentInstance
+  getCurrentInstance,
+  useSlots
 } from 'vue'
 import {
   createCommandNotFound,
@@ -131,6 +132,8 @@ import {
   nth,
   lt
 } from 'lodash'
+
+const slots = useSlots()
 
 const props = defineProps({
   commands: {
@@ -526,7 +529,6 @@ provide('helpText', props.helpText)
 provide('helpTimeout', props.helpTimeout)
 provide('hidePrompt', props.hidePrompt)
 provide('incrementHistory', incrementHistory)
-provide('invert', props.invert)
 provide('optionsResolver', props.optionsResolver)
 provide('parser', props.parser)
 provide('programs', programs)
@@ -534,9 +536,10 @@ provide('sendSignal', sendSignal)
 provide('setCursorPosition', setCursorPosition)
 provide('setFullscreen', setFullscreen)
 provide('setHistoryPosition', setHistoryPosition)
+provide('setQuery', setQuery)
 provide('showHelp', props.showHelp)
 provide('signals', signals)
-provide('setQuery', setQuery)
+provide('slots', slots)
 provide('terminal', terminal)
 
 defineExpose({
