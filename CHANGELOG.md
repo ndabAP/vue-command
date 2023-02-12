@@ -1,3 +1,10 @@
+## [32.4.0](https://github.com/ndabAP/vue-command/compare/v32.3.0...v32.4.0) (2023-02-12)
+
+
+### Features
+
+* prompt slot ([996b95d](https://github.com/ndabAP/vue-command/commit/996b95d122902fd25016045ba4849aa730c2e800))
+
 ## [32.3.0](https://github.com/ndabAP/vue-command/compare/v32.2.1...v32.3.0) (2023-02-10)
 
 
