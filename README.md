@@ -70,18 +70,18 @@ This is a nano text editor emulator! Press Ctrl + x to leave.</textarea
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
-  inject: ['exit', 'setFullscreen', 'terminal'],
+  inject: ["exit", "setFullscreen", "terminal"],
 
-  created () {
-    this.setFullscreen(true)
+  created() {
+    this.setFullscreen(true);
   },
 
-  mounted () {
-    this.$refs.nano.focus()
-  }
-}
+  mounted() {
+    this.$refs.nano.focus();
+  },
+};
 </script>
 
 <style scoped>
@@ -364,7 +364,7 @@ signals.off("SIGINT", sigint);
 ```
 
 The libraries query component makes usage of that and allows to cancel a query
-with `SIGIN`.
+with `SIGINT` and appending `^C` to the query.
 
 ## Nice-to-haves
 
