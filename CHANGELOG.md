@@ -1,3 +1,10 @@
+## [33.0.1](https://github.com/ndabAP/vue-command/compare/v33.0.0...v33.0.1) (2023-02-12)
+
+
+### Bug Fixes
+
+* dynamic prompt ([4f16289](https://github.com/ndabAP/vue-command/commit/4f16289f5661dad25a3b4202d86cd35ef592c387))
+
 ## [33.0.0](https://github.com/ndabAP/vue-command/compare/v32.4.0...v33.0.0) (2023-02-12)
 
 

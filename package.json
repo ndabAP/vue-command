@@ -1,6 +1,6 @@
 {
   "name": "vue-command",
-  "version": "33.0.0",
+  "version": "33.0.1",
   "description": "A fully working, most feature-rich Vue.js terminal emulator",
   "author": {
     "email": "kontakt@julian-claus.de",
