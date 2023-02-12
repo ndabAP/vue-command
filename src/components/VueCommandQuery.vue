@@ -143,6 +143,9 @@ const reverseISearchRef = ref(null)
 const reverseISearchStatus = ref('reverse-i-search')
 const queryRef = ref(null)
 
+// This shall not be reactive
+const prompt = terminal.value.prompt
+
 // Prompt slot with fallback
 const VueCommandPrompt = computed(() => {
   if (hidePrompt) {
@@ -157,7 +160,7 @@ const VueCommandPrompt = computed(() => {
   // Show default prompt slot
   return h(Fragment, h('span', {
     class: 'vue-command__query__prompt'
-  }, terminal.value.prompt))
+  }, prompt))
 })
 
 const local = reactive({
