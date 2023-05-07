@@ -22,6 +22,7 @@
             :help-text="helpText"
             :help-timeout="helpTimeout"
             :hide-bar="hideBar"
+            :hide-buttons="hideButtons"
             :hide-prompt="hidePrompt"
             :hide-title="hideTitle"
             :invert="invert"
@@ -71,7 +72,21 @@
               <tr>
                 <td><pre><code>hide-bar</code></pre></td>
                 <td>
-                  <pre><code>{{ hideBar }}</code></pre>
+                  <input
+                    v-model="hideBar"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="">
+                </td>
+              </tr>
+              <tr>
+                <td><pre><code>hide-buttons</code></pre></td>
+                <td>
+                  <input
+                    v-model="hideButtons"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="">
                 </td>
               </tr>
               <tr>
@@ -176,6 +191,7 @@ export default {
     const helpText = ref('Type in help')
     const helpTimeout = ref(3500)
     const hideBar = ref(false)
+    const hideButtons = ref(false)
     const hidePrompt = ref(false)
     const hideTitle = ref(false)
     const history = ref(newDefaultHistory())
@@ -270,6 +286,7 @@ export default {
       helpText,
       helpTimeout,
       hideBar,
+      hideButtons,
       hidePrompt,
       hideTitle,
       history,
@@ -304,15 +321,15 @@ export default {
 
   .vue-command__bar,
   .vue-command__bar--invert {
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
   }
 
   .vue-command__history,
   .vue-command__history--invert {
     height: 350px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 }
 
