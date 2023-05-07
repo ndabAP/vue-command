@@ -6,15 +6,18 @@
       'vue-command--invert': invert
     }">
     <!-- Bar -->
-    <slot name="bar">
+    <slot
+      v-if="!hideBar"
+      name="bar">
       <div
-        v-if="!hideBar"
         :class="{
           'vue-command__bar': !invert,
           'vue-command__bar--invert': invert
         }">
         <div>
-          <slot name="buttons">
+          <slot
+            v-if="!hideButtons"
+            name="buttons">
             <span
               :class="{
                 'vue-command__bar__button': !invert,
@@ -42,16 +45,17 @@
           </slot>
         </div>
         <div>
-          <slot name="title">
+          <slot
+            v-if="!hideTitle"
+            name="title">
             <span
-              v-if="!hideTitle"
               :class="{
                 'vue-command__bar__title': !invert,
                 'vue-command__bar__title--invert': invert
               }">{{ title }}</span>
           </slot>
         </div>
-        <div />
+        <div>&#8203;</div>
       </div>
     </slot>
 
@@ -174,6 +178,12 @@ const props = defineProps({
   },
 
   hideBar: {
+    default: false,
+    required: false,
+    type: Boolean
+  },
+
+  hideButtons: {
     default: false,
     required: false,
     type: Boolean
@@ -583,20 +593,21 @@ defineExpose({
     }
   }
 
-  overflow-y: hidden;
   overflow-x: hidden;
+  overflow-y: hidden;
 
   .vue-command__bar,
   .vue-command__bar--invert {
     @include clearfix();
-    position: inherit;
+
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    justify-content: space-between;
+    padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
-    padding-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    position: inherit;
   }
 
   .vue-command__bar__button,
@@ -618,32 +629,32 @@ defineExpose({
 
   .vue-command__history--invert,
   .vue-command__history {
-    overflow: auto;
-    word-break: break-all;
     display: block;
-    padding: 12px 12px 12px 12px;
-    margin: 0;
-    white-space: pre-line;
-    line-height: 1.33;
     height: 100%;
+    line-height: 1.33;
+    margin: 0;
+    overflow: auto;
+    padding: 12px 12px 12px 12px;
+    white-space: pre-line;
+    word-break: break-all;
 
     /* Provide reasonable default values */
     ul {
+      list-style-type: none;
       margin: 0;
       padding: 0;
-      list-style-type: none;
     }
 
     input,
     textarea {
       background: none;
       border: none;
-      outline: none;
       flex: 1;
       font-size: 1rem;
-      width: 100%;
-      resize: none;
+      outline: none;
       overflow: hidden;
+      resize: none;
+      width: 100%;
     }
   }
 

@@ -132,6 +132,7 @@ directive is required.
 | `help-text`          | Command help                                | `String`   | `''`                      | No       | Yes             |
 | `help-timeout`       | Command help timeout                        | `Number`   | `3000`                    | No       | No              |
 | `hide-bar`           | Hides the bar                               | `Boolean`  | `false`                   | No       | No              |
+| `hide-buttons`       | Hides the buttons                           | `Boolean`  | `false`                   | No       | No              |
 | `hide-prompt`        | Hides the prompt                            | `Boolean`  | `false`                   | No       | No              |
 | `hide-title`         | Hides the title                             | `Boolean`  | `false`                   | No       | No              |
 | `history`            | Terminal history                            | `Array`    | `[]`                      | No       | Yes             |
@@ -201,7 +202,8 @@ classes. Example:
 
 ### Buttons
 
-Inside the bar, you can customize the buttons. Example:
+Inside the bar, you can customize the buttons. If you use this slot,
+`hideButtons` property has no effect. Example:
 
 ```vue
 <vue-command>
