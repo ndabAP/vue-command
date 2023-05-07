@@ -1,3 +1,10 @@
+## [33.1.0](https://github.com/ndabAP/vue-command/compare/v33.0.1...v33.1.0) (2023-05-07)
+
+
+### Features
+
+* hide buttons ([a71bf81](https://github.com/ndabAP/vue-command/commit/a71bf81d2a133884889a47776db1598ff0aa7bda))
+
 ## [33.0.1](https://github.com/ndabAP/vue-command/compare/v33.0.0...v33.0.1) (2023-02-12)
 
 
