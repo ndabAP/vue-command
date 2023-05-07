@@ -1,3 +1,21 @@
+## [34.0.0](https://github.com/ndabAP/vue-command/compare/v33.0.1...v34.0.0) (2023-05-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix features bullet point escape
+* fix features bullet point
+
+### Features
+
+* hide buttons ([a71bf81](https://github.com/ndabAP/vue-command/commit/a71bf81d2a133884889a47776db1598ff0aa7bda))
+
+
+### Documentation
+
+* fix features bullet point ([60faa9a](https://github.com/ndabAP/vue-command/commit/60faa9af2b45807e5ce45cb3d1a0d87e5f57d967))
+* fix features bullet point escape ([c7850a5](https://github.com/ndabAP/vue-command/commit/c7850a531da197982121fbb32233777cd4dd28ca))
+
 ## [33.1.0](https://github.com/ndabAP/vue-command/compare/v33.0.1...v33.1.0) (2023-05-07)
 
 
