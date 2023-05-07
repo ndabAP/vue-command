@@ -12,7 +12,7 @@ Now with Vue.js 3 support!
 - Supports fullscreen mode
 - Customize the terminal with slots
 - Provide your own parser (falls back to simple one)
-- Multiline support (with <kbd>\</kbd>)
+- Multiline support (with <kbd>\\</kbd>)
 - Autocompletion resolver (with <kbd>↹</kbd>)
 - Browse history (with <kbd>↑</kbd>/<kbd>↓</kbd>)
 - Search history (with <kbd>Ctrl</kbd> + <kbd>r</kbd>)
