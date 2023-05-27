@@ -34,7 +34,7 @@
     "dist/*.js.map"
   ],
   "scripts": {
-    "build": "yarn lint && && yarn build:docs && yarn build:lib",
+    "build": "yarn lint && yarn build:docs && yarn build:lib",
     "build:docs": "vue-cli-service build --dest docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "lint": "vue-cli-service lint",
