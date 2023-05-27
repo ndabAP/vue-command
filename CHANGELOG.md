@@ -1,3 +1,14 @@
+## [35.0.0](https://github.com/ndabAP/vue-command/compare/v34.0.0...v35.0.0) (2023-05-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* update
+
+### Documentation
+
+* update ([9fe4674](https://github.com/ndabAP/vue-command/commit/9fe4674f85393e8335ff4b691791f0349185fb44))
+
 ## [34.0.0](https://github.com/ndabAP/vue-command/compare/v33.0.1...v34.0.0) (2023-05-07)
 
 
