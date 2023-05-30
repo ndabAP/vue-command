@@ -1,3 +1,10 @@
+## [35.1.0](https://github.com/ndabAP/vue-command/compare/v35.0.0...v35.1.0) (2023-05-30)
+
+
+### Features
+
+* add font api and command ([e8111f3](https://github.com/ndabAP/vue-command/commit/e8111f392061676719f488c7ba2f47f610f26e07))
+
 ## [35.0.0](https://github.com/ndabAP/vue-command/compare/v34.0.0...v35.0.0) (2023-05-27)
 
 
