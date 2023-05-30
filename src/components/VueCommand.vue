@@ -4,7 +4,8 @@
     :class="{
       'vue-command': !invert,
       'vue-command--invert': invert
-    }">
+    }"
+    :style="font ? { 'font-family': font } : {}">
     <!-- Bar -->
     <slot
       v-if="!hideBar"
@@ -270,6 +271,12 @@ const props = defineProps({
     default: '',
     required: false,
     type: String
+  },
+
+  font: {
+    default: undefined,
+    required: false,
+    type: String
   }
 })
 
@@ -299,7 +306,8 @@ const local = reactive({
   historyPosition: props.historyPosition,
   isFullscreen: props.isFullscreen,
   prompt: props.prompt,
-  query: props.query
+  query: props.query,
+  font: props.font
 })
 // Signals like SIGINT or SIGKILL
 const signals = reactive(newEventBus())
@@ -312,7 +320,8 @@ const terminal = computed(() => ({
   invert: props.invert,
   isFullscreen: local.isFullscreen,
   prompt: local.prompt,
-  query: local.query
+  query: local.query,
+  font: local.font
 }))
 
 // Provided commands as programs. It takes the keys of the commands object
