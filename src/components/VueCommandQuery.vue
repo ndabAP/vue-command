@@ -18,6 +18,7 @@
         autocapitalize="none"
         autocorrect="off"
         type="text"
+        :style="terminal.font ? { 'font': `1rem ${terminal.font}`} : {}"
         @click="setCursorPosition($refs.queryRef.selectionStart)"
         @keydown.tab.exact.prevent="autocompleteQuery"
         @keydown.ctrl.r.exact.prevent="showReverseISearch()"
@@ -500,7 +501,6 @@ defineExpose({
   .vue-command__multiline-query--invert {
     display: flex;
 
-    input::placeholder,
     input {
       font: 1rem Consolas,
         Monaco,

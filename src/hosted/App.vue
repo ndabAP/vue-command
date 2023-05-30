@@ -29,7 +29,8 @@
             :prompt="prompt"
             :options-resolver="optionsResolver"
             :show-help="showHelp"
-            :title="title" />
+            :title="title"
+            :font="font" />
         </div>
 
         <div class="table-responsive">
@@ -202,6 +203,7 @@ export default {
     const query = ref('')
     const showHelp = ref(true)
     const title = ref('bash - 720x350')
+    const font = ref('')
 
     const optionsResolver = (program, parsedQuery, setQuery) => {
       const lastArgument = parsedQuery[parsedQuery.length - 1]
@@ -260,6 +262,18 @@ export default {
         return createStdout('Hello world')
       },
 
+      changefont: parsedQuery => {
+        const joinedQuery = parsedQuery.join(' ')
+        const regex = /(["'])(.*?)\1/
+        const match = joinedQuery.match(regex)
+        if (match) {
+          font.value = match[2]
+          return createQuery()
+        }
+
+        return createStdout('No quotes found')
+      },
+
       history: () => {
         const history = []
         for (const [index, entry] of [...dispatchedQueries.value].entries()) {
@@ -297,6 +311,7 @@ export default {
       query,
       showHelp,
       title,
+      font,
 
       optionsResolver
     }
