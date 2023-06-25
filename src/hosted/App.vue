@@ -19,6 +19,7 @@
             v-model:history-position="historyPosition"
             v-model:query="query"
             :commands="commands"
+            :font="font"
             :help-text="helpText"
             :help-timeout="helpTimeout"
             :hide-bar="hideBar"
@@ -29,8 +30,7 @@
             :prompt="prompt"
             :options-resolver="optionsResolver"
             :show-help="showHelp"
-            :title="title"
-            :font="font" />
+            :title="title" />
         </div>
 
         <div class="table-responsive">
@@ -170,6 +170,7 @@
 import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
 import {
+  createStderr,
   createStdout,
   createQuery,
   listFormatter,
@@ -189,6 +190,7 @@ export default {
   setup () {
     const cursorPosition = ref(0)
     const dispatchedQueries = ref(new Set())
+    const font = ref('')
     const helpText = ref('Type in help')
     const helpTimeout = ref(3500)
     const hideBar = ref(false)
@@ -203,7 +205,6 @@ export default {
     const query = ref('')
     const showHelp = ref(true)
     const title = ref('bash - 720x350')
-    const font = ref('')
 
     const optionsResolver = (program, parsedQuery, setQuery) => {
       const lastArgument = parsedQuery[parsedQuery.length - 1]
@@ -244,7 +245,7 @@ export default {
           prompt.value = `${PROMPT}`
         }
         if (lastArgument !== 'home' && lastArgument !== '../' && lastArgument !== '..') {
-          return createStdout(`bash: cd: ${lastArgument}: No such file or directory`)
+          return createStderr(`bash: cd: ${lastArgument}: No such file or directory`)
         }
 
         return createQuery()
@@ -254,24 +255,11 @@ export default {
         // "splice" is necessary since Vue.js losses its reactivity if array is
         // set to empty
         history.value.splice(0, history.value.length)
-
         return createQuery()
       },
 
       'hello-world': () => {
         return createStdout('Hello world')
-      },
-
-      changefont: parsedQuery => {
-        const joinedQuery = parsedQuery.join(' ')
-        const regex = /(["'])(.*?)\1/
-        const match = joinedQuery.match(regex)
-        if (match) {
-          font.value = match[2]
-          return createQuery()
-        }
-
-        return createStdout('No quotes found')
       },
 
       history: () => {
@@ -284,11 +272,25 @@ export default {
       },
 
       nano: () => NanoEditor,
-      norris: () => ChuckNorris
+      norris: () => ChuckNorris,
+
+      'set-font': parsedQuery => {
+        if (parsedQuery.length < 2) {
+          return createStderr('Missing font')
+        }
+
+        const match = parsedQuery.at(1)
+        if (match) {
+          font.value = match.replace(/['"]+/g, '')
+          return createQuery()
+        }
+
+        return createStderr('Missing font')
+      }
     }
     commands.help = () => {
       const list = Object.keys(commands)
-      // TODO Create terminal-like columns
+      // TODO: Create terminal-like columns
       return createStdout(listFormatter(...list))
     }
 
