@@ -129,6 +129,7 @@ directive is required.
 | `cursor-position`    | Cursor position                             | `Number`   | `0`                       | No       | Yes             |
 | `dispatched-queries` | Non-empty dispatched queries                | `Set`      | `new Set()`               | No       | Yes             |
 | `event-resolver`     | See [Event resolver](#event-resolver)       | `Function` | `newDefaultEventResolver` | No       | No              |
+| `font`               | Terminal font                               | `String`   | `''`                      | No       | No              |
 | `help-text`          | Command help                                | `String`   | `''`                      | No       | Yes             |
 | `help-timeout`       | Command help timeout                        | `Number`   | `3000`                    | No       | No              |
 | `hide-bar`           | Hides the bar                               | `Boolean`  | `false`                   | No       | No              |
@@ -246,6 +247,7 @@ Library provides helper methods to render terminal related content.
 | Function                      | Parameters                                                         | Description                           |
 | ----------------------------- | ------------------------------------------------------------------ | ------------------------------------- |
 | `createCommandNotFound`       | `command, text = 'command not found', name = 'VueCommandNotFound'` | Creates a command not found component |
+| `createStderr`                | `formatterOrText, name = 'VueCommandStderr'`                       | Creates a "stderr" component          |
 | `createStdout`                | `formatterOrText, name = 'VueCommandStdout'`                       | Creates a "stdout" component          |
 | `createQuery`                 |                                                                    | Creates a query component             |
 | `defaultHistoryEventResolver` | `refs, eventProvider`                                              | The default history event resolver    |

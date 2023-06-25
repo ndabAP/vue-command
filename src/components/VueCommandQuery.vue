@@ -8,17 +8,17 @@
       <VueCommandPrompt />
 
       <!-- Query -->
-      <!-- TODO Convert to textarea to enforce word breaks -->
+      <!-- TODO: Implement line breaks -->
       <input
         ref="queryRef"
         v-model="local.query"
         class="vue-command__query__input"
         :disabled="isOutdatedQuery"
         :placeholder="placeholder"
+        :style="queryStyle"
         autocapitalize="none"
         autocorrect="off"
         type="text"
-        :style="terminal.font ? { 'font': `1rem ${terminal.font}`} : {}"
         @click="setCursorPosition($refs.queryRef.selectionStart)"
         @keydown.tab.exact.prevent="autocompleteQuery"
         @keydown.ctrl.r.exact.prevent="showReverseISearch()"
@@ -40,6 +40,7 @@
         ref="multilineQueryRefs"
         class="vue-command__multiline-query__input"
         :disabled="isOutdatedMultilineQuery(index)"
+        :style="queryStyle"
         :value="multilineQuery"
         autocapitalize="none"
         autocorrect="off"
@@ -63,6 +64,7 @@
         v-model="reverseISearch"
         class="vue-command__reverse-i-search__input"
         :disabled="isOutdated"
+        :style="queryStyle"
         autocapitalize="none"
         autocorrect="off"
         type="text"
@@ -163,9 +165,17 @@ const VueCommandPrompt = computed(() => {
     class: 'vue-command__query__prompt'
   }, prompt))
 })
+const queryStyle = computed(() => {
+  if (!isEmpty(terminal.value.font)) {
+    return {
+      font: `1rem ${terminal.value.font}`
+    }
+  }
+
+  return {}
+})
 
 const local = reactive({
-  prompt: terminal.value.prompt,
   query: ''
 })
 // Entered with "\"

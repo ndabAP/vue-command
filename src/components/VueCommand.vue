@@ -166,6 +166,12 @@ const props = defineProps({
     type: Array
   },
 
+  font: {
+    default: '',
+    required: false,
+    type: String
+  },
+
   helpText: {
     default: null,
     required: false,
@@ -271,12 +277,6 @@ const props = defineProps({
     default: '',
     required: false,
     type: String
-  },
-
-  font: {
-    default: undefined,
-    required: false,
-    type: String
   }
 })
 
@@ -306,8 +306,7 @@ const local = reactive({
   historyPosition: props.historyPosition,
   isFullscreen: props.isFullscreen,
   prompt: props.prompt,
-  query: props.query,
-  font: props.font
+  query: props.query
 })
 // Signals like SIGINT or SIGKILL
 const signals = reactive(newEventBus())
@@ -315,13 +314,13 @@ const signals = reactive(newEventBus())
 const terminal = computed(() => ({
   cursorPosition: local.cursorPosition,
   dispatchedQueries: local.dispatchedQueries,
+  font: props.font,
   history: local.history,
   historyPosition: local.historyPosition,
   invert: props.invert,
   isFullscreen: local.isFullscreen,
   prompt: local.prompt,
-  query: local.query,
-  font: local.font
+  query: local.query
 }))
 
 // Provided commands as programs. It takes the keys of the commands object
@@ -378,7 +377,7 @@ const appendToHistory = (...components) => {
 // Parses the query, looks for a user given command and appends the resulting
 // component to the history
 const dispatch = async query => {
-  // Call given interpreter to execute arbitrary code, if given
+  // Call optional interpreter to execute arbitrary code
   if (isFunction(props.interpreter)) {
     props.interpreter(query)
     return
@@ -413,7 +412,7 @@ const dispatch = async query => {
   // instantly to history
   // TODO Find a better way to find out the name
   if (eq(get(command, '__name'), 'VueCommandQuery')) {
-    appendToHistory(command)
+    exit()
     return
   }
 
@@ -435,9 +434,9 @@ const dispatch = async query => {
   })
   appendToHistory(markRaw(component))
 }
-// Tear down component and execute final steps
+// Tear down component, execute final steps and return a new query
 const exit = () => {
-  // TODO Does order matter?
+  // TODO: Does order matter?
   appendToHistory(createQuery())
   setCursorPosition(0)
   setFullscreen(false)
@@ -522,7 +521,7 @@ onMounted(() => {
 
   // Scroll to bottom if history changes
   const resizeObsever = new ResizeObserver(() => {
-    // TODO Only scroll to bottom if user scrolled to bottom before
+    // TODO: Only scroll to bottom if user scrolled to bottom before
     vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
   })
   for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
