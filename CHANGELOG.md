@@ -1,3 +1,15 @@
+## [35.2.0](https://github.com/ndabAP/vue-command/compare/v35.1.0...v35.2.0) (2023-06-25)
+
+
+### Features
+
+* add stderr component ([fb280c0](https://github.com/ndabAP/vue-command/commit/fb280c00a9ac4f572d0d4e0ca8a01096151c1c7b))
+
+
+### Bug Fixes
+
+* set font ([f92d85c](https://github.com/ndabAP/vue-command/commit/f92d85cc7e97eb45bd1ebb72b37f1bf536bac25a))
+
 ## [35.1.0](https://github.com/ndabAP/vue-command/compare/v35.0.0...v35.1.0) (2023-05-30)
 
 
