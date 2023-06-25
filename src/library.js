@@ -25,6 +25,12 @@ export const createCommandNotFound = (command, notFoundText = 'command not found
   return createStdout(text, name)
 }
 
+// Creates a "stderr" with the given formatter or text and name. It exits as
+// soon as the component has been mounted
+export const createStderr = (formatterOrText, name = 'VueCommandSterr') => {
+  return createStdout(formatterOrText, name)
+}
+
 // Creates a "stdout" with the given formatter or text and name. It exits as
 // soon as the component has been mounted
 export const createStdout = (formatterOrText, name = 'VueCommandStdout') => markRaw(defineComponent({
