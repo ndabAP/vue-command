@@ -22,6 +22,16 @@ describe('VueCommand', () => {
 
       expect(wrapper.find('.vue-command__bar').exists()).toBe(false)
     })
+    it('hides the Titles', () => {
+      const wrapper = mount(VueCommand, {
+        props: {
+          hideTitle: true
+        }
+      })
+
+      expect(wrapper.find('vue-command__bar__title').exists()).toBe(false)
+      expect(wrapper.find('vue-command__bar__title--invert').exists()).toBe(false)
+    })
 
     it('renders the given prompt', () => {
       const prompt = 'TEST_PROMPT'
