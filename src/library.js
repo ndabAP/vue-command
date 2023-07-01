@@ -27,7 +27,7 @@ export const createCommandNotFound = (command, notFoundText = 'command not found
 
 // Creates a "stderr" with the given formatter or text and name. It exits as
 // soon as the component has been mounted
-export const createStderr = (formatterOrText, name = 'VueCommandSterr') => {
+export const createStderr = (formatterOrText, name = 'VueCommandStderr') => {
   return createStdout(formatterOrText, name)
 }
 
