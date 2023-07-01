@@ -1,3 +1,10 @@
+## [35.2.1](https://github.com/ndabAP/vue-command/compare/v35.2.0...v35.2.1) (2023-07-01)
+
+
+### Bug Fixes
+
+* stderr component name ([859769e](https://github.com/ndabAP/vue-command/commit/859769ecfd3983b55fba73e1e76ebf8783d572de))
+
 ## [35.2.0](https://github.com/ndabAP/vue-command/compare/v35.1.0...v35.2.0) (2023-06-25)
 
 
