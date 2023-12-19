@@ -48,7 +48,7 @@
     "vue": "^3.3.12"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.2",
+    "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.6.6",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^9.0.2",
