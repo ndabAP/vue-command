@@ -45,7 +45,7 @@
     "core-js": "^3.33.0",
     "lodash": "^4.17.21",
     "register-service-worker": "^1.7.2",
-    "vue": "^3.3.4"
+    "vue": "^3.3.12"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
