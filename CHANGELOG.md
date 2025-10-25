@@ -1,3 +1,14 @@
+## [36.0.0](https://github.com/ndabAP/vue-command/compare/v35.2.1...v36.0.0) (2025-10-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* improve readme
+
+### Documentation
+
+* improve readme ([49e4165](https://github.com/ndabAP/vue-command/commit/49e4165fed84021931437dc7b062ffccaafe6193))
+
 ## [35.2.1](https://github.com/ndabAP/vue-command/compare/v35.2.0...v35.2.1) (2023-07-01)
 
 
