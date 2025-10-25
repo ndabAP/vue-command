@@ -4,7 +4,7 @@
       <div class="container">
         <h1>vue-command</h1>
         <p class="lead">
-          A fully working, most feature-rich Vue.js terminal emulator. Now with Vue.js 3 support! <a
+          A fully working, most feature-rich Vue.js terminal emulator. <a
             href="https://github.com/ndabAP/vue-command">Github</a>
         </p>
 
@@ -47,31 +47,41 @@
             </thead>
             <tbody>
               <tr>
-                <td><pre><code>cursor-position</code></pre></td>
+                <td>
+                  <pre><code>cursor-position</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ cursorPosition }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>dispatched-queries</code></pre></td>
+                <td>
+                  <pre><code>dispatched-queries</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ dispatchedQueries }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>help-text</code></pre></td>
+                <td>
+                  <pre><code>help-text</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ helpText }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>help-timeout</code></pre></td>
+                <td>
+                  <pre><code>help-timeout</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ helpTimeout }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>hide-bar</code></pre></td>
+                <td>
+                  <pre><code>hide-bar</code></pre>
+                </td>
                 <td>
                   <input
                     v-model="hideBar"
@@ -81,7 +91,9 @@
                 </td>
               </tr>
               <tr>
-                <td><pre><code>hide-buttons</code></pre></td>
+                <td>
+                  <pre><code>hide-buttons</code></pre>
+                </td>
                 <td>
                   <input
                     v-model="hideButtons"
@@ -91,13 +103,17 @@
                 </td>
               </tr>
               <tr>
-                <td><pre><code>hide-prompt</code></pre></td>
+                <td>
+                  <pre><code>hide-prompt</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ hidePrompt }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>hide-title</code></pre></td>
+                <td>
+                  <pre><code>hide-title</code></pre>
+                </td>
                 <td>
                   <input
                     v-model="hideTitle"
@@ -107,25 +123,33 @@
                 </td>
               </tr>
               <tr>
-                <td><pre><code>help-timeout</code></pre></td>
+                <td>
+                  <pre><code>help-timeout</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ helpTimeout }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>history</code></pre></td>
+                <td>
+                  <pre><code>history</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ history }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>history-position</code></pre></td>
+                <td>
+                  <pre><code>history-position</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ historyPosition }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>invert</code></pre></td>
+                <td>
+                  <pre><code>invert</code></pre>
+                </td>
                 <td>
                   <input
                     v-model="invert"
@@ -135,25 +159,33 @@
                 </td>
               </tr>
               <tr>
-                <td><pre><code>is-fullscreen</code></pre></td>
+                <td>
+                  <pre><code>is-fullscreen</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ isFullscreen }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>prompt</code></pre></td>
+                <td>
+                  <pre><code>prompt</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ prompt }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>query</code></pre></td>
+                <td>
+                  <pre><code>query</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ query }}</code></pre>
                 </td>
               </tr>
               <tr>
-                <td><pre><code>title</code></pre></td>
+                <td>
+                  <pre><code>title</code></pre>
+                </td>
                 <td>
                   <pre><code>{{ title }}</code></pre>
                 </td>
@@ -167,18 +199,18 @@
 </template>
 
 <script lang="js">
-import { ref } from 'vue'
 import VueCommand from '@/components/VueCommand'
+import ChuckNorris from '@/hosted/ChuckNorris.vue'
+import NanoEditor from '@/hosted/NanoEditor.vue'
 import {
+  createQuery,
   createStderr,
   createStdout,
-  createQuery,
   listFormatter,
   newDefaultHistory,
   tableFormatter
 } from '@/library'
-import NanoEditor from '@/hosted/NanoEditor.vue'
-import ChuckNorris from '@/hosted/ChuckNorris.vue'
+import { ref } from 'vue'
 
 const PROMPT = 'neil@moon~$'
 
@@ -241,7 +273,7 @@ export default {
           prompt.value = `${PROMPT}/home`
         }
         if ((lastArgument === '../' || lastArgument === '..') &&
-            prompt.value === `${PROMPT}/home`) {
+          prompt.value === `${PROMPT}/home`) {
           prompt.value = `${PROMPT}`
         }
         if (lastArgument !== 'home' && lastArgument !== '../' && lastArgument !== '..') {

@@ -34,20 +34,20 @@ Let's start with a dead simple example. We want to send "Hello world" to
 </template>
 
 <script>
-import VueCommand, { createStdout } from "vue-command";
-import "vue-command/dist/vue-command.css";
+import VueCommand, { createStdout } from "vue-command"
+import "vue-command/dist/vue-command.css"
 
 export default {
   components: {
-    VueCommand,
+    VueCommand
   },
 
   data: () => ({
     commands: {
-      "hello-world": () => createStdout("Hello world"),
-    },
-  }),
-};
+      "hello-world": () => createStdout("Hello world")
+    }
+  })
+}
 </script>
 ```
 
@@ -74,13 +74,13 @@ export default {
   inject: ["exit", "setFullscreen", "terminal"],
 
   created() {
-    this.setFullscreen(true);
+    this.setFullscreen(true)
   },
 
   mounted() {
-    this.$refs.nano.focus();
-  },
-};
+    this.$refs.nano.focus()
+  }
+}
 </script>
 
 <style scoped>
@@ -99,9 +99,9 @@ Now the command has to return the component.
 </template>
 
 <script>
-import VueCommand from "vue-command";
-import "vue-command/dist/vue-command.css";
-import NanoEditor from "@/components/NanoEditor.vue";
+import VueCommand from "vue-command"
+import "vue-command/dist/vue-command.css"
+import NanoEditor from "@/components/NanoEditor.vue"
 
 export default {
   components: {
@@ -111,9 +111,9 @@ export default {
   data: () => ({
     commands: {
       nano: () => NanoEditor,
-    },
-  }),
-};
+    }
+  })
+}
 </script>
 ```
 
