@@ -9,7 +9,7 @@
   },
   "private": false,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "repository": {
     "type": "git",
@@ -48,6 +48,7 @@
     "vue": "^3.3.12"
   },
   "devDependencies": {
+    "@achrinza/node-ipc": "^9.2.9",
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.6.6",
     "@semantic-release/changelog": "^6.0.3",
@@ -62,6 +63,7 @@
     "@vue/cli-plugin-unit-jest": "~4.5.13",
     "@vue/cli-service": "~4.5.13",
     "@vue/compiler-sfc": "^3.5.13",
+    "@vue/cli-shared-utils": "5.0.9",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "^2.4.5",
     "babel-eslint": "^10.1.0",
