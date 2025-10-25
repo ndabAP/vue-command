@@ -15,11 +15,11 @@ jobs:
           node-version: "22"
       - name: Lint
         run: |
-          yarn
+          yarn --ignore-engines
           yarn lint
       - name: Test
         run: |
-          yarn
+          yarn --ignore-engines
           yarn test
 
   publish:
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: "22"
       - name: Publish
-        run: yarn; yarn build:lib; npx semantic-release
+        run: yarn --ignore-engines; yarn build:lib; npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
