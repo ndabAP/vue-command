@@ -9,7 +9,7 @@
   },
   "private": false,
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "dist/*.js.map"
   ],
   "scripts": {
-    "build": "npm run lint && npm run build:docs && npm run build:lib",
+    "build": "yarn lint && yarn build:docs && yarn build:lib",
     "build:docs": "vue-cli-service build --dest docs",
     "build:lib": "vue-cli-service build --target lib --name vue-command ./src/library.js",
     "lint": "vue-cli-service lint",
@@ -80,8 +80,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS; npm runnpm run lint --fix",
-      "pre-push": "npm run test"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS; yarn lint --fix",
+      "pre-push": "yarn test"
     }
   }
 }
