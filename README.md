@@ -33,7 +33,7 @@ Let's start with a dead simple example. We want to send "Hello world" to
 
 ```vue
 <template>
-  <vue-command :commands="commands" />
+  <vue-command :commands='commands' />
 </template>
 
 <script>
