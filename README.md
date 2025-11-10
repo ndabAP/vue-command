@@ -4,8 +4,8 @@ A fully working, most feature-rich Vue.js terminal emulator. See the
 [demo](https://ndabap.github.io/vue-command/) and check the demo
 [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
 In contrast to other terminal emulators, commands are not just 
-mappings to external applications but are native components with 
-injectable environment variables.
+mappings to strings but are native components with injectable 
+environment variables.
 
 ## Features
 
