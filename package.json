@@ -62,7 +62,7 @@
     "@vue/cli-plugin-pwa": "~4.5.13",
     "@vue/cli-plugin-unit-jest": "~4.5.13",
     "@vue/cli-service": "~4.5.13",
-    "@vue/compiler-sfc": "^3.5.13",
+    "@vue/compiler-sfc": "^3.5.24",
     "@vue/cli-shared-utils": "5.0.9",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "^2.4.5",
