@@ -385,6 +385,8 @@ to the bottom. You may need a pollyfill to support your target browser.
 
 ## Projects using vue-command
 
+- [escrcpy](https://github.com/viarotel-org/escrcpy) - Display and control your Android device graphically with scrcpy
+- [linkandroid](https://github.com/modstart-lib/linkandroid) - Link Android and PC easily
 - [curvy-idle-game](https://github.com/n4n0GH/curvy-idle-game) - Short idle game
   where you get to pat her
 - [docker-management-dashboard](https://github.com/zero4994/docker-management-dashboard) - A management dashboard for your local docker containers
