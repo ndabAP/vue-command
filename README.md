@@ -3,6 +3,9 @@
 A fully working, most feature-rich Vue.js terminal emulator. See the
 [demo](https://ndabap.github.io/vue-command/) and check the demo
 [source code](https://github.com/ndabAP/vue-command/blob/master/src/hosted/App.vue).
+In contrast to other terminal emulators, commands are not just 
+mappings to external applications but are native components with 
+injectable environment variables.
 
 ## Features
 
@@ -26,7 +29,7 @@ $ npm install vue-command --save
 ## Usage
 
 Let's start with a dead simple example. We want to send "Hello world" to
-`Stdout` when entering `hello-world`.
+`stdout` when entering `hello-world`.
 
 ```vue
 <template>
@@ -34,8 +37,8 @@ Let's start with a dead simple example. We want to send "Hello world" to
 </template>
 
 <script>
-import VueCommand, { createStdout } from "vue-command"
-import "vue-command/dist/vue-command.css"
+import VueCommand, { createStdout } from 'vue-command'
+import 'vue-command/dist/vue-command.css'
 
 export default {
   components: {
@@ -44,7 +47,7 @@ export default {
 
   data: () => ({
     commands: {
-      "hello-world": () => createStdout("Hello world")
+      'hello-world': () => createStdout('Hello world')
     }
   })
 }
@@ -62,8 +65,8 @@ switch the terminal into fullscreen mode.
 
 ```vue
 <template>
-  <div v-show="terminal.isFullscreen">
-    <textarea ref="nano" @keyup.ctrl.x.exact="exit">
+  <div v-show='terminal.isFullscreen'>
+    <textarea ref='nano' @keyup.ctrl.x.exact='exit'>
 This is a nano text editor emulator! Press Ctrl + x to leave.</textarea
     >
   </div>
@@ -71,7 +74,7 @@ This is a nano text editor emulator! Press Ctrl + x to leave.</textarea
 
 <script>
 export default {
-  inject: ["exit", "setFullscreen", "terminal"],
+  inject: ['exit', 'setFullscreen', 'terminal'],
 
   created() {
     this.setFullscreen(true)
@@ -95,22 +98,22 @@ Now the command has to return the component.
 
 ```vue
 <template>
-  <vue-command :commands="commands" />
+  <vue-command :commands='commands' />
 </template>
 
 <script>
-import VueCommand from "vue-command"
-import "vue-command/dist/vue-command.css"
-import NanoEditor from "@/components/NanoEditor.vue"
+import VueCommand from 'vue-command'
+import 'vue-command/dist/vue-command.css'
+import NanoEditor from '@/components/NanoEditor.vue'
 
 export default {
   components: {
-    VueCommand,
+    VueCommand
   },
 
   data: () => ({
     commands: {
-      nano: () => NanoEditor,
+      nano: () => NanoEditor
     }
   })
 }
@@ -262,7 +265,7 @@ Library provides helper methods to render terminal related content.
 Helper methods can be imported by name:
 
 ```js
-import { createStdout, createQuery } from "vue-command";
+import { createStdout, createQuery } from 'vue-command'
 ```
 
 ### Formatters
@@ -281,7 +284,7 @@ content as a list or table or something else.
 Formatters can be imported by name:
 
 ```js
-import { listFormatter } from "vue-command";
+import { listFormatter } from 'vue-command'
 ```
 
 ## Provided
@@ -314,7 +317,7 @@ import { listFormatter } from "vue-command";
 Provider can be injected into your component by name:
 
 ```js
-inject: ["exit", "terminal"],
+inject: ["exit", "terminal"]
 ```
 
 ## Exposed
@@ -352,18 +355,18 @@ is the only implemented signal for now. When the user presses
 signal name and a callback:
 
 ```js
-const signals = inject("signals");
+const signals = inject('signals')
 const sigint = () => {
   // Tear down component
 };
-signals.on("SIGINT", sigint);
+signals.on('SIGINT', sigint)
 ```
 
 To unsubscribe from the signal, pass the same signal name and callback you used
 to subscribe to the signal.
 
 ```js
-signals.off("SIGINT", sigint);
+signals.off('SIGINT', sigint)
 ```
 
 The libraries query component makes usage of that and allows to cancel a query
