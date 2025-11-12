@@ -110,7 +110,8 @@ import {
   onMounted,
   nextTick,
   getCurrentInstance,
-  useSlots
+  useSlots,
+  onBeforeUnmount
 } from 'vue'
 import {
   createCommandNotFound,
@@ -297,6 +298,12 @@ const emits = defineEmits([
 const vueCommandHistoryEntryComponentRefs = ref(null)
 const vueCommandHistoryRef = ref(null)
 const vueCommandRef = ref(null)
+
+// Keep a global resizeObserver instance to disconnect it at onBeforeUnmount
+const resizeObserver = new ResizeObserver(() => {
+  // TODO: Only scroll to bottom if user scrolled to bottom before
+  vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
+})
 
 // A local copy to allow the absence of properties
 const local = reactive({
@@ -511,6 +518,9 @@ watch(() => props.query, query => {
   // Cursor position gets updated in query component
 })
 
+onBeforeUnmount(() => {
+  resizeObserver.disconnect()
+})
 onMounted(() => {
   // Binds given event listeners and calls them with the terminals references
   // and exposed properties
@@ -520,20 +530,16 @@ onMounted(() => {
   }
 
   // Scroll to bottom if history changes
-  const resizeObsever = new ResizeObserver(() => {
-    // TODO: Only scroll to bottom if user scrolled to bottom before
-    vueCommandHistoryRef.value.scrollTop = vueCommandHistoryRef.value.scrollHeight
-  })
   for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
-    resizeObsever.observe(vueCommandHistoryEntry)
+    resizeObserver.observe(vueCommandHistoryEntry)
   }
   // If history changes, unobserve all history entries and observe again
   watch(local.history, async () => {
     await nextTick()
 
-    resizeObsever.disconnect()
+    resizeObserver.disconnect()
     for (const vueCommandHistoryEntry of vueCommandHistoryRef.value.children) {
-      resizeObsever.observe(vueCommandHistoryEntry)
+      resizeObserver.observe(vueCommandHistoryEntry)
     }
   })
 })
