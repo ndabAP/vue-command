@@ -1,3 +1,10 @@
+## [36.0.1](https://github.com/ndabAP/vue-command/compare/v36.0.0...v36.0.1) (2025-11-18)
+
+
+### Bug Fixes
+
+* avoid crash when closing terminal ([ab4c703](https://github.com/ndabAP/vue-command/commit/ab4c7031f126485f100013b2932b5089e53f2e4e))
+
 ## [36.0.0](https://github.com/ndabAP/vue-command/compare/v35.2.1...v36.0.0) (2025-10-25)
 
 
