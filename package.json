@@ -48,7 +48,7 @@
     "vue": "^3.5.26"
   },
   "devDependencies": {
-    "@achrinza/node-ipc": "^9.2.9",
+    "@achrinza/node-ipc": "^9.2.10",
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.6.6",
     "@semantic-release/changelog": "^6.0.3",
